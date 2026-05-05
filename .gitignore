@@ -26,6 +26,8 @@ playwright/.cache/
 
 # Misc
 *.log
+*.bak
+*.tmpbak*
 .vercel
 
 # Claude Code worktrees

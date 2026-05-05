@@ -1,205 +1,251 @@
 "use client";
 
 /* ============================================================
-   Inbox Hub — /creator/inbox (overview + dispatcher)
-   Authority: Design.md § 0 (3-tier rules) · § 4.3 radii ·
-              § 6 spacing · § 8.9 liquid-glass · § 9 buttons
-   Role: This page is a HUB — surface unread counts per
-         channel + last-message previews, then route the
-         creator into Messages / Invites / System.
+   Inbox Hub — /creator/inbox (NOW view)
+   Authority: Audit §五.4 — Hub 重做为"今日要做的事"
+   Role: Replace the redundant 3-card snapshot with a unified
+   urgency-ranked feed pulling from invites + messages +
+   system. Answer the one question creator opens inbox to ask:
+   "what do I need to do today?"
    ============================================================ */
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
-import { useNotifications } from "@/lib/notifications/useNotifications";
+import { useEffect, useMemo, useState } from "react";
+import {
+  deriveNowItems,
+  avatarBg as sharedAvatarBg,
+  type NowSource,
+  type NowItem,
+} from "@/lib/inbox/seed";
+import { useInboxState } from "@/lib/inbox/state";
+import { PaneHeader, PaneSubCount, EmptyState } from "@/lib/workspace/chrome";
 import "./inbox.css";
 
-/* ── Channel descriptors ─────────────────────────────────────
-   Mock counts mirror layout.tsx (kept in sync intentionally —
-   when the real API lands, both files swap to the same hook). */
+/* The Now feed is DERIVED from live context state — Accept an
+   invite, mark a notification read, send a brand reply: the feed
+   reorders/disappears here in real time. No parallel mock. */
 
-type Channel = {
-  key: "messages" | "invites" | "system";
-  href: string;
-  label: string; // Tab label (邀约 / 消息 / 系统 mapped to EN)
-  blurb: string; // 1-line role description
-  unread: number;
-  preview: { sender: string; line: string; time: string } | null;
+/* ── Bucket: Right now (<6h) / Today (<24h) / This week (<7d) ── */
+
+type BucketKey = "now" | "today" | "week";
+
+function bucketOf(ms: number): BucketKey {
+  if (ms < 6 * 60 * 60 * 1000) return "now";
+  if (ms < 24 * 60 * 60 * 1000) return "today";
+  return "week";
+}
+
+const BUCKETS: { key: BucketKey; title: string; sub: string }[] = [
+  { key: "now", title: "Right now", sub: "next 6 hours" },
+  { key: "today", title: "Today", sub: "before tomorrow" },
+  { key: "week", title: "This week", sub: "lower urgency" },
+];
+
+/* Source → tag / dot color (matches System category palette) */
+const SOURCE_TAG: Record<
+  NowSource,
+  {
+    label: string;
+    dot: string;
+    intent: "alert" | "compliance" | "money" | "updates";
+  }
+> = {
+  invite: { label: "INVITE", dot: "#93c5fd", intent: "updates" },
+  message: { label: "REPLY", dot: "var(--ink)", intent: "updates" },
+  system: { label: "DEADLINE", dot: "var(--brand-red)", intent: "alert" },
+  compliance: { label: "FTC", dot: "var(--ga-orange)", intent: "compliance" },
 };
 
+const avatarBg = (initial?: string) => sharedAvatarBg(initial);
+
+function urgencyLabel(ms: number) {
+  if (ms <= 0) return "expired";
+  const hrs = Math.floor(ms / (60 * 60 * 1000));
+  if (hrs >= 24) return `${Math.floor(hrs / 24)}d left`;
+  if (hrs >= 1) {
+    const m = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+    return `${hrs}h ${m}m`;
+  }
+  return `${Math.floor(ms / (60 * 1000))}m`;
+}
+
+/* ── Page ─────────────────────────────────────────────────── */
+
 export default function InboxHubPage() {
-  const router = useRouter();
-  const { unreadCount: systemUnread } = useNotifications("creator");
-
-  // Mock previews — replace with hook calls once endpoints land.
-  // Numbers must mirror layout.tsx (same source of truth).
-  const channels: Channel[] = useMemo(
-    () => [
-      {
-        key: "messages",
-        href: "/creator/inbox/messages",
-        label: "Messages",
-        blurb: "Threads with brands and Push.",
-        unread: 2,
-        preview: {
-          sender: "Push Team",
-          line: "Your application to Roberta's was accepted.",
-          time: "2m",
-        },
-      },
-      {
-        key: "invites",
-        href: "/creator/inbox/invites",
-        label: "Invites",
-        blurb: "Brand campaigns waiting on you.",
-        unread: 3,
-        preview: {
-          sender: "Roberta's Pizza",
-          line: "Summer Menu Launch · expires in 4h",
-          time: "now",
-        },
-      },
-      {
-        key: "system",
-        href: "/creator/inbox/system",
-        label: "System",
-        blurb: "Payments, scores, platform notices.",
-        unread: systemUnread,
-        preview: {
-          sender: "Push Payments",
-          line: "$120 added to your wallet.",
-          time: "3h",
-        },
-      },
-    ],
-    [systemUnread],
-  );
-
-  /* Keyboard shortcut — 1 / 2 / 3 jumps to the matching channel.
-     Skipped while focus is in inputs (avoids conflict with type-to-search
-     once messages list ships). */
+  // Live ticker so urgency labels stay accurate
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const target = e.target as HTMLElement | null;
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const { invites, threads, notifications } = useInboxState();
+  const items = useMemo(
+    () => deriveNowItems({ invites, threads, notifications }),
+    [invites, threads, notifications],
+  );
+  // deriveNowItems already sorts by urgencyMs ascending.
+  const sorted = items;
+
+  const grouped = useMemo(() => {
+    const out: Record<BucketKey, NowItem[]> = { now: [], today: [], week: [] };
+    for (const it of sorted) out[bucketOf(it.urgencyMs)].push(it);
+    return out;
+  }, [sorted]);
+
+  const nowCount = grouped.now.length;
+  const todayCount = grouped.today.length;
+  const totalActionable = nowCount + todayCount;
+
+  // Keyboard: J/K cycles items, 1/2/3 jumps to tabs
+  useEffect(() => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
       if (
-        target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.isContentEditable)
+        t?.tagName === "INPUT" ||
+        t?.tagName === "TEXTAREA" ||
+        t?.isContentEditable
       )
         return;
-      if (e.key === "1") {
+      if (e.metaKey || e.ctrlKey) return;
+      const map: Record<string, string> = {
+        "1": "/creator/inbox/messages",
+        "2": "/creator/inbox/invites",
+        "3": "/creator/inbox/system",
+      };
+      if (map[e.key]) {
         e.preventDefault();
-        router.push(channels[0].href);
-      } else if (e.key === "2") {
-        e.preventDefault();
-        router.push(channels[1].href);
-      } else if (e.key === "3") {
-        e.preventDefault();
-        router.push(channels[2].href);
+        window.location.assign(map[e.key]);
       }
-    }
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [router, channels]);
-
-  const totalUnread = channels.reduce((sum, c) => sum + c.unread, 0);
+  }, []);
 
   return (
-    <section className="ib-content ib-hub" aria-labelledby="ib-hub-heading">
-      {/* ── Eyebrow + summary line ──────────────────────────── */}
-      <div className="ib-hub-intro">
-        <p className="ib-hub-eyebrow">LINKS · OVERVIEW</p>
-        <h2 id="ib-hub-heading" className="ib-hub-summary">
-          {totalUnread > 0 ? (
-            <>
-              <span className="ib-hub-summary-num">{totalUnread}</span>
-              <span className="ib-hub-summary-text">
-                {totalUnread === 1 ? "thing waiting." : "things waiting."}
-              </span>
-            </>
+    <section
+      className="ib-content ib-now ib-now-pane"
+      data-lenis-prevent
+      aria-labelledby="ib-now-heading"
+    >
+      <PaneHeader
+        title="Now"
+        sub={
+          totalActionable === 0 ? (
+            <strong>All clear · nothing needs you today</strong>
           ) : (
             <>
-              <span className="ib-hub-summary-text">All clear.</span>
-              <span className="ib-hub-summary-faint">
-                Nothing needs you right now.
-              </span>
+              <PaneSubCount
+                count={totalActionable}
+                label={
+                  totalActionable === 1
+                    ? "thing on your plate"
+                    : "things on your plate"
+                }
+              />
+              {nowCount > 0 && <> · {nowCount} in next 6h</>}
             </>
-          )}
-        </h2>
+          )
+        }
+      />
+
+      {/* Buckets — each shows urgency band + count */}
+      <div className="ib-now-buckets" data-tick={tick}>
+        {BUCKETS.map((b) => {
+          const list = grouped[b.key];
+          if (list.length === 0) return null;
+
+          return (
+            <div
+              key={b.key}
+              className={`ib-now-bucket ib-now-bucket--${b.key}`}
+            >
+              <div className="ib-now-bucket-head">
+                <h3 className="ib-now-bucket-title">{b.title}</h3>
+                <span className="ib-now-bucket-sub">{b.sub}</span>
+                <span className="ib-now-bucket-count">{list.length}</span>
+                <span className="ib-now-bucket-line" aria-hidden />
+              </div>
+
+              <ul className="ib-now-list" role="list">
+                {list.map((it) => {
+                  const tag = SOURCE_TAG[it.source];
+                  return (
+                    <li key={it.id}>
+                      <Link
+                        href={it.href}
+                        className={`ib-now-row ib-now-row--${tag.intent}`}
+                        aria-label={`${it.title} — ${it.cta}`}
+                      >
+                        <span
+                          className="ib-now-row-avatar"
+                          aria-hidden
+                          style={{ background: avatarBg(it.brandInitial) }}
+                        >
+                          {it.brandInitial ?? "·"}
+                        </span>
+
+                        <div className="ib-now-row-body">
+                          <div className="ib-now-row-meta">
+                            <span
+                              className="ib-now-row-tag-dot"
+                              aria-hidden
+                              style={{ background: tag.dot }}
+                            />
+                            <span className="ib-now-row-tag">{tag.label}</span>
+                            <span className="ib-now-row-sep" aria-hidden>
+                              ·
+                            </span>
+                            <span className="ib-now-row-urgency">
+                              {urgencyLabel(it.urgencyMs)}
+                            </span>
+                            {it.payoutHint && (
+                              <>
+                                <span className="ib-now-row-sep" aria-hidden>
+                                  ·
+                                </span>
+                                <span className="ib-now-row-payout">
+                                  {it.payoutHint}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <p className="ib-now-row-title">{it.title}</p>
+                          <p className="ib-now-row-body-text">{it.body}</p>
+                        </div>
+
+                        <span className="ib-now-row-cta" aria-hidden>
+                          {it.cta} →
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })}
+
+        {totalActionable === 0 && (
+          <div className="ib-now-empty">
+            <p className="ib-now-empty-title">
+              No deadlines, no pending replies.
+            </p>
+            <p className="ib-now-empty-body">
+              Nothing on your plate right now — but{" "}
+              <Link href="/creator/discover">3 new campaigns within 1mi</Link>{" "}
+              are accepting applications.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* ── Channel cards — 3-up grid, dispatchers ──────────── */}
-      <ul className="ib-hub-grid" role="list">
-        {channels.map((ch, idx) => (
-          <li key={ch.key}>
-            <Link
-              href={ch.href}
-              className={
-                "ib-hub-card" + (ch.unread > 0 ? " ib-hub-card--alert" : "")
-              }
-              aria-label={`${ch.label} — ${
-                ch.unread > 0 ? `${ch.unread} unread` : "no unread"
-              }. Press ${idx + 1} to open.`}
-            >
-              {/* Top row — number + key hint */}
-              <div className="ib-hub-card-top">
-                <span
-                  className="ib-hub-card-num"
-                  aria-hidden="true"
-                  data-zero={ch.unread === 0}
-                >
-                  {ch.unread}
-                </span>
-                <kbd className="ib-hub-card-key" aria-hidden="true">
-                  {idx + 1}
-                </kbd>
-              </div>
-
-              {/* Title block */}
-              <div className="ib-hub-card-head">
-                <h3 className="ib-hub-card-title">{ch.label}</h3>
-                <p className="ib-hub-card-blurb">{ch.blurb}</p>
-              </div>
-
-              {/* Preview row — last message in this channel */}
-              {ch.preview ? (
-                <div className="ib-hub-card-preview">
-                  <span className="ib-hub-card-preview-sender">
-                    {ch.preview.sender}
-                  </span>
-                  <span className="ib-hub-card-preview-dot" aria-hidden="true">
-                    ·
-                  </span>
-                  <span className="ib-hub-card-preview-line">
-                    {ch.preview.line}
-                  </span>
-                </div>
-              ) : (
-                <div className="ib-hub-card-preview ib-hub-card-preview--empty">
-                  Nothing yet.
-                </div>
-              )}
-
-              {/* Footer — view-all affordance */}
-              <div className="ib-hub-card-foot">
-                <span className="ib-hub-card-foot-label">View all</span>
-                <span className="ib-hub-card-foot-arrow" aria-hidden="true">
-                  →
-                </span>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      {/* ── Footnote — keyboard hint, Magvix Italic register ── */}
-      <p className="ib-hub-foot-hint">
-        <span className="ib-hub-foot-italic">Tip ·</span>
-        <span className="ib-hub-foot-mono">
-          press <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> to jump between channels.
+      {/* Footer hint — honest about what this view IS */}
+      <p className="ib-now-foot">
+        <span className="ib-now-foot-italic">Now ·</span>
+        <span className="ib-now-foot-mono">
+          merged from invites + messages + system. press <kbd>1</kbd> messages ·{" "}
+          <kbd>2</kbd> invites · <kbd>3</kbd> system.
         </span>
       </p>
     </section>

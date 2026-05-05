@@ -6,28 +6,8 @@
    Augments parent inbox.css — does NOT redefine row card geometry.
    ============================================================ */
 
-/* ── Eyebrow row — replaces ib-sys-count text ───────────────── */
-
-.ib-sys-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-}
-
-.ib-sys-eyebrow-sep {
-  color: var(--ink-6);
-  font-weight: 400;
-}
-
-.ib-sys-eyebrow-state {
-  color: var(--ink-3);
-}
+/* Removed: .ib-sys-eyebrow / -sep / -state — replaced by the
+   shared .cw-pane-header (title + sub) pattern in System main. */
 
 /* ── Row geometry override — single row, multi-line stack ──── */
 
@@ -124,25 +104,25 @@ button.ib-sys-row {
 }
 
 /* Per-category tinted icon tile — colors only from § 2 closed list */
-.ib-sys-icon--payments {
+.ib-sys-icon--money {
   background: rgba(31, 122, 57, 0.08); /* success-dark @ 8% */
   color: var(--success-dark);
   border-color: rgba(31, 122, 57, 0.18);
 }
 
-.ib-sys-icon--campaigns {
+.ib-sys-icon--action {
   background: var(--brand-red-tint);
   color: var(--brand-red);
   border-color: rgba(193, 18, 31, 0.18);
 }
 
-.ib-sys-icon--platform {
+.ib-sys-icon--updates {
   background: var(--accent-blue-tint);
   color: var(--accent-blue-deep);
   border-color: rgba(0, 133, 255, 0.20);
 }
 
-.ib-sys-icon--alerts {
+.ib-sys-icon--compliance {
   background: var(--champagne-tint);
   color: var(--champagne-deep);
   border-color: var(--champagne-border);
@@ -154,10 +134,10 @@ button.ib-sys-row {
 }
 
 /* Hovered row deepens icon hue subtly */
-.ib-sys-row:hover .ib-sys-icon--payments  { background: rgba(31, 122, 57, 0.13); }
-.ib-sys-row:hover .ib-sys-icon--campaigns { background: rgba(193, 18, 31, 0.13); }
-.ib-sys-row:hover .ib-sys-icon--platform  { background: rgba(0, 133, 255, 0.15); }
-.ib-sys-row:hover .ib-sys-icon--alerts    { background: rgba(191, 161, 112, 0.22); }
+.ib-sys-row:hover .ib-sys-icon--money  { background: rgba(31, 122, 57, 0.13); }
+.ib-sys-row:hover .ib-sys-icon--action { background: rgba(193, 18, 31, 0.13); }
+.ib-sys-row:hover .ib-sys-icon--updates  { background: rgba(0, 133, 255, 0.15); }
+.ib-sys-row:hover .ib-sys-icon--compliance    { background: rgba(191, 161, 112, 0.22); }
 
 /* ── Body cluster — meta row + title + text ────────────────── */
 
@@ -194,25 +174,25 @@ button.ib-sys-row {
   white-space: nowrap;
 }
 
-.ib-sys-badge--payments {
+.ib-sys-badge--money {
   background: rgba(31, 122, 57, 0.10);
   color: var(--success-dark);
   border-color: rgba(31, 122, 57, 0.20);
 }
 
-.ib-sys-badge--campaigns {
+.ib-sys-badge--action {
   background: var(--brand-red-tint);
   color: var(--brand-red-deep);
   border-color: rgba(193, 18, 31, 0.20);
 }
 
-.ib-sys-badge--platform {
+.ib-sys-badge--updates {
   background: var(--accent-blue-tint);
   color: var(--accent-blue-deep);
   border-color: rgba(0, 133, 255, 0.22);
 }
 
-.ib-sys-badge--alerts {
+.ib-sys-badge--compliance {
   background: var(--champagne-tint);
   color: var(--champagne-deep);
   border-color: var(--champagne-border);
@@ -241,6 +221,20 @@ button.ib-sys-row {
   text-transform: uppercase;
   background: var(--ink);
   color: var(--snow);
+}
+
+.ib-sys-run-count {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--surface-3);
+  color: var(--ink-3);
 }
 
 /* Title — display 16px, allow wrap on mobile */

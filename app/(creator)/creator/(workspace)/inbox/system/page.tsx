@@ -1,167 +1,51 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  useNotifications,
-  timeAgo,
-  type Notification,
-} from "@/lib/notifications/useNotifications";
+import { timeAgo } from "@/lib/notifications/useNotifications";
+import { type SystemNotif, type Category } from "@/lib/inbox/seed";
+import { useInboxState } from "@/lib/inbox/state";
+import { PaneHeader, PaneSubCount, EmptyState } from "@/lib/inbox/components";
+import { Button } from "@/lib/workspace/buttons";
 import "../inbox.css";
 import "./system.css";
 
-/* ── Category config — product UI canonical labels ────────────── */
-
-type Category = "all" | "payments" | "campaigns" | "platform" | "alerts";
+/* ── Category config — re-cut per audit P1 ──────────────────────
+   Old taxonomy ("Campaigns" / "Alerts" / "Platform") didn't map
+   to creator mental models. New cut groups by *what creator does
+   with it*: take action, watch money, FYI updates, FTC compliance. */
 
 const CATEGORIES: { id: Category; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "payments", label: "Payments" },
-  { id: "campaigns", label: "Campaigns" },
-  { id: "platform", label: "Platform" },
-  { id: "alerts", label: "Alerts" },
+  { id: "action", label: "Action Required" },
+  { id: "money", label: "Money" },
+  { id: "updates", label: "Updates" },
+  { id: "compliance", label: "Compliance" },
 ];
 
 const EMPTY_MESSAGES: Record<Category, { title: string; body: string }> = {
   all: {
     title: "No notifications.",
-    body: "Payouts, campaign updates, and platform notices land here.",
+    body: "Action items, payouts, and FTC reminders land here.",
   },
-  payments: {
+  action: {
+    title: "Nothing needs you right now.",
+    body: "Briefs to open, deadlines to confirm, decisions to make will appear here.",
+  },
+  money: {
     title: "No payment activity.",
-    body: "Wallet credits and bank transfers will appear here.",
+    body: "Wallet credits, payouts, and bank transfers will appear here.",
   },
-  campaigns: {
-    title: "No campaign updates.",
-    body: "Application decisions and deadline reminders will appear here.",
+  updates: {
+    title: "No updates.",
+    body: "Score changes, tier moves, and FYI items will appear here.",
   },
-  platform: {
-    title: "No platform updates.",
-    body: "Score changes, tier moves, and product news will appear here.",
-  },
-  alerts: {
-    title: "No alerts.",
-    body: "Action-required notices and compliance flags will appear here.",
+  compliance: {
+    title: "All compliant.",
+    body: "FTC disclosure prompts and policy flags will appear here.",
   },
 };
-
-/* ── Extended notification type ─────────────────────────────── */
-
-type SystemNotif = Notification & {
-  category: Category;
-  priority?: boolean;
-  role?: string;
-  type?: string;
-};
-
-/* ── Seed data ───────────────────────────────────────────────── */
-
-const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
-  {
-    id: "sys-c-001",
-    role: "creator",
-    type: "system",
-    title: "Payment received",
-    body: "$120.00 payout from Brow Theory campaign processed.",
-    href: "/creator/wallet",
-    createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "payments",
-    priority: true,
-  },
-  {
-    id: "sys-c-002",
-    role: "creator",
-    type: "system",
-    title: "Application accepted",
-    body: "Your application to Roberta's Summer campaign was accepted.",
-    href: "/creator/dashboard",
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "campaigns",
-  },
-  {
-    id: "sys-c-003",
-    role: "creator",
-    type: "system",
-    title: "Deadline in 3 days",
-    body: "Flamingo Estate shoot deadline is Friday 5pm.",
-    href: "/creator/campaigns",
-    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "alerts",
-    priority: false,
-  },
-  {
-    id: "sys-c-004",
-    role: "creator",
-    type: "system",
-    title: "Push Score updated",
-    body: "Your Push Score increased by 3 points — now 87.",
-    href: "/creator/profile",
-    createdAt: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "platform",
-  },
-  {
-    id: "sys-c-005",
-    role: "creator",
-    type: "system",
-    title: "New campaign match",
-    body: "Fort Greene Coffee matches your profile — $55 base payout.",
-    href: "/creator/dashboard",
-    createdAt: new Date(Date.now() - 22 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "campaigns",
-  },
-  {
-    id: "sys-c-006",
-    role: "creator",
-    type: "system",
-    title: "Wallet withdrawal processed",
-    body: "$240 transferred to your bank account ending 4521.",
-    href: "/creator/wallet",
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "payments",
-    priority: true,
-  },
-  {
-    id: "sys-c-007",
-    role: "creator",
-    type: "system",
-    title: "Campaign completed",
-    body: "Brow Theory Spring campaign marked complete. Great work!",
-    href: "/creator/campaigns",
-    createdAt: new Date(
-      Date.now() - 2 * 24 * 60 * 60 * 1000 - 3 * 60 * 60 * 1000,
-    ).toISOString(),
-    read: true,
-    category: "campaigns",
-  },
-  {
-    id: "sys-c-008",
-    role: "creator",
-    type: "system",
-    title: "Tier upgrade available",
-    body: "You're 2 campaigns away from Operator tier — higher payouts unlock.",
-    href: "/creator/profile",
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "platform",
-  },
-  {
-    id: "sys-c-009",
-    role: "creator",
-    type: "system",
-    title: "Content flagged for review",
-    body: "Your post for Fort Greene was flagged for minor compliance check.",
-    href: "/creator/campaigns",
-    createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "alerts",
-  },
-];
 
 /* ── Category icon SVGs — single icon family, 18px stroke 1.6 ──
    Using Lucide-style stroke icons for product UI register.   */
@@ -273,14 +157,14 @@ const CategoryIcon = ({
   className?: string;
 }) => {
   switch (cat) {
-    case "payments":
+    case "money":
       return <PaymentsIcon className={className} />;
-    case "campaigns":
-      return <CampaignsIcon className={className} />;
-    case "platform":
-      return <PlatformIcon className={className} />;
-    case "alerts":
+    case "action":
       return <AlertsIcon className={className} />;
+    case "compliance":
+      return <CampaignsIcon className={className} />;
+    case "updates":
+      return <PlatformIcon className={className} />;
     default:
       return <DefaultIcon className={className} />;
   }
@@ -289,18 +173,53 @@ const CategoryIcon = ({
 /* Category badge label — short product UI tag shown next to title */
 const BADGE_LABEL: Record<Category, string> = {
   all: "Update",
-  payments: "Payment",
-  campaigns: "Campaign",
-  platform: "Platform",
-  alerts: "Alert",
+  action: "Action",
+  money: "Money",
+  updates: "Update",
+  compliance: "Compliance",
 };
+
+/* ── Scan-verified dedupe ─────────────────────────────────────
+   Consecutive scan_verified from the same brand collapse into one
+   row with a running count badge — no agentic theater, just noise
+   reduction. Sorted oldest→newest so the last body wins. */
+
+type DedupeRow = SystemNotif & { runCount: number };
+
+function dedupeNotifs(items: SystemNotif[]): DedupeRow[] {
+  const out: DedupeRow[] = [];
+  for (const n of items) {
+    if (n.type === "scan_verified") {
+      const prev = out[out.length - 1];
+      const brand = n.title.includes(" · ") ? n.title.split(" · ")[1] : "";
+      const prevBrand =
+        prev?.type === "scan_verified" && prev.title.includes(" · ")
+          ? (prev.title.split(" · ").pop() ?? "")
+          : "";
+      if (prev?.type === "scan_verified" && prevBrand === brand) {
+        const newCount = prev.runCount + 1;
+        out[out.length - 1] = {
+          ...prev,
+          runCount: newCount,
+          title: `${newCount} scans verified · ${brand}`,
+          body: n.body,
+          createdAt: n.createdAt,
+        };
+        continue;
+      }
+      out.push({ ...n, runCount: 1 });
+      continue;
+    }
+    out.push({ ...n, runCount: 1 });
+  }
+  return out;
+}
 
 /* ── Date grouping ───────────────────────────────────────────── */
 
 type DateGroup = { label: string; items: SystemNotif[] };
 
-function groupByDate(notifications: SystemNotif[]): DateGroup[] {
-  const now = Date.now();
+function groupByDate(notifications: SystemNotif[], now: number): DateGroup[] {
   const oneDayMs = 24 * 60 * 60 * 1000;
 
   const today: SystemNotif[] = [];
@@ -324,88 +243,129 @@ function groupByDate(notifications: SystemNotif[]): DateGroup[] {
 /* ── Page ─────────────────────────────────────────────────────── */
 
 export default function SystemPage() {
-  const { markAllRead } = useNotifications("creator");
+  /* Notifications + mutations come from the shared inbox context.
+     This means an "Application accepted" notification fired by
+     accepting an invite over in /invites is read here in real
+     time — and the segmented nav badge re-counts everywhere. */
+  const router = useRouter();
+  const {
+    notifications,
+    markNotifRead: markRead,
+    markAllNotifsRead: markAllSystemRead,
+    snoozeNotif,
+  } = useInboxState();
 
-  const [notifications, setNotifications] = useState<SystemNotif[]>(
-    EXTENDED_NOTIFICATIONS,
-  );
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 
-  const markRead = useCallback((id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
+  /* Auto-archive: FYI items (Money/Updates) drop off the list 7 days
+     after they're read. Action / Compliance items stick until the
+     creator handles the underlying campaign — they don't auto-rot.
+     Snoozed items hide until their snoozedUntil time arrives. */
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  /* SSR-safe live clock — null on first paint so server and client
+     hydration agree, then refreshes every 60s. Filters that depend
+     on `now` simply pass through everything until mount. */
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
   }, []);
 
-  const markAllSystemRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    markAllRead();
-  }, [markAllRead]);
+  const visibleNotifications = useMemo(
+    () =>
+      notifications.filter((n) => {
+        if (now == null) return true;
+        if (n.snoozedUntil && n.snoozedUntil > now) return false;
+        if (!n.fyiArchive || !n.read) return true;
+        const age = now - new Date(n.createdAt).getTime();
+        return age < SEVEN_DAYS;
+      }),
+    [notifications, now],
+  );
 
   const filtered = useMemo(() => {
-    if (activeCategory === "all") return notifications;
-    return notifications.filter((n) => n.category === activeCategory);
-  }, [notifications, activeCategory]);
+    if (activeCategory === "all") return visibleNotifications;
+    return visibleNotifications.filter((n) => n.category === activeCategory);
+  }, [visibleNotifications, activeCategory]);
 
   const groups = useMemo(() => {
     const sorted = [...filtered].sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-    return groupByDate(sorted).map((g) => ({
+    /* During SSR `now` is null — use the newest createdAt as the
+       reference so grouping is deterministic across server / client.
+       After hydration, real `now` takes over. */
+    const reference =
+      now ?? (sorted.length > 0 ? new Date(sorted[0].createdAt).getTime() : 0);
+    return groupByDate(sorted, reference).map((g) => ({
       ...g,
       items: [
         ...g.items.filter((n) => n.priority && !n.read),
         ...g.items.filter((n) => !(n.priority && !n.read)),
       ],
     }));
-  }, [filtered]);
+  }, [filtered, now]);
 
+  /* Per audit: unify sidebar count semantics. Every category — incl.
+     "All" — now shows UNREAD count (not a mix of total & unread). */
   const countFor = useCallback(
     (cat: Category) => {
       const src =
         cat === "all"
-          ? notifications
-          : notifications.filter((n) => n.category === cat);
+          ? visibleNotifications
+          : visibleNotifications.filter((n) => n.category === cat);
       return src.filter((n) => !n.read).length;
     },
-    [notifications],
+    [visibleNotifications],
   );
 
   const totalUnread = countFor("all");
 
-  return (
-    <div className="ib-content">
-      {/* Eyebrow + action bar */}
-      <div className="ib-sys-bar">
-        <span className="ib-sys-eyebrow">
-          LINKS
-          <span className="ib-sys-eyebrow-sep" aria-hidden>
-            ·
-          </span>
-          <span className="ib-sys-eyebrow-state">
-            {totalUnread > 0 ? `${totalUnread} UNREAD` : "ALL CAUGHT UP"}
-          </span>
-        </span>
-        {totalUnread > 0 && (
-          <button
-            type="button"
-            className="ib-mark-all-btn"
-            onClick={markAllSystemRead}
-            aria-label="Mark all notifications as read"
-          >
-            Mark all as read
-          </button>
-        )}
-      </div>
+  // Map of pretty group title for the right column
+  const GROUP_TITLE: Record<string, string> = {
+    TODAY: "Today",
+    YESTERDAY: "Yesterday",
+    EARLIER: "Earlier",
+  };
 
-      {/* Category filter chips */}
-      <div
-        className="ib-filter-row"
-        role="group"
-        aria-label="Filter notifications by category"
+  return (
+    <div className="ib-content ib-sys-layout">
+      {/* ── Left sidebar — Figma reference 2 ─────────────────── */}
+      <aside
+        className="ib-sys-sidebar"
+        aria-label="Notification categories"
+        data-lenis-prevent
       >
-        {CATEGORIES.map((cat) => {
+        <span className="ib-sys-sidebar-icon" aria-hidden>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M2 4h12M2 8h12M2 12h12"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
+
+        {/* ALL — big pill at top */}
+        <button
+          type="button"
+          onClick={() => setActiveCategory("all")}
+          aria-pressed={activeCategory === "all"}
+          className={`ib-sys-cat ib-sys-cat--all${activeCategory === "all" ? " is-active" : ""}`}
+        >
+          <span>All</span>
+          <span
+            className={`ib-sys-cat-count${countFor("all") === 0 ? " ib-sys-cat-count--quiet" : ""}`}
+          >
+            {countFor("all")}
+          </span>
+        </button>
+
+        {/* Category rows with colored dots */}
+        {CATEGORIES.filter((c) => c.id !== "all").map((cat) => {
           const count = countFor(cat.id);
           const isActive = activeCategory === cat.id;
           return (
@@ -414,121 +374,246 @@ export default function SystemPage() {
               type="button"
               onClick={() => setActiveCategory(cat.id)}
               aria-pressed={isActive}
-              className={`ib-chip${isActive ? " ib-chip--active" : ""}`}
+              className={`ib-sys-cat${isActive ? " is-active" : ""}`}
             >
-              {cat.label}
-              {count > 0 && <span className="ib-chip-count"> · {count}</span>}
+              <span
+                className={`ib-sys-dot-cat ib-sys-dot-cat--${cat.id}`}
+                aria-hidden
+              />
+              <span>{cat.label}</span>
+              {count > 0 ? (
+                <span className="ib-sys-cat-count">{count}</span>
+              ) : (
+                <span className="ib-sys-cat-count ib-sys-cat-count--quiet">
+                  0
+                </span>
+              )}
             </button>
           );
         })}
-      </div>
+      </aside>
 
-      {/* Notification list */}
-      <div className="ib-sys-list">
-        {groups.length === 0 ? (
-          <div className="ib-empty">
-            <p className="ib-empty-title">
-              {EMPTY_MESSAGES[activeCategory].title}
-            </p>
-            <p className="ib-empty-body">
-              {EMPTY_MESSAGES[activeCategory].body}
-            </p>
-          </div>
-        ) : (
-          groups.map((group) => (
-            <div key={group.label} className="ib-group">
-              <div className="ib-group-label">
-                <span>{group.label}</span>
-                <span className="ib-group-line" aria-hidden />
-              </div>
+      {/* ── Right column — grouped notification list ─────────── */}
+      <div className="ib-sys-main" data-lenis-prevent>
+        <PaneHeader
+          title={
+            CATEGORIES.find((c) => c.id === activeCategory)?.label ?? "All"
+          }
+          sub={
+            totalUnread > 0 ? (
+              <PaneSubCount count={totalUnread} label="unread" />
+            ) : (
+              <strong>All caught up</strong>
+            )
+          }
+          actions={
+            totalUnread > 0 && (
+              <Button
+                variant="pill"
+                size="sm"
+                onClick={markAllSystemRead}
+                ariaLabel="Mark all notifications as read"
+              >
+                Mark all read
+              </Button>
+            )
+          }
+        />
 
-              {group.items.map((notif) => {
-                const cat = notif.category as Category;
-                const rowClass = [
-                  "ib-sys-row",
-                  `ib-sys-row--${cat}`,
-                  !notif.read ? "ib-sys-row--unread" : "",
-                  notif.priority && !notif.read ? "ib-sys-row--priority" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ");
+        <div className="ib-sys-list">
+          {groups.length === 0 ? (
+            <EmptyState
+              title={EMPTY_MESSAGES[activeCategory].title}
+              body={EMPTY_MESSAGES[activeCategory].body}
+            />
+          ) : (
+            groups.map((group) => (
+              <div key={group.label} className="ib-group">
+                {/* New v11 Figma title — replaces the old line-divider band
+                  (the band is hidden by .ib-sys-layout .ib-group-label) */}
+                <h3 className="ib-sys-group-title">
+                  {GROUP_TITLE[group.label] ?? group.label}
+                </h3>
+                <div className="ib-group-label">
+                  <span>{group.label}</span>
+                  <span className="ib-group-line" aria-hidden />
+                </div>
 
-                const inner = (
-                  <>
-                    {/* Icon tile */}
-                    <span
-                      className={`ib-sys-icon ib-sys-icon--${cat}`}
-                      aria-hidden
-                    >
-                      <CategoryIcon cat={cat} className="ib-sys-icon-svg" />
-                    </span>
+                {dedupeNotifs(group.items).map((notif) => {
+                  const cat = notif.category as Category;
+                  const rowClass = [
+                    "ib-sys-row",
+                    `ib-sys-row--${cat}`,
+                    !notif.read ? "ib-sys-row--unread" : "",
+                    notif.priority && !notif.read ? "ib-sys-row--priority" : "",
+                    notif.nextAction ? "ib-sys-row--has-action" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ");
 
-                    {/* Body */}
-                    <span className="ib-sys-body">
-                      <span className="ib-sys-meta-row">
-                        <span className={`ib-sys-badge ib-sys-badge--${cat}`}>
-                          {BADGE_LABEL[cat]}
-                        </span>
-                        <span className="ib-sys-time">
-                          {timeAgo(notif.createdAt)}
-                        </span>
-                        {notif.priority && !notif.read && (
-                          <span
-                            className="ib-sys-priority-tag"
-                            aria-label="Priority notification"
-                          >
-                            Priority
-                          </span>
-                        )}
-                      </span>
-
+                  const inner = (
+                    <>
+                      {/* Icon tile */}
                       <span
-                        className={`ib-sys-title${
-                          !notif.read ? " ib-sys-title--bold" : ""
-                        }`}
+                        className={`ib-sys-icon ib-sys-icon--${cat}`}
+                        aria-hidden
                       >
-                        {notif.title}
+                        <CategoryIcon cat={cat} className="ib-sys-icon-svg" />
                       </span>
-                      <span className="ib-sys-text">{notif.body}</span>
-                    </span>
 
-                    {/* Right: unread dot OR chevron when linkable */}
-                    <span className="ib-sys-right">
-                      {!notif.read ? (
+                      {/* Body */}
+                      <span className="ib-sys-body">
+                        <span className="ib-sys-meta-row">
+                          <span className={`ib-sys-badge ib-sys-badge--${cat}`}>
+                            {BADGE_LABEL[cat]}
+                          </span>
+                          <span
+                            className="ib-sys-time"
+                            suppressHydrationWarning
+                          >
+                            {timeAgo(notif.createdAt)}
+                          </span>
+                          {notif.runCount > 1 && (
+                            <span className="ib-sys-run-count">
+                              ×{notif.runCount}
+                            </span>
+                          )}
+                          {notif.priority && !notif.read && (
+                            <span
+                              className="ib-sys-priority-tag"
+                              aria-label="Priority notification"
+                            >
+                              Priority
+                            </span>
+                          )}
+                        </span>
+
                         <span
-                          className="ib-sys-dot"
-                          aria-label="Unread notification"
-                        />
-                      ) : notif.href ? (
-                        <ChevronIcon className="ib-sys-chevron" />
-                      ) : null}
-                    </span>
-                  </>
-                );
+                          className={`ib-sys-title${
+                            !notif.read ? " ib-sys-title--bold" : ""
+                          }`}
+                        >
+                          {notif.title}
+                        </span>
+                        <span className="ib-sys-text">{notif.body}</span>
 
-                return notif.href ? (
-                  <Link
-                    key={notif.id}
-                    href={notif.href}
-                    className={rowClass}
-                    onClick={() => markRead(notif.id)}
-                  >
-                    {inner}
-                  </Link>
-                ) : (
-                  <button
-                    key={notif.id}
-                    type="button"
-                    className={rowClass}
-                    onClick={() => markRead(notif.id)}
-                  >
-                    {inner}
-                  </button>
-                );
-              })}
-            </div>
-          ))
-        )}
+                        {/* Inline next-action + snooze (audit P0/P2) */}
+                        <div className="ib-sys-row-tools">
+                          {notif.nextAction && (
+                            <Link
+                              href={notif.nextAction.href}
+                              className="ib-sys-action-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                markRead(notif.id);
+                              }}
+                            >
+                              {notif.nextAction.label}
+                              <span aria-hidden>→</span>
+                            </Link>
+                          )}
+                          {/* Snooze only on Action / Compliance — FYI items
+                            already auto-archive; money is terminal. */}
+                          {(notif.category === "action" ||
+                            notif.category === "compliance") && (
+                            <div className="ib-sys-snooze-wrap">
+                              <button
+                                type="button"
+                                className="ib-sys-snooze-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  const nextEl = e.currentTarget
+                                    .nextElementSibling as HTMLElement | null;
+                                  nextEl?.classList.toggle("is-open");
+                                }}
+                                aria-label="Snooze this item"
+                                title="Snooze"
+                              >
+                                Snooze
+                              </button>
+                              <div className="ib-sys-snooze-menu">
+                                {(
+                                  [
+                                    ["1h", 1],
+                                    ["3h", 3],
+                                    ["Tomorrow", 18],
+                                    ["Next week", 24 * 7],
+                                  ] as const
+                                ).map(([label, hours]) => (
+                                  <button
+                                    key={label}
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      e.preventDefault();
+                                      snoozeNotif(notif.id, hours);
+                                      (
+                                        e.currentTarget
+                                          .parentElement as HTMLElement
+                                      ).classList.remove("is-open");
+                                    }}
+                                  >
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </span>
+
+                      {/* Right: unread dot OR chevron when linkable */}
+                      <span className="ib-sys-right">
+                        {!notif.read ? (
+                          <span
+                            className="ib-sys-dot"
+                            aria-label="Unread notification"
+                          />
+                        ) : notif.href ? (
+                          <ChevronIcon className="ib-sys-chevron" />
+                        ) : null}
+                      </span>
+                    </>
+                  );
+
+                  return notif.href ? (
+                    /* Use div+onClick (not Link) so that inner action
+                       Links don't create invalid nested <a> elements. */
+                    <div
+                      key={notif.id}
+                      role="button"
+                      tabIndex={0}
+                      className={rowClass}
+                      onClick={() => {
+                        markRead(notif.id);
+                        router.push(notif.href!);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          markRead(notif.id);
+                          router.push(notif.href!);
+                        }
+                      }}
+                    >
+                      {inner}
+                    </div>
+                  ) : (
+                    <button
+                      key={notif.id}
+                      type="button"
+                      className={rowClass}
+                      onClick={() => markRead(notif.id)}
+                    >
+                      {inner}
+                    </button>
+                  );
+                })}
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

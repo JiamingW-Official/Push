@@ -1,204 +1,372 @@
 "use client";
 
+/* ============================================================
+   Messages — v11 iMessage Two-Pane Layout
+   Authority: Design.md § 0 STRUCTURED · § 9 (Filled Secondary
+   N2W Blue for outgoing) · § 6 (negative-space tokens) ·
+   § 4.3 (radii)
+   Layout: thread list (left, 360px) + active conversation
+   pane (right, flex-1) with bubbles + composer. Replaces the
+   old "single column → click to navigate" pattern.
+   ============================================================ */
+
 import {
   useState,
   useCallback,
   useRef,
   useMemo,
   useEffect,
-  type KeyboardEvent,
+  useLayoutEffect,
 } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { timeAgo } from "@/lib/notifications/useNotifications";
+import {
+  avatarBg,
+  type Thread,
+  type Message,
+  type AttributionStatus,
+  type MessageRole,
+} from "@/lib/inbox/seed";
+import { useInboxState } from "@/lib/inbox/state";
+import {
+  PaneHeader,
+  PaneSubCount,
+  EmptyState,
+  FilterChips,
+} from "@/lib/inbox/components";
 import "../inbox.css";
 import "./messages.css";
 
-/* ── Mock data (hardcoded, no API call) ──────────────────────────
-   `time` retained for back-compat fallback. `createdAt` is the
-   canonical ISO timestamp (relativized at render time). Data shape
-   additive — does not break any existing consumer.            */
+/* ── Page-local types ────────────────────────────────────────── */
 
-type Role = "merchant" | "platform" | "payments" | "system";
+type FilterKey = "all" | "unread" | "needs-reply";
 
-type MockThread = {
-  id: string;
-  sender: string;
-  initial: string;
-  preview: string;
-  campaign: string | null;
-  time: string;
-  createdAt: string;
-  unread: boolean;
-  online: boolean;
-  role: Role;
-  group: "TODAY" | "THIS WEEK" | "EARLIER";
+const ROLE_LABEL: Record<MessageRole, string> = {
+  merchant: "BRAND",
 };
 
-const now = Date.now();
-const minutesAgo = (m: number) => new Date(now - m * 60_000).toISOString();
-const hoursAgo = (h: number) => new Date(now - h * 60 * 60_000).toISOString();
-const daysAgo = (d: number) =>
-  new Date(now - d * 24 * 60 * 60_000).toISOString();
+const GROUP_ORDER: Thread["group"][] = ["TODAY", "THIS WEEK", "EARLIER"];
 
-const MOCK_THREADS: MockThread[] = [
-  {
-    id: "t1",
-    sender: "Push Team",
-    initial: "P",
-    preview: "Your application to Roberta's was accepted — next steps inside.",
-    campaign: "Roberta's Spring",
-    time: "2m",
-    createdAt: minutesAgo(2),
-    unread: true,
-    online: true,
-    role: "platform",
-    group: "TODAY",
-  },
-  {
-    id: "t2",
-    sender: "Flamingo Estate",
-    initial: "F",
-    preview: "Shoot deadline reminder — 3 days left to complete your content.",
-    campaign: "Wellness Weekend",
-    time: "1h",
-    createdAt: hoursAgo(1),
-    unread: true,
-    online: true,
-    role: "merchant",
-    group: "TODAY",
-  },
-  {
-    id: "t3",
-    sender: "Push Payments",
-    initial: "$",
-    preview: "$120 has been added to your wallet — campaign verified.",
-    campaign: null,
-    time: "3h",
-    createdAt: hoursAgo(3),
-    unread: false,
-    online: false,
-    role: "payments",
-    group: "TODAY",
-  },
-  {
-    id: "t4",
-    sender: "Fort Greene Coffee",
-    initial: "G",
-    preview: "We loved your content — can you do a follow-up post?",
-    campaign: "Morning Ritual",
-    time: "Yesterday",
-    createdAt: daysAgo(1),
-    unread: false,
-    online: false,
-    role: "merchant",
-    group: "THIS WEEK",
-  },
-  {
-    id: "t5",
-    sender: "Campaign Updates",
-    initial: "C",
-    preview: "Score updated: +3 points after Brow Theory verification.",
-    campaign: null,
-    time: "2d",
-    createdAt: daysAgo(2),
-    unread: false,
-    online: false,
-    role: "system",
-    group: "EARLIER",
-  },
-];
-
-const AVATAR_COLORS: Record<string, string> = {
-  P: "var(--brand-red)",
-  F: "var(--champagne)",
-  $: "var(--success-dark)",
-  G: "var(--ink)",
-  C: "var(--accent-blue)",
-};
-
-function avatarBg(initial: string): string {
-  return AVATAR_COLORS[initial] ?? "var(--ink-3)";
+/* ── Format a bubble timestamp like "Mon, Apr 27 at 13:18" ──── */
+function formatBubbleStamp(iso: string) {
+  const d = new Date(iso);
+  const wd = d.toLocaleDateString(undefined, { weekday: "short" });
+  const md = d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+  const hm = d.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  return `${wd}, ${md} at ${hm}`;
 }
 
-const ROLE_LABEL: Record<Role, string> = {
-  merchant: "MERCHANT",
-  platform: "PLATFORM",
-  payments: "PAYMENTS",
-  system: "SYSTEM",
+/* Group consecutive messages from the same sender — for tail trim */
+type GroupedMsg = Message & {
+  position: "single" | "top" | "mid" | "bottom";
+  showStamp: boolean;
 };
+function groupMessages(msgs: Message[]): GroupedMsg[] {
+  const out: GroupedMsg[] = [];
+  for (let i = 0; i < msgs.length; i++) {
+    const m = msgs[i];
+    const prev = msgs[i - 1];
+    const next = msgs[i + 1];
+    const samePrev =
+      prev &&
+      prev.from === m.from &&
+      new Date(m.at).getTime() - new Date(prev.at).getTime() < 5 * 60_000;
+    const sameNext =
+      next &&
+      next.from === m.from &&
+      new Date(next.at).getTime() - new Date(m.at).getTime() < 5 * 60_000;
 
-const GROUP_ORDER: MockThread["group"][] = ["TODAY", "THIS WEEK", "EARLIER"];
+    let position: GroupedMsg["position"];
+    if (!samePrev && !sameNext) position = "single";
+    else if (!samePrev && sameNext) position = "top";
+    else if (samePrev && sameNext) position = "mid";
+    else position = "bottom";
+
+    // Show stamp at the start of every new sender-block, or every ~30 min gap
+    const gap = prev
+      ? new Date(m.at).getTime() - new Date(prev.at).getTime()
+      : Infinity;
+    const showStamp = !samePrev || gap > 30 * 60_000;
+
+    out.push({ ...m, position, showStamp });
+  }
+  return out;
+}
+
+/* ── Icons ────────────────────────────────────────────────── */
 
 function SearchIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-      <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4" />
       <path
         d="M10 10L13 13"
         stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="square"
+        strokeWidth="1.4"
+        strokeLinecap="round"
       />
     </svg>
   );
 }
-
-function ChevronRight() {
+function PencilIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      aria-hidden
-      className="ib-thread-chev"
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
-        d="M5 3L9 7L5 11"
+        d="M11 2.5l2.5 2.5L5 13.5H2.5V11L11 2.5z"
         stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
         fill="none"
       />
     </svg>
   );
 }
+function PhoneIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M3 4.5C3 3.7 3.7 3 4.5 3h1.7c.4 0 .7.3.8.6L7.6 5c.1.3 0 .6-.2.8L6.4 6.7c.7 1.4 1.9 2.6 3.3 3.3l1-1c.2-.2.5-.3.8-.2l1.4.6c.3.1.6.4.6.8v1.7c0 .8-.7 1.5-1.5 1.5C7 13.4 3 9.4 3 4.5z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+function InfoIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
+      <path
+        d="M8 7v4M8 5h.01"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+function PlusIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M8 3v10M3 8h10"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+function SendIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path
+        d="M2 7l10-5-3.5 5L12 12 2 7z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+function ChevronLeft() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path
+        d="M9 3L5 7l4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M8 1.8l1.85 3.95 4.35.45-3.25 2.95.95 4.25L8 11.4l-3.9 2 .95-4.25L1.8 6.2l4.35-.45L8 1.8z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+        fill={filled ? "currentColor" : "none"}
+      />
+    </svg>
+  );
+}
 
-/* ── Page ─────────────────────────────────────────────────────── */
+/* ── Attribution banner ─────────────────────────────────────
+   Real agentic affordance — surfaces verified-scan progress
+   and current/max payout for the campaign this conversation
+   belongs to, so the creator can answer "how's it going?"
+   without flipping to /campaigns. */
+
+function AttributionBanner({
+  campaign,
+  attr,
+}: {
+  campaign: string;
+  attr: AttributionStatus;
+}) {
+  const pct = Math.min(
+    100,
+    Math.round((attr.scansVerified / Math.max(1, attr.scansTarget)) * 100),
+  );
+  /* Deadline relative-time depends on Date.now() — defer to after
+     hydration so SSR and client first paint match. */
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    setNow(Date.now());
+  }, []);
+  const dl = new Date(attr.deadlineISO);
+  const dlMs = now == null ? 0 : dl.getTime() - now;
+  const dlDays = Math.round(dlMs / (24 * 60 * 60 * 1000));
+  const dlLabel =
+    now == null
+      ? ""
+      : dlMs <= 0
+        ? "Deadline passed"
+        : dlDays === 0
+          ? "Due today"
+          : `${dlDays}d to deadline`;
+  const isComplete = attr.scansVerified >= attr.scansTarget;
+  const isUrgent = now != null && dlMs > 0 && dlDays <= 2 && !isComplete;
+
+  return (
+    <div
+      className={`msg-attr-banner${isComplete ? " is-complete" : ""}${isUrgent ? " is-urgent" : ""}`}
+      aria-label={`Attribution status for ${campaign}`}
+    >
+      <div className="msg-attr-row">
+        <span className="msg-attr-eyebrow">(ATTRIBUTION) · {campaign}</span>
+        <span className="msg-attr-deadline" suppressHydrationWarning>
+          {dlLabel}
+        </span>
+      </div>
+      <div className="msg-attr-stats">
+        <div className="msg-attr-stat">
+          <span className="msg-attr-stat-num">
+            {attr.scansVerified}
+            <span className="msg-attr-stat-of">/ {attr.scansTarget}</span>
+          </span>
+          <span className="msg-attr-stat-label">verified scans</span>
+        </div>
+        <div className="msg-attr-stat">
+          <span className="msg-attr-stat-num">
+            ${attr.estPayout}
+            <span className="msg-attr-stat-of">/ ${attr.maxPayout}</span>
+          </span>
+          <span className="msg-attr-stat-label">earned · max</span>
+        </div>
+      </div>
+      <div className="msg-attr-bar" role="presentation">
+        <span className="msg-attr-bar-fill" style={{ width: `${pct}%` }} />
+      </div>
+      {isUrgent && pct < 50 && (
+        <p className="msg-attr-action">
+          {attr.scansTarget - attr.scansVerified} more scans needed in{" "}
+          {dlDays === 0 ? "< 1" : dlDays}d — post today to stay on track.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ── Page ────────────────────────────────────────────────── */
 
 export default function InboxMessagesPage() {
-  const router = useRouter();
-  const [threads, setThreads] = useState<MockThread[]>(MOCK_THREADS);
+  /* Threads + thread mutations come from shared context now —
+     mark-read, star toggle, send all propagate to the segmented
+     nav badge + Hub Now view in real time. */
+  const { threads, markThreadRead, toggleStar, sendMessage } = useInboxState();
+
+  const [activeId, setActiveId] = useState<string | null>(
+    threads[0]?.id ?? null,
+  );
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "unread" | "campaigns">("all");
-  const [focusIndex, setFocusIndex] = useState<number>(-1);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-  const searchRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [filter, setFilter] = useState<FilterKey>("all");
+  const [composer, setComposer] = useState("");
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
-  const handleSearch = useCallback((value: string) => {
-    setQuery(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => setDebouncedQuery(value), 200);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  /* Auto-dismiss the small inline toast after 3s */
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  /* Phone button — voice calls aren't shipped yet, but the button
+     reads honest copy + announces to screen readers. */
+  const handleCall = useCallback(() => {
+    setToast("Voice calls launching Q3 — message for now");
   }, []);
 
-  const markRead = useCallback((id: string) => {
-    setThreads((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, unread: false } : t)),
-    );
+  /* Attach button — opens a real file picker. The selected file
+     becomes a placeholder reference in the composer so the demo
+     reads as "attachment queued for next send". */
+  const handleAttach = useCallback(() => {
+    fileInputRef.current?.click();
   }, []);
+  const handleFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setComposer((prev) => (prev ? `${prev} [📎 ${f.name}]` : `[📎 ${f.name}]`));
+    setToast(`Attached ${f.name}`);
+    composerRef.current?.focus();
+    e.target.value = ""; // allow re-pick same file
+  }, []);
+
+  const handleSelect = useCallback(
+    (id: string) => {
+      setActiveId(id);
+      markThreadRead(id);
+    },
+    [markThreadRead],
+  );
+
+  const needsReplyCount = useMemo(() => {
+    const now = Date.now();
+    return threads.filter((t) => {
+      if (t.campaign === null) return false;
+      const lastMsg = t.messages[t.messages.length - 1];
+      if (!lastMsg || lastMsg.from !== "other") return false;
+      return (
+        t.unread || now - new Date(lastMsg.at).getTime() > 12 * 60 * 60 * 1000
+      );
+    }).length;
+  }, [threads]);
 
   const filtered = useMemo(() => {
     let result = threads;
     if (filter === "unread") result = result.filter((t) => t.unread);
-    else if (filter === "campaigns")
-      result = result.filter((t) => t.campaign !== null);
-
-    if (debouncedQuery.trim()) {
-      const q = debouncedQuery.toLowerCase();
+    else if (filter === "needs-reply") {
+      const now = Date.now();
+      result = result.filter((t) => {
+        if (t.campaign === null) return false;
+        const lastMsg = t.messages[t.messages.length - 1];
+        if (!lastMsg || lastMsg.from !== "other") return false;
+        return (
+          t.unread || now - new Date(lastMsg.at).getTime() > 12 * 60 * 60 * 1000
+        );
+      });
+    }
+    if (query.trim()) {
+      const q = query.toLowerCase();
       result = result.filter(
         (t) =>
           t.sender.toLowerCase().includes(q) ||
@@ -206,34 +374,39 @@ export default function InboxMessagesPage() {
       );
     }
     return result;
-  }, [threads, filter, debouncedQuery]);
+  }, [threads, filter, query]);
 
-  const groupedThreads = useMemo(() => {
-    return GROUP_ORDER.map((label) => ({
+  const grouped = useMemo(() => {
+    /* Starred threads bubble to the top in their own group,
+       regardless of recency — audit P2 anchor pattern. */
+    const starredThreads = filtered.filter((t) => t.starred);
+    const dateGroups = GROUP_ORDER.map((label) => ({
       label,
-      threads: filtered.filter((t) => t.group === label),
+      threads: filtered.filter((t) => t.group === label && !t.starred),
     })).filter((g) => g.threads.length > 0);
+
+    return starredThreads.length > 0
+      ? [{ label: "STARRED" as const, threads: starredThreads }, ...dateGroups]
+      : dateGroups;
   }, [filtered]);
 
-  /* Flat ordered list mirrors visual order — drives keyboard nav */
-  const flatThreads = useMemo(
-    () => groupedThreads.flatMap((g) => g.threads),
-    [groupedThreads],
-  );
-
   const unreadCount = threads.filter((t) => t.unread).length;
-  const pinned = useMemo(
-    () => threads.find((t) => t.unread && t.online) ?? threads[0],
-    [threads],
+  const active = useMemo(
+    () => threads.find((t) => t.id === activeId) ?? null,
+    [threads, activeId],
+  );
+  const groupedMessages = useMemo(
+    () => (active ? groupMessages(active.messages) : []),
+    [active],
   );
 
-  /* Reset focus when filter / search results change */
-  useEffect(() => {
-    setFocusIndex((idx) => (idx >= flatThreads.length ? -1 : idx));
-  }, [flatThreads.length]);
+  /* Auto-scroll to bottom of thread when active changes or new msg arrives */
+  useLayoutEffect(() => {
+    if (!bodyRef.current) return;
+    bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+  }, [activeId, active?.messages.length]);
 
-  /* ── Global keyboard shortcuts: J/K nav, Enter open, / focus search,
-     Esc clear / blur. Disabled while typing in inputs.            */
+  /* "/" focuses composer; Esc clears search; J/K cycles list */
   useEffect(() => {
     const handler = (e: globalThis.KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -241,275 +414,437 @@ export default function InboxMessagesPage() {
         target?.tagName === "INPUT" ||
         target?.tagName === "TEXTAREA" ||
         target?.isContentEditable;
+      if (isTyping) return;
 
-      if (e.key === "/" && !isTyping) {
-        e.preventDefault();
-        searchRef.current?.focus();
-        return;
-      }
-
-      if (isTyping) {
-        if (e.key === "Escape") {
-          if (query) {
-            handleSearch("");
-          } else {
-            (target as HTMLInputElement).blur();
-          }
-        }
-        return;
-      }
-
-      if (flatThreads.length === 0) return;
-
+      if (filtered.length === 0) return;
+      const idx = filtered.findIndex((t) => t.id === activeId);
       if (e.key === "j" || e.key === "ArrowDown") {
         e.preventDefault();
-        setFocusIndex((i) => Math.min(flatThreads.length - 1, i + 1));
+        const next = filtered[Math.min(filtered.length - 1, idx + 1)];
+        if (next) handleSelect(next.id);
       } else if (e.key === "k" || e.key === "ArrowUp") {
         e.preventDefault();
-        setFocusIndex((i) => Math.max(0, i - 1));
-      } else if (e.key === "Enter" && focusIndex >= 0) {
-        e.preventDefault();
-        const t = flatThreads[focusIndex];
-        if (t) {
-          markRead(t.id);
-          router.push(`/creator/inbox/${t.id}`);
-        }
+        const prev = filtered[Math.max(0, idx - 1)];
+        if (prev) handleSelect(prev.id);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [flatThreads, focusIndex, query, handleSearch, markRead, router]);
+  }, [filtered, activeId, handleSelect]);
 
-  /* Scroll focused row into view */
-  useEffect(() => {
-    if (focusIndex < 0 || !listRef.current) return;
-    const node = listRef.current.querySelector<HTMLElement>(
-      `[data-thread-idx="${focusIndex}"]`,
-    );
-    node?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [focusIndex]);
+  const handleSend = useCallback(() => {
+    const text = composer.trim();
+    if (!text || !activeId) return;
+    sendMessage(activeId, text);
+    setComposer("");
+    composerRef.current?.focus();
+  }, [composer, activeId, sendMessage]);
 
-  const handleRowKey = useCallback(
-    (e: KeyboardEvent<HTMLAnchorElement>, idx: number) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        const t = flatThreads[idx];
-        if (t) markRead(t.id);
-      }
-    },
-    [flatThreads, markRead],
-  );
+  const handleComposerKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   return (
-    <div className="ib-content msg-content">
-      {/* ── (LINKS) eyebrow — product UI canonical, no parenthetical ──
-         Kept as plain LINKS to match Product register. */}
+    <section
+      className={`ib-content msg-pane-layout${active ? " has-active" : ""}`}
+      aria-label="Messages"
+    >
+      {/* ── Left pane: thread list ─────────────────────────── */}
+      <aside className="msg-list-pane" aria-label="Conversations">
+        <header className="msg-list-pane-header">
+          <PaneHeader
+            flush
+            title="Messages"
+            sub={
+              unreadCount > 0 ? (
+                <PaneSubCount count={unreadCount} label="unread" />
+              ) : (
+                <strong>All read</strong>
+              )
+            }
+            actions={
+              <button
+                type="button"
+                className="ib-icon-btn"
+                aria-label="New conversation"
+                title="New conversation"
+              >
+                <PencilIcon />
+              </button>
+            }
+          />
 
-      {/* Pinned active conversation — single liquid-glass tile (≤1 per viewport).
-         Surfaces highest-priority unread+online thread as a focus magnet. */}
-      {pinned && pinned.unread && (
-        <Link
-          href={`/creator/inbox/${pinned.id}`}
-          onClick={() => markRead(pinned.id)}
-          className="msg-pinned"
-          aria-label={`Open conversation with ${pinned.sender}`}
-        >
-          <span className="msg-pinned-eyebrow">
-            ACTIVE · {ROLE_LABEL[pinned.role]}
-          </span>
-          <div className="msg-pinned-row">
-            <span
-              className="msg-pinned-avatar"
-              style={{ background: avatarBg(pinned.initial) }}
-              aria-hidden
-            >
-              {pinned.initial}
-              {pinned.online && (
-                <span className="msg-pinned-online" aria-hidden />
-              )}
+          <label className="msg-list-search">
+            <span className="msg-list-search-icon" aria-hidden>
+              <SearchIcon />
             </span>
-            <div className="msg-pinned-body">
-              <span className="msg-pinned-sender">{pinned.sender}</span>
-              <span className="msg-pinned-preview">{pinned.preview}</span>
-            </div>
-            <div className="msg-pinned-meta">
-              <span className="msg-pinned-time">
-                {timeAgo(pinned.createdAt)}
-              </span>
-              <span className="msg-pinned-cta">
-                Open
-                <ChevronRight />
-              </span>
-            </div>
-          </div>
-        </Link>
-      )}
+            <input
+              type="search"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Search conversations"
+            />
+          </label>
 
-      {/* Search */}
-      <div className="ib-search-wrap msg-search-wrap">
-        <span className="ib-search-icon" aria-hidden>
-          <SearchIcon />
-        </span>
-        <input
-          ref={searchRef}
-          type="search"
-          className="ib-search-input"
-          placeholder="Search conversations…"
-          value={query}
-          onChange={(e) => handleSearch(e.target.value)}
-          aria-label="Search conversations"
-        />
-        <kbd className="msg-search-kbd" aria-hidden>
-          /
-        </kbd>
-      </div>
+          <FilterChips
+            ariaLabel="Filter conversations"
+            active={filter}
+            onChange={setFilter}
+            options={[
+              { value: "all", label: "All", hideCount: true },
+              { value: "unread", label: "Unread", count: unreadCount },
+              {
+                value: "needs-reply",
+                label: "Needs reply",
+                count: needsReplyCount,
+              },
+            ]}
+          />
+        </header>
 
-      {/* Filter chips */}
-      <div className="ib-filter-row" role="group" aria-label="Filter threads">
-        {(["all", "unread", "campaigns"] as const).map((f) => (
-          <button
-            key={f}
-            type="button"
-            onClick={() => setFilter(f)}
-            aria-pressed={filter === f}
-            className={`ib-chip${filter === f ? " ib-chip--active" : ""}`}
-          >
-            {f === "all" ? "All" : f === "unread" ? "Unread" : "Campaigns"}
-            {f === "unread" && unreadCount > 0 && (
-              <span className="ib-chip-count"> · {unreadCount}</span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* Keyboard hint — subtle parenthetical caption */}
-      {flatThreads.length > 0 && (
-        <p className="msg-hint" aria-hidden>
-          (TIP) <kbd>J</kbd> <kbd>K</kbd> navigate · <kbd>Enter</kbd> open ·{" "}
-          <kbd>/</kbd> search
-        </p>
-      )}
-
-      {/* Thread list */}
-      {filtered.length === 0 ? (
-        <div className="ib-empty msg-empty">
-          <span className="ib-empty-icon" aria-hidden>
-            ✉
-          </span>
-          <p className="ib-empty-title">
-            {query
-              ? "No conversations found"
-              : filter === "unread"
-                ? "Inbox zero."
-                : "Quiet for now."}
-          </p>
-          <p className="ib-empty-body">
-            {query
-              ? `Nothing matches "${query}". Try a different sender or campaign.`
-              : filter === "unread"
-                ? "Every thread is up to date — new messages will appear here."
-                : "Reply to invites or wait for merchant updates — they land here."}
-          </p>
-          {(query || filter !== "all") && (
-            <button
-              type="button"
-              className="msg-empty-reset"
-              onClick={() => {
-                handleSearch("");
-                setFilter("all");
-              }}
-            >
-              Reset filters
-            </button>
+        <div className="msg-list-body" data-lenis-prevent>
+          {grouped.length === 0 ? (
+            <EmptyState
+              title={query ? "No matches." : "Quiet for now."}
+              body={
+                query
+                  ? `Nothing matches "${query}".`
+                  : "New brand replies will land here."
+              }
+            />
+          ) : (
+            grouped.map((g) => (
+              <div key={g.label}>
+                <p className="msg-list-section-label">{g.label}</p>
+                {g.threads.map((t) => {
+                  const isActive = t.id === activeId;
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => handleSelect(t.id)}
+                      aria-pressed={isActive}
+                      className={[
+                        "msg-list-row",
+                        isActive ? "is-active" : "",
+                        t.unread ? "is-unread" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      {t.unread && (
+                        <span className="msg-list-unread-dot" aria-hidden />
+                      )}
+                      <span
+                        className="msg-list-avatar"
+                        style={{ background: avatarBg(t.initial) }}
+                        aria-hidden
+                      >
+                        {t.initial}
+                        {t.online && (
+                          <span
+                            className="msg-list-avatar-online"
+                            aria-hidden
+                          />
+                        )}
+                      </span>
+                      <span className="msg-list-row-body">
+                        <span className="msg-list-row-top">
+                          <span className="msg-list-row-name">
+                            {t.starred && (
+                              <span
+                                className="msg-list-row-star"
+                                aria-label="Starred"
+                              >
+                                ★
+                              </span>
+                            )}
+                            {t.sender}
+                          </span>
+                          <span
+                            className="msg-list-row-time"
+                            suppressHydrationWarning
+                          >
+                            {timeAgo(t.createdAt)}
+                          </span>
+                        </span>
+                        <span className="msg-list-row-preview">
+                          {t.preview}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))
           )}
         </div>
-      ) : (
-        <div ref={listRef}>
-          {(() => {
-            let runningIdx = -1;
-            return groupedThreads.map((group) => (
-              <div key={group.label} className="ib-group">
-                <div className="ib-group-label">
-                  <span>{group.label}</span>
-                  <span className="ib-group-line" aria-hidden />
-                  <span className="msg-group-count">
-                    {group.threads.length}
-                  </span>
-                </div>
+      </aside>
 
-                <div role="list">
-                  {group.threads.map((thread) => {
-                    runningIdx += 1;
-                    const idx = runningIdx;
-                    const isFocused = idx === focusIndex;
-                    return (
-                      <Link
-                        key={thread.id}
-                        role="listitem"
-                        href={`/creator/inbox/${thread.id}`}
-                        aria-label={`Open conversation with ${thread.sender}${thread.unread ? " (unread)" : ""}`}
-                        onClick={() => markRead(thread.id)}
-                        onKeyDown={(e) => handleRowKey(e, idx)}
-                        onMouseEnter={() => setFocusIndex(idx)}
-                        data-thread-idx={idx}
-                        className={`ib-thread-row msg-thread-row${thread.unread ? " ib-thread-row--unread" : ""}${isFocused ? " msg-thread-row--focused" : ""}`}
-                      >
-                        {/* Avatar with online dot */}
-                        <span
-                          className="ib-thread-avatar msg-thread-avatar"
-                          style={{ background: avatarBg(thread.initial) }}
-                          aria-hidden
-                        >
-                          {thread.initial}
-                          {thread.online && (
-                            <span className="msg-thread-online" aria-hidden />
-                          )}
-                        </span>
-
-                        {/* Body */}
-                        <span className="ib-thread-body msg-thread-body">
-                          <span className="msg-thread-row-top">
-                            <span className="ib-thread-sender">
-                              {thread.sender}
-                            </span>
-                            <span className="msg-thread-role">
-                              {ROLE_LABEL[thread.role]}
-                            </span>
-                          </span>
-                          <span className="ib-thread-preview msg-thread-preview">
-                            {thread.preview}
-                          </span>
-                          {thread.campaign && (
-                            <span className="ib-thread-campaign">
-                              {thread.campaign}
-                            </span>
-                          )}
-                        </span>
-
-                        {/* Meta */}
-                        <span className="ib-thread-meta">
-                          <span
-                            className="ib-thread-time"
-                            title={new Date(thread.createdAt).toLocaleString()}
-                          >
-                            {timeAgo(thread.createdAt)}
-                          </span>
-                          {thread.unread && (
-                            <span
-                              className="ib-thread-dot"
-                              aria-label="Unread"
-                            />
-                          )}
-                        </span>
-                      </Link>
-                    );
-                  })}
-                </div>
+      {/* ── Right pane: active conversation ───────────────── */}
+      <section className="msg-thread-pane" aria-label="Conversation">
+        {!active ? (
+          <div className="msg-thread-empty">
+            <span className="msg-thread-empty-icon" aria-hidden>
+              <SearchIcon />
+            </span>
+            <h3 className="msg-thread-empty-title">Pick a conversation.</h3>
+            <p className="msg-thread-empty-body">
+              Tap any thread on the left to read it here. Use J / K to cycle.
+            </p>
+          </div>
+        ) : (
+          <>
+            <header className="msg-thread-header">
+              <button
+                type="button"
+                className="msg-thread-back-btn"
+                onClick={() => setActiveId(null)}
+                aria-label="Back to list"
+              >
+                <ChevronLeft />
+              </button>
+              <span
+                className="msg-thread-header-avatar"
+                style={{ background: avatarBg(active.initial) }}
+                aria-hidden
+              >
+                {active.initial}
+              </span>
+              <div className="msg-thread-header-info">
+                <p className="msg-thread-header-name">{active.sender}</p>
+                <p className="msg-thread-header-meta">
+                  {ROLE_LABEL[active.role]}
+                  {active.online ? " · ONLINE" : ""}
+                  {active.campaign ? ` · ${active.campaign.toUpperCase()}` : ""}
+                </p>
               </div>
-            ));
-          })()}
+              <div className="msg-thread-header-actions">
+                <button
+                  type="button"
+                  className={`msg-thread-icon-btn${active.starred ? " is-starred" : ""}`}
+                  onClick={() => toggleStar(active.id)}
+                  aria-label={
+                    active.starred ? "Unstar conversation" : "Star conversation"
+                  }
+                  aria-pressed={!!active.starred}
+                  title={
+                    active.starred
+                      ? "Unstar (anchor off)"
+                      : "Star (anchor to top)"
+                  }
+                >
+                  <StarIcon filled={!!active.starred} />
+                </button>
+                <button
+                  type="button"
+                  className="msg-thread-icon-btn"
+                  aria-label="Voice call"
+                  title="Voice call (launching Q3)"
+                  onClick={handleCall}
+                >
+                  <PhoneIcon />
+                </button>
+                <button
+                  type="button"
+                  className={`msg-thread-icon-btn${infoOpen ? " is-active" : ""}`}
+                  aria-label={
+                    infoOpen
+                      ? "Hide conversation info"
+                      : "Show conversation info"
+                  }
+                  aria-pressed={infoOpen}
+                  title="Conversation info"
+                  onClick={() => setInfoOpen((v) => !v)}
+                >
+                  <InfoIcon />
+                </button>
+              </div>
+            </header>
+
+            {/* Attribution status banner — pinned just below header
+                when this conversation is tied to an active campaign.
+                Lets the creator answer "how's the campaign going?"
+                without leaving the thread. P1 from audit. */}
+            {active.attribution && active.campaign && (
+              <AttributionBanner
+                campaign={active.campaign}
+                attr={active.attribution}
+              />
+            )}
+
+            <div className="msg-thread-body" ref={bodyRef} data-lenis-prevent>
+              {groupedMessages.map((m) => {
+                const isSelf = m.from === "self";
+                const groupedClass =
+                  m.position === "top"
+                    ? "is-grouped-top"
+                    : m.position === "mid"
+                      ? "is-grouped-mid"
+                      : m.position === "bottom"
+                        ? "is-grouped-bottom"
+                        : "is-single";
+                const showAvatar =
+                  !isSelf &&
+                  (m.position === "single" || m.position === "bottom");
+                return (
+                  <div key={m.id}>
+                    {m.showStamp && (
+                      <p className="msg-bubble-time" suppressHydrationWarning>
+                        {formatBubbleStamp(m.at)}
+                      </p>
+                    )}
+                    <div
+                      className={[
+                        "msg-bubble-row",
+                        isSelf ? "is-self" : "",
+                        groupedClass,
+                        showAvatar ? "show-avatar" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      <span
+                        className="msg-bubble-avatar"
+                        style={{ background: avatarBg(active.initial) }}
+                        aria-hidden
+                      >
+                        {active.initial}
+                      </span>
+                      <div
+                        className={`msg-bubble msg-bubble--${isSelf ? "out" : "in"}`}
+                      >
+                        {m.text}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Honest composer — no fake AI badge, no theatrical
+                "suggested replies". Will return when grounded LLM
+                generation lands (see audit P2). */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,.pdf,.heic,.png,.jpg,.jpeg"
+              onChange={handleFile}
+              style={{ display: "none" }}
+              aria-hidden
+            />
+            <div className="msg-composer">
+              <button
+                type="button"
+                className="msg-composer-attach"
+                aria-label="Add attachment"
+                title="Attach photo / scan-log / placement evidence"
+                onClick={handleAttach}
+              >
+                <PlusIcon />
+              </button>
+              <textarea
+                ref={composerRef}
+                className="msg-composer-input"
+                placeholder={`Message ${active.sender} · Enter to send`}
+                value={composer}
+                onChange={(e) => setComposer(e.target.value)}
+                onKeyDown={handleComposerKey}
+                rows={1}
+                aria-label="Message"
+              />
+              <button
+                type="button"
+                className="msg-composer-send"
+                onClick={handleSend}
+                disabled={!composer.trim()}
+                aria-label="Send"
+                title="Send (Enter)"
+              >
+                <SendIcon />
+              </button>
+            </div>
+
+            {/* Info panel — slides down from the header when toggled.
+                Shows campaign details + brand contact info + shoot
+                window. Replaces the fake decorative info button with
+                a real reveal. */}
+            {infoOpen && (
+              <aside
+                className="msg-info-panel"
+                aria-label="Conversation details"
+              >
+                <button
+                  type="button"
+                  className="msg-info-close"
+                  onClick={() => setInfoOpen(false)}
+                  aria-label="Close info"
+                >
+                  ×
+                </button>
+                <p className="msg-info-eyebrow">(Conversation details)</p>
+                <h3 className="msg-info-title">{active.sender}</h3>
+                {active.campaign && (
+                  <dl className="msg-info-list">
+                    <div className="msg-info-row">
+                      <dt>Campaign</dt>
+                      <dd>{active.campaign}</dd>
+                    </div>
+                    {active.attribution && (
+                      <>
+                        <div className="msg-info-row">
+                          <dt>Verified scans</dt>
+                          <dd>
+                            {active.attribution.scansVerified} /{" "}
+                            {active.attribution.scansTarget}
+                          </dd>
+                        </div>
+                        <div className="msg-info-row">
+                          <dt>Earned · max</dt>
+                          <dd>
+                            ${active.attribution.estPayout} / $
+                            {active.attribution.maxPayout}
+                          </dd>
+                        </div>
+                        <div className="msg-info-row">
+                          <dt>Deadline</dt>
+                          <dd>
+                            {new Date(
+                              active.attribution.deadlineISO,
+                            ).toLocaleDateString(undefined, {
+                              weekday: "short",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </dd>
+                        </div>
+                      </>
+                    )}
+                    <div className="msg-info-row">
+                      <dt>Status</dt>
+                      <dd>{active.online ? "Active now" : "Offline"}</dd>
+                    </div>
+                  </dl>
+                )}
+                <p className="msg-info-foot">
+                  Need to escalate? Push support is on it 24/7.
+                </p>
+              </aside>
+            )}
+          </>
+        )}
+      </section>
+
+      {/* Inline toast for phone / attach feedback */}
+      {toast && (
+        <div className="msg-toast" role="status" aria-live="polite">
+          {toast}
         </div>
       )}
-    </div>
+    </section>
   );
 }
