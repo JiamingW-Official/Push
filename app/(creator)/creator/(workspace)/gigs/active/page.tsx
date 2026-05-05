@@ -97,11 +97,13 @@ function GigCard({ gig, now }: { gig: Invite; now: number | null }) {
   const stretch = gig.payoutTiers.find((t) => t.label === "Stretch");
   const steps = gig.acceptSteps ?? [];
   const doneCount = steps.filter((s) => s.done).length;
+  const allDone = steps.length > 0 && doneCount === steps.length;
   const daysLeft = now ? shootDaysLeft(gig.shootWindow, now) : null;
   const isClosed = daysLeft === "Window closed";
   const isUrgent =
-    daysLeft === "Last day" ||
-    (daysLeft?.endsWith("d left") && parseInt(daysLeft) <= 2);
+    !isClosed &&
+    (daysLeft === "Last day" ||
+      (daysLeft?.endsWith("d left") ? parseInt(daysLeft) <= 2 : false));
 
   return (
     <article className={`gig-card${isClosed ? " gig-card--closed" : ""}`}>
@@ -168,62 +170,108 @@ function GigCard({ gig, now }: { gig: Invite; now: number | null }) {
           </div>
         </div>
 
-        {/* Checklist */}
+        {/* Checklist — collapsed to banner when all steps done */}
         {steps.length > 0 && (
           <div className="gig-card-checklist">
-            <div className="gig-card-checklist-head">
-              <span className="gig-card-eyebrow">CHECKLIST</span>
-              <span className="gig-card-checklist-frac">
-                {doneCount}/{steps.length}
-              </span>
-            </div>
-            <div
-              className="gig-card-progress-track"
-              role="progressbar"
-              aria-valuenow={doneCount}
-              aria-valuemax={steps.length}
-              aria-label={`${doneCount} of ${steps.length} steps complete`}
-            >
+            {allDone ? (
               <div
-                className="gig-card-progress-fill"
-                style={{ width: `${(doneCount / steps.length) * 100}%` }}
-              />
-            </div>
-            <ul className="gig-card-steps" role="list">
-              {steps.map((step) => (
-                <li
-                  key={step.id}
-                  className={`gig-card-step${step.done ? " is-done" : ""}`}
+                className="gig-card-ready"
+                aria-label="All setup steps complete"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden
                 >
-                  <StepCheck done={step.done} />
-                  {step.done ? (
-                    <span>{step.label}</span>
-                  ) : (
-                    <Link href={step.href}>{step.label}</Link>
-                  )}
-                </li>
-              ))}
-            </ul>
+                  <circle cx="8" cy="8" r="7.25" fill="var(--ink)" />
+                  <path
+                    d="M4.5 8.25l2.25 2.25 4.5-4.5"
+                    stroke="var(--snow)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span>All set · ready to shoot</span>
+              </div>
+            ) : (
+              <>
+                <div className="gig-card-checklist-head">
+                  <span className="gig-card-eyebrow">CHECKLIST</span>
+                  <span className="gig-card-checklist-frac">
+                    {doneCount}/{steps.length}
+                  </span>
+                </div>
+                <div
+                  className="gig-card-progress-track"
+                  role="progressbar"
+                  aria-valuenow={doneCount}
+                  aria-valuemax={steps.length}
+                  aria-label={`${doneCount} of ${steps.length} steps complete`}
+                >
+                  <div
+                    className="gig-card-progress-fill"
+                    style={{ width: `${(doneCount / steps.length) * 100}%` }}
+                  />
+                </div>
+                <ul className="gig-card-steps" role="list">
+                  {steps.map((step) => (
+                    <li
+                      key={step.id}
+                      className={`gig-card-step${step.done ? " is-done" : ""}`}
+                    >
+                      <StepCheck done={step.done} />
+                      {step.done ? (
+                        <span>{step.label}</span>
+                      ) : (
+                        <Link href={step.href}>{step.label}</Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         )}
 
-        {/* Footer CTAs */}
+        {/* Footer CTAs — simplified when ready to shoot */}
         <div className="gig-card-foot">
-          <Link
-            href={`/creator/campaigns/${gig.id}/calendar`}
-            className="gig-card-cta"
-          >
-            Open Calendar
-          </Link>
-          <Link href={gig.briefHref} className="gig-card-cta">
-            View Brief
-          </Link>
-          <Link
-            href="/creator/inbox/messages"
-            className="gig-card-cta gig-card-cta--ghost"
-          >
-            Message Brand
-          </Link>
+          {allDone ? (
+            <>
+              <Link
+                href={`/creator/campaigns/${gig.id}/shoot`}
+                className="gig-card-cta gig-card-cta--go"
+              >
+                Go shoot →
+              </Link>
+              <Link
+                href="/creator/inbox/messages"
+                className="gig-card-cta gig-card-cta--ghost"
+              >
+                Message Brand
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href={`/creator/campaigns/${gig.id}/calendar`}
+                className="gig-card-cta"
+              >
+                Open Calendar
+              </Link>
+              <Link href={gig.briefHref} className="gig-card-cta">
+                View Brief
+              </Link>
+              <Link
+                href="/creator/inbox/messages"
+                className="gig-card-cta gig-card-cta--ghost"
+              >
+                Message Brand
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </article>

@@ -544,6 +544,9 @@ export default function InvitesPage() {
   const [batchConfirming, setBatchConfirming] = useState(false);
   const [filter, setFilter] = useState<InviteFilter>("all");
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [acceptToast, setAcceptToast] = useState<{ brand: string } | null>(
+    null,
+  );
 
   const pending = invites.filter((i) => i.status === "pending");
   const topMatches = pending.filter((i) => i.matchScore >= 90);
@@ -605,8 +608,15 @@ export default function InvitesPage() {
   );
 
   const handleAccept = useCallback(
-    (id: string) => acceptInvite(id),
-    [acceptInvite],
+    (id: string) => {
+      const invite = invites.find((i) => i.id === id);
+      acceptInvite(id);
+      if (invite) {
+        setAcceptToast({ brand: invite.brand });
+        setTimeout(() => setAcceptToast(null), 3500);
+      }
+    },
+    [acceptInvite, invites],
   );
   const handleDecline = useCallback(
     (id: string) => {
@@ -728,7 +738,7 @@ export default function InvitesPage() {
         onDecline={handleDecline}
       />
 
-      {/* Decline-with-Undo toast — 5s window, replaces 2-step confirm */}
+      {/* Decline-with-Undo toast */}
       {declineToast && (
         <div className="inv-toast" role="status" aria-live="polite">
           <span className="inv-toast-text">
@@ -741,6 +751,22 @@ export default function InvitesPage() {
           >
             Undo
           </button>
+        </div>
+      )}
+
+      {/* Accept confirmation toast — 3.5s, no undo needed */}
+      {acceptToast && !declineToast && (
+        <div
+          className="inv-toast inv-toast--accept"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="inv-toast-text">
+            <strong>{acceptToast.brand}</strong> moved to Active
+          </span>
+          <Link href="/creator/gigs/active" className="inv-toast-link">
+            View →
+          </Link>
         </div>
       )}
     </section>
