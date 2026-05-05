@@ -78,10 +78,10 @@
 /* KPI label */
 .hp-hero-stat-label {
   display: block;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.50);
   margin-top: 6px;
@@ -99,10 +99,10 @@
 
 /* Hero eyebrow — refined */
 .hp-hero-eyebrow {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
   margin: 0 0 16px;
@@ -127,7 +127,7 @@
 
 /* Hero subtitle — v12 spec: 20px, lh 1.40, ls -0.1em */
 .hp-hero-sub {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
@@ -223,20 +223,20 @@
 
 /* Tile eyebrows */
 .hp-tile-eyebrow-snow {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
   margin: 0 0 16px;
 }
 
 .hp-tile-eyebrow-ink {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 16px;
@@ -244,7 +244,7 @@
 
 /* Body on tiles — v12 spec: 20px, lh 1.40, ls -0.1em */
 .hp-tile-body-snow {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 20px;
   color: rgba(255, 255, 255, 0.60);
   line-height: 1.40;
@@ -254,7 +254,7 @@
 }
 
 .hp-tile-body-ink {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 20px;
   color: var(--ink-3);
   line-height: 1.40;
@@ -265,8 +265,8 @@
 
 /* Tile CTAs — link labels at bottom of tile */
 .hp-tile-cta-snow {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -276,8 +276,8 @@
 }
 
 .hp-tile-cta-ink {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -340,10 +340,10 @@
 
 /* KPI eyebrow label */
 .hp-kpi-label {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.40);
   margin: 0;
@@ -439,10 +439,10 @@
 
 /* Row number — mono eyebrow style */
 .hp-how-num {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
 }
 
@@ -459,7 +459,7 @@
 
 /* Body — v12 spec: 20px, lh 1.40, ls -0.1em */
 .hp-how-step-body {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 20px;
   color: var(--ink-3);
   line-height: 1.40;
@@ -525,7 +525,7 @@
 
 /* Ticket body — v12 spec: 20px, lh 1.40, ls -0.1em */
 .hp-ticket-body {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
@@ -551,7 +551,7 @@
   min-width: 200px;
   height: 48px;
   padding: 0 16px;
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 16px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.72);
@@ -567,7 +567,7 @@
 
 /* Submit confirmation */
 .hp-submit-confirm {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 18px;
   color: var(--ink);
   text-align: center;

@@ -50,7 +50,7 @@
 }
 
 .wallet-empty-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -59,8 +59,8 @@
 }
 
 .wallet-empty-body {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink-3);
   max-width: 56ch;
@@ -69,8 +69,8 @@
 
 .wallet-empty-cell {
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   padding: 32px !important;
 }
@@ -153,7 +153,7 @@
 }
 
 .wallet-method-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -161,14 +161,14 @@
 }
 
 .wallet-method-detail {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
 }
 
 .wallet-method-fee {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -183,8 +183,8 @@
 /* ── Badges ──────────────────────────────────────────────── */
 
 .wallet-badge {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -231,8 +231,8 @@
 /* ── Action buttons (Ghost variant) ──────────────────────── */
 
 .wallet-action-btn {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -273,8 +273,8 @@
 
 /* Add-method dashed CTA */
 .wallet-add-method-btn {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -324,8 +324,8 @@
 }
 
 .wallet-filter-select {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   background: var(--surface-2);
@@ -350,8 +350,8 @@
 }
 
 .wallet-export-btn {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -394,13 +394,13 @@
 .wallet-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
-  font-family: var(--font-mono);
+  font-size: 14px;
+  font-family: var(--font-body);
 }
 
 .wallet-table th {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -447,17 +447,17 @@
 
 .wallet-method-cell__detail {
   color: var(--ink-4);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .wallet-table .amount-col {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
 .wallet-table .net-col {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 800;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -465,7 +465,7 @@
 
 .wallet-table .fee-col {
   color: var(--ink-4);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* Status pill for withdrawal rows */
@@ -473,9 +473,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 .wallet-status-dot {
@@ -503,8 +503,8 @@
 }
 
 .wallet-failed-reason {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--brand-red);
   margin-bottom: 8px;
 }
@@ -521,8 +521,8 @@
 }
 
 .wallet-tax-year-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -541,8 +541,8 @@
 }
 
 .wallet-tax-sub {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(248, 244, 232, 0.55);
 }
 
@@ -561,8 +561,8 @@
 }
 
 .wallet-tax-card-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -584,7 +584,7 @@
 }
 
 .wallet-1099-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -593,8 +593,8 @@
 }
 
 .wallet-1099-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink-3);
   margin-bottom: 24px;
@@ -602,8 +602,8 @@
 
 /* Tax CTA — Filled Primary Brand Red */
 .wallet-tax-cta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -649,8 +649,8 @@
 .wallet-w9-row:last-of-type  { border-bottom: none; }
 
 .wallet-w9-key {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -659,15 +659,15 @@
 }
 
 .wallet-w9-val {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   text-align: right;
 }
 
 .wallet-w9-val--address {
   max-width: 200px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -712,8 +712,8 @@
 }
 
 .wallet-bar-month {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -745,8 +745,8 @@
 }
 
 .wallet-estimate-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -755,11 +755,11 @@
   color: var(--ink);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .wallet-estimate-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -773,8 +773,8 @@
 }
 
 .wallet-tax-disclaimer {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink-4);
   margin-top: 24px;
@@ -867,8 +867,8 @@
 
 .wallet-form-label {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -877,8 +877,8 @@
 }
 
 .wallet-form-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -889,7 +889,7 @@
 .wallet-form-input,
 .wallet-form-select {
   width: 100%;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   background: var(--snow);
   border: 1px solid var(--mist);
@@ -923,15 +923,15 @@
 }
 
 .wallet-form-error {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--brand-red);
   margin: 8px 0 0;
 }
 
 .wallet-form-hint {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 8px 0 0;
 }
@@ -969,8 +969,8 @@
 }
 
 .wallet-withdraw-net-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -979,7 +979,7 @@
 }
 
 .wallet-withdraw-net-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(40px, 5vw, 56px);
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -989,8 +989,8 @@
 }
 
 .wallet-withdraw-fee-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
 }
@@ -1017,8 +1017,8 @@
 }
 
 .wallet-modal-btn {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1115,7 +1115,7 @@
 }
 
 .wallet-method-type-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -1127,8 +1127,8 @@
 }
 
 .wallet-method-type-fee {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -1137,16 +1137,16 @@
   border-left: 3px solid var(--accent-blue);
   padding: 16px;
   margin-bottom: 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink-3);
   border-radius: 0 8px 8px 0;
 }
 
 .wallet-stripe-success {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent-blue-deep);
   margin: 0;
@@ -1157,8 +1157,8 @@
 
 /* Filled Secondary (Stripe blue) */
 .wallet-stripe-connect-btn {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1210,8 +1210,8 @@
   right: 32px;
   background: var(--char);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   padding: 16px 24px;
   z-index: 2000;

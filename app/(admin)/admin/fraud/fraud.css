@@ -38,7 +38,7 @@
 
 .fraud-hero__eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
 }
 
 .fraud-hero__stat-label {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -122,7 +122,7 @@
 }
 
 .fraud-filters__label {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -139,7 +139,7 @@
 .fraud-filters__select,
 .fraud-filters__input {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   background: var(--surface);
@@ -166,16 +166,16 @@
 }
 
 .fraud-filters__range-sep {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
 }
 
 .fraud-filters__clear {
   /* Ghost button variant */
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink);
   background: transparent;
@@ -206,14 +206,14 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   border-bottom: 2px solid var(--brand-red);
   transition: height 200ms ease, opacity 200ms ease;
 }
 
 .fraud-bulk-bar__count {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 900;
   letter-spacing: -0.03em;
@@ -229,10 +229,10 @@
 
 .fraud-bulk-btn {
   /* Pill variant on dark surface */
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
@@ -284,7 +284,7 @@
   padding: var(--space-2) var(--space-3);
   margin-top: var(--space-4);
   border-bottom: 2px solid var(--ink);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -367,21 +367,21 @@
 
 /* Event ID */
 .fraud-row__id {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink);
 }
 
 .fraud-row__qr {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
 }
 
 /* Risk score */
 .fraud-score {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 900;
   letter-spacing: -0.03em;
@@ -399,13 +399,13 @@
 
 /* Creator/merchant column */
 .fraud-row__creator {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .fraud-row__merchant {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
 }
@@ -417,12 +417,12 @@
   gap: 4px;
 }
 
-/* v11 chip spec: 6px radius / 4×8 padding / mono / 12px / 600 / uppercase / 0.04em */
+/* v11 chip spec: 6px radius / 4×8 padding / display / 12px / 600 / uppercase / 0.06em */
 .fraud-chip {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 8px;
   border-radius: var(--r-sm, 6px);
@@ -462,14 +462,14 @@
 
 /* Device / IP */
 .fraud-row__ip {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
 .fraud-row__device {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
 }
@@ -479,10 +479,10 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 8px;
   border-radius: var(--r-sm, 6px);
@@ -527,10 +527,10 @@
 }
 
 .fraud-action-btn {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 8px;
   border-radius: 8px;
@@ -635,7 +635,7 @@
 }
 
 .fraud-detail__section-title {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -656,7 +656,7 @@
 .fraud-log__entry {
   display: flex;
   gap: var(--space-2);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -673,7 +673,7 @@
 
 /* History table */
 .fraud-history {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .fraud-history__row {
@@ -700,9 +700,9 @@
 }
 
 .fraud-history__score {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 /* Map placeholder */
@@ -719,7 +719,7 @@
 }
 
 .fraud-map__label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--graphite);
   text-align: center;
@@ -749,7 +749,7 @@
   left: var(--space-2);
   display: flex;
   gap: var(--space-2);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -782,7 +782,7 @@
   padding: 6px var(--space-2);
   background: var(--surface);
   border: 1px solid var(--line);
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: background var(--t-fast);
 }
@@ -792,7 +792,7 @@
 }
 
 .fraud-related__score {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 900;
   letter-spacing: -0.02em;
@@ -813,7 +813,7 @@
 }
 
 .fraud-related__rule {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 1px;
 }
@@ -840,14 +840,14 @@
 }
 
 .fraud-rules-panel__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .fraud-rules-panel__count {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   background: var(--brand-red);
@@ -905,14 +905,14 @@
 }
 
 .fraud-rule-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 2px;
 }
 
 .fraud-rule-desc {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.4;
   margin-bottom: var(--space-1);
@@ -925,10 +925,10 @@
 }
 
 .fraud-rule-threshold {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-blue);
   background: var(--accent-blue-tint);
@@ -937,7 +937,7 @@
 }
 
 .fraud-rule-triggered {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 900;
   letter-spacing: -0.02em;
@@ -949,7 +949,7 @@
 
 .fraud-rule-triggered__label {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1010,10 +1010,10 @@
 
 .fraud-page-btn {
   /* Pill variant */
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 8px 16px;
   border: 1px solid var(--hairline);
   border-radius: 8px;
@@ -1043,7 +1043,7 @@
 }
 
 .fraud-page-info {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--graphite);
   padding: 0 var(--space-2);

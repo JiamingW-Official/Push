@@ -1,7 +1,7 @@
 /* ============================================================
    Push — API Docs  |  Design.md compliant
    All border-radius: 0. Colors from --var tokens only.
-   Fonts: Darky (headings) + CSGenioMono (everything else).
+   Fonts: Darky (headings) + Open Sans (body/UI).
    ============================================================ */
 
 /* ── Layout ─────────────────────────────────────────────── */
@@ -122,7 +122,7 @@
 
 .api-toc-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -185,7 +185,7 @@
 /* Section header */
 .api-section-eyebrow {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -225,7 +225,7 @@
 }
 
 .api-subsection-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -259,7 +259,7 @@
 
 .api-method {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -307,7 +307,7 @@
 
 .api-table th {
   text-align: left;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -353,7 +353,7 @@
 
 .api-param-required {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -362,7 +362,7 @@
 
 .api-param-optional {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -392,7 +392,7 @@
 
 .api-code-lang {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -401,7 +401,7 @@
 
 .api-code-copy {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -444,7 +444,7 @@
 .api-code-body pre {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--surface-3);
   white-space: pre;
@@ -491,7 +491,7 @@
 
 .api-tab {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -525,7 +525,7 @@
 
 .api-example-title {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -574,7 +574,7 @@
 
 .api-note-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -605,7 +605,7 @@
 .api-rate-table th {
   background: var(--surface);
   text-align: left;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -638,7 +638,7 @@
 .api-error-table th {
   background: var(--ink);
   text-align: left;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -698,7 +698,7 @@
 
 .api-event-desc {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.5;
 }
@@ -728,7 +728,7 @@
 }
 
 .api-sdk-lang {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -743,7 +743,7 @@
 
 .api-sdk-status {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -809,7 +809,7 @@
 .api-step-body {}
 
 .api-step-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
@@ -849,7 +849,7 @@
 
 .api-scope-desc {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.5;
 }

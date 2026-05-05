@@ -97,8 +97,8 @@ body:has(.dh-shell) .dh-main:has(.disc) {
   color: var(--snow);
   padding: 8px 16px;            /* 8px grid ✓ */
   border-radius: 8px;            /* §9 button radius */
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;

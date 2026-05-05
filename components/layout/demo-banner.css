@@ -28,8 +28,8 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.10);
 
   color: var(--snow, #fff);
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -63,8 +63,8 @@
 }
 
 .demo-chip__tip {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: none;
@@ -116,7 +116,7 @@
     bottom: 70px; /* clear of mobile bottom dock */
     right: 12px;
     height: 30px;
-    font-size: 10px;
+    font-size: 14px;
     padding: 0 8px 0 12px;
     gap: 8px;
     max-width: 180px;

@@ -1,5 +1,5 @@
 /* ============================================================
-   Creator Discover — v11 refinement (Photo Grid + Sticky Glass Rail)
+   Creator Discover — v12 rebuild (Photo Grid + Drawer + Map Modal)
    Design.md anchors:
      § 2     Closed Allowed-Color List (warm-gray ladder + brand)
      § 4     iOS 26 continuous radii (--r-md / --r-pill / --r-xl)
@@ -26,12 +26,26 @@
   100% { transform: scale(1); }
 }
 
+@keyframes disc-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes disc-drawer-in {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(0.96); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes disc-map-modal-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* Page-scoped tokens — derived from Design.md, not new colors */
 .disc {
-  --disc-gutter:        10vw;    /* matches shell --main-pad; 6vw/24px/16px on breakpoints */
-  --disc-split-pad:     24px;    /* narrower fixed pad inside the MAP split-list pane */
-  --disc-toolbar-h:     72px;                     /* 9 × 8px */
-  --disc-cat-strip-h:   64px;                     /* 8 × 8px */
+  --disc-gutter:      10vw;    /* matches shell --main-pad; 6vw/24px/16px on breakpoints */
+  --disc-toolbar-h:   72px;    /* 9 × 8px */
+  --disc-cat-strip-h: 64px;    /* 8 × 8px */
   background: var(--snow);
   color: var(--ink);
 }
@@ -66,10 +80,10 @@
 /* Canonical Product eyebrow — no parens (Marketing uses parens) */
 .cw-page.disc .cw-eyebrow,
 .cw-page.disc .cw-eyebrow--live {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0;
@@ -99,7 +113,6 @@
   -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(1.04);
   backdrop-filter: blur(48px) saturate(200%) brightness(1.04);
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-  /* inset top glow — lifts the bar off the page */
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.90),
               0 1px 0 rgba(0, 0, 0, 0.04),
               0 4px 32px rgba(0, 0, 0, 0.04);
@@ -130,7 +143,7 @@
   border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.82);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   outline: none;
@@ -155,56 +168,94 @@
               0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
+/* Toolbar right — single liquid-glass cluster: [FILTERS | GRID / MAP] */
 .disc-toolbar-right {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 0;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 0.5px solid rgba(0, 0, 0, 0.09);
+  border-radius: var(--r-pill);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.90),
+              0 2px 12px rgba(0,0,0,0.07);
 }
 
-/* Filter trigger — uses .btn-pill from globals + a count chip */
+/* Divider between filter btn and view toggle */
+.disc-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.10);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+/* Filter trigger — pill inside glass cluster */
 .disc-filter-btn {
-  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease, transform 150ms ease;
 }
+.disc-filter-btn:hover { background: rgba(0,0,0,0.05); transform: none; }
 
-.disc-filter-btn-count {
+/* Active badge inside filter button */
+.disc-filter-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 6px;
-  margin-left: 4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
   background: var(--brand-red);
   color: var(--snow);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: var(--r-pill);
   letter-spacing: 0;
+  line-height: 1;
 }
 
-/* View toggle — iOS 26 segmented control */
+/* View toggle — lives inside the same glass cluster */
 .disc-view-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 3px;
-  background: rgba(0, 0, 0, 0.07);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--r-pill);
+  gap: 2px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   flex-shrink: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.10);
+  box-shadow: none;
 }
 
 .disc-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   height: 32px;
   padding: 0 14px;
   border: none;
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -227,77 +278,6 @@
 .disc-view-btn:focus-visible {
   outline: 4px solid var(--brand-red-focus);
   outline-offset: 2px;
-}
-
-/* ── Filter panel — drops from Filter trigger ────────────── */
-
-.disc-filter-panel {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  width: 360px;
-  background: var(--surface);
-  border-radius: var(--r-xl);                      /* 16px — floating panel */
-  padding: 24px;
-  z-index: 100;
-  box-shadow: var(--shadow-3);
-  animation: disc-card-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.disc-filter-panel-title {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0 0 16px;
-}
-
-.disc-filter-group { margin-bottom: 24px; }
-.disc-filter-group:last-of-type { margin-bottom: 0; }
-
-.disc-filter-group-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin-bottom: 8px;
-  display: block;
-}
-
-.disc-filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* Filter chips piggyback on .btn-pill (globals); only sizing override */
-.disc-filter-options .btn-pill {
-  font-size: 12px;
-  padding: 6px 14px;                               /* slimmer for dense panel */
-  letter-spacing: 0.04em;
-}
-
-.disc-filter-panel-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding-top: 16px;
-  margin-top: 8px;
-  border-top: 1px solid var(--hairline);
-}
-
-/* The two footer buttons reuse .btn-ghost / .btn-primary from globals;
-   we only need to compress them slightly to fit a 360px panel. */
-.disc-filter-panel-footer .btn-ghost,
-.disc-filter-panel-footer .btn-primary {
-  height: 40px;
-  padding: 10px 20px;
-  font-size: 13px;
 }
 
 /* ── Category strip — pill row, sits below toolbar ──────── */
@@ -331,6 +311,13 @@
   letter-spacing: 0.04em;
 }
 
+/* Active category — ink fill */
+.disc-cat-btn--active {
+  background: var(--ink) !important;
+  color: var(--snow) !important;
+  border-color: transparent !important;
+}
+
 /* ── Sort / meta row ────────────────────────────────────── */
 
 .disc-grid-meta {
@@ -348,7 +335,7 @@
 }
 
 .disc-sort-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   color: var(--ink-4);
@@ -370,14 +357,15 @@
 }
 
 .disc-sort-btn {
+  position: relative;
   height: 32px;
   padding: 0 14px;
   border: none;
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -400,6 +388,32 @@
   outline: 4px solid var(--brand-red-focus);
   outline-offset: 2px;
 }
+
+/* Sort tooltip — appears on hover via data-tooltip attribute */
+[data-tooltip] { position: relative; }
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 240px;
+  white-space: normal;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--snow);
+  background: var(--ink);
+  border-radius: 6px;
+  padding: 6px 10px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease 80ms;
+  z-index: 200;
+}
+[data-tooltip]:hover::after { opacity: 1; }
 
 /* ── Grid — 12-col / 24px gutter / token padding ────────── */
 
@@ -439,6 +453,18 @@
 .disc-card:active { transform: translate(2px, 2px) scale(0.997); }
 .disc-card--active .disc-card-img-wrap { box-shadow: var(--shadow-2); }
 
+/* Rejected — 60% opacity; CTA hidden via JSX */
+.disc-card--rejected { opacity: 0.6; }
+
+/* Compact — used in map rail (narrower, shorter image) */
+.disc-card--compact {
+  width: 192px;
+  flex-shrink: 0;
+}
+.disc-card--compact .disc-card-img-wrap {
+  aspect-ratio: 3 / 4;
+}
+
 .disc-card-img-wrap {
   position: relative;
   aspect-ratio: 4 / 5;                             /* § 8.7 — Photo Card portrait */
@@ -476,47 +502,74 @@
   pointer-events: none;
 }
 
-/* Title overlay (Photo Card title) */
-.disc-card-overlay {
+/* ── Photo overlay liquid-glass (uniform brightness) ─────────
+   All floating overlays on a card photo use the same bright glass
+   so they read consistently across any photo luminance. */
+.disc-card-tier-chip,
+.disc-card-badge,
+.disc-card-arrow,
+.disc-card-save {
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.18) 60%),
+    rgba(255, 255, 255, 0.46);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.62);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.18),
+    0 1px 4px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Tier chip — top-left, liquid glass */
+.disc-card-tier-chip {
   position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
-  display: flex;
-  flex-direction: column;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
-  z-index: 2;
+  padding: 5px 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-radius: var(--r-pill);
+  z-index: 3;
   pointer-events: none;
 }
 
-.disc-card-overlay-title {
-  font-family: var(--font-display);
-  font-size: 20px;
+.disc-card-tier-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Scarcity badge — top-center (different from tier chip top-left) */
+.disc-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  line-height: 1.20;
-  letter-spacing: -0.005em;
-  color: var(--snow);
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
-}
-
-.disc-card-overlay-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+  border-radius: var(--r-pill);
+  z-index: 3;
+  pointer-events: none;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Save button — true liquid-glass badge (§ 8.9.6) */
+/* Save button — top-right, liquid glass */
 .disc-card-save {
   position: absolute;
   top: 12px;
@@ -526,16 +579,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.18);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 0.5px solid rgba(255, 255, 255, 0.42);
-  border-radius: 50%;
   font-size: 17px;
   cursor: pointer;
   z-index: 3;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18),
-              inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  border-radius: 50%;
   transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
               background 160ms ease;
 }
@@ -551,31 +598,25 @@
 }
 .disc-card-save--saved { color: var(--brand-red); }
 
-/* Scarcity badge — true liquid-glass pill, top-left */
-.disc-card-badge {
+/* Not selected overlay — shown on rejected cards */
+.disc-card-not-selected {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 6px 12px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--snow);
-  background: rgba(10, 10, 10, 0.48);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
-  border: 0.5px solid rgba(255, 255, 255, 0.22);
-  border-radius: var(--r-pill);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20),
-              inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  z-index: 3;
+  background: rgba(10, 10, 10, 0.58);
+  z-index: 4;
   pointer-events: none;
 }
 
-/* Carousel arrows — always visible, brighter than .lg-surface--badge default
-   so the icon reads cleanly against any photo regardless of luminance. */
+/* Carousel arrows — opacity 0 by default, reveal on card hover */
 .disc-card-arrow {
   position: absolute;
   top: 50%;
@@ -589,15 +630,12 @@
   justify-content: center;
   cursor: pointer;
   z-index: 3;
-  opacity: 0.85;
+  opacity: 0;                                      /* hidden by default */
   transition:
-    opacity 180ms ease,
+    opacity 200ms ease,
     transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.disc-card:hover .disc-card-arrow,
-.disc-split-card:hover .disc-card-arrow {
-  opacity: 1;
-}
+.disc-card:hover .disc-card-arrow { opacity: 1; }
 .disc-card-arrow:focus-visible {
   opacity: 1;
   outline: 4px solid var(--brand-red-focus);
@@ -607,40 +645,8 @@
 .disc-card-arrow--next { right: 8px; }
 .disc-card-arrow:hover { transform: translateY(-50%) translate(1px, 1px); }
 .disc-card-arrow:active { transform: translateY(-50%) translate(2px, 2px) scale(0.94); }
-.disc-card-arrow--sm { width: 24px; height: 24px; }
-.disc-card-arrow--sm.disc-card-arrow--prev { left: 6px; }
-.disc-card-arrow--sm.disc-card-arrow--next { right: 6px; }
 
-/* ── Photo-overlay liquid-glass (uniform brightness) ─────────
-   .lg-surface--badge defaults to a dark, low-contrast fill that disappears
-   on bright photos. These rules force a brighter, ink-text glass for every
-   floating overlay on a card photo (arrows, heart, scarcity badge), so all
-   liquid-glass elements on a photo read at the same luminance. */
-.disc-card-arrow,
-.disc-card-save,
-.disc-split-card-save,
-.disc-card-badge,
-.disc-split-card-badge {
-  background:
-    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.18) 60%),
-    rgba(255, 255, 255, 0.46);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  backdrop-filter: blur(28px) saturate(180%);
-  border: 0.5px solid rgba(255, 255, 255, 0.62);
-  color: var(--ink);
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.18),
-    0 1px 4px rgba(0, 0, 0, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.70),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
-}
-/* Saved-heart override — brand red after the brighter base reset */
-.disc-card-save.disc-card-save--saved,
-.disc-split-card-save.disc-split-card-save--saved {
-  color: var(--brand-red);
-}
-
-/* Carousel dots — clickable, reflect actual photo count */
+/* Carousel dots — hidden by default, reveal on hover */
 .disc-card-dots {
   position: absolute;
   left: 50%;
@@ -653,10 +659,8 @@
   transition: opacity 200ms ease;
   padding: 4px;
 }
-.disc-card:hover .disc-card-dots,
-.disc-split-card:hover .disc-card-dots {
-  opacity: 1;
-}
+.disc-card:hover .disc-card-dots { opacity: 1; }
+
 .disc-card-dot {
   width: 6px;
   height: 6px;
@@ -673,8 +677,46 @@
   outline-offset: 1px;
 }
 .disc-card-dot--active { background: var(--snow); }
-.disc-card-dots--sm { bottom: 6px; gap: 4px; }
-.disc-card-dots--sm .disc-card-dot { width: 4px; height: 4px; }
+
+/* Title overlay (Photo Card title — § 8.7) */
+.disc-card-overlay {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.disc-card-overlay-title {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.20;
+  letter-spacing: -0.005em;
+  color: var(--snow);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.disc-card-overlay-meta {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* Card content (below image) — Product register */
 .disc-card-content {
@@ -685,234 +727,328 @@
   flex: 1;
 }
 
+/* Merchant + deadline inline row */
+.disc-card-merchant-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
 .disc-card-merchant {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  color: var(--ink);
+  color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.disc-card-earn-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
-}
-
-.disc-card-earn {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.disc-card-pay-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-4);
-  letter-spacing: 0.02em;
-}
-
 .disc-card-deadline {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--brand-red);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
+/* Pay headline + hourly estimate */
+.disc-card-pay-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.disc-card-pay-headline {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.disc-card-pay-estimate {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-4);
+  letter-spacing: 0.01em;
+}
+
+/* Slots + format */
 .disc-card-specs {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 16px;                             /* body → CTA 16px */
   letter-spacing: 0.02em;
 }
 
-/* Apply button — uses Brand-Red filled (.btn-primary equivalent) */
+/* Apply button — Brand-Red filled (§ 9 Filled Primary) */
 .disc-card-apply {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 44px;
-  padding: 12px 20px;
+  height: 40px;
+  padding: 0 20px;
   border: none;
-  border-radius: var(--r-sm);                      /* 8px */
+  border-radius: 10px;
   background: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   cursor: pointer;
-  margin-top: auto;
-  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 180ms ease;
+  margin-top: 12px;
+  /* Liquid-glass depth: inner highlight + warm shadow */
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18),
+              0 2px 8px rgba(193, 18, 31, 0.28);
+  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 140ms ease;
 }
 
-.disc-card-apply:hover:not(:disabled) { transform: translate(1px, 1px); }
+.disc-card-apply:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14),
+              2px 2px 0 rgba(193,18,31,0.40);
+}
 .disc-card-apply:active:not(:disabled) {
   transform: translate(2px, 2px) scale(0.98);
-  background: var(--brand-red-deep);
 }
 .disc-card-apply:focus-visible {
+  outline: 3px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+.disc-card-apply:disabled { cursor: default; }
+
+/* In-review — liquid-glass ghost */
+.disc-card-apply--in-review {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  color: var(--ink-3);
+  border: 0.5px solid rgba(0,0,0,0.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.70);
+  cursor: default;
+}
+.disc-card-apply--in-review:hover { transform: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.70); }
+
+/* Accepted — N2W Blue with same inner highlight */
+.disc-card-apply--accepted {
+  background: var(--accent-blue);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18),
+              0 2px 8px rgba(0,133,255,0.28);
+  cursor: default;
+}
+.disc-card-apply--accepted:hover { transform: none; }
+
+/* ── Filter Drawer (right-side slide-in panel) ───────────── */
+
+.disc-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  background: rgba(0, 0, 0, 0.40);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.disc-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9998;
+  width: min(680px, 92vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--snow);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.20), 0 8px 24px rgba(0, 0, 0, 0.10);
+  animation: disc-drawer-in 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.disc-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+
+.disc-drawer-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.disc-drawer-close {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 180ms ease,
+              transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.disc-drawer-close:hover {
+  background: var(--surface-3);
+  transform: translate(1px, 1px);
+}
+.disc-drawer-close:focus-visible {
   outline: 4px solid var(--brand-red-focus);
   outline-offset: 2px;
 }
 
-/* Applied state — tonal flip to N2W Blue (informational) */
-.disc-card-apply--applied {
-  background: var(--accent-blue-tint);
-  color: var(--accent-blue-deep);
-  cursor: default;
-}
-.disc-card-apply--pending {
-  background: var(--surface-3);
-  color: var(--ink-4);
-  cursor: default;
-}
-
-/* Stop hover transform on disabled states */
-.disc-card-apply:disabled { transform: none; }
-
-/* ── Split / Map view ───────────────────────────────────── */
-
-/* Shell padding zeroed via :has(.disc) in lumin-shell.css — no escape needed */
-
-/* Prevent body/main scroll in MAP mode — page is fixed at 100dvh */
-body:has(.disc--split-mode) {
-  overflow: hidden;
-}
-body:has(.disc--split-mode) .dh-main {
-  height: 100dvh;
-  overflow: hidden;
-}
-
-.disc--split-mode {
-  display: flex;
-  flex-direction: column;
-  height: calc(100dvh - var(--ws-topnav-h, 56px));
-  overflow: hidden;
-  background: var(--snow);
-}
-
-/* catstrip top offset includes toolbar + topnav for scrolling mode;
-   in MAP mode the container starts below the topnav so only toolbar offset needed */
-.disc--split-mode .disc-cat-strip {
-  top: 0;
-}
-
-.disc-split {
+.disc-drawer-body {
   flex: 1;
-  display: flex;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.disc-split-list {
-  flex: 0 0 50%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--snow);
-  border-right: 1px solid var(--hairline);
-}
-
-/* Dedicated scroll container — avoids flex-column + overflow-y:auto scroll bugs */
-.disc-split-scroll {
-  flex: 1;
-  min-height: 0;
   overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   scrollbar-width: thin;
   scrollbar-color: var(--mist) transparent;
 }
-.disc-split-scroll::-webkit-scrollbar { width: 4px; }
-.disc-split-scroll::-webkit-scrollbar-track { background: transparent; }
-.disc-split-scroll::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 2px; }
+.disc-drawer-body::-webkit-scrollbar { width: 4px; }
+.disc-drawer-body::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 2px; }
 
-.disc-split-meta {
+.disc-drawer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--hairline);
   flex-shrink: 0;
-  padding: 12px var(--disc-split-pad) 12px var(--disc-gutter);
-  background: rgba(255, 255, 255, 0.78);
-  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.03);
-  backdrop-filter: blur(40px) saturate(200%) brightness(1.03);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.90),
-              0 1px 0 rgba(0, 0, 0, 0.03),
-              0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
-.disc-split-meta .disc-sort-row {
-  background: none;
-  border: none;
-  margin: 0;
-  padding: 0;
-  box-shadow: none;
+/* ── Filter group internals ──────────────────────────────── */
+
+.disc-filter-group {
+  display: flex;
+  flex-direction: column;
 }
 
-.disc-split-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px 20px;
-  padding: 16px var(--disc-split-pad) 64px var(--disc-gutter);
+.disc-filter-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 12px;
 }
 
-.disc-split-empty { padding: 48px 24px; }
-
-.disc-split-map {
-  flex: 1;
-  min-width: 0;
-  /* padding: top right bottom left — right matches 10vw editorial gutter */
-  padding: 16px var(--disc-gutter) 16px 16px;
+.disc-filter-hint {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
+  margin: 2px 0 0;
+  letter-spacing: 0.01em;
 }
 
-/* Inner panel — rounded card with overflow clip for Leaflet tiles */
-.disc-map-panel {
+.disc-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Filter chips piggyback on .btn-pill; active state flips to ink fill */
+.disc-chip { /* no overrides needed — .btn-pill handles base */ }
+.disc-chip--active {
+  background: var(--ink) !important;
+  color: var(--snow) !important;
+  border-color: transparent !important;
+}
+
+/* Toggle row — label on left, switch on right */
+.disc-filter-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* ── iOS toggle switch ───────────────────────────────────── */
+
+.disc-toggle {
   position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  isolation: isolate;
-  /* iOS 26 three-layer soft shadow */
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.06),
-    0 6px 24px rgba(0, 0, 0, 0.10),
-    0 24px 64px rgba(0, 0, 0, 0.08);
+  width: 48px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: var(--surface-3);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 200ms ease;
 }
+.disc-toggle--on { background: var(--brand-red); }
 
-.disc-map-loading {
-  width: 100%;
-  height: 100%;
-  background: var(--surface-2);
-}
-
-/* Map expand/collapse — liquid glass button overlaid on panel */
-.disc-map-expand-btn {
+.disc-toggle-thumb {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--snow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.disc-toggle--on .disc-toggle-thumb { transform: translateX(20px); }
+
+.disc-toggle:focus-visible {
+  outline: 4px solid var(--brand-red-focus);
+  outline-offset: 2px;
+}
+
+/* ── Map Modal (fullscreen overlay) ─────────────────────── */
+
+.disc-map-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  display: flex;
+  flex-direction: column;
+  background: var(--snow);
+  animation: disc-map-modal-in 240ms ease;
+}
+
+.disc-map-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
   z-index: 500;
   width: 40px;
   height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.90);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   backdrop-filter: blur(16px) saturate(160%);
   border: 0.5px solid rgba(255, 255, 255, 0.60);
@@ -920,292 +1056,119 @@ body:has(.disc--split-mode) .dh-main {
   color: var(--ink);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14),
-              0 1px 2px rgba(0, 0, 0, 0.08),
               inset 0 1px 0 rgba(255, 255, 255, 0.80);
-  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 160ms ease;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.disc-map-expand-btn:hover {
-  background: rgba(255, 255, 255, 0.98);
-  transform: translate(1px, 1px);
-}
-.disc-map-expand-btn:active { transform: translate(2px, 2px) scale(0.98); }
-.disc-map-expand-btn:focus-visible {
+.disc-map-close:hover { transform: translate(1px, 1px); }
+.disc-map-close:active { transform: translate(2px, 2px) scale(0.98); }
+.disc-map-close:focus-visible {
   outline: 4px solid var(--brand-red-focus);
   outline-offset: 2px;
 }
 
-/* Fullscreen map — hide list, balance left margin on map */
-.disc--map-fullscreen .disc-split-list { display: none; }
-.disc--map-fullscreen .disc-split-map { padding-left: var(--disc-gutter); }
-
-/* ── Split card — list-row Airbnb pattern, refined ──────── */
-
-.disc-split-card {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.07);
-  background: transparent;
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  transition: background 200ms ease,
-              box-shadow 200ms ease,
-              transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-height: 144px;
-  position: relative;
-}
-
-.disc-split-card:last-child { border-bottom: none; }
-.disc-split-card:hover {
-  background: rgba(0, 0, 0, 0.025);
-  transform: translate(1px, 1px);
-}
-.disc-split-card:active { transform: translate(2px, 2px) scale(0.998); }
-.disc-split-card--active {
-  background: rgba(0, 0, 0, 0.028);
-}
-
-.disc-split-card-img-wrap {
-  position: relative;
-  flex: 0 0 38%;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  background: var(--mist);
-  align-self: stretch;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10),
-              0 0.5px 2px rgba(0, 0, 0, 0.07);
-  transition: box-shadow 200ms ease;
-}
-
-.disc-split-card:hover .disc-split-card-img-wrap {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14),
-              0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.disc-split-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: filter 240ms ease;
-}
-
-.disc-split-card:hover .disc-split-card-img {
-  filter: brightness(1.04) saturate(1.06);
-}
-
-/* Save button — true liquid glass */
-.disc-split-card-save {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.20);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
-  border: 0.5px solid rgba(255, 255, 255, 0.45);
-  border-radius: 50%;
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 3;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16),
-              inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 160ms ease;
-}
-
-.disc-split-card-save:hover { transform: translate(1px, 1px); }
-.disc-split-card-save:active {
-  transform: translate(2px, 2px) scale(0.98);
-  animation: disc-heart-pop 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.disc-split-card-save:focus-visible {
-  outline: 4px solid var(--brand-red-focus);
-  outline-offset: 2px;
-}
-.disc-split-card-save--saved { color: var(--brand-red); }
-
-.disc-split-card-badge {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  padding: 4px 10px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--snow);
-  background: rgba(10, 10, 10, 0.52);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  backdrop-filter: blur(12px) saturate(140%);
-  border: 0.5px solid rgba(255, 255, 255, 0.20);
-  border-radius: var(--r-pill);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* Body */
-.disc-split-card-body {
+/* Map fills the remaining height above the rail */
+.disc-map-body {
   flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.disc-map-body > div { height: 100% !important; }
+
+/* Horizontal card rail at the bottom of map modal */
+.disc-map-rail {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 16px;
+  padding: 16px 24px 24px;
+  overflow-x: auto;
+  background: var(--snow);
+  border-top: 1px solid var(--hairline);
+  height: 320px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mist) transparent;
+}
+.disc-map-rail::-webkit-scrollbar { height: 4px; }
+.disc-map-rail::-webkit-scrollbar-track { background: transparent; }
+.disc-map-rail::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 2px; }
+
+.disc-map-rail-item {
+  /* width driven by .disc-card--compact (192px) */
+}
+
+/* ── Skeleton Cards ──────────────────────────────────────── */
+
+.disc-skeleton {
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  padding: 2px 0;
+  animation: disc-card-in 350ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
-.disc-split-card-merchant {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.disc-skeleton-img {
+  aspect-ratio: 4 / 5;
+  border-radius: var(--r-md);
+  margin-bottom: 16px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-3) 25%,
+    var(--surface-2) 50%,
+    var(--surface-3) 75%
+  );
+  background-size: 800px 100%;
+  animation: disc-shimmer 1.4s infinite linear;
 }
 
-.disc-split-card-location {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--ink-4);
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.disc-split-card-earn-row {
+.disc-skeleton-body {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 6px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
 }
 
-.disc-split-card-earn {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+.disc-skeleton-line {
+  height: 12px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-3) 25%,
+    var(--surface-2) 50%,
+    var(--surface-3) 75%
+  );
+  background-size: 800px 100%;
+  animation: disc-shimmer 1.4s infinite linear;
 }
+.disc-skeleton-line--sm  { width: 40%; }
+.disc-skeleton-line--md  { width: 60%; height: 10px; }
+.disc-skeleton-line--lg  { width: 100%; height: 24px; }
 
-.disc-split-card-pay {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-4);
-  letter-spacing: 0.02em;
-}
-
-.disc-split-card-dl {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--brand-red);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-left: auto;
-}
-
-.disc-split-card-title {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-
-.disc-split-card-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--ink-4);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.disc-split-card-foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-top: auto;
-  padding-top: 8px;
-}
-
-/* Apply button — compact ghost variant */
-.disc-split-card-apply {
-  height: 36px;
-  padding: 0 16px;
+.disc-skeleton-btn {
+  height: 44px;
+  margin-top: 8px;
   border-radius: var(--r-sm);
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 180ms ease, color 180ms ease,
-              border-color 180ms ease;
+  background: linear-gradient(
+    90deg,
+    var(--surface-3) 25%,
+    var(--surface-2) 50%,
+    var(--surface-3) 75%
+  );
+  background-size: 800px 100%;
+  animation: disc-shimmer 1.4s infinite linear;
 }
 
-.disc-split-card-apply:hover:not(:disabled) {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--snow);
-  transform: translate(1px, 1px);
-}
-.disc-split-card-apply:active:not(:disabled) {
-  transform: translate(2px, 2px) scale(0.98);
-  background: var(--char);
-}
-.disc-split-card-apply:focus-visible {
-  outline: 4px solid var(--brand-red-focus);
-  outline-offset: 2px;
-}
-.disc-split-card-apply--done {
-  border-color: var(--accent-blue-tint);
-  color: var(--accent-blue-deep);
-  background: var(--accent-blue-tint);
-  cursor: default;
-}
-.disc-split-card-apply--done:hover {
-  background: var(--accent-blue-tint);
-  color: var(--accent-blue-deep);
-  border-color: var(--accent-blue-tint);
-  transform: none;
-}
-
-/* ── Empty state ────────────────────────────────────────── */
+/* ── Empty state ─────────────────────────────────────────── */
 
 .disc-empty {
   grid-column: 1 / -1;
   padding: 96px 24px;
   text-align: center;
+}
+
+.disc-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  width: 72px;
+  height: 72px;
 }
 
 .disc-empty-title {
@@ -1218,7 +1181,7 @@ body:has(.disc--split-mode) .dh-main {
 }
 
 .disc-empty-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-3);
   margin: 0 auto 32px;
@@ -1227,32 +1190,31 @@ body:has(.disc--split-mode) .dh-main {
   letter-spacing: 0.01em;
 }
 
-.disc-empty-actions {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
+/* ── Filter panel — drop-down (preserved for potential reuse) */
+
+.disc-filter-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 360px;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 24px;
+  z-index: 100;
+  box-shadow: var(--shadow-3);
+  animation: disc-card-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* The empty-state buttons reuse .btn-primary / .btn-ghost; no overrides
-   beyond a slight padding tighten if they need to fit a narrow column. */
-
-/* ── Reduced motion ─────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .disc-card,
-  .disc-card-img-wrap,
-  .disc-split-card,
-  .disc-card-save,
-  .disc-card-apply,
-  .disc-split-card-apply,
-  .disc-view-btn,
-  .disc-sort-btn { animation: none; transition: none; }
-  .disc-card:hover,
-  .disc-split-card:hover,
-  .disc-card-save:hover,
-  .disc-card-apply:hover,
-  .disc-split-card-apply:hover { transform: none; }
+.disc-filter-panel-title,
+.disc-filter-group-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 16px;
+  display: block;
 }
 
 /* ── Filter panel — slider controls ─────────────────────── */
@@ -1265,14 +1227,13 @@ body:has(.disc--split-mode) .dh-main {
 }
 
 .disc-filter-group-value {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--brand-red);
   letter-spacing: 0.04em;
 }
 
-/* Slider track container */
 .disc-slider-wrap {
   position: relative;
   height: 32px;
@@ -1280,7 +1241,6 @@ body:has(.disc--split-mode) .dh-main {
   align-items: center;
 }
 
-/* Shared grey track drawn via ::before */
 .disc-slider-wrap::before {
   content: "";
   position: absolute;
@@ -1294,7 +1254,6 @@ body:has(.disc--split-mode) .dh-main {
   pointer-events: none;
 }
 
-/* Filled segment (brand-red) — positioned via inline style */
 .disc-slider-track-fill {
   position: absolute;
   top: 50%;
@@ -1306,7 +1265,6 @@ body:has(.disc--split-mode) .dh-main {
   z-index: 1;
 }
 
-/* Base <input type="range"> reset */
 .disc-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -1319,7 +1277,6 @@ body:has(.disc--split-mode) .dh-main {
   z-index: 2;
 }
 
-/* Webkit thumb */
 .disc-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1332,14 +1289,12 @@ body:has(.disc--split-mode) .dh-main {
   cursor: grab;
   transition: transform 0.15s, box-shadow 0.15s;
 }
-
 .disc-slider::-webkit-slider-thumb:active {
   cursor: grabbing;
   transform: scale(1.15);
   box-shadow: var(--shadow-2);
 }
 
-/* Firefox thumb */
 .disc-slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
@@ -1350,11 +1305,7 @@ body:has(.disc--split-mode) .dh-main {
   cursor: grab;
 }
 
-/* Dual slider — both inputs stacked */
-.disc-slider-wrap--dual {
-  position: relative;
-}
-
+.disc-slider-wrap--dual { position: relative; }
 .disc-slider-wrap--dual .disc-slider--min,
 .disc-slider-wrap--dual .disc-slider--max {
   position: absolute;
@@ -1365,26 +1316,420 @@ body:has(.disc--split-mode) .dh-main {
   transform: translateY(-50%);
   pointer-events: none;
 }
-
 .disc-slider-wrap--dual .disc-slider--min::-webkit-slider-thumb,
-.disc-slider-wrap--dual .disc-slider--max::-webkit-slider-thumb {
-  pointer-events: all;
-}
-
+.disc-slider-wrap--dual .disc-slider--max::-webkit-slider-thumb { pointer-events: all; }
 .disc-slider-wrap--dual .disc-slider--min::-moz-range-thumb,
-.disc-slider-wrap--dual .disc-slider--max::-moz-range-thumb {
-  pointer-events: all;
-}
+.disc-slider-wrap--dual .disc-slider--max::-moz-range-thumb  { pointer-events: all; }
 
-/* Min/max labels below the track */
 .disc-slider-labels {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .disc-card,
+  .disc-card-img-wrap,
+  .disc-card-save,
+  .disc-card-apply,
+  .disc-view-btn,
+  .disc-sort-btn,
+  .disc-skeleton-img,
+  .disc-skeleton-line,
+  .disc-skeleton-btn { animation: none; transition: none; }
+
+  .disc-card:hover,
+  .disc-card-save:hover,
+  .disc-card-apply:hover { transform: none; }
+
+  .disc-drawer { animation: none; transform: translate(-50%, -50%); }
+}
+
+/* ── Split view (left list + right map) ─────────────────── */
+
+/* ── Split mode — independent panel scroll ─────────────────── */
+
+/* Lock dh-main to viewport so only the left panel scrolls.
+   unified-sidebar.css adds padding-top:56px + padding-bottom:96px to .dh-main
+   on all pages — zero these out so the split occupies exactly 100svh. */
+body:has(.disc--split-mode) .dh-main {
+  height: 100svh;
+  overflow: hidden;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.disc--split-mode {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;  /* direct viewport lock — no parent chain dependency */
+  overflow: hidden;
+}
+
+/* Flex row takes remaining height after toolbar.
+   padding: 2vh uniform — matches the messages fullbleed 2% bleed rhythm. */
+.disc-split {
+  flex: 1;
+  min-height: 0;                 /* critical: allows flex child to shrink */
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  padding: 2vh;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* ── Left panel — independently scrollable ── */
+.disc-split-list {
+  flex: 0 0 56%;
+  min-width: 440px;
+  min-height: 0;           /* lets flex child shrink below content size */
+  align-self: stretch;     /* fills cross-axis height explicitly */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mist) transparent;
+}
+.disc-split-list::-webkit-scrollbar { width: 4px; }
+.disc-split-list::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 2px; }
+
+.disc--map-fullscreen .disc-split-list { display: none; }
+
+/* Combined control bar — cats + sort, sticky inside the scroll container.
+   Placing it here means hovering anywhere in the left column enables scroll. */
+.disc-control-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--snow);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+
+.disc-control-bar-cats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 0 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.disc-control-bar-cats::-webkit-scrollbar { display: none; }
+
+.disc-control-bar-sort {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0 12px;
+}
+
+.disc-split-scroll {
+  padding: 0 0 32px;
+}
+
+.disc-split-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.disc-split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* ── Right panel — fixed height map (never scrolls) ── */
+.disc-split-map {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.disc-map-panel {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(10,10,10,0.05),
+    0 0 32px rgba(10,10,10,0.04),
+    0 6px 24px rgba(10,10,10,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.90),
+    inset 0 -1px 0 rgba(10,10,10,0.04);
+  border: 0.5px solid rgba(10,10,10,0.05);
+}
+
+.disc-map-expand-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--ink-5);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.disc-map-expand-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-1);
+}
+
+.disc-map-loading {
+  width: 100%;
+  height: 100%;
+  background: #f0eeea;
+}
+
+/* ── SplitCard ── */
+.disc-split-card {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.disc-split-card:hover,
+.disc-split-card--active {
+  border-color: var(--ink-5);
+  box-shadow: var(--shadow-1);
+  transform: translate(2px, 2px);
+}
+
+/* Image area: fixed 96×96 square */
+.disc-split-card-img-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.disc-split-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Reuse arrow styles at small size */
+.disc-card-arrow--sm {
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.disc-split-card-save {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.disc-split-card-save:hover { transform: translate(2px, 2px); }
+.disc-split-card-save--saved { color: #e8447d; }
+
+.disc-split-card-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--brand-red);
+  color: #fff;
+  font-family: var(--font-darky);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Text body */
+.disc-split-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.disc-split-card-merchant {
+  font-family: var(--font-darky);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.disc-split-card-location {
+  font-size: 14px;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.disc-split-card-earn-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.disc-split-card-earn {
+  font-family: var(--font-darky);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.disc-split-card-dl {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-red);
+  white-space: nowrap;
+}
+
+.disc-split-card-title {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.disc-split-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.disc-split-card-meta {
+  font-size: 14px;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.disc-split-card-apply {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: none;
+  background: var(--brand-red);
+  color: #fff;
+  font-family: var(--font-darky);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.disc-split-card-apply:hover { transform: translate(2px, 2px); }
+
+.disc-split-card-apply--done {
+  background: var(--accent-blue);
+  cursor: default;
+}
+
+.disc-split-card-apply--done:hover { transform: none; }
+
+/* Responsive: narrow screens */
+@media (max-width: 1100px) {
+  .disc-split-list { flex: 0 0 50%; min-width: 340px; }
+  .disc-split-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  body:has(.disc--split-mode) .dh-main {
+    height: auto;
+    overflow: visible;
+  }
+  .disc--split-mode {
+    height: auto;
+    overflow: visible;
+    min-height: 100svh;
+  }
+  .disc-split {
+    flex-direction: column;
+    padding: 12px 16px 0;
+    gap: 16px;
+    overflow: visible;
+    height: auto;
+    flex: none;
+  }
+  .disc-split-map {
+    height: auto;
+    padding: 0 0 16px;
+  }
+  .disc-map-panel {
+    height: 320px;
+  }
+  .disc-split-list {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    overflow: visible;
+  }
+  .disc-split-grid { grid-template-columns: repeat(2, 1fr); }
+  .disc--map-fullscreen .disc-split-list { display: none; }
+  .disc--map-fullscreen .disc-map-panel { height: 60vh; }
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
@@ -1392,291 +1737,28 @@ body:has(.disc--split-mode) .dh-main {
 @media (max-width: 1024px) {
   .disc { --disc-gutter: 6vw; }
   .cw-page.disc .cw-header { padding: 32px var(--disc-gutter) 24px; }
-  .disc-split-list { flex: 0 0 50%; }
-  .disc-split-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
-  .disc {
-    --disc-gutter: 24px;
-  }
+  .disc { --disc-gutter: 24px; }
   .cw-page.disc .cw-header { padding: 24px var(--disc-gutter) 16px; }
   .disc-toolbar { gap: 12px; padding: 12px var(--disc-gutter); }
   .disc-cat-strip { padding: 12px var(--disc-gutter); }
-  .disc-grid { padding: 0 var(--disc-gutter) 64px; grid-template-columns: 1fr; gap: 32px 16px; }
+  .disc-grid {
+    padding: 0 var(--disc-gutter) 64px;
+    grid-template-columns: 1fr;
+    gap: 32px 16px;
+  }
   .disc-card-overlay-title { font-size: 18px; }
-
-  .disc-filter-panel {
-    width: calc(100vw - 32px);
-    right: -8px;
-  }
-
-  .disc--split-mode { height: auto; overflow: visible; }
-  body:has(.disc--split-mode) { overflow: auto; }
-  body:has(.disc--split-mode) .dh-main { height: auto; overflow: auto; }
-  .disc-split { flex-direction: column; }
-  .disc-split-list {
-    flex: none;
-    max-height: 50vh;
-    border-right: none;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .disc-split-map {
-    height: 360px;
-    flex: none;
-    padding: 8px 16px 16px;
-  }
-  .disc-map-panel { border-radius: 12px; }
-
-  .disc-view-toggle { display: none; }            /* mobile prefers list */
+  .disc-view-toggle { display: none; }            /* mobile uses full-screen map */
+  .disc-drawer { width: 95vw; max-height: 92vh; }
+  .disc-map-rail { height: 280px; }
 }
 
 @media (max-width: 640px) {
   .disc { --disc-gutter: 16px; }
 }
 
-/* ── Filter Modal — Airbnb-style full-screen overlay ────── */
-
-@keyframes disc-modal-in {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Backdrop — full-viewport dark scrim */
-.disc-filter-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  background: rgba(0, 0, 0, 0.48);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  animation: disc-modal-in 200ms ease forwards;
-}
-
-/* Modal panel — centred sheet, max 680px wide */
-.disc-filter-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  width: min(680px, calc(100vw - 48px));
-  max-height: min(88vh, 800px);
-  height: auto;
-  background: var(--snow);
-  border-radius: var(--r-xl);                        /* 16px — floating panel */
-  box-shadow: var(--shadow-3);
-  overflow: hidden;
-  animation: disc-modal-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Header — border-bottom rule, close left, title centre */
-.disc-filter-modal-header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--hairline);
-  flex-shrink: 0;
-}
-
-.disc-filter-modal-title {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin: 0;
-}
-
-.disc-filter-modal-close {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--hairline-2);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--ink);
-  font-size: 14px;
-  cursor: pointer;
-  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 180ms ease;
-}
-
-.disc-filter-modal-close:hover {
-  background: var(--surface-3);
-  transform: translateY(-50%) translate(1px, 1px);
-}
-
-.disc-filter-modal-close:focus-visible {
-  outline: 4px solid var(--brand-red-focus);
-  outline-offset: 2px;
-}
-
-/* Scrollable body */
-.disc-filter-modal-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 32px 32px 24px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--mist) transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-/* Shared group styles already defined above (.disc-filter-group etc.)
-   only override margin so gaps come from the flex gap instead */
-.disc-filter-modal-body .disc-filter-group {
-  margin-bottom: 0;
-}
-
-.disc-filter-modal-body .disc-filter-group:last-of-type {
-  margin-bottom: 0;
-}
-
-.disc-filter-modal-body .disc-filter-group-label {
-  margin-bottom: 12px;
-  font-size: 13px;
-}
-
-/* Modal footer — sticky at bottom, two-button row */
-.disc-filter-modal-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 32px;
-  border-top: 1px solid var(--hairline);
-  flex-shrink: 0;
-  background: var(--surface);
-}
-
-/* Histogram bars — decorative payout distribution */
-.disc-histogram {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 64px;
-  margin-bottom: 8px;
-}
-
-.disc-histogram-bar {
-  flex: 1;
-  background: var(--surface-3);
-  border-radius: 2px 2px 0 0;
-  transition: background 200ms ease;
-}
-
-.disc-histogram-bar--in-range {
-  background: var(--brand-red);
-  opacity: 0.7;
-}
-
-/* Min/Max price text inputs */
-.disc-price-inputs {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.disc-price-input-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.disc-price-input-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-}
-
-.disc-price-input-field {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--hairline-2);
-  border-radius: var(--r-sm);                        /* 8px */
-  background: var(--snow);
-  overflow: hidden;
-  transition: border-color 180ms ease;
-}
-
-.disc-price-input-field:focus-within {
-  border-color: var(--ink);
-}
-
-.disc-price-input-sym {
-  padding: 0 10px 0 14px;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-4);
-}
-
-.disc-price-input {
-  flex: 1;
-  height: 44px;
-  padding: 0 14px 0 0;
-  border: none;
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  outline: none;
-  min-width: 0;
-  -moz-appearance: textfield;
-}
-
-.disc-price-input::-webkit-outer-spin-button,
-.disc-price-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.disc-price-input-divider {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  color: var(--ink-4);
-  flex-shrink: 0;
-}
-
-/* Mobile: modal goes full-screen */
-@media (max-width: 600px) {
-  .disc-filter-modal {
-    width: 100%;
-    max-height: 100%;
-    height: 100%;
-    border-radius: 0;
-    margin: 0;
-    inset: 0;
-  }
-
-  .disc-filter-modal-body {
-    padding: 24px 20px 16px;
-  }
-
-  .disc-filter-modal-footer {
-    padding: 16px 20px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .disc-filter-backdrop,
-  .disc-filter-modal { animation: none; }
+  .disc-drawer-backdrop { animation: none; }
 }

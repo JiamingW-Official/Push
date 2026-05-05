@@ -37,7 +37,7 @@
 
 .overview-welcome {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -92,7 +92,7 @@
 
 .overview-section__meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;

@@ -100,7 +100,7 @@
 
 .press-hero-stat {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -133,7 +133,7 @@
 
 .press-badge-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -226,7 +226,7 @@
 
 .press-featured-outlet {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -235,7 +235,7 @@
 
 .press-featured-date {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.28);
 }
@@ -276,7 +276,7 @@
 
 .press-featured-badge-sub {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
@@ -404,7 +404,7 @@
 
 .press-card-pub-name {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -413,7 +413,7 @@
 
 /* Headline — Darky 20px 700 snow */
 .press-card-headline {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -434,7 +434,7 @@
 
 .press-card-date {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
@@ -494,7 +494,7 @@
 
 .press-stat-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -613,7 +613,7 @@
 .press-contact-fine {
   margin-top: 24px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.28);
@@ -636,7 +636,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--snow);
@@ -651,7 +651,7 @@
 }
 
 .press-founder-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -661,7 +661,7 @@
 
 .press-founder-role {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;

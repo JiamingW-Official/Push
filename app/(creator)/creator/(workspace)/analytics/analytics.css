@@ -29,10 +29,10 @@
 }
 
 .an-section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 8px;
@@ -62,8 +62,8 @@
 }
 
 .an-period-pill {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -131,8 +131,8 @@
 }
 
 .an-kpi-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -152,7 +152,7 @@
 }
 
 .an-kpi-unit {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink-3);
@@ -164,17 +164,17 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
   margin: 12px 0 0;
 }
 
 .an-kpi-delta__arrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0;
   line-height: 1;
 }
@@ -215,8 +215,8 @@
 }
 
 .an-chart-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 4px 0 0;
 }
@@ -281,8 +281,8 @@
 }
 
 .an-bar-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -307,8 +307,8 @@
 }
 
 .an-table-head-cell {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -337,7 +337,7 @@
 }
 
 .an-table-campaign {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -345,7 +345,7 @@
 }
 
 .an-table-visits {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -354,7 +354,7 @@
 }
 
 .an-table-earnings {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--brand-red);
@@ -363,8 +363,8 @@
 }
 
 .an-table-period {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -372,8 +372,8 @@
 
 .an-status-chip {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -443,8 +443,8 @@
 }
 
 .an-stat-best-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0 0 24px;
   letter-spacing: 0.02em;
@@ -465,8 +465,8 @@
 }
 
 .an-stat-best-grid__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -474,7 +474,7 @@
 }
 
 .an-stat-best-grid__value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -495,7 +495,7 @@
 }
 
 .an-streak-unit {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -505,8 +505,8 @@
 }
 
 .an-streak-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
   letter-spacing: 0.02em;
@@ -538,8 +538,8 @@
 }
 
 .an-tier-next {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   letter-spacing: 0.02em;
 }
@@ -566,15 +566,15 @@
 
 .an-tier-score,
 .an-tier-gap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .an-tier-score strong {
   color: var(--ink);
   font-weight: 700;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   letter-spacing: -0.01em;
 }
 
@@ -613,7 +613,7 @@
 }
 
 .an-top-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink-4);
@@ -626,7 +626,7 @@
 }
 
 .an-top-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   color: var(--ink);
@@ -637,8 +637,8 @@
 }
 
 .an-top-value {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -660,8 +660,8 @@
 }
 
 .an-hbar-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
@@ -688,8 +688,8 @@
 }
 
 .an-hbar-value {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -706,8 +706,8 @@
 }
 
 .an-insights-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -716,7 +716,7 @@
 }
 
 .an-insights-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 40px;
   font-weight: 800;
   color: var(--ink);
@@ -767,7 +767,7 @@
 }
 
 .an-insight-stat {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(40px, 5vw, 56px);
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -785,13 +785,13 @@
 }
 
 .an-insight-context {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .an-insight-headline {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -801,7 +801,7 @@
 }
 
 .an-insight-body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
@@ -810,8 +810,8 @@
 }
 
 .an-insight-cta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -849,7 +849,7 @@
 }
 
 .an-page-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(40px, 5vw, 72px);
   font-weight: 800;
   color: var(--snow);
@@ -859,8 +859,8 @@
 }
 
 .an-page-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;

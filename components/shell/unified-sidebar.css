@@ -2,7 +2,7 @@
  * Push — Unified Sidebar (vertical caption layout, fixed full-height rail)
  *
  * Replaces the per-item hover-pill flyout with iPhone-style stacked
- * captions: each icon sits above an always-visible 11px CS Genio Mono
+ * captions: each icon sits above an always-visible 11px Open Sans
  * label. No hover dependency, no horizontal flyout pill, no parking
  * margin needed. Works identically on desktop, iPad, touch.
  *
@@ -20,7 +20,7 @@
   --us-item-inset:  10px;   /* horizontal inset of pill from rail edge */
   --us-item-gap:    6px;    /* between items */
   --us-pad-x:       12px;   /* rail outer padding */
-  --us-cap-size:    11px;   /* caption font-size */
+  --us-cap-size:    14px;   /* nav label font-size — v12.1 floor */
   --us-radius:      14px;   /* iOS 26 continuous corner */
   --us-t-fast:      180ms;
   --us-t-medium:    260ms;
@@ -192,13 +192,13 @@
   opacity: 1;
 }
 
-/* CAPTION — always visible, 11px CS Genio Mono uppercase */
+/* NAV LABEL — Open Sans uppercase, minimum 12px */
 .us-item__label {
-  font-family: var(--font-mono, 'CS Genio Mono', ui-monospace, monospace);
+  font-family: var(--font-body);
   font-size: var(--us-cap-size);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   color: inherit;
   white-space: nowrap;
   line-height: 1;
@@ -302,10 +302,10 @@
   border-radius: 999px;
   background: var(--brand-red, #c1121f);
   color: var(--snow, #ffffff);
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -351,7 +351,7 @@
 }
 .us-avatar-circle__initial {
   font-family: var(--font-display, 'Darky', sans-serif);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--ink, #1c1814);
@@ -407,9 +407,9 @@
   .us-item__icon { width: 32px; height: 32px; opacity: 0.86; }
   .us-item__icon svg { width: 20px; height: 20px; }
   .us-item__label {
-    font-size: 9px;
+    font-size: 14px;
     max-width: 52px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
   }
   .us-item--logo { display: none; }
   .us-item.is-active::after { bottom: -1px; }

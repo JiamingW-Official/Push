@@ -29,7 +29,7 @@
   max-width: none;
   width: 100%;
   margin: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
   container-type: inline-size;
@@ -68,11 +68,11 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 min-floor */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 min-floor */
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;                     /* spec § 3.1 Eyebrow Canonical */
+  letter-spacing: 0.04em;                     /* spec § 3.1 Eyebrow Canonical */
   color: var(--ink-3);
   margin-bottom: 12px;
 }
@@ -104,8 +104,8 @@
 }
 
 .cw-date {
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 min-floor */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 min-floor */
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -133,8 +133,8 @@
   background: var(--snow);
   border: 1px solid var(--hairline);
   border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 min-floor */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 min-floor */
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -180,7 +180,7 @@
   opacity: 0.62;
 }
 
-.cw-pill__icon { font-size: 13px; line-height: 1; opacity: 0.85; }
+.cw-pill__icon { font-size: 14px; line-height: 1; opacity: 0.85; }
 
 .cw-pill--urgent {
   background: var(--brand-red);
@@ -317,18 +317,18 @@ a.cw-card:focus-visible {
   gap: 12px;
 }
 .cw-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 Eyebrow Canonical */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 Eyebrow Canonical */
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .cw-card__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   line-height: 1.2;
@@ -336,8 +336,8 @@ a.cw-card:focus-visible {
   color: var(--ink);
 }
 .cw-card__sub {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-4);
   line-height: 1.5;
@@ -440,8 +440,8 @@ a.cw-card:focus-visible {
   gap: 6px;
   padding: 8px 16px;
   border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -528,7 +528,7 @@ a.cw-card:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 800;
   color: var(--snow);
@@ -539,7 +539,7 @@ a.cw-card:focus-visible {
 }
 .cw-row__body { min-width: 0; }
 .cw-row__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
@@ -549,8 +549,8 @@ a.cw-card:focus-visible {
   letter-spacing: -0.005em;
 }
 .cw-row__sub {
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 min-floor */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 min-floor */
   font-weight: 500;
   color: var(--ink-4);
   white-space: nowrap;
@@ -559,8 +559,8 @@ a.cw-card:focus-visible {
   margin-top: 2px;
 }
 .cw-row__meta {
-  font-family: var(--font-mono);
-  font-size: 10px;                            /* § 3.1 Caption (sole sub-12 exception) */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* § 3.1 Caption (sole sub-12 exception) */
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -589,11 +589,11 @@ a.cw-card:focus-visible {
 }
 .cw-kpi:last-child { border-right: none; padding-right: 0; }
 .cw-kpi__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
 }
 .cw-kpi__value {
@@ -606,8 +606,8 @@ a.cw-card:focus-visible {
   line-height: 1;
 }
 .cw-kpi__delta {
-  font-family: var(--font-mono);
-  font-size: 12px;                      /* raised from 11px to meet 12px min-floor § 3.1 */
+  font-family: var(--font-body);
+  font-size: 14px;                      /* raised from 11px to meet 12px min-floor § 3.1 */
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -638,11 +638,11 @@ a.cw-card:focus-visible {
 
 .cw-table { width: 100%; border-collapse: collapse; }
 .cw-table th {
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 Editorial Table Header */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 Editorial Table Header */
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
   padding: 0 0 16px;
   border-bottom: 1px dotted var(--hairline-2);
@@ -652,14 +652,14 @@ a.cw-card:focus-visible {
 .cw-table td {
   padding: 20px 0;
   border-bottom: 1px dotted var(--hairline);
-  font-family: var(--font-mono);
-  font-size: 16px;                            /* spec § 3.1 Editorial Table Body Cell */
+  font-family: var(--font-body);
+  font-size: 18px;                            /* spec § 3.1 Editorial Table Body Cell */
   line-height: 1.40;
   color: var(--ink-3);
   vertical-align: baseline;
 }
 .cw-table td:first-child {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -689,15 +689,15 @@ a.cw-card:focus-visible {
   padding-bottom: 8px;
 }
 .cw-section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 Eyebrow Canonical */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 Eyebrow Canonical */
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-3);
 }
 .cw-section-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -705,8 +705,8 @@ a.cw-card:focus-visible {
   line-height: 1.1;
 }
 .cw-section-link {
-  font-family: var(--font-mono);
-  font-size: 12px;                            /* spec § 3.1 min-floor */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* spec § 3.1 min-floor */
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -737,7 +737,7 @@ a.cw-card:focus-visible {
   color: var(--ink-4);
 }
 .cw-empty__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;                            /* spec § 3.1 H5 */
   font-weight: 700;
   color: var(--ink);
@@ -745,7 +745,7 @@ a.cw-card:focus-visible {
   letter-spacing: -0.01em;
 }
 .cw-empty__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;                            /* spec § 3.1 Small/Label */
   line-height: 1.45;
   color: var(--ink-4);
@@ -765,10 +765,10 @@ a.cw-card:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 .cw-stat__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
@@ -786,8 +786,8 @@ a.cw-card:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-mono);
-  font-size: 12px;                      /* raised from 11px to meet 12px min-floor § 3.1 */
+  font-family: var(--font-body);
+  font-size: 14px;                      /* raised from 11px to meet 12px min-floor § 3.1 */
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -834,15 +834,15 @@ a.cw-card:focus-visible {
   gap: 2px;
 }
 .cw-metric__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
 .cw-metric__value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -0.015em;
@@ -885,8 +885,8 @@ a.cw-card:focus-visible {
   gap: 6px;
   padding: 8px 16px;
   border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -929,8 +929,8 @@ a.cw-card:focus-visible {
 .cw-tab.is-active:hover  { color: var(--snow); transform: translate(2px, 2px); }
 .cw-tab.is-active:active { transform: translate(3px, 3px) scale(0.98); }
 .cw-tab__count {
-  font-family: var(--font-mono);
-  font-size: 10px;                            /* § 3.1 Caption sub-12 exception */
+  font-family: var(--font-body);
+  font-size: 14px;                            /* § 3.1 Caption sub-12 exception */
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 2px 7px;
@@ -1038,8 +1038,8 @@ a.cw-card:focus-visible {
   gap: 6px !important;
   padding: 8px 16px !important;
   border-radius: var(--r-pill) !important;
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: 0.06em !important;
   text-transform: uppercase !important;
@@ -1225,10 +1225,10 @@ a.cw-card:focus-visible {
   .wallet-eyebrow,
   .drafts-eyebrow
 ) {
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;                 /* spec § 3.1 Eyebrow Canonical */
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;                 /* spec § 3.1 Eyebrow Canonical */
   font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
   color: var(--ink-3) !important;
   margin: 0 0 8px !important;
@@ -1258,7 +1258,7 @@ a.cw-card:focus-visible {
   .dispute-section-title,
   .disc-section-title
 ) {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
@@ -1438,8 +1438,8 @@ a.cw-card:focus-visible {
 
 .cw-pane-sub {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -1498,7 +1498,7 @@ a.cw-card:focus-visible {
 }
 .cw-state-title {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.005em;
@@ -1506,8 +1506,8 @@ a.cw-card:focus-visible {
 }
 .cw-state-body {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink-4);
   max-width: 320px;
@@ -1521,8 +1521,8 @@ a.cw-card:focus-visible {
   border-radius: 50vh;
   background: var(--ink);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1571,7 +1571,7 @@ a.cw-card:focus-visible {
   --cw-btn-pad-x: 22px;
   --cw-btn-pad-y: 0;
   --cw-btn-h: 36px;
-  --cw-btn-fs: 13px;
+  --cw-btn-fs: 14px;
   --cw-btn-tracking: 0.06em;
   display: inline-flex;
   align-items: center;
@@ -1583,7 +1583,7 @@ a.cw-card:focus-visible {
   border: none;
   background: transparent;
   color: inherit;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--cw-btn-fs);
   font-weight: 700;
   letter-spacing: var(--cw-btn-tracking);
@@ -1618,13 +1618,13 @@ a.cw-card:focus-visible {
 .cw-btn--sm {
   --cw-btn-pad-x: 14px;
   --cw-btn-h: 28px;
-  --cw-btn-fs: 11px;
+  --cw-btn-fs: 14px;
   --cw-btn-tracking: 0.08em;
 }
 .cw-btn--md {
   --cw-btn-pad-x: 20px;
   --cw-btn-h: 36px;
-  --cw-btn-fs: 12px;
+  --cw-btn-fs: 14px;
 }
 .cw-btn--lg {
   --cw-btn-pad-x: 26px;

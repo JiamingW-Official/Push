@@ -28,7 +28,7 @@
 
 .cl-hero-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -79,7 +79,7 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -104,7 +104,7 @@
 
 .cl-entry-count {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
 }
@@ -139,7 +139,7 @@
 
 .cl-filter-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -165,7 +165,7 @@
 /* Filter chip — pill shape (Design.md exception) */
 .cl-chip {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -223,7 +223,7 @@
 }
 
 .cl-year-label {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(48px, 6vw, 80px);
   font-weight: 200;
   letter-spacing: -0.04em;
@@ -262,7 +262,7 @@
 
 .cl-entry-date {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -395,7 +395,7 @@
 /* Version badge */
 .cl-version-badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -422,7 +422,7 @@
 /* Version string */
 .cl-version-string {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -431,7 +431,7 @@
 /* Area badge */
 .cl-area-badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -478,7 +478,7 @@
 
 .cl-image-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -556,7 +556,7 @@
   display: flex;
   gap: 12px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink);
 }
@@ -574,7 +574,7 @@
 /* Read more toggle */
 .cl-read-more-btn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -632,8 +632,8 @@
 }
 
 .cl-author-avatar-initials {
-  font-family: var(--font-display);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 900;
   color: #fff;
   letter-spacing: 0;
@@ -647,7 +647,7 @@
 
 .cl-author-name {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: 0.01em;
@@ -655,13 +655,13 @@
 
 .cl-author-role {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .cl-coded-by {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.03em;
 }

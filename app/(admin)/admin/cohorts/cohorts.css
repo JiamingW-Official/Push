@@ -2,7 +2,7 @@
    Push Admin — Cohort Analysis  ·  v11 Design System
    Authority: Design.md v11 2026-04-25
    Product UI register — no marketing elements
-   8px grid  ·  Darky display + CS Genio Mono body
+   8px grid  ·  Darky display + Open Sans body
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -23,7 +23,7 @@
 
 .cohorts-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -65,7 +65,7 @@
 
 .cohort-kpi-tile__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -114,7 +114,7 @@
 
 .cohort-top-card__badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -135,7 +135,7 @@
 
 .cohort-top-card__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -155,7 +155,7 @@
 
 .cohort-top-card__meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -189,7 +189,7 @@
 
 .cohort-top-card__stat-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
 /* Filter tabs use .btn-pill from globals.css — override size for toolbar density */
 .cohorts-toolbar .btn-pill {
   padding: 5px 12px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* ------------------------------------------------------------
@@ -243,7 +243,7 @@
 
 .cohorts-grid-count {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 16px;
 }
@@ -301,7 +301,7 @@
 
 /* Card name — Darky 800 product heading */
 .cohort-card-v11__name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   color: var(--ink);
@@ -313,7 +313,7 @@
 /* Type badge — 12px mono uppercase pill */
 .cohort-type-badge {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -341,7 +341,7 @@
   gap: 6px;
   align-items: center;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -353,7 +353,7 @@
   padding: 2px 8px;
   border-radius: 4px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.03em;
 }
@@ -408,7 +408,7 @@
 
 /* Regular small metric — Darky 20px 800 */
 .cohort-metric-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   color: var(--ink);
@@ -418,7 +418,7 @@
 
 .cohort-metric-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -428,7 +428,7 @@
 /* View link */
 .cohort-card-v11__cta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent-blue);
   margin-top: auto;
@@ -481,7 +481,7 @@
 .modal-close:hover { background: var(--mist); color: var(--ink); }
 
 .modal-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 800;
   color: var(--ink);
@@ -490,7 +490,7 @@
 
 .modal-subtitle {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0 0 24px;
   line-height: 1.5;
@@ -510,7 +510,7 @@
 
 .form-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -548,7 +548,7 @@
    ------------------------------------------------------------ */
 .cohort-badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -581,7 +581,7 @@
 /* Experiment tags */
 .cohort-exp-tag {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;

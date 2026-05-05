@@ -13,7 +13,7 @@
   flex-direction: column;
   min-height: 100svh;
   background: var(--surface);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 /* ── Top sub-nav bar (Product chrome — back link + page label) ── */
@@ -27,8 +27,8 @@
 }
 
 .int-subnav__back {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -45,7 +45,7 @@
 }
 
 .int-subnav__label {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
@@ -84,10 +84,10 @@
 }
 
 .int-header__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 8px;
@@ -104,7 +104,7 @@
 }
 
 .int-header__subtitle {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
@@ -139,24 +139,24 @@
 }
 
 .int-header__stat-divider {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   color: var(--ink-4);
   font-weight: 400;
 }
 
 .int-header__stat-total {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   color: var(--ink-4);
   font-weight: 500;
 }
 
 .int-header__stat-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
@@ -171,10 +171,10 @@
 }
 
 .int-featured__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 16px;
@@ -223,15 +223,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 15px;
   flex-shrink: 0;
 }
 
 .int-featured-item__name {
-  font-family: var(--font-mono);
-  font-size: 12px; /* v11 min-font-size compliance */
+  font-family: var(--font-body);
+  font-size: 14px; /* v11 min-font-size compliance */
   font-weight: 700;
   color: var(--ink);
   text-align: center;
@@ -256,8 +256,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -288,7 +288,7 @@
 .int-tab[aria-pressed="true"]:active { background: var(--char); }
 
 .int-tab__count {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   opacity: 0.65;
 }
@@ -304,7 +304,7 @@
 }
 
 .int-section-heading {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -313,8 +313,8 @@
 }
 
 .int-section-count {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -405,7 +405,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 15px;
   flex-shrink: 0;
@@ -418,8 +418,8 @@
   gap: 6px;
   padding: 4px 10px;
   border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -458,7 +458,7 @@
 .int-card__body { display: flex; flex-direction: column; gap: 8px; }
 
 .int-card__name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -467,8 +467,8 @@
 }
 
 .int-card__description {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
   margin: 0;
@@ -485,8 +485,8 @@
 }
 
 .int-card__benefit {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   display: flex;
   align-items: flex-start;
@@ -505,8 +505,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -533,8 +533,8 @@
 }
 
 .int-card__category {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -542,8 +542,8 @@
 }
 
 .int-card__cta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -571,7 +571,7 @@
 }
 
 .int-empty__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
@@ -580,8 +580,8 @@
 }
 
 .int-empty__body {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.6;
   max-width: 360px;
@@ -597,10 +597,10 @@
 }
 
 .int-cta-panel__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 8px;
@@ -616,7 +616,7 @@
 }
 
 .int-cta-panel__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
@@ -661,8 +661,8 @@
   top: 16px;
   right: 16px;
   z-index: 2;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -724,10 +724,10 @@
 }
 
 .int-confirm__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 8px;
@@ -744,8 +744,8 @@
 }
 
 .int-confirm__body {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
   margin: 0 0 24px;

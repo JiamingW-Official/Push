@@ -44,10 +44,10 @@
 
 .qr-glass-eyebrow {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 0;
 }
@@ -64,8 +64,8 @@
 
 .qr-glass-caption {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   margin: 0;
@@ -114,11 +114,11 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-1);
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-size: 14px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-weight: 700;
 }
 
@@ -130,8 +130,8 @@
 
 .qr-card__creator {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.04em;
   color: var(--ink-3);
   overflow: hidden;
@@ -180,9 +180,9 @@
 
 .qr-card__stat-label {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 700;
 }
@@ -208,7 +208,7 @@
 .qr-card__actions .btn-ghost {
   flex: 1;
   padding: 10px 16px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* ---------- Empty state wrap ---------------------------------- */

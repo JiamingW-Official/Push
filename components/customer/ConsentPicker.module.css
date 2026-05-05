@@ -1,7 +1,7 @@
 /* ============================================================
    ConsentPicker — Push Design System
    - Surface-elevated option cards on Pearl Stone backdrop
-   - Flag Red selection highlight; Darky title; CS Genio Mono body
+   - Flag Red selection highlight; Darky title; Open Sans body
    - border-radius: 0 everywhere
    ============================================================ */
 
@@ -21,7 +21,7 @@
 
 .eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
 
 .optionTier {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -101,7 +101,7 @@
 }
 
 .optionLabel {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -110,7 +110,7 @@
 
 .optionTagline {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--accent-blue);
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -124,7 +124,7 @@
 
 .optionItem {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   padding: 2px 0;
   line-height: 1.55;
@@ -132,7 +132,7 @@
 
 .optionTradeoff {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.55);
   font-style: italic;
   line-height: 1.55;
@@ -152,7 +152,7 @@
 
 .moreLink {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--accent-blue);
   text-decoration: none;
   letter-spacing: 0.01em;
@@ -173,7 +173,7 @@
   height: 40px;
   padding: 0 16px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

@@ -66,10 +66,10 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.72);
   text-transform: uppercase;
 }
@@ -99,7 +99,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   color: var(--snow);
@@ -110,10 +110,10 @@
 }
 .wt-now__head-text { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .wt-now__merchant {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
 }
@@ -140,10 +140,10 @@
   line-height: 1;
 }
 .wt-now__pay-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.50);
   text-transform: uppercase;
 }
@@ -166,15 +166,15 @@
 }
 .wt-now__meta-cell:last-child { border-right: none; }
 .wt-now__meta-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.50);
   text-transform: uppercase;
 }
 .wt-now__meta-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--snow);
@@ -192,7 +192,7 @@
   gap: 6px;
   padding: 10px 18px;
   border-radius: 10px;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.005em;
@@ -294,10 +294,10 @@
   position: absolute;
   top: -10px;
   left: -52px;
-  font-family: var(--font-mono);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--snow);
   background: var(--brand-red);
@@ -316,10 +316,10 @@
 }
 .wt-tg__label {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 12px 0 4px 84px;
@@ -340,8 +340,8 @@
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-3);
   text-align: right;
@@ -350,7 +350,7 @@
   line-height: 1.2;
 }
 .wt-row__time-end {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-5);
   margin-top: 2px;
@@ -434,7 +434,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: transparent;
   transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
@@ -452,8 +452,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
   color: var(--snow);
   letter-spacing: -0.02em;
@@ -463,7 +463,7 @@
 }
 .wt-row__body { min-width: 0; }
 .wt-row__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 700;
   color: var(--ink);
@@ -471,8 +471,8 @@
   line-height: 1.3;
 }
 .wt-row__sub {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-4);
   margin-top: 4px;
@@ -488,7 +488,7 @@
   gap: 6px;
 }
 .wt-row__pay {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.015em;
@@ -496,10 +496,10 @@
   line-height: 1;
 }
 .wt-row__chip {
-  font-family: var(--font-mono);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 999px;
@@ -537,7 +537,7 @@
 }
 .wt-row__expanded .cw-pill {
   padding: 6px 12px;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 
@@ -558,15 +558,15 @@
   );
 }
 .wt-row__free-text {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
 .wt-row__free-cta {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -599,8 +599,8 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -628,8 +628,8 @@
   border-radius: 10px;
 }
 .wt-add__time {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   padding: 6px 10px;
   border: 1px solid var(--hairline-2);
@@ -639,7 +639,7 @@
   cursor: pointer;
 }
 .wt-add__text {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   padding: 8px 12px;
@@ -709,8 +709,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
   color: var(--snow);
   letter-spacing: -0.02em;
@@ -720,7 +720,7 @@
 }
 .wt-rail__body { min-width: 0; }
 .wt-rail__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
@@ -730,8 +730,8 @@
   text-overflow: ellipsis;
 }
 .wt-rail__sub {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -742,7 +742,7 @@
   text-overflow: ellipsis;
 }
 .wt-rail__pay {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.015em;
@@ -816,10 +816,10 @@
 }
 
 .wt-progress__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
@@ -857,8 +857,8 @@
 }
 
 .wt-progress__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--ink-3);
@@ -873,8 +873,8 @@
 
 .wt-row__priority {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -909,7 +909,7 @@
 
 .wt-row__campaign-link {
   color: var(--accent-blue);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -934,8 +934,8 @@
    ════════════════════════════════════════════════════════════ */
 
 .wt-row__deadline {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

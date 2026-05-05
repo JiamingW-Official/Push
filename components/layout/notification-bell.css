@@ -46,7 +46,7 @@
   background: var(--brand-red);
   color: #fff; /* text-on-dark */
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0;
   display: flex;
@@ -98,7 +98,7 @@
 
 .nb-panel-title {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -107,7 +107,7 @@
 
 .nb-mark-all {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   cursor: pointer;
   background: none;
@@ -130,7 +130,7 @@
 .nb-empty {
   padding: 32px 16px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   text-align: center;
 }
@@ -170,7 +170,7 @@
   height: 32px;
   background: var(--ink);
   color: var(--surface-3);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 800;
   display: flex;
@@ -196,7 +196,7 @@
 
 .nb-item-title {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
@@ -206,7 +206,7 @@
 
 .nb-item-text {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.4;
   display: -webkit-box;
@@ -217,7 +217,7 @@
 
 .nb-item-time {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--graphite);
   opacity: 0.7;
   margin-top: 2px;
@@ -242,7 +242,7 @@
 
 .nb-view-all {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   text-decoration: none;

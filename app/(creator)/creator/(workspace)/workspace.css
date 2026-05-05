@@ -108,7 +108,7 @@
 
 .ws-topnav__page {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -164,7 +164,7 @@
 .ws-topnav__search-placeholder {
   flex: 1;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   text-align: left;
   letter-spacing: 0.01em;
@@ -179,7 +179,7 @@
 
 .ws-topnav__search-kbd kbd {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--graphite);
   background: var(--surface);
@@ -206,7 +206,7 @@
   height: 24px;
   padding: 0 8px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -263,7 +263,7 @@
   background: var(--brand-red);
   border-radius: var(--r-full);
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   display: flex;
@@ -307,7 +307,7 @@
 }
 
 .ws-topnav__avatar-initial {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--snow);
@@ -369,7 +369,7 @@
 
 .ws-sidenav__section-header {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -388,7 +388,7 @@
   color: rgba(255,255,255,0.55);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.01em;
   border-left: 3px solid transparent;
@@ -459,7 +459,7 @@
   background: rgba(255,255,255,0.14);
   color: rgba(255,255,255,0.70);
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   border-radius: var(--r-sm);
@@ -519,8 +519,8 @@
 }
 
 .ws-sidenav__user-initial {
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   user-select: none;
@@ -536,7 +536,7 @@
 
 .ws-sidenav__user-name {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   white-space: nowrap;
@@ -547,7 +547,7 @@
 
 .ws-sidenav__user-tier {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -589,7 +589,7 @@
 
 .ws-context__title {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -640,7 +640,7 @@
 
 .ws-context__section-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -664,24 +664,24 @@
 }
 
 .ws-context__stat-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   line-height: 1;
 }
 
 .ws-context__stat-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.01em;
 }
 
 .ws-context__stat-delta {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -734,7 +734,7 @@
 
 .ws-context__deadline-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink);
   flex: 1;
   min-width: 0;
@@ -746,7 +746,7 @@
 
 .ws-context__deadline-date {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -769,7 +769,7 @@
   width: 100%;
   padding: 9px 12px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;

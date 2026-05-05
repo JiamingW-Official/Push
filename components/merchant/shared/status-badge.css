@@ -16,11 +16,11 @@
   border: 1px solid;
   border-radius: var(--r-pill);
   display: inline-flex;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   gap: 4px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 4px 12px;
   text-transform: uppercase;
 }

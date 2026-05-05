@@ -46,7 +46,7 @@
 
 .mddisp-info-card__section-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -71,14 +71,14 @@
 
 .mddisp-info-card__key {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   flex-shrink: 0;
 }
 
 .mddisp-info-card__value {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   text-align: right;
@@ -111,7 +111,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 800;
   color: var(--ink);
@@ -135,7 +135,7 @@
 
 .mddisp-creator-chip__role {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ink-4);
@@ -199,7 +199,7 @@
 
 .mddisp-evidence-zone__sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
   max-width: 280px;
@@ -207,7 +207,7 @@
 
 .mddisp-evidence-zone__browse {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--accent-blue);
   background: none;
@@ -231,7 +231,7 @@
 
 .mddisp-evidence-section__label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -260,7 +260,7 @@
 
 .mddisp-action-bar__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -281,7 +281,7 @@
 
 .mddisp-composer__label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -351,7 +351,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -396,7 +396,7 @@
 
 .mddisp-timeline-section__label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -412,7 +412,7 @@
    ───────────────────────────────────────── */
 .mddisp-escalate-note {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
   flex: 1;

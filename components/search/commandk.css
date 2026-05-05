@@ -1,5 +1,5 @@
 /* Push — Cmd-K Search Overlay Styles
-   Authority: Design.md — border-radius: 0, 6 colors, Darky + CSGenioMono, 8px grid */
+   Authority: Design.md — border-radius: 0, 6 colors, Darky + Open Sans, 8px grid */
 
 /* ------------------------------------------------------------------ Overlay */
 
@@ -92,7 +92,7 @@
 
 .ck-input {
   flex: 1;
-  font-family: var(--font-display);  /* Darky */
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -117,7 +117,7 @@
 
 .ck-kbd kbd {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--graphite);
@@ -159,7 +159,7 @@
 
 .ck-group-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
 
 .ck-item-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--graphite);
   white-space: nowrap;
@@ -243,7 +243,7 @@
 
 .ck-item-badge {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -274,7 +274,7 @@
 
 .ck-empty-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -312,7 +312,7 @@
 
 .ck-shortcut-label {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink);
   white-space: nowrap;
@@ -329,7 +329,7 @@
 }
 
 .ck-no-results-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -339,7 +339,7 @@
 
 .ck-no-results-sub {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   letter-spacing: 0.01em;
 }
@@ -362,14 +362,14 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.01em;
 }
 
 .ck-footer-hint kbd {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--graphite);
   background: var(--surface-2);

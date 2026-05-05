@@ -2,7 +2,7 @@
 
 > **Authority**: Single source of truth for every UI surface in Push. Color, typography, shape, grid, spacing, components, motion — all conform to the tokens below.
 >
-> **Status (2026-05-01, consolidated)**: v11 editorial register + v12 Figma-synced typography. Three fonts (Magvix / Darky / CS Genio Mono), 11-stop warm-gray ladder, light mode only, 8px grid, 12-column desktop grid, 5 unified buttons, bottom-right hover shift, GA Tri-Color nav chrome. § 0's three-tier rule classification (🔒 STRICT / 📐 STRUCTURED / 🎨 OPEN) governs every rule below.
+> **Status (2026-05-05, consolidated)**: v11 editorial register + v12 typography (Open Sans body, Open Sans removed). Three fonts (Magvix / Darky / Open Sans), 11-stop warm-gray ladder, light mode only, 8px grid, 12-column desktop grid, 5 unified buttons, bottom-right hover shift, GA Tri-Color nav chrome. § 0's three-tier rule classification (🔒 STRICT / 📐 STRUCTURED / 🎨 OPEN) governs every rule below.
 >
 > **Last calibrated**: 2026-05-01 (consolidation pass — historical migration notes pruned, GA Tri-Color hex aligned to Figma, sticky/floating navbar specs merged, Build Checklist folded into § 1 Quick Reference).
 > **Next planned review**: After Williamsburg Tier 0 pilot launches (2026-05-23).
@@ -74,7 +74,7 @@ The 12 non-negotiables. Every other section is the implementation detail of one 
 1. **Closed Allowed-Color List.** Production CSS may only use color tokens listed in § 2. Photos and SVG visual effects exempt. New colors require a documented PR.
 2. **8px grid, enforced.** Every width / height / padding / margin / gap / top / left snaps to 8px. Half-grid (4px) only for hairlines and chip gaps. § 5 has the full system.
 3. **Negative-space tokens are locked per container.** § 6 lists every container's text-to-edge / text-to-line / text-to-vector / text-to-text spacing. Eyeballing is forbidden.
-4. **Three fonts, role-locked.** Magvix (Regular + Italic) for hero / wordmark / signature divider — max 1 hero block per page; Darky for display / heading / numerals / footer giant wordmark; CS Genio Mono for body / UI / labels / parenthetical eyebrow. Magvix never below 28px.
+4. **Three fonts, role-locked.** Magvix (Regular + Italic) for hero / wordmark / signature divider / Ticket Panel headline (max 1 hero block per page); Darky 500-900 for ALL display, headings, numerals, UI labels, buttons, navs, breadcrumbs, eyebrows, badges, chips, pills, table headers, footer giant wordmark; Open Sans 400-700 (+ italic) for body, paragraph, message content, form inputs, card descriptions, table data cells (tabular-nums for numeric columns). Magvix never below 28px. Open Sans REMOVED in v12.
 5. **Corner-anchored titles for editorial moments.** Hero title hugs panel **bottom-left**, section titles hug **top-left**, footer Giant Wordmark hugs **bottom-left**. Centered titles only inside Ticket Panel + Photo Card overlay + Modal.
 6. **iOS 26 continuous corner — selective use.** Radii scale `4 / 8 / 10 / 12 / 16 / 20 / 28 / 40 / pill / circle`. `border-radius: 0` permitted in 3 places only: full-bleed Photo Card Hero, Editorial Hero Tile billboard, image-collage card. Everything else uses the scale.
 7. **Unified button system, 5 variants only.** § 9 is the single source. Every button on every page renders identically.
@@ -207,53 +207,71 @@ Status colors communicate the outcome of a system event (transaction settled, fo
 
 ---
 
-## 3. Typography
+## 3. Typography (v12 · 2026-05-05 · Open Sans body adoption · Open Sans removed)
+
+**Three fonts. No mono. No Roboto. No system-ui as terminal fallback.**
+
+### 3.0 Font allocation (the proportional rule)
+
+| Font | Share | Role |
+|------|-------|------|
+| Magvix Regular + Italic | ≈ 3% | editorial signature only |
+| Darky 500-900 | ≈ 35% | structural spine — every heading, numeral, UI label, button, nav, eyebrow, badge, chip |
+| Open Sans 400-700 + italic | ≈ 62% | reading body — long-form prose, message content, form inputs, descriptions |
 
 ### 3.1 Type Scale (Figma source of truth)
 
-Vertical rhythm: every type size uses a line-height that lands on the 8px grid. Display sizes lock to `0.85 / 0.90 / 0.95` line-height; body locks to `1.40`. No arbitrary line-heights.
+Vertical rhythm: every type size uses a line-height that lands on the 8px grid. Display sizes lock to `0.85 / 0.90 / 0.95` line-height; body locks to `1.55`. No arbitrary line-heights.
 
 | Element | Font | Size | Weight | Line-Height | Letter-Spacing |
 |---------|------|------|--------|-------------|---------------|
-| **Header 1 / Magvix Hero** — landing only, 1 per page max | Magvix Regular | `clamp(64px, 9vw, 200px)` | 400 | `0.85` | `-0.02em` (-4px @ 200px) |
-| **Magvix Italic / Header 4** — wordmark, italic hero | Magvix Italic | `80px` | 400 italic | `0.90` | `-0.025em` (-2px @ 80px) |
+| **Magvix Hero** — landing only, 1 per page max | Magvix Regular | `clamp(64px, 9vw, 200px)` | 400 | `0.85` | `-0.02em` |
+| **Magvix Italic / Wordmark** | Magvix Italic | `80px` | 400 italic | `0.90` | `-0.025em` |
 | **Magvix Italic Signature Divider** | Magvix Italic | `clamp(28px, 3vw, 40px)` | 400 italic | `1.15` | `-0.005em` |
-| **Darky Giant Footer Wordmark** | Darky | `clamp(140px, 18vw, 320px)` | 800 | `0.85` | `-0.045em` |
-| **Header 2 / Darky Display** — non-Magvix hero pages | Darky | `clamp(56px, 8vw, 128px)` | 900 | `0.85` | `-0.03em` (-4px @ 128px) |
-| **Header 3 / Darky Large** — intermediate display | Darky | `110px` | 800 | `0.95` | `-0.036em` (-4px @ 110px) |
+| **Magvix Italic Ticket Panel headline** | Magvix Italic | `clamp(40px, 5vw, 56px)` | 400 italic | `1.1` | `-0.005em` |
+| **Footer Giant Wordmark** | Darky | `clamp(140px, 18vw, 320px)` | 800 | `0.85` | `-0.045em` |
+| **Darky Display** — non-Magvix hero pages | Darky | `clamp(56px, 8vw, 128px)` | 900 | `0.85` | `-0.03em` |
+| **Darky Large** — intermediate display | Darky | `110px` | 800 | `0.95` | `-0.036em` |
 | H1 (page title) | Darky | `clamp(40px, 5vw, 72px)` | 800 | `1.0` | `-0.025em` |
 | H2 (section title) | Darky | `40px` | 800 | `1.05` | `-0.02em` |
 | H3 (sub-section / card title) | Darky | `28px` | 700 | `1.15` | `-0.015em` |
-| **Header 5 / H4** (card body title) | Darky | `24px` | 700 | `1.40` | `-0.083em` (-2px @ 24px) |
+| H4 (card body title) | Darky | `24px` | 700 | `1.40` | `-0.01em` |
 | H5 (small block title) | Darky | `20px` | 600 | `1.3` | `-0.005em` |
-| **Body / Paragraph 1 (default)** | CS Genio Mono | `20px` | 400 | `1.40` | `-0.1em` (-2px @ 20px) |
-| Body small / Paragraph 2 | CS Genio Mono | `16px` | 400 | `1.40` | `-0.125em` (-2px @ 16px) |
-| Small / Label | CS Genio Mono | `14px` | 500 | `1.45` | `0.01em` |
-| **Caption** (documented min-floor exception) | CS Genio Mono | `10px` | 400 | `1.40` | `0.4em` (+4px @ 10px) UPPERCASE |
-| **Eyebrow Canonical** (Product UI) | CS Genio Mono | `12px` | 700 | `1.3` | `0.12em` UPPERCASE |
-| **Eyebrow Parenthetical** (Marketing) — `(LINKS)` `(WHY THIS EXISTS)` | CS Genio Mono | `12px` | 700 | `1.3` | `0.12em` UPPERCASE — parens literal |
-| **Editorial Table Header** | CS Genio Mono | `12px` | 700 | `1.3` | `0.12em` UPPERCASE |
-| **Editorial Table First Cell** | Darky | `18px` (mobile) / `20px` (desktop) | 700 | `1.4` | `-0.01em` |
-| **Editorial Table Body Cell** | CS Genio Mono | `16px` | 400 | `1.40` | `-0.125em` |
-| **Photo Card Title Overlay** (marketing only) | Darky | `20px` (desktop) / `18px` (mobile) | 700 | `1.25` | `-0.005em` color `--snow` |
-| **Photo Card Metadata Overlay** | CS Genio Mono | `12px` | 500 | `1.3` | `0.04em` UPPERCASE color `rgba(255,255,255,0.85)` |
-| Numbered Section marker | CS Genio Mono | `14px` | 600 | `1.3` | `0.04em` |
-| Stat numeral (large KPI) | Darky | `clamp(40px, 5vw, 72px)` | 700 | `1.0` | `-0.02em` |
-| Stat caption | CS Genio Mono | `14px` | 500 | `1.4` | `0.02em` |
-| **Forbidden** | — | `< 10px` OR `> 200px` (Footer Wordmark exempt to 320px; Caption 10px is sole documented exception below 12px) | — | — | — |
+| **Stat numeral (KPI)** | Darky | `clamp(40px, 5vw, 72px)` | 700 | `1.0` | `-0.02em` + `tabular-nums` |
+| **Stat caption** (was mono) | Darky | `14px` | 600 | `1.4` | `0.04em` UPPERCASE |
+| **Eyebrow Canonical** (Product UI, was mono) | Darky | `12px` | 700 | `1.3` | `0.14em` UPPERCASE |
+| **Eyebrow Parenthetical** (Marketing, was mono) | Darky | `12px` | 700 | `1.3` | `0.16em` UPPERCASE — parens literal |
+| **Button label** (was mono) | Darky | `16px` (mobile `14px`) | 600 | `1.0` | `0.06em` UPPERCASE |
+| **Nav label / breadcrumb** (was mono) | Darky | `14px` | 600 | `1.3` | `0.04em` UPPERCASE |
+| **Tag / chip / pill** (was mono) | Darky | `12px` | 600 | `1.3` | `0.06em` UPPERCASE |
+| **Status badge** (was mono) | Darky | `12px` | 700 | `1.3` | `0.06em` UPPERCASE |
+| **Editorial Table Header** (was mono) | Darky | `12px` | 700 | `1.3` | `0.16em` UPPERCASE — parenthetical form |
+| **Editorial Table First Cell** | Darky | `18px` mobile / `20px` desktop | 700 | `1.4` | `-0.01em` |
+| **Editorial Table Body Cell** (was mono) | Open Sans | `16px` | 400 | `1.4` | `0` + `tabular-nums` on numeric columns |
+| **Photo Card Title Overlay** (marketing only) | Darky | `20px` desktop / `18px` mobile | 700 | `1.25` | `-0.005em` color `--snow` |
+| **Photo Card Metadata Overlay** (was mono) | Darky | `12px` | 600 | `1.3` | `0.06em` UPPERCASE color `rgba(255,255,255,0.85)` |
+| **Numbered Section marker** (was mono) | Darky | `14px` | 600 | `1.3` | `0.04em` |
+| **Body / Paragraph 1 (default)** | Open Sans | `18px` | 400 | `1.55` | `0` |
+| Body small / Paragraph 2 | Open Sans | `16px` | 400 | `1.55` | `0` |
+| **Caption** (documented min-floor exception) | Open Sans | `10px` | 400 | `1.40` | `0.4em` UPPERCASE |
+| Form input value / textarea | Open Sans | `16px` | 400 | `1.5` | `0` |
+| Form input placeholder | Open Sans | `16px` | 400 italic | `1.5` | `0` color `--ink-5` |
+| Message bubble content | Open Sans | `16px` | 400 | `1.5` | `0` |
+| Card body description | Open Sans | `16px` | 400 | `1.5` | `0` |
+| Long-form quote / testimonial | Open Sans | `18px` | 400 italic | `1.6` | `0` |
+| **Forbidden** | — | `< 10px` OR `> 200px` (Footer Wordmark exempt to 320px) | — | — | — |
 
 > **Ink color note:** Figma source uses `#0f0e0e` (warmer near-black). CSS token `--ink` remains `#0a0a0a`; treat as equivalent for production — do not introduce `#0f0e0e` as a new token.
 
 ### 3.2 Vertical Rhythm Module
 
-**Baseline = 8px.** All vertical spacing snaps to 8px increments. The closest size-to-rhythm anchors:
+**Baseline = 8px.** All vertical spacing snaps to 8px increments.
 
 | Type | Used line-height in px | Rounds to grid (multiple of 8) |
 |------|------------------------|-------------------------------|
-| Body 20px × 1.40 | 28px | 32px (1 row) |
-| Body small 16px × 1.40 | 22.4px | round to 24px |
-| Small 14px × 1.45 | 20.3px | round to 24px |
-| H4 24px × 1.40 | 33.6px | round to 32px |
+| Body 18px × 1.55 | 27.9px | 32px (1 row) |
+| Body small 16px × 1.55 | 24.8px | 24px |
+| H4 24px × 1.40 | 33.6px | 32px |
 | H3 28px × 1.15 | 32.2px | 32px |
 | H2 40px × 1.05 | 42px | 48px |
 | H1 desktop 72px × 1.0 | 72px | 72px (9 rows) |
@@ -262,15 +280,17 @@ Vertical rhythm: every type size uses a line-height that lands on the 8px grid. 
 
 Use `margin-bottom` in 8 / 16 / 24 / 32 / 48 / 64 / 80 / 96px steps to seat each block on the rhythm grid. Avoid arbitrary `margin-bottom: 22px`.
 
-### 3.3 Font Faces
+### 3.3 Font Faces (v12)
 
 | Token | Family | Role |
 |-------|--------|------|
-| `var(--font-hero)` | Magvix (Regular + Italic) | Hero block, wordmark, signature divider, inline accent |
-| `var(--font-display)` | Darky (100-900 weight) | All headings, numerals, **footer giant wordmark** |
-| `var(--font-mono)` | CS Genio Mono | Body, UI, labels, captions, parenthetical eyebrow |
+| `var(--font-hero)` | Magvix (Regular + Italic) | Hero block, wordmark, signature divider, Ticket Panel headline, inline accent |
+| `var(--font-display)` | Darky (100-900 weight) | ALL headings, numerals, UI labels, buttons, navs, eyebrows, badges, chips, pills, table headers, footer giant wordmark |
+| `var(--font-body)` | Open Sans (variable, 300-800) | Body, paragraph, message content, form inputs, card descriptions, table data cells, timestamps, captions |
+| `--font-mono` | **REMOVED in v12** | Open Sans abolished. Any `var(--font-mono)` reference is a bug. |
 
 ```css
+/* Magvix — unchanged */
 @font-face {
   font-family: 'Magvix';
   src: url('/fonts/Magvix-Regular.ttf') format('truetype');
@@ -281,23 +301,89 @@ Use `margin-bottom` in 8 / 16 / 24 / 32 / 48 / 64 / 80 / 96px steps to seat each
   src: url('/fonts/Magvix-Italic.ttf') format('truetype');
   font-weight: normal; font-style: italic; font-display: swap;
 }
-/* Darky 100-900 individual weight files + CS Genio Mono — declared in globals.css */
+/* Darky 100-900 individual weight files — declared in globals.css */
+
+/* Open Sans — variable font, replaces Open Sans */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype-variations'),
+       url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype-variations'),
+       url('/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+}
+/* Open Sans — DELETED in v12. */
 ```
 
-### 3.4 Typography Rules
+### 3.4 CSS Variables (canonical)
 
-1. **Type sizes are the scale above, period.** Never random Tailwind `text-*` mix. Build a custom Tailwind theme exposing only these tokens.
-2. **Line-heights match the scale.** Display `0.85–0.95`; headings `1.0–1.3`; body + body small `1.40`. Never `1.5+` on display sizes, never `1.7` / `2.0` anywhere.
-3. **One H1 per page. One H2 per panel.** H3/H4 only inside cards or table cells.
-4. **Eyebrow always CS Genio Mono 12px 700 uppercase 0.12em.** Parenthetical variant on Marketing surfaces; canonical (no parens) on Product UI. The two registers do not mix in the same viewport.
-5. **Magvix is hero-only OR signature-divider-only.** Below 28px Magvix becomes illegible. Allowed surfaces: solid color (Ink / Obsidian / Surface / Snow / Brand Red / Candy Panel / GA Orange Ticket / Editorial Blue). Never on gradient or photo.
-6. **Magvix Italic = brand wordmark + signature divider + inline accent.** Magvix Regular = hero block headline. Hero block max 1 per page.
-7. **Darky giant footer wordmark = 1 instance per page**, footer-only, ≤320px.
-8. **Body paragraph = CS Genio Mono.** Never Darky body.
-9. **Display tracking is negative** — Darky -0.025 to -0.045em, Magvix -0.02 to -0.025em. Body and small stay at 0.
-10. **Hero title hugs panel top-left**, not centered. (See § 7.1 Corner-Anchored Title Rules.)
+```css
+:root {
+  --font-hero:    'Magvix', Georgia, serif;
+  --font-display: 'Darky', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* --font-mono REMOVED in v12. Banned in production CSS. */
+}
 
-### 3.5 Magvix Inline Accent Pattern
+body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  font-feature-settings: "kern", "liga", "calt";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numeric surfaces — recovers ledger feel mono used to provide */
+.tabular,
+.tabular *,
+[data-numeric],
+[data-numeric] * {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+```
+
+### 3.5 Typography Rules
+
+1. **🔒 STRICT — Three fonts only.** Magvix (Regular + Italic) / Darky (500-900) / Open Sans (400-700 + italic). No system-ui, Helvetica, Inter, Roboto, monospace, Courier, Menlo, Consolas, Fira Code, or 'sans-serif' as terminal fallback.
+2. **🔒 STRICT — Body paragraph is Open Sans.** Never Darky body. Never Magvix body. If text is > 8 words and meant to be read, it's Open Sans.
+3. **🔒 STRICT — Every heading, label, button, nav, eyebrow, badge, chip, pill, table header is Darky.** Darky is the structural spine.
+4. **🔒 STRICT — Magvix is hero / divider / accent / Ticket Panel headline only.** Below 28px Magvix becomes illegible. Allowed surfaces: solid color (Ink / Obsidian / Surface / Snow / Brand Red / Candy Panel / GA Orange Ticket / Editorial Blue). Never on gradient or photo.
+5. **🔒 STRICT — Numeric data uses `font-variant-numeric: tabular-nums`.** Mandatory on KPI numerals, timestamps, money amounts, counts, percentages, table cells with numbers, attribution payouts.
+6. **🔒 STRICT — Sans-serif uppercase tracking is wider than mono-era.** Eyebrow canonical `0.14em` (was `0.12em`), eyebrow parenthetical `0.16em` (was `0.12em`), button label `0.06em` (was `0.04em`).
+7. **One H1 per page. One H2 per panel.** H3/H4 only inside cards or table cells.
+8. **Darky giant footer wordmark = 1 instance per page**, footer-only, ≤320px.
+9. **Display tracking is negative** — Darky -0.025 to -0.045em, Magvix -0.02 to -0.025em. Open Sans body stays at 0.
+10. **Hero title hugs panel bottom-left**, not centered. (See § 7.1 Corner-Anchored Title Rules.)
+
+### 3.6 Migration grep checks (run before merging any PR)
+
+```bash
+# Must all return zero results in production CSS / TSX:
+rg -i "cs genio|font-mono|monospace|courier|menlo|consolas|fira code" app/ lib/ components/ public/styles/
+rg "'Roboto'|\"Roboto\"|font-family:[^;]*Roboto" app/ lib/ components/
+rg "font-family:\s*system-ui\s*;" app/ lib/ components/  # terminal system-ui banned
+```
+
+### 3.7 Rationale (why mono is gone)
+
+Open Sans served four jobs in v11: editorial marginalia, ledger feel, small-text legibility, register split. v12 replaces them:
+- **Editorial marginalia** → recovered via Darky 700 uppercase 0.16em on parenthetical eyebrows.
+- **Ledger feel** → recovered via `font-variant-numeric: tabular-nums` on every numeric surface.
+- **Small-text legibility** → Open Sans is purpose-built for legibility at 12-14px; Darky 600 also reads well.
+- **Register split** → now lives in Magvix usage frequency and Marketing-only pattern constraints.
+
+### 3.8 Magvix Inline Accent Pattern
 
 A single Magvix Italic word may appear inside a Darky 900 hero headline as `<em>` at `font-size: 1.08em`. Max 1 accent word per headline. Max 1 such headline per panel. Max 3 panels using this pattern per page. Accent word must carry semantic weight.
 
@@ -615,7 +701,7 @@ The pill structure (Home / Active / Last in GA Tri-Color) is invariant. The **co
 |---------|-------|
 | Monogram (left) | 32×32px circle, `background: var(--ink); color: var(--snow);` Magvix Italic 14px centered glyph (e.g. "P" or "•P•"). `border-radius: var(--r-full);` |
 | Pill row (center) | `display: flex; gap: 8px;` |
-| Each pill | `padding: 8px 18px; border-radius: var(--r-pill);` CS Genio Mono 14px 600 uppercase 0.04em |
+| Each pill | `padding: 8px 18px; border-radius: var(--r-pill);` Darky 14px 600 uppercase 0.04em |
 | Home pill | `background: var(--ga-orange); color: var(--snow);` |
 | Active page pill | `background: var(--ga-green); color: var(--ink);` |
 | Last pill | `background: var(--ga-sky); color: var(--ink);` |
@@ -711,7 +797,7 @@ Push signature container — orange perforated ticket with grommets + Magvix Ita
 | Grommets (×4) | 16px ink-solid circles, 24px inset from each corner | 16px, 20px inset | 12px, 16px inset |
 | Headline | Magvix Italic `clamp(40px, 5vw, 56px)` color `--ink`, centered | same scale | scales down via clamp |
 | Headline → subhead spacing | 16px | 16px | 12px |
-| Subhead | CS Genio Mono 16px 400 color `--ink`, centered, max-width 480px, mx-auto | same | scales |
+| Subhead | Open Sans 16px 400 color `--ink`, centered, max-width 480px, mx-auto | same | scales |
 | Subhead → CTA spacing | 32px | 32px | 24px |
 | CTA button | Filled Ink variant (see § 9.3) | same | same |
 | Box shadow | none (flat) | same | same |
@@ -729,8 +815,8 @@ Footer = Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peekin
 | Floating glass tiles (Newsletter + Socials) | Peek above top edge by 40-60px. `position: absolute; top: -40px;` `background: rgba(255,255,255,0.12); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.18); border-radius: var(--r-xl);` (16px) |
 | Footer content grid | 3-column desktop (LINKS / CONNECT / Copyright), 2-column iPad (LINKS-CONNECT row + Copyright row), 1-column mobile (stacked) |
 | Column header | Parenthetical Eyebrow — `(LINKS)` `(CONNECT)` color `rgba(255,255,255,0.65)` |
-| Column links | CS Genio Mono 16px 400 color `--snow` line-height 1.6, hover underline 4px offset |
-| Copyright + tagline | CS Genio Mono 12px 500 color `rgba(255,255,255,0.65)` |
+| Column links | Open Sans 16px 400 color `--snow` line-height 1.6, hover underline 4px offset |
+| Copyright + tagline | Open Sans 12px 500 color `rgba(255,255,255,0.65)` |
 | **Giant Wordmark** | Darky `clamp(140px, 18vw, 320px)` weight 800 uppercase color `--snow` line-height 0.85 letter-spacing -0.045em |
 | Wordmark position | **Bottom-left of footer**, full-bleed left-anchored, `margin-top: 96px` (creates breathing space between content grid and brand stamp) |
 | Wordmark behavior | Static. No hover, no animation. |
@@ -741,7 +827,7 @@ Marketing surfaces use `(LINKS)` `(CONNECT)` `(WHY THIS EXISTS)` form. Product U
 
 ```css
 .eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -793,11 +879,11 @@ Cinema-Selects style for Pricing / Compare / KPI / Stats on Marketing surfaces. 
 |---------|-------|
 | Title | Darky `clamp(40px, 5vw, 64px)` weight 800 color `--ink` margin-bottom 56px, **top-left of table panel** (not centered) |
 | Container | `background: var(--surface-2); border-radius: var(--r-md);` `padding: 48px 56px` desktop / `40px 40px` iPad / `32px 24px` mobile. May also live unboxed on `--surface` Ivory. |
-| Header row | CS Genio Mono 12px 700 uppercase 0.12em color `--ink-3` parenthetical form `(FILM)` |
+| Header row | Darky 12px 700 uppercase 0.16em color `--ink-3` parenthetical form `(FILM)` |
 | Header → divider spacing | 24px |
 | Header divider | `border-bottom: 1px dotted rgba(10,10,10,0.30);` |
 | First column cell | Darky 18px (mobile) / 20px (desktop) weight 700 color `--ink` |
-| Other column cells | CS Genio Mono 16px 400 color `--ink-3` |
+| Other column cells | Open Sans 16px 400 color `--ink-3` |
 | Last column ("Why" / "Outcome") | Right-aligned |
 | Row divider | `border-bottom: 1px dotted rgba(10,10,10,0.18);` lighter than header divider |
 | Row vertical padding | 20px desktop / 16px mobile |
@@ -817,7 +903,7 @@ Marketing-only card pattern. Image fills card, bottom 35% black gradient, Darky 
 | Text overlay padding | 24px from each edge (left + right + bottom) | 20px | 16px |
 | Title | Darky 20px (desktop) / 18px (mobile) weight 700 color `--snow` | 20px | 18px |
 | Title → metadata gap | 8px | 8px | 8px |
-| Metadata | CS Genio Mono 12px 500 uppercase 0.04em color `rgba(255,255,255,0.85)` | same | same |
+| Metadata | Darky 12px 600 uppercase 0.06em color `rgba(255,255,255,0.85)` | same | same |
 | Hover | bottom-right shift `translate(1px, 1px)` (subtle), NO image zoom, NO gradient lift | same | same |
 
 ### 8.8 Candy Panel
@@ -845,7 +931,7 @@ Stack order from top to bottom (omit slots not used; spacing only applies betwee
    ↓ 16px (locked, all breakpoints)
 [ Title ]                         ← Darky 36-72px corner-anchored top-left
    ↓ 24px desktop / 24px iPad / 16px mobile
-[ Body paragraph(s) ]             ← CS Genio Mono 18px line-height 1.55
+[ Body paragraph(s) ]             ← Open Sans 18px line-height 1.55
    ↓ 32px desktop / 24px iPad / 24px mobile
 [ CTA cluster ]                   ← 1-2 buttons from § 9 unified system, gap 16px / 12px mobile
    ↓ 56px desktop / 40px iPad / 32px mobile (only if inner-content slot follows)
@@ -889,7 +975,7 @@ Common pattern: Adventure router shows 3-4 cards inside a Candy Panel.
 | Inner card padding | 24px (all sides) | 24px | 20px |
 | Grid gap between cards | 24px | 20px | 16px |
 | Card title | Darky 24px H4 weight 700 color `--ink` | same | Darky 20px |
-| Card body | CS Genio Mono 16px line-height 1.5 | same | same |
+| Card body | Open Sans 16px line-height 1.5 | same | same |
 | Card hover | bottom-right shift (Push interaction signature) | same | same |
 
 #### 8.8.6 Floating Liquid-Glass Tile Inside Candy Panel
@@ -904,7 +990,7 @@ Max 1 floating liquid-glass tile per Candy Panel.
 | Box shadow | `--shadow-glass` | same | same |
 | Padding | 32px | 24px | 20px |
 | Position (typical) | `position: absolute; top: 32px; right: 32px;` (peeks from upper-right corner of the panel) OR docked bottom-right | same | inline-flow on mobile, no float |
-| Content | Stat numeral (Darky `clamp(40,5vw,72)px` weight 700) + caption (CS Genio Mono 14px 500) OR small badge / status | same | same |
+| Content | Stat numeral (Darky `clamp(40,5vw,72)px` weight 700) + caption (Open Sans 14px 500) OR small badge / status | same | same |
 | Numeral → caption gap | 16px | 16px | 16px |
 | Hover | bottom-right shift | same | same |
 
@@ -974,7 +1060,7 @@ Two warm Candy Panels stacked = orange-tinted page. Two Sky Candy Panels stacked
 }
 
 .candy-panel__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -998,7 +1084,7 @@ Two warm Candy Panels stacked = orange-tinted page. Two Sky Candy Panels stacked
 }
 
 .candy-panel__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.55;
   color: var(--ink-3);
@@ -1194,7 +1280,7 @@ One liquid-glass stat tile per Candy Panel, anchored upper-right or lower-right 
 |----------|-------|
 | Position | `position: absolute; top: 32px; right: 32px;` (default upper-right) OR `bottom: 32px; right: 32px;` |
 | Padding | 32px desktop / 24px iPad / 20px mobile |
-| Content | Stat numeral (Darky `clamp(40,5vw,72)px` 700) + caption (CS Genio Mono 14px 500) |
+| Content | Stat numeral (Darky `clamp(40,5vw,72)px` 700) + caption (Open Sans 14px 500) |
 | Mobile (<768px) | Drops out of `position: absolute`, flows inline below body, full-width |
 | Surface variant | `.lg-surface` (Candy Panel fills are light) |
 
@@ -1237,7 +1323,7 @@ A small liquid-glass badge anchored to a Photo Card (with Bottom Gradient Overla
 | Position | `position: absolute; top: 16px; right: 16px;` (within Photo Card frame) |
 | Padding | 8px 14px |
 | Border radius | `--r-pill` (50vh) — pill shape |
-| Font | CS Genio Mono 12px 600 uppercase 0.04em |
+| Font | Open Sans 12px 600 uppercase 0.04em |
 | Content | Single token — tier name (`Bronze`) OR status (`Sold out`) OR date stamp (`Aug 21`) OR category (`Film`). Max 1 token. |
 | Mobile (<768px) | Same — stays inside card frame top-right |
 | Surface variant | `.lg-surface--dark` (Photo Card image is photographic, behaves as dark surface — text reads white) |
@@ -1255,7 +1341,7 @@ For long-form Marketing pages (article, case study, About): a small liquid-glass
 | Min-width | 120px | 120px | 100px |
 | Padding | 12px 20px | 12px 18px | 10px 16px |
 | Border radius | `--r-pill` (50vh) | same | same |
-| Font | CS Genio Mono 14px 600 uppercase 0.04em | same | 12px |
+| Font | Darky 14px 600 uppercase 0.04em | same | 12px |
 | Content | EITHER scroll progress (`23% read`) OR sticky CTA (`Subscribe` / `Apply now`) — choose ONE, not both | same | same |
 | Z-index | 90 | same | same |
 | Show / hide | Hidden until user scrolls past hero (offset 600px); fades in over 240ms | same | same |
@@ -1573,7 +1659,7 @@ Set these on the `.unified-sidebar` root; every other rule reads from them:
 | `--us-item-gap` | `6px` | Vertical gap between adjacent pills |
 | `--us-tile` | `40px` | Icon tile (square) |
 | `--us-icon` | `22px` | Icon glyph size inside tile |
-| `--us-cap-size` | `11px` | Caption font-size (CS Genio Mono) |
+| `--us-cap-size` | `11px` | Caption font-size (Open Sans) |
 | `--us-radius` | `14px` | Pill border-radius |
 | `--us-trans` | `260ms cubic-bezier(0.4, 0, 0.2, 1)` | Background / shadow / border transition |
 
@@ -1597,7 +1683,7 @@ Set these on the `.unified-sidebar` root; every other rule reads from them:
 | **Active red dot** | 4×4 circle, `bottom: -3px; left: 50%; transform: translateX(-50%); background: var(--brand-red) #c1121f; box-shadow: 0 0 0 1.5px var(--snow);` (snow ring isolates the dot from the pill edge) |
 | Pill internal layout | `display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px;` |
 | Icon tile | 40×40 (`--us-tile`), centered. Icon glyph 22px (`--us-icon`), color matches caption. Default opacity 0.78 → hover/active 1.0. |
-| Caption | CS Genio Mono `--us-cap-size` (11px) 600 uppercase 0.02em. `max-width: 68px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;` |
+| Caption | Open Sans `--us-cap-size` (11px) 600 uppercase 0.02em. `max-width: 68px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;` |
 | Caption color | Idle `--ink-4` `#6a6a6a` · Hover/Active `--ink` `#0a0a0a` |
 | Transition | `background var(--us-trans), border-color var(--us-trans), box-shadow var(--us-trans), color 180ms ease, opacity 180ms ease` |
 | Bell badge (Alerts) | Same pill structure; small red `--brand-red` 6×6 dot at top-right of icon tile (top: -2px; right: -2px; box-shadow ring) when `data-unread="true"` |
@@ -1684,7 +1770,7 @@ The vertical rail collapses to a horizontal bottom dock at mobile width. Same co
                  display: grid; place-items: center;
                  opacity: 0.78; transition: opacity 180ms ease; }
 .us-item__icon svg { width: var(--us-icon); height: var(--us-icon); }
-.us-item__cap { font-family: var(--font-mono); font-size: var(--us-cap-size);
+.us-item__cap { font-family: var(--font-body); font-size: var(--us-cap-size);
                 font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;
                 color: var(--ink-4); max-width: 68px;
                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1782,11 +1868,11 @@ The vertical rail collapses to a horizontal bottom dock at mobile width. Same co
 | Background | iOS 26 Liquid Glass — Light Variant (`.lg-surface` token from § 8.9.1: white-alpha base + radial specular highlight + multi-layer inset shadow + `backdrop-filter: blur(32px) saturate(180%)`) |
 | Border | `0.5px solid rgba(255, 255, 255, 0.40)` |
 | Pulse dot (`.cd-agent-pulse`) | 7×7 circle, `background: var(--status-done) #16a34a`, `border-radius: 50%`. Animation: 2.8s scale + opacity loop (`@keyframes cd-pulse: 0%/100% scale(1) opacity(1) → 50% scale(1.6) opacity(0.45)`). |
-| Label (`.cd-agent-label`) | "Push is active" — CS Genio Mono 13px 600, color `var(--ink-2)`, letter-spacing 0.01em |
+| Label (`.cd-agent-label`) | "Push is active" — Open Sans 13px 600, color `var(--ink-2)`, letter-spacing 0.01em |
 | Separator (`.cd-agent-sep`) | Middle-dot `·` — color `var(--ink-5)`, 13px |
-| Needs-you button (`.cd-agent-needs-you`) | "{N} NEEDS YOU" — CS Genio Mono 12px 700 uppercase 0.04em, color `var(--brand-red)`. Renders as `<button>` (clickable — opens the action queue). Hover: bottom-right shift `translate(1px, 1px)` (this one IS interactive, so it gets the standard button hover). Hidden when `actionsNeeded === 0`. |
-| Detail (`.cd-agent-detail`) | "${pendingTotal} pending" — CS Genio Mono 12px 500, color `var(--ink-4)` |
-| Last action (`.cd-agent-last`) | "last action 2m ago" — CS Genio Mono 12px 500, color `var(--ink-5)`, `margin-left: auto` (right-aligned). Mobile: wraps to next line. |
+| Needs-you button (`.cd-agent-needs-you`) | "{N} NEEDS YOU" — Open Sans 12px 700 uppercase 0.04em, color `var(--brand-red)`. Renders as `<button>` (clickable — opens the action queue). Hover: bottom-right shift `translate(1px, 1px)` (this one IS interactive, so it gets the standard button hover). Hidden when `actionsNeeded === 0`. |
+| Detail (`.cd-agent-detail`) | "${pendingTotal} pending" — Open Sans 12px 500, color `var(--ink-4)` |
+| Last action (`.cd-agent-last`) | "last action 2m ago" — Open Sans 12px 500, color `var(--ink-5)`, `margin-left: auto` (right-aligned). Mobile: wraps to next line. |
 | Spacing | 12px gap between every inline element. Right-side last-action pushes via `margin-left: auto`. |
 | Mobile (<768px) | Container becomes 2-row stack: row 1 = pulse + label + needs-you button; row 2 = detail + last action. `padding: 12px 16px`. |
 
@@ -1818,11 +1904,11 @@ The vertical rail collapses to a horizontal bottom dock at mobile width. Same co
 
 ```
 ┌─────────────────────────────┐
-│  (EYEBROW)  TOTAL SCANS     │  ← CS Genio Mono 11px 700 uppercase --ink-3
+│  (EYEBROW)  TOTAL SCANS     │  ← Open Sans 11px 700 uppercase --ink-3
 │                             │
 │  2,847                      │  ← Darky Bold clamp(40,5vw,64)px --ink
 │                             │
-│  ▲ +12.4% vs last week     │  ← CS Genio Mono 12px delta: green/red
+│  ▲ +12.4% vs last week     │  ← Open Sans 12px delta: green/red
 └─────────────────────────────┘
 ```
 
@@ -1832,11 +1918,11 @@ The vertical rail collapses to a horizontal bottom dock at mobile width. Same co
 | Border radius | `var(--r-xl)` (16px) |
 | Box shadow | `var(--shadow-1)` |
 | Padding | `24px` all sides (desktop) / `20px` (mobile) |
-| Eyebrow | CS Genio Mono 11px 700 uppercase letter-spacing 0.12em `--ink-3` |
+| Eyebrow | Open Sans 11px 700 uppercase letter-spacing 0.12em `--ink-3` |
 | Eyebrow → numeral gap | 8px |
 | KPI numeral | Darky Bold `clamp(40px, 5vw, 64px)` `--ink` (Brand Red for primary metric only) |
 | Numeral → delta gap | 16px |
-| Delta text | CS Genio Mono 12px 500 · `▲` positive `color: #22c55e` · `▼` negative `color: var(--brand-red)` · neutral `--ink-3` |
+| Delta text | Open Sans 12px 500 · `▲` positive `color: #22c55e` · `▼` negative `color: var(--brand-red)` · neutral `--ink-3` |
 | Hover | Bottom-right shift `translate(1px,1px)` if card is clickable; no shift if display-only |
 | Grid desktop | 3-up (4+4+4 col span) gap 24px |
 | Grid iPad | 2-up (4+4 col span) gap 20px |
@@ -1873,7 +1959,7 @@ Each secondary section is a separate white / `--surface-2` panel with `--r-xl` r
 .kpi-card:active { transform: translate(2px, 2px) scale(0.98); }
 
 .kpi-card__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--ink-3);
@@ -1892,7 +1978,7 @@ Each secondary section is a separate white / `--surface-2` panel with `--r-xl` r
 .kpi-card__numeral--primary { color: var(--brand-red); }
 
 .kpi-card__delta {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px; font-weight: 500;
   display: flex; align-items: center; gap: 4px;
 }
@@ -1913,7 +1999,7 @@ Each secondary section is a separate white / `--surface-2` panel with `--r-xl` r
 
 ### 8.15 Cinema Selects Text Pattern — Q&A / Data / Prose (📐 STRUCTURED)
 
-> The Editorial Table (§ 8.6) establishes the visual grammar: **dotted hairline row separators** + **Darky first column** + **CS Genio Mono remaining columns**. This § extends that grammar to **prose contexts** — Q&A sections, feature comparisons, founder bios, attribution event logs, FAQ blocks. The layout is not a table element; it's a series of `<dl>`, `<div>` rows, or flex rows following the same visual rhythm.
+> The Editorial Table (§ 8.6) establishes the visual grammar: **dotted hairline row separators** + **Darky first column** + **Open Sans remaining columns**. This § extends that grammar to **prose contexts** — Q&A sections, feature comparisons, founder bios, attribution event logs, FAQ blocks. The layout is not a table element; it's a series of `<dl>`, `<div>` rows, or flex rows following the same visual rhythm.
 
 #### 8.15.1 Row Structure
 
@@ -1922,7 +2008,7 @@ Each "row" in the Cinema Selects pattern has exactly two zones:
 | Zone | Role | Typography |
 |------|------|------------|
 | **Label / Question** | Left zone, ~30% width | Darky 18-20px 700 `--ink`, top-aligned, no wrap preferred |
-| **Value / Answer** | Right zone, ~70% width | CS Genio Mono 16px 400 `--ink-3`, line-height 1.6, wraps normally |
+| **Value / Answer** | Right zone, ~70% width | Open Sans 16px 400 `--ink-3`, line-height 1.6, wraps normally |
 
 Between every row: `border-top: 1px dotted rgba(10,10,10,0.20)` (the `--hairline-dotted` token).
 
@@ -1961,7 +2047,7 @@ Then all subsequent rows use `dotted` separators.
 }
 
 .cs-block__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--ink-3);
@@ -2005,7 +2091,7 @@ Then all subsequent rows use `dotted` separators.
 }
 
 .cs-row__value {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px; font-weight: 400;
   color: var(--ink-3);
   line-height: 1.65;
@@ -2019,7 +2105,7 @@ Then all subsequent rows use `dotted` separators.
   align-items: center;
 }
 .cs-row--log .cs-row__label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px; font-weight: 500;
   color: var(--ink-4);
 }
@@ -2031,7 +2117,7 @@ Then all subsequent rows use `dotted` separators.
 
 /* Status pill inside data log rows */
 .cs-status {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.08em;
   padding: 3px 10px;
@@ -2090,7 +2176,7 @@ The committed-action button — Apply, Launch, Reserve, Submit, Buy.
 .btn-primary {
   background: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2161,7 +2247,7 @@ Outlined, no fill. Lower-stakes pair to Filled Primary in dialog actions.
   background: transparent;
   color: var(--ink);
   border: 1px solid var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2186,7 +2272,7 @@ Pill-radius, smaller padding, used for non-primary repeated chips.
 .btn-pill {
   background: var(--surface-3);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2460,7 +2546,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 - [ ] Color values come from the Allowed-Color List in § 2 only — photos / SVG visual effects exempt
 - [ ] Body text = `--ink-3` warm gray, headings = `--ink` (or `--graphite` for mid-strong, `--char` on dark surface)
 - [ ] No body text < 12px, no display text > 160px (Hero Magvix), > 320px (Footer Wordmark only exception)
-- [ ] Three fonts loaded via `@font-face` — Magvix-Regular, Magvix-Italic, Darky-*, CS Genio Mono
+- [ ] Three fonts loaded via `@font-face` — Magvix-Regular, Magvix-Italic, Darky-*, Open Sans
 - [ ] Tailwind theme exposes only the 12 type-scale sizes + radii scale + 8px spacing scale + Allowed-Color List
 - [ ] All colors come from CSS custom properties — no hardcoded hex outside `:root`
 - [ ] Mobile (<768px) tap targets ≥ 44×44
@@ -2515,7 +2601,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Pill radius | `--r-pill` (50vh) |
 | Pill padding | `8px 18px` |
 | Text-only variant | No fill; label text only, same font |
-| Font | CS Genio Mono 14px 600 uppercase 0.04em |
+| Font | Darky 14px 600 uppercase 0.04em |
 
 ```css
 .nav-item--pill {
@@ -2523,7 +2609,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   align-items: center;
   padding: 8px 18px;
   border-radius: 50vh;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2588,10 +2674,10 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Background | `#0F0E0E` |
 | Layout | 2-column: left col ~4:5 photo card + caption, right col hero text |
 | Left: image | 4:5 portrait photo, `border-radius: 8px` (Figma uses 8px panel radius) |
-| Left: caption | CS Genio Mono 12px, color `#555659`, below image |
+| Left: caption | Open Sans 12px, color `#555659`, below image |
 | Right: headline | Darky `clamp(40px, 5vw, 72px)` weight 700, color `#F6F8FB` |
-| Right: body | CS Genio Mono 16px line-height 1.55, color `#8C8D92` |
-| Right: metadata | CS Genio Mono 12px uppercase, color `#555659` |
+| Right: body | Open Sans 16px line-height 1.55, color `#8C8D92` |
+| Right: metadata | Open Sans 12px uppercase, color `#555659` |
 | Hover | Bottom-right shift on entire article card |
 
 ### 19.4 Article - small (Figma node 1:100)
@@ -2607,7 +2693,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Grid | 2-column, 4:5 portrait photos |
 | Caption placement | **BELOW the image** (not overlaid) |
 | Image radius | `8px` |
-| Caption font | CS Genio Mono 12px, color `#555659` |
+| Caption font | Open Sans 12px, color `#555659` |
 | Title | Darky 20px weight 700, color `#F6F8FB`, below caption |
 | Gap between image and caption | 8px |
 | Gap between caption and title | 12px |
@@ -2666,7 +2752,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Label color | `#F6F8FB` near-white |
 | Radius | `8px` |
 | Padding | `14px 28px` |
-| Font | CS Genio Mono 16px 600 uppercase 0.04em |
+| Font | Open Sans 16px 600 uppercase 0.04em |
 | Hover | Bottom-right shift `translate(2px, 2px)` |
 
 ```css
@@ -2675,7 +2761,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   background: #1F1F1F;
   color: #F6F8FB;
   border-radius: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px; font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -2698,9 +2784,9 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Background | `#0F0E0E` |
 | Column structure | 4 cols: Title / Year / Mood / Description |
 | Col 1 (Title) | Darky 20px weight 700 color `#F6F8FB` |
-| Col 2 (Year) | CS Genio Mono 16px color `#8C8D92` |
-| Col 3 (Mood/Tag) | CS Genio Mono 16px color `#8C8D92` |
-| Col 4 (Description) | CS Genio Mono 16px color `#555659`, right-aligned |
+| Col 2 (Year) | Open Sans 16px color `#8C8D92` |
+| Col 3 (Mood/Tag) | Open Sans 16px color `#8C8D92` |
+| Col 4 (Description) | Open Sans 16px color `#555659`, right-aligned |
 | Row divider | `border-bottom: 1px dotted rgba(255,255,255,0.15)` |
 | Row vertical padding | `20px 0` |
 | Mobile | Collapses — title full-width top, year/mood inline below, description drops |
@@ -2720,8 +2806,8 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 }
 .table-row:hover { transform: translate(2px, 2px); }
 .table-row__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: #F6F8FB; }
-.table-row__meta  { font-family: var(--font-mono); font-size: 16px; color: #8C8D92; }
-.table-row__desc  { font-family: var(--font-mono); font-size: 16px; color: #555659; text-align: right; }
+.table-row__meta  { font-family: var(--font-body); font-size: 16px; color: #8C8D92; }
+.table-row__desc  { font-family: var(--font-body); font-size: 16px; color: #555659; text-align: right; }
 ```
 
 ### 19.8 Subscribe container (Figma node 1:168)
@@ -2739,7 +2825,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Perforation | Dashed 2px lines running left + right sides (inset ~14px from edge) |
 | Headline | Magvix Italic `clamp(56px, 8vw, 96px)` color `#0F0E0E`, **centered** |
 | Headline text | "Tune into the signal" |
-| Body | CS Genio Mono 16px-18px, color `#1F1F1F` centered, max-width 480px |
+| Body | Open Sans 16px-18px, color `#1F1F1F` centered, max-width 480px |
 | Body text | "No noise—just deep cuts on music, film, and culture" |
 | CTA button | Dark fill `#0F0E0E` + snow text, `border-radius: 8px` (Filled Ink variant) |
 | CTA label | "Subscribe" |
@@ -2767,7 +2853,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   line-height: 1.0;
 }
 .subscribe-container__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 18px;
   color: #1F1F1F;
   text-align: center;
@@ -2788,7 +2874,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Number of photos | 5 per row |
 | Each photo | ~256×256px square (approx: (1360 − 4×20) / 5 = 256px per cell) |
 | Image radius | None (or minimal — editorial square crop) |
-| Caption | "Link" text below each photo in CS Genio Mono 12px `#555659` |
+| Caption | "Link" text below each photo in Open Sans 12px `#555659` |
 | Caption gap | 8px below image |
 | Background | Transparent / page bg (#0F0E0E) |
 | Hover | Bottom-right shift on individual photo card |
@@ -2815,7 +2901,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   width: 100%;
 }
 .photo-row__caption {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   color: #555659;
 }
@@ -2920,15 +3006,15 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 |----------|-------|
 | Shape | Square (1:1 aspect ratio) |
 | Album cover | Full-bleed photograph / artwork |
-| Badge — left | `"ARTIFACT"` — rectangular pill, white 1px border, white CS Genio Mono 12px 700 uppercase |
-| Badge — right | `"GA-03"` — oval outline pill, white 1px border, white CS Genio Mono 12px |
+| Badge — left | `"ARTIFACT"` — rectangular pill, white 1px border, white Open Sans 12px 700 uppercase |
+| Badge — right | `"GA-03"` — oval outline pill, white 1px border, white Open Sans 12px |
 | Badge position | Absolute, bottom of the album card, inset 16px from left/right edges |
 
 **Metadata row** (below album art card):
 
 | Property | Value |
 |----------|-------|
-| Artist line | `"False Memory by Artifact"` — CS Genio Mono 16px, white `#F6F8FB` |
+| Artist line | `"False Memory by Artifact"` — Open Sans 16px, white `#F6F8FB` |
 | CTA link | `"▶ Listen now"` — Magvix Italic ~24px, white |
 | Gap | 8px between artist line and CTA |
 
@@ -2997,7 +3083,7 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 }
 
 .ga-album-badge {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -3019,7 +3105,7 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 }
 
 .ga-album-meta__artist {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   color: #F6F8FB;
 }
@@ -3061,5 +3147,32 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 7. **📐 STRUCTURED — Navigation dark bg**: GA nav uses `#1F1F1F`, not the light `rgba(248,244,232,0.85)` from Push marketing nav (§ 8.1). Two separate nav specs for two registers.
 8. **📐 STRUCTURED — Featured Album Section**: background is always `#141414` + BW photo at 60%. No Brand Red / Blue CTA — use Magvix Italic "Listen now" link only. Section title top-left (Darky Bold). Album display is a content column, not a card — no border, no shadow, no Candy Panel.
 9. **📐 STRUCTURED — Archive Hero Section**: no panel wrapper, no border-radius. Title anchored bottom-left directly on the photo. No interactive affordance on the hero frame — the Button-large that follows is the CTA.
+
+---
+
+### Hero Greeting Block (📐 STRUCTURED · Product UI register only)
+
+A page-top welcome composition used on `/creator/today` and reserved for any workspace surface where the day's brief is the primary content. NEVER use on Marketing pages — Marketing pages use Magvix Hero instead.
+
+**Composition (locked):**
+- Eyebrow: Open Sans 12px 700, color `var(--ink-4)`, `text-transform: uppercase`, `letter-spacing: 0.04em`. Content = date line (e.g. "Tuesday, May 5").
+- 8px gap.
+- Greeting: Darky 800 `clamp(32px, 4vw, 40px)`, color `var(--ink)`, `line-height: 1.1`, single line, ellipsize on overflow.
+- 16px gap.
+- Hero line: Darky 500 `clamp(18px, 1.6vw, 22px)`, color `var(--ink-3)`, max-width `56ch`, `line-height: 1.4`, max 2 lines.
+- 24px gap.
+- Optional CTA: one Filled Primary button. Never two CTAs. Never Editorial Pink stamp here (this is Product UI).
+- Bottom: 1px `var(--ink-6)` hairline as the section divider, full page-content width.
+
+**Spacing:**
+- Block top padding: `64px` desktop, `48px` iPad, `32px` mobile.
+- Block bottom padding: `0` (the hairline serves as bottom edge).
+- Side padding: workspace standard (8px-grid token, e.g. 64px → 48px → 24px).
+
+**Constraints:**
+- One Hero Greeting Block per page. Never two.
+- Greeting and hero text both wrapped in `suppressHydrationWarning` if either is computed from `Date.now()` or relative-time logic.
+- Date line uses `toLocaleDateString` — risk SSR/CSR drift across timezones, so always pair with `useNow()` null-guard rendering empty.
+- Hero text max 25 words. If the source string exceeds, truncate upstream — don't let CSS do it.
 
 ---

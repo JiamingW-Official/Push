@@ -27,7 +27,7 @@
 
 .invite-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -89,7 +89,7 @@
   height: 48px;
   background-color: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 18px;
   display: flex;
@@ -116,7 +116,7 @@
 
 .invite-inviter-handle {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.02em;
 }
@@ -215,7 +215,7 @@
 
 .invite-code-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -268,7 +268,7 @@
 
 .invite-bonus-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -334,7 +334,7 @@
 }
 
 .invite-step-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 200;
   font-size: 48px;
   line-height: 1;
@@ -417,7 +417,7 @@
 
 .invite-role-tag {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -458,7 +458,7 @@
   display: inline-block;
   padding: 12px 24px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -507,7 +507,7 @@
   height: 64px;
   background-color: var(--ink);
   color: var(--snow);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 800;
   font-size: 22px;
   display: flex;
@@ -534,7 +534,7 @@
 
 .invite-profile-handle {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 12px;
   letter-spacing: 0.01em;

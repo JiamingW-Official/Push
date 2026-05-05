@@ -76,7 +76,7 @@
   align-items: center;
   padding: 2px 10px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -155,7 +155,7 @@
 }
 
 .cr-stat-label {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -192,7 +192,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -253,7 +253,7 @@
 /* Stat label — mono eyebrow */
 .creator-stat-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -270,7 +270,7 @@
 
 .creator-section-header__tag {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -311,7 +311,7 @@
 
 .creator-empty-state__message {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -320,7 +320,7 @@
 
 .creator-empty-state__sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted, rgba(0,48,73,0.55));
   max-width: 280px;
 }

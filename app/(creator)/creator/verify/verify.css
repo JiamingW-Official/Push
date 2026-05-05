@@ -134,7 +134,7 @@
 }
 
 .kv-progress__num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   color: var(--ink);
   line-height: 1;
@@ -685,7 +685,7 @@
 }
 
 .kv-review-section-label {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--ink);

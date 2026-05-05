@@ -27,17 +27,17 @@
 }
 
 .al-pinned__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brand-red);
 }
 
 .al-pinned__count {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
@@ -72,15 +72,16 @@
 }
 
 .al-pinned__time {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 .al-pinned__text {
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: var(--ink);
   line-height: 1.35;
@@ -102,10 +103,10 @@
 
 /* v11 product eyebrow — parenthetical mono uppercase */
 .al-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 8px;
@@ -144,8 +145,8 @@
 }
 
 .al-kpi-chip__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -171,8 +172,8 @@
 }
 
 .al-kpi-chip__sub {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
@@ -192,8 +193,8 @@
 }
 
 .al-filter-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -211,8 +212,8 @@
 
 /* Filter chip — pill variant (surface-3 + ink text) */
 .al-chip {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   padding: 5px 12px;
@@ -256,8 +257,8 @@
 
 /* Search input — 8px radius per spec */
 .al-search {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   padding: 6px 12px;
   background: var(--surface);
   border: 1px solid var(--hairline);
@@ -293,8 +294,8 @@
   border-radius: 8px;
   background: var(--accent-blue, #0085ff);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -315,8 +316,8 @@
 
 .al-count {
   margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -342,8 +343,8 @@
 }
 
 .al-table-head span {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -359,8 +360,8 @@
   /* v11: 8px padding top/bottom, 16px left/right */
   padding: 8px 24px;
   border-bottom: 1px solid var(--surface-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   cursor: pointer;
   transition: background 0.10s ease;
 }
@@ -393,26 +394,28 @@
 
 /* ---- Timestamp column ---- */
 .al-row__time-main {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   white-space: nowrap;
   letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 .al-row__time-ago {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
   letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 /* ---- Severity badge ---- */
 .al-sev {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -461,8 +464,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-3);
   flex-shrink: 0;
@@ -471,8 +474,8 @@
 
 /* User column — 600 weight, ink color (v11 spec) */
 .al-row__actor-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   overflow: hidden;
@@ -482,15 +485,15 @@
 
 /* ---- Event description ---- */
 .al-row__action {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .al-row__target-type {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -499,18 +502,19 @@
 }
 
 .al-row__target-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
 }
 
 /* ---- IP column ---- */
 .al-row__ip {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   white-space: nowrap;
   letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 /* ---- Pin indicator ---- */
@@ -549,7 +553,7 @@
 }
 
 .al-empty__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
@@ -558,7 +562,7 @@
 
 .al-empty__body {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -575,8 +579,8 @@
 }
 
 .al-pagination__info {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
@@ -591,8 +595,8 @@
   border: 1px solid var(--hairline);
   border-radius: 8px;
   background: var(--surface);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -663,7 +667,7 @@
 
 .al-drawer__title {
   flex: 1;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 700;
   color: var(--ink);
@@ -706,10 +710,10 @@
 }
 
 .al-section__head {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 10px;
@@ -723,13 +727,13 @@
   gap: 8px;
   padding: 6px 0;
   border-bottom: 1px solid var(--hairline);
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-body);
 }
 
 .al-meta-row__key {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
 }
@@ -740,8 +744,8 @@
 }
 
 .al-meta-row__val--mono {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
 }
 
 .al-diff {
@@ -766,10 +770,10 @@
 }
 
 .al-diff__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 8px;
 }
@@ -781,8 +785,8 @@
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
 }
 
 .al-diff__k { color: var(--ink-4); flex-shrink: 0; }
@@ -793,7 +797,7 @@
   background: var(--surface-3);
   border-radius: 6px;
   border: 1px solid var(--hairline);
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: var(--ink);
   line-height: 1.6;

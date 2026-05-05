@@ -13,7 +13,7 @@
   margin: 0 auto;
   padding-bottom: var(--space-10);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 /* ─── Page header — tighten for Product UI register ───────────── */
@@ -39,7 +39,7 @@
 }
 
 .db-dashboard-page .ms-page-header-subtitle {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   color: var(--ink-3);
   line-height: 1.45;
@@ -84,7 +84,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1); /* 8px — text → trailing arrow */
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -101,7 +101,7 @@
 
 .db-section-link::after {
   content: "→";
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   transition: transform 180ms var(--spring);
 }
@@ -191,7 +191,7 @@
   align-items: center;
   justify-content: center;
   width: 14px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   line-height: 1;
 }
@@ -270,7 +270,7 @@
 
 .db-row-title {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--text-h5); /* 20px */
   font-weight: 700;
   letter-spacing: -0.005em;
@@ -283,7 +283,7 @@
 
 .db-row-meta {
   margin: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-small);
   line-height: 1.4;
   color: var(--ink-3);
@@ -305,7 +305,7 @@
 }
 
 .db-row-metric {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow); /* 12px floor */
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -319,7 +319,7 @@
 .db-empty-copy {
   margin: 0;
   padding: var(--space-6);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   line-height: 1.45;
   color: var(--ink-3);

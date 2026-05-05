@@ -12,7 +12,7 @@
   min-height: 100vh;
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -84,7 +84,7 @@
 
 .pc-hero-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -115,7 +115,7 @@
 
 .pc-category-chip {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   background: var(--surface-3);
   border: 1px solid var(--hairline);
@@ -156,7 +156,7 @@
 
 .pc-payout-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-3);
   text-transform: uppercase;
@@ -195,7 +195,7 @@
 
 .pc-section-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
 
 .pc-results-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 16px;
 }
@@ -254,7 +254,7 @@
 
 .pc-metric-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -270,7 +270,7 @@
 
 .pc-metric-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -400,14 +400,14 @@
 
 .pc-score-impact-label {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   font-weight: 600;
 }
 
 .pc-score-impact-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -445,7 +445,7 @@
 
 .pc-score-bar-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -467,7 +467,7 @@
 
 .pc-score-disclaimer {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   font-style: italic;
   margin: 0 0 12px;
@@ -475,7 +475,7 @@
 
 .pc-score-next-info {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -486,7 +486,7 @@
   border: 1px solid rgba(193, 18, 31, 0.2);
   border-radius: 8px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--brand-red);
   font-weight: 600;
 }
@@ -533,7 +533,7 @@
 
 .pc-tier-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -542,7 +542,7 @@
 }
 
 .pc-tier-label--current {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--brand-red);
 }
@@ -570,7 +570,7 @@
 .pc-tier-perk {
   margin-top: 16px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -593,7 +593,7 @@
 
 .pc-payout-commission {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0 0 12px;
 }
@@ -601,7 +601,7 @@
 .pc-payout-speed-badge {
   display: inline-block;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
   background: var(--surface-3);
   border: 1px solid var(--hairline);
@@ -628,7 +628,7 @@
 
 .pc-feedback-waiting-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -688,7 +688,7 @@
 
 .pc-next-step-title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
@@ -699,7 +699,7 @@
 
 .pc-next-step-desc {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -720,12 +720,12 @@
 
 .pc-motivation-count {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .pc-motivation-tagline {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
@@ -736,7 +736,7 @@
 .pc-milestone-badge {
   color: var(--champagne);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -806,7 +806,7 @@
 
 .pc-celebration-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--n2w-blue);
@@ -840,7 +840,7 @@
 
 .pc-celebration-desc {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.6);
   max-width: 360px;
   line-height: 1.6;
@@ -851,7 +851,7 @@
 
 .pc-celebration-dismiss {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;

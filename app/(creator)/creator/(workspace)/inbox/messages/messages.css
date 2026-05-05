@@ -41,13 +41,34 @@
 }
 
 .msg-list-pane-header {
-  padding: 20px 16px 12px;
+  padding: 20px 18px 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border-bottom: 1px solid var(--hairline);
   flex-shrink: 0;
 }
+
+/* Nav row — houses InboxTabNav (flex:1) + pencil icon button.
+   The bottom hairline acts as the tab underline's ground line. */
+.msg-list-pane-nav-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 4px;
+}
+/* When InboxTabNav is inside the nav row, its flex:1 fills the row.
+   The 2px active tab border-bottom overrides the row hairline.    */
+.msg-list-pane-nav-row .inbox-pane-nav {
+  margin-bottom: 0;
+}
+/* Pencil icon aligns to the bottom of the tab text baseline */
+.msg-list-pane-nav-row .ib-icon-btn {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+  color: var(--ink-4);
+}
+.msg-list-pane-nav-row .ib-icon-btn:hover { color: var(--ink); }
 
 .msg-list-search {
   display: flex;
@@ -67,8 +88,8 @@
   border: none;
   outline: none;
   background: transparent;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   min-width: 0;
 }
@@ -84,28 +105,25 @@
   box-shadow: none;
   padding: 0;
 }
-.msg-list-pane .cw-chip { padding: 6px 12px; font-size: 11px; }
+.msg-list-pane .cw-chip { padding: 6px 12px; font-size: 14px; }
 .msg-list-pane .cw-chip--active {
   background: var(--ink);
   box-shadow: none;
 }
 
 /* List body — premium scrollbar with breathing space.
-   `scrollbar-gutter: stable both-edges` reserves matching gutter on
-   the LEFT side too, so content stays visually centered when the
-   scrollbar appears. The thumb has 4px snow border around it so it
-   never visually touches the content edge. */
+   `scrollbar-gutter: stable both-edges` reserves equal gutter on
+   BOTH sides so content stays visually centered and the blue
+   active highlight has equal left/right margins inside the panel. */
 .msg-list-body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable both-edges;
   scrollbar-width: thin;
   scrollbar-color: var(--surface-3) transparent;
-  /* Right padding gap so scrollbar visually clears the row content */
-  padding-right: 6px;
 }
 .msg-list-body::-webkit-scrollbar { width: 12px; }
 .msg-list-body::-webkit-scrollbar-track {
@@ -125,10 +143,10 @@
 
 .msg-list-section-label {
   padding: 16px 16px 6px;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
 }
@@ -169,7 +187,11 @@
 .msg-list-row.is-active::after    { background: var(--accent-blue); }
 .msg-list-row.is-active:hover::after { background: #006fd6; }
 
-/* Active row text → snow on the blue inset highlight */
+/* Active row text → snow on the blue inset highlight.
+   Note: higher-specificity overrides at the END of this file for
+   the fullbleed pane context where .msg-pane-layout color rules
+   (0,2,0 specificity) would otherwise win over these (also 0,2,0
+   but appearing earlier in the cascade). */
 .msg-list-row.is-active .msg-list-row-name,
 .msg-list-row.is-active .msg-list-row-time,
 .msg-list-row.is-active .msg-list-row-preview {
@@ -207,7 +229,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   color: var(--snow);
@@ -238,7 +260,7 @@
   gap: 8px;
 }
 .msg-list-row-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
@@ -250,16 +272,16 @@
 }
 .msg-list-row.is-unread .msg-list-row-name { font-weight: 800; }
 .msg-list-row-time {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-5);
   flex-shrink: 0;
   white-space: nowrap;
 }
 .msg-list-row-preview {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.45;
   color: var(--ink-4);
   display: -webkit-box;
@@ -321,7 +343,7 @@
   margin-bottom: 20px;
 }
 .msg-thread-empty-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -329,8 +351,8 @@
   letter-spacing: -0.01em;
 }
 .msg-thread-empty-body {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.6;
   color: var(--ink-4);
   margin: 0;
@@ -356,14 +378,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 800;
   color: var(--snow);
 }
 .msg-thread-header-info { flex: 1; min-width: 0; }
 .msg-thread-header-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -371,8 +393,8 @@
   margin: 0;
 }
 .msg-thread-header-meta {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-5);
@@ -437,8 +459,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
   color: var(--snow);
   flex-shrink: 0;
@@ -451,7 +473,7 @@
   max-width: 72%;
   padding: 10px 14px;
   border-radius: 18px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.45;
   word-wrap: break-word;
@@ -482,8 +504,8 @@
   width: 100%;
   text-align: center;          /* centered date stamp like iMessage */
   margin: 8px 0;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.08em;
   color: var(--ink-5);
 }
@@ -524,7 +546,7 @@
   background: var(--surface-2);
   border: 1px solid transparent;
   border-radius: 18px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   resize: none;
@@ -640,16 +662,16 @@
 .msg-info-close:hover { background: var(--surface-3); color: var(--ink); }
 .msg-info-eyebrow {
   margin: 0 0 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
 }
 .msg-info-title {
   margin: 0 0 18px;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.015em;
@@ -669,24 +691,24 @@
   border-bottom: 1px dashed var(--hairline);
 }
 .msg-info-row dt {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
 }
 .msg-info-row dd {
   margin: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   color: var(--ink);
 }
 .msg-info-foot {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   font-style: italic;
 }
@@ -702,8 +724,8 @@
   background: var(--ink);
   color: var(--snow);
   border-radius: 50vh;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.02em;
   box-shadow: 0 12px 32px rgba(10,10,10,0.20);
   animation: msg-toast-in 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -727,15 +749,14 @@
 
 .ib-page.ib-page--fullbleed.ib-page {
   /* Override workspace-shell's 40/96px paddings — fill the viewport.
-     v11.3 — switched from flex column to GRID with explicit row tracks.
-     Grid `auto 1fr` forces .ib-content to receive exactly the remaining
-     space after the chrome (deterministic, no flex/height conflicts). */
+     v11.4 headerless — removed slim chrome, grid has only the 1fr
+     content row. The a11y live region is auto-sized (0px when empty). */
   padding: 0;
   height: 100svh;
   max-height: 100svh;
   overflow: hidden;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr;
 }
 
 /* Hard-lock the shell when an inbox fullbleed page is rendered.
@@ -781,7 +802,7 @@ body:has(.ib-page--fullbleed) .dh-main {
   align-items: baseline;
   gap: 10px;
   text-decoration: none;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   letter-spacing: -0.015em;
   color: var(--ink-4);
   transition: color 180ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -793,17 +814,17 @@ body:has(.ib-page--fullbleed) .dh-main {
   color: var(--ink);
 }
 .ib-slim-home-sep {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink-5);
   letter-spacing: 0;
 }
 .ib-slim-home-where {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
@@ -811,26 +832,29 @@ body:has(.ib-page--fullbleed) .dh-main {
 /* When fullbleed: pane layout hugs the .dh-main content edges
    (the 10vw shell padding is the bleed). 28px gap between panes.
    Critical for inner scroll:
-   - This element is BOTH .ib-content (flex: 1) AND .msg-pane-layout
-     (display: grid). flex: 1 from .ib-content sizes the box.
-   - DO NOT set `height: 100%` here — it conflicts with flex: 1
-     in some browsers and the grid row collapses to content size
-     (panes lose definite height → scroll silently no-ops).
+   - This element is BOTH .ib-content AND .msg-pane-layout (same node).
+   - `height: auto` overrides the base `calc(100vh - 220px)` so the
+     parent grid row (1fr of 100svh) determines the height, not a
+     hardcoded offset. With the parent being a proper display:grid
+     container of definite height, `height:auto` + `align-self:stretch`
+     gives a definite height context for inner `grid-template-rows:1fr`.
    - `grid-template-rows: 1fr` is what makes the grid row fill the
-     flex-allocated container height, giving panes definite scroll
+     parent-allocated container height, giving panes definite scroll
      context. */
 .ib-page.ib-page--fullbleed .msg-pane-layout {
-  /* Override base height (calc(100vh-220px) was for non-fullbleed) so
-     the outer grid's 1fr row determines the actual height instead. */
+  /* Reset base height so the parent grid row (1fr ≈ 100svh) governs.
+     padding: 2vh 0 is the 2% top/bottom breathing room. */
   height: auto;
-  /* Clear ib-content's padding-bottom:96px which eats grid space. */
-  padding: 0;
+  padding: 2vh 0;
   min-height: 0;
-  margin: 24px 0 64px;
-  gap: 28px;
+  /* gap between the two panes */
+  gap: 24px;
   display: grid;
   grid-template-columns: 400px minmax(0, 1fr);
   grid-template-rows: 1fr;
+  /* Ensure the element stretches to fill the outer grid row so inner
+     grid-template-rows:1fr gets a definite height context. */
+  align-self: stretch;
 }
 .ib-page.ib-page--fullbleed .msg-list-pane,
 .ib-page.ib-page--fullbleed .msg-thread-pane {
@@ -851,7 +875,7 @@ body:has(.ib-page--fullbleed) .dh-main {
   letter-spacing: -0.015em;
 }
 
-.msg-pane-layout .msg-list-search { height: 44px; padding: 0 14px; }
+.msg-pane-layout .msg-list-search { height: 40px; padding: 0 12px; }
 .msg-pane-layout .msg-list-search input {
   font-size: 15px;            /* 13 → 15 */
 }
@@ -860,14 +884,14 @@ body:has(.ib-page--fullbleed) .dh-main {
 }
 
 .msg-pane-layout .msg-list-pane .cw-chip {
-  font-size: 12px;            /* 11 → 12 */
+  font-size: 14px;            /* 11 → 12 */
   padding: 7px 14px;
   letter-spacing: 0.06em;
 }
 
 .msg-pane-layout .msg-list-section-label {
-  font-size: 12px;            /* 10 → 12 */
-  letter-spacing: 0.16em;
+  font-size: 14px;            /* 10 → 12 */
+  letter-spacing: 0.04em;
   padding: 20px 18px 8px;
   color: var(--ink-4);
 }
@@ -877,6 +901,8 @@ body:has(.ib-page--fullbleed) .dh-main {
   gap: 16px;
   /* No third column anymore — chevron removed per design feedback */
   grid-template-columns: 48px 1fr;
+  /* Ensure uniform 2-line height even when preview text is short */
+  min-height: 96px;
 }
 .msg-pane-layout .msg-list-avatar {
   width: 48px;
@@ -893,7 +919,7 @@ body:has(.ib-page--fullbleed) .dh-main {
   font-weight: 800;
 }
 .msg-pane-layout .msg-list-row-time {
-  font-size: 13px;            /* iMessage-scale time */
+  font-size: 14px;            /* iMessage-scale time */
   font-weight: 500;
   color: var(--ink-4);
 }
@@ -902,14 +928,16 @@ body:has(.ib-page--fullbleed) .dh-main {
   line-height: 1.5;
   -webkit-line-clamp: 2;
   color: var(--ink-4);
+  /* Always reserve 2-line height so all rows stay the same height */
+  min-height: calc(14px * 1.5 * 2);
 }
 .msg-pane-layout .msg-list-row.is-unread .msg-list-row-preview {
   color: var(--ink-3);
   font-weight: 500;
 }
 .msg-pane-layout .msg-list-section-label {
-  font-size: 12px;            /* bigger section labels TODAY/THIS WEEK */
-  letter-spacing: 0.18em;
+  font-size: 14px;            /* bigger section labels TODAY/THIS WEEK */
+  letter-spacing: 0.04em;
   padding: 22px 22px 10px;
   color: var(--ink-4);
 }
@@ -928,12 +956,12 @@ body:has(.ib-page--fullbleed) .dh-main {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
 }
 .msg-pane-layout .msg-thread-header-meta {
-  font-size: 11px;            /* aligned to row-meta scale */
+  font-size: 14px;            /* aligned to row-meta scale */
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-top: 4px;
@@ -984,19 +1012,19 @@ body:has(.ib-page--fullbleed) .dh-main {
 .msg-pane-layout .msg-bubble-avatar {
   width: 32px;
   height: 32px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .msg-pane-layout .msg-bubble-time {
   display: block;
   width: 100%;
   text-align: center;          /* centered date stamp like iMessage */
-  font-size: 11px;             /* aligned to row-meta scale */
+  font-size: 14px;             /* aligned to row-meta scale */
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 16px 0 10px;
   color: var(--ink-5);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 .msg-pane-layout .msg-composer {
@@ -1063,19 +1091,19 @@ body:has(.ib-page--fullbleed) .dh-main {
 }
 
 .msg-pane-layout .msg-attr-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.10em;            /* aligned to row-meta scale */
+  letter-spacing: 0.04em;            /* aligned to row-meta scale */
   text-transform: uppercase;
   color: var(--ink-5);
 }
 
 .msg-pane-layout .msg-attr-deadline {
-  font-family: var(--font-mono);
-  font-size: 11px;                   /* aligned to row-meta scale */
+  font-family: var(--font-body);
+  font-size: 14px;                   /* aligned to row-meta scale */
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
@@ -1106,18 +1134,18 @@ body:has(.ib-page--fullbleed) .dh-main {
   font-variant-numeric: tabular-nums;
 }
 .msg-pane-layout .msg-attr-stat-of {
-  font-family: var(--font-mono);
-  font-size: 13px;                   /* aligned to body-text scale */
+  font-family: var(--font-body);
+  font-size: 14px;                   /* aligned to body-text scale */
   font-weight: 600;
   color: var(--ink-5);
   margin-left: 4px;
   letter-spacing: 0;
 }
 .msg-pane-layout .msg-attr-stat-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
@@ -1147,8 +1175,8 @@ body:has(.ib-page--fullbleed) .dh-main {
   padding: 8px 12px;
   border-radius: 6px;
   background: rgba(193, 18, 31, 0.07);
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--brand-red);
   line-height: 1.5;
@@ -1159,8 +1187,8 @@ body:has(.ib-page--fullbleed) .dh-main {
   display: inline-flex;
   align-items: center;
   margin-right: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: #d9a73b;
   line-height: 1;
 }
@@ -1209,36 +1237,39 @@ body:has(.ib-page--fullbleed) .dh-main {
 }
 .ib-page.ib-page--fullbleed .ib-segmented-tab {
   padding: 10px 18px;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.08em;
+}
+
+@media (max-width: 1400px) {
+  .ib-page.ib-page--fullbleed .msg-pane-layout {
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 20px;
+  }
 }
 
 @media (max-width: 1280px) {
   .ib-page.ib-page--fullbleed .msg-pane-layout {
-    margin: 20px 0 32px;
-    grid-template-columns: 360px minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
   }
 }
 
 @media (max-width: 1100px) {
   .ib-page.ib-page--fullbleed .msg-list-pane,
   .ib-page.ib-page--fullbleed .msg-thread-pane {
-    border-radius: 24px;
+    border-radius: 22px;
   }
   .ib-page.ib-page--fullbleed .msg-pane-layout {
-    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-columns: 290px minmax(0, 1fr);
+    gap: 16px;
   }
 }
 
 @media (max-width: 760px) {
   .ib-page.ib-page--fullbleed .msg-pane-layout {
     grid-template-columns: 1fr;
-    margin: 12px 0 20px;
     gap: 0;
-  }
-  .ib-page.ib-page--fullbleed .cw-header.ib-hero-header.ib-hero-header--slim {
-    padding: 14px 0 12px;
   }
   .msg-pane-layout .msg-list-pane,
   .msg-pane-layout .msg-thread-pane {
@@ -1264,10 +1295,10 @@ body:has(.ib-page--fullbleed) .dh-main {
 }
 
 .msg-draft-chips-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   flex-shrink: 0;
@@ -1281,8 +1312,8 @@ body:has(.ib-page--fullbleed) .dh-main {
   border-radius: var(--r-pill);
   border: 1px solid var(--hairline);
   background: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-3);
   cursor: pointer;
@@ -1322,7 +1353,7 @@ body:has(.ib-page--fullbleed) .dh-main {
 }
 
 .msg-disclosure-icon {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   flex-shrink: 0;
   color: var(--brand-red);
@@ -1330,16 +1361,16 @@ body:has(.ib-page--fullbleed) .dh-main {
 
 .msg-disclosure-text {
   flex: 1;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--brand-red);
 }
 
 .msg-disclosure-link {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--brand-red);
@@ -1352,4 +1383,181 @@ body:has(.ib-page--fullbleed) .dh-main {
 @media (prefers-reduced-motion: reduce) {
   .msg-draft-chip { transition: none; }
   .msg-draft-chip:hover { transform: none; }
+}
+
+/* inbox-pane-nav styles live in inbox.css (shared). See inbox.css end. */
+
+/* ── System sidebar: same nav-row hairline pattern as Messages ── */
+.ib-sys-sidebar .inbox-pane-nav-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 12px;
+}
+.ib-sys-sidebar .inbox-pane-nav-row .inbox-pane-nav {
+  margin-bottom: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ACTIVE ROW WHITE TEXT — high-specificity overrides (0,3,0)
+   These beat the .msg-pane-layout .msg-list-row-* color rules
+   (0,2,0) that appear earlier in this file and share the same
+   specificity, making them win due to cascade order.
+   ══════════════════════════════════════════════════════════════ */
+
+.msg-pane-layout .msg-list-row.is-active .msg-list-row-name,
+.msg-pane-layout .msg-list-row.is-active .msg-list-row-time,
+.msg-pane-layout .msg-list-row.is-active .msg-list-row-preview {
+  color: var(--snow);
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HAMBURGER FILTER DROPDOWN — liquid-glass vertical filter panel
+   Shared by both Messages and System left panels.
+   Opened by the ≡ icon in the nav-row; contains filter items
+   stacked vertically instead of horizontal chips.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Wrapper gives a position context for the floating panel */
+.msg-filter-wrap {
+  position: relative;
+  flex-shrink: 0;
+  /* align with the bottom of the tab text baseline */
+  margin-bottom: 6px;
+}
+
+/* iOS 26 liquid-glass floating panel — ultra-glassy */
+.msg-filter-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 300;
+  min-width: 200px;
+  padding: 6px;
+  /* Multi-layer glass: top specular burst + side catch lights + semi-transparent base.
+     Lower opacity (0.42) lets the blurred background show through strongly. */
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 48%),
+    radial-gradient(ellipse at 100% 100%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 52%),
+    radial-gradient(ellipse at 0% 60%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 50%),
+    rgba(255,255,255,0.42);
+  /* 72px blur + high saturation + brightness lift = max glass depth */
+  -webkit-backdrop-filter: blur(72px) saturate(220%) brightness(1.06);
+  backdrop-filter: blur(72px) saturate(220%) brightness(1.06);
+  /* Asymmetric border: crisp top edge (glass catches light at top),
+     softer sides and bottom. */
+  border-top: 1px solid rgba(255,255,255,0.88);
+  border-left: 0.5px solid rgba(255,255,255,0.55);
+  border-right: 0.5px solid rgba(255,255,255,0.55);
+  border-bottom: 0.5px solid rgba(255,255,255,0.30);
+  border-radius: 20px;
+  box-shadow:
+    /* deep ambient drop */
+    0 28px 72px rgba(10,10,10,0.20),
+    0 8px 24px rgba(10,10,10,0.12),
+    /* inner top highlight — glass edge */
+    inset 0 2px 0 rgba(255,255,255,0.96),
+    /* inner bottom depth */
+    inset 0 -1px 0 rgba(10,10,10,0.08),
+    /* side catch lights */
+    inset 1px 0 0 rgba(255,255,255,0.50),
+    inset -1px 0 0 rgba(255,255,255,0.50);
+  animation: msg-dropdown-in 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes msg-dropdown-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Vertical filter item inside the dropdown */
+.msg-filter-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.msg-filter-item:hover {
+  background: rgba(10,10,10,0.05);
+  color: var(--ink);
+  transform: translate(1px, 1px);
+}
+.msg-filter-item:active { transform: translate(2px, 2px) scale(0.98); }
+.msg-filter-item.is-active {
+  background: var(--ink);
+  color: var(--snow);
+}
+.msg-filter-item.is-active:hover {
+  background: var(--char);
+  color: var(--snow);
+  transform: translate(1px, 1px);
+}
+.msg-filter-item:focus-visible {
+  outline: 2px solid rgba(0,133,255,0.45);
+  outline-offset: -2px;
+  border-radius: 10px;
+}
+
+/* Count badge inside a filter item */
+.msg-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 50vh;
+  background: rgba(193,18,31,0.12);
+  color: var(--brand-red);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.msg-filter-item.is-active .msg-filter-badge {
+  background: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.90);
+}
+
+/* Thin hairline divider inside the dropdown */
+.msg-filter-divider {
+  height: 1px;
+  background: rgba(10,10,10,0.07);
+  margin: 4px 6px;
+}
+
+/* Section label inside the dropdown */
+.msg-filter-section-label {
+  padding: 8px 14px 4px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+/* Reduce animation for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .msg-filter-dropdown { animation: none; }
+  .msg-filter-item { transition: none; }
+  .msg-filter-item:hover { transform: none; }
 }

@@ -95,8 +95,8 @@
    Product register: no parens in canonical eyebrow
    ------------------------------------------------------------ */
 .fin-page-eyebrow {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -106,8 +106,8 @@
 
 /* Admin page uses the existing .adm-page-eyebrow — we override for finance */
 .adm-page-eyebrow.fin-eyebrow-override {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -124,7 +124,7 @@
 
 .fin-hero__eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -175,8 +175,8 @@
 }
 
 .adm-kpi-card__eyebrow {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -200,8 +200,8 @@
 }
 
 .adm-kpi-card__sub {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.4;
 }
@@ -223,8 +223,8 @@
 }
 
 .fin-stat__label {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -319,7 +319,7 @@
 
 .fin-stream__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -373,8 +373,8 @@
 }
 
 .fin-stream__time {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.35);
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -390,8 +390,8 @@
 }
 
 .fin-stream__type {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -425,7 +425,7 @@
 }
 
 .fin-stream__amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 300;
   letter-spacing: -0.02em;
@@ -471,8 +471,8 @@
 }
 
 .fin-filter-group label {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -481,7 +481,7 @@
 
 .fin-filter-group input,
 .fin-filter-group select {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   background: var(--surface);
@@ -521,7 +521,7 @@
 
 /* btn-primary — Brand Red fill */
 .btn-primary {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -553,7 +553,7 @@
 
 /* btn-secondary — N2W Blue fill */
 .btn-secondary {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -585,7 +585,7 @@
 
 /* btn-ghost — transparent + 1px ink border */
 .btn-ghost {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -617,7 +617,7 @@
 
 /* btn-ink — Ink fill (dark surface) */
 .btn-ink {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -650,13 +650,13 @@
 /* btn-sm modifier — compact padding for filter rows */
 .btn-sm {
   padding: 8px 16px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* fin-btn legacy aliases (used by existing page) */
 .fin-btn {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -700,7 +700,7 @@
 
 .fin-btn--sm {
   padding: 5px 10px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 /* ------------------------------------------------------------
@@ -716,7 +716,7 @@
 .fin-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
 }
 
@@ -731,8 +731,8 @@
 .fin-table th {
   padding: 12px 16px;
   text-align: left;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -751,7 +751,7 @@
   border-bottom: 1px solid var(--hairline);
   vertical-align: middle;
   white-space: nowrap;
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
 }
 
@@ -774,10 +774,10 @@
 }
 
 .fin-table__ts {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
   letter-spacing: 0.02em;
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
 }
 
 .fin-table__party {
@@ -789,16 +789,16 @@
 }
 
 .fin-table__ref {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .fin-table__amount {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   text-align: right;
@@ -820,8 +820,8 @@
   align-items: center;
   border-radius: 6px;
   padding: 2px 8px;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -864,8 +864,8 @@
 .fin-badge {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -904,8 +904,8 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.03em;
 }
@@ -973,15 +973,15 @@
 }
 
 .fin-pagination__info {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   flex: 1;
 }
 
 .fin-pagination__btn {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   background: none;
@@ -1031,7 +1031,7 @@
 }
 
 .fin-panel__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1048,8 +1048,8 @@
 }
 
 .fin-panel__key {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   letter-spacing: 0.04em;
 }
@@ -1075,8 +1075,8 @@
 }
 
 .fin-panel__tag {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1103,8 +1103,8 @@
 }
 
 .fin-panel__note {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   margin-top: 2px;
 }
@@ -1146,7 +1146,7 @@
 }
 
 .fin-stripe-panel__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1178,8 +1178,8 @@
 }
 
 .fin-stripe-panel__key {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1187,8 +1187,8 @@
 }
 
 .fin-stripe-panel__note {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   margin-top: 4px;
 }
@@ -1241,8 +1241,8 @@
 }
 
 .fin-chart__label {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   fill: var(--ink-3);
   text-anchor: middle;
 }
@@ -1250,8 +1250,8 @@
 .fin-chart__legend {
   display: flex;
   gap: var(--space-3);
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -1293,7 +1293,7 @@
 }
 
 .fin-scheduler__countdown {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 36px;
   font-weight: 200;
   letter-spacing: -0.04em;
@@ -1302,8 +1302,8 @@
 }
 
 .fin-scheduler__sub {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   margin-top: 2px;
 }
@@ -1377,7 +1377,7 @@
 }
 
 .fin-action-card__label {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 700;
   color: var(--ink);
@@ -1389,8 +1389,8 @@
 }
 
 .fin-action-card__desc {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
   white-space: normal;
@@ -1444,7 +1444,7 @@
 }
 
 .fin-modal__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1458,8 +1458,8 @@
 }
 
 .fin-modal__field label {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1469,7 +1469,7 @@
 .fin-modal__field input,
 .fin-modal__field textarea,
 .fin-modal__field select {
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   background: var(--surface);
@@ -1499,8 +1499,8 @@
 }
 
 .fin-modal__note {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--brand-red);
   background: var(--brand-red-tint, rgba(193, 18, 31, 0.05));
   padding: 10px 14px;
@@ -1518,8 +1518,8 @@
   right: var(--space-4);
   background: var(--ink);
   color: var(--surface);
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   padding: 12px 16px;
@@ -1547,16 +1547,16 @@
   text-align: center;
   padding: var(--space-6);
   color: var(--ink-3);
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   background: var(--surface-2);
 }
 
 .fin-loading {
   padding: var(--space-4);
   text-align: center;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   letter-spacing: 0.06em;
   animation: shimmer 1.5s linear infinite;
@@ -1677,6 +1677,6 @@
   .btn-ghost,
   .btn-ink {
     padding: 12px 24px;
-    font-size: 12px;
+    font-size: 14px;
   }
 }

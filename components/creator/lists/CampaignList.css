@@ -46,8 +46,8 @@
 }
 
 .cl-campaign-title {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   white-space: nowrap;
   overflow: hidden;
@@ -65,10 +65,10 @@
 
 /* Status badge */
 .cl-badge {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 2px 8px;
   border-radius: var(--r-xl);
@@ -117,8 +117,8 @@
 }
 
 .cl-empty__body {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.6;
   color: var(--graphite);
   margin: 0;

@@ -58,12 +58,12 @@
   max-width: 680px;
 }
 
-/* Eyebrow — CS Genio Mono 12px 700 uppercase parenthetical (Marketing register) */
+/* Eyebrow — body 12px 700 uppercase (§ rule: eyebrow = Open Sans) */
 .pv11-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
   margin: 0 0 16px;
@@ -80,12 +80,12 @@
   margin: 0 0 24px;
 }
 
-/* Subtitle — CS Genio Mono 18px body */
+/* Subtitle — Open Sans 18px body */
 .pv11-hero-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.4;
-  letter-spacing: -0.1em;
+  letter-spacing: 0;
   color: var(--ink-3);
   max-width: 52ch;
   margin: 0 0 32px;
@@ -132,10 +132,10 @@
 }
 
 .pv11-badge-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
   text-align: right;
@@ -166,12 +166,12 @@
   margin-bottom: 56px;
 }
 
-/* Section eyebrow — parenthetical Marketing variant */
+/* Section eyebrow — Open Sans per typography rule */
 .pv11-section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
   margin: 0 0 16px;
@@ -249,8 +249,8 @@
   align-items: center;
   background: var(--champagne);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -262,10 +262,10 @@
 
 /* Tier eyebrow */
 .pv11-tier-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
   margin: 0 0 16px;
@@ -309,9 +309,9 @@
   color: var(--snow);
 }
 
-/* Price sub — CS Genio Mono 14px label */
+/* Price sub — Open Sans 14px label */
 .pv11-price-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -322,10 +322,10 @@
   color: rgba(255, 255, 255, 0.48);
 }
 
-/* Price note — 12px mono, divider below */
+/* Price note — 12px body, divider below */
 .pv11-price-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.02em;
   color: var(--ink-3);
   margin: 0 0 24px;
@@ -356,8 +356,8 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.4;
   letter-spacing: 0.02em;
   color: var(--ink-3);
@@ -371,7 +371,7 @@
   flex-shrink: 0;
   color: var(--brand-red);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 1px;
 }
 
@@ -384,8 +384,8 @@
 
 /* Fine print below grid */
 .pv11-tiers-fine {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.06em;
   color: var(--ink-4);
   text-align: center;
@@ -422,12 +422,12 @@
   z-index: 1;
 }
 
-/* Ticket eyebrow — parenthetical */
+/* Ticket eyebrow */
 .pv11-ticket-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(10, 10, 10, 0.56);
   margin: 0 0 24px;
@@ -445,12 +445,12 @@
   margin: 0 0 16px;
 }
 
-/* Subtitle — CS Genio Mono 16px body-small */
+/* Subtitle — Open Sans 16px body-small */
 .pv11-ticket-sub {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.72);
   max-width: 480px;
@@ -481,12 +481,12 @@
   padding: 0 64px;
 }
 
-/* Table eyebrow — parenthetical Marketing */
+/* Table eyebrow */
 .pv11-table-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
   margin: 0 0 16px;
@@ -527,13 +527,13 @@
   padding-top: 0;
 }
 
-/* All cells — CS Genio Mono 16px base */
+/* All cells — Open Sans 16px base */
 .pv11-tcell {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   font-weight: 400;
   color: var(--ink-3);
-  letter-spacing: -0.125em;
+  letter-spacing: 0;
   line-height: 1.4;
   display: flex;
   align-items: center;
@@ -542,7 +542,7 @@
 
 /* Header cells — mono 12px 700 uppercase (§8.6 Editorial Table spec) */
 .pv11-trow--head .pv11-tcell {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--ink-3);
@@ -551,7 +551,7 @@
 
 /* Feature column — Darky 20px 700 (§8.6 first-column spec) */
 .pv11-tcell--feature {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -560,8 +560,8 @@
 
 /* Header feature cell reverts to mono eyebrow */
 .pv11-trow--head .pv11-tcell--feature {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--ink-3);
@@ -569,9 +569,9 @@
 
 /* Push column — value color via inline style */
 .pv11-tcell--push {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  letter-spacing: -0.125em;
+  font-family: var(--font-body);
+  font-size: 18px;
+  letter-spacing: -0.111em;  /* v12.1 — was -0.125em at 16px */
 }
 
 /* Last column — right-aligned (§8.6 spec) */
@@ -739,7 +739,7 @@
   }
 
   .pv11-tiers-fine {
-    font-size: 10px;
+    font-size: 14px;
   }
 }
 

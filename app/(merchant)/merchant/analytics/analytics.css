@@ -6,7 +6,7 @@
 
 .an-page {
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 /* ------------------------------------------------------------------ */
@@ -37,7 +37,7 @@
   border-radius: 999px;
   color: var(--ink-3);
   cursor: pointer;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -75,7 +75,7 @@
   border-radius: var(--r-sm);
   color: var(--ink);
   cursor: pointer;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -130,7 +130,7 @@
 
 .an-page .kpi-card__eyebrow {
   font-size: var(--text-eyebrow);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
 }
 
 .an-page .kpi-card__numeral {
@@ -140,7 +140,7 @@
 }
 
 .an-page .kpi-card__delta {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -166,10 +166,10 @@
 
 .an-eyebrow {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -289,7 +289,7 @@
   border-radius: var(--r-sm);
   color: var(--snow, #fff);
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 600;
   gap: 6px;
@@ -310,7 +310,7 @@
 
 .an-chart-tooltip strong {
   color: var(--snow, #fff);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -330,8 +330,8 @@
 .an-chart-label {
   color: var(--ink-4);
   display: flex;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   justify-content: center;
   letter-spacing: 0.02em;
@@ -361,10 +361,10 @@
 
 .an-glass-tile__eyebrow {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -382,8 +382,8 @@
 
 .an-glass-tile__caption {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
@@ -409,7 +409,7 @@
 .an-table th,
 .an-table td {
   border-bottom: 1px solid var(--hairline);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-small, 14px);
   padding: 16px;
   text-align: left;
@@ -419,7 +419,7 @@
   color: var(--ink-3);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -451,7 +451,7 @@
   color: var(--ink);
   cursor: pointer;
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -541,7 +541,7 @@
 
 .an-leaderboard-handle {
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -564,10 +564,10 @@
 
 .an-leaderboard-stats span {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 

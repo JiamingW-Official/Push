@@ -310,8 +310,8 @@ form.form-loading {
 .merchant-login-forgot {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
