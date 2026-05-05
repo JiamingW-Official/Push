@@ -52,6 +52,7 @@ function GigsShell({ children }: { children: React.ReactNode }) {
 
   const pending = invites.filter((i) => i.status === "pending");
   const pendingCount = pending.length;
+  const activeCount = invites.filter((i) => i.status === "accepted").length;
 
   const urgentCount =
     now == null
@@ -59,6 +60,7 @@ function GigsShell({ children }: { children: React.ReactNode }) {
       : pending.filter((i) => i.expiresAt - now < 6 * 60 * 60 * 1000).length;
 
   const invPop = usePopOnChange(pendingCount);
+  const activePop = usePopOnChange(activeCount);
 
   const tabs = [
     {
@@ -72,8 +74,8 @@ function GigsShell({ children }: { children: React.ReactNode }) {
     {
       href: "/creator/gigs/active",
       label: "Active",
-      count: 0,
-      pop: false,
+      count: activeCount,
+      pop: activePop,
       urgent: false,
       match: (p: string) => p?.startsWith("/creator/gigs/active") ?? false,
     },
