@@ -37,6 +37,20 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/creator/inbox/invites",
+        destination: "/creator/gigs/invites",
+        permanent: true,
+      },
+      {
+        source: "/creator/inbox/invites/:slug*",
+        destination: "/creator/gigs/invites/:slug*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

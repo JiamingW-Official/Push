@@ -17,7 +17,7 @@ import {
   type NowSource,
   type NowItem,
 } from "@/lib/inbox/seed";
-import { useInboxState } from "@/lib/inbox/state";
+import { useWorkspaceState } from "@/lib/workspace/state";
 import { PaneHeader, PaneSubCount, EmptyState } from "@/lib/workspace/chrome";
 import "./inbox.css";
 
@@ -79,7 +79,7 @@ export default function InboxHubPage() {
     return () => clearInterval(id);
   }, []);
 
-  const { invites, threads, notifications } = useInboxState();
+  const { invites, threads, notifications } = useWorkspaceState();
   const items = useMemo(
     () => deriveNowItems({ invites, threads, notifications }),
     [invites, threads, notifications],
@@ -110,7 +110,7 @@ export default function InboxHubPage() {
       if (e.metaKey || e.ctrlKey) return;
       const map: Record<string, string> = {
         "1": "/creator/inbox/messages",
-        "2": "/creator/inbox/invites",
+        "2": "/creator/gigs/invites",
         "3": "/creator/inbox/system",
       };
       if (map[e.key]) {

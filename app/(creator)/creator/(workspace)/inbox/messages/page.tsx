@@ -26,7 +26,7 @@ import {
   type AttributionStatus,
   type MessageRole,
 } from "@/lib/inbox/seed";
-import { useInboxState } from "@/lib/inbox/state";
+import { useWorkspaceState } from "@/lib/workspace/state";
 import Link from "next/link";
 import {
   PaneHeader,
@@ -290,7 +290,7 @@ export default function InboxMessagesPage() {
      mark-read, star toggle, send all propagate to the segmented
      nav badge + Hub Now view in real time. */
   const { threads, markThreadRead, toggleStar, sendMessage, notifications } =
-    useInboxState();
+    useWorkspaceState();
 
   const [activeId, setActiveId] = useState<string | null>(
     threads[0]?.id ?? null,

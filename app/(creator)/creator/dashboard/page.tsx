@@ -347,7 +347,7 @@ const CHECKLIST: ChecklistItem[] = [
     label: "Accept your first campaign invite",
     done: true,
     doneByPush: true,
-    href: "/creator/inbox/invites",
+    href: "/creator/gigs/invites",
   },
   {
     id: "c3",
@@ -476,7 +476,7 @@ function RecentRow({ item }: { item: RecentItem }) {
         {item.needsReview && (
           <>
             {" · "}
-            <Link href="/creator/inbox/invites" className="cd-recent-review">
+            <Link href="/creator/gigs/invites" className="cd-recent-review">
               Review
             </Link>
           </>

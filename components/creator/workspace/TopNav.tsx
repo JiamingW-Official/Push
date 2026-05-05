@@ -99,10 +99,10 @@ function getBreadcrumb(pathname: string): BreadcrumbConfig {
       sectionHref: "/creator/discover",
       title: "Discover",
     };
-  if (pathname.startsWith("/creator/inbox/invites"))
+  if (pathname.startsWith("/creator/gigs/invites"))
     return {
-      section: "Inbox",
-      sectionHref: "/creator/inbox",
+      section: "Gigs",
+      sectionHref: "/creator/gigs/invites",
       page: "Invites",
       title: "Invites",
     };

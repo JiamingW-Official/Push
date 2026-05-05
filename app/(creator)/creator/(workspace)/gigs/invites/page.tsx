@@ -19,7 +19,8 @@ import {
   type AcceptStep,
   type PayoutTier,
 } from "@/lib/inbox/seed";
-import { useInboxState } from "@/lib/inbox/state";
+import { useWorkspaceState } from "@/lib/workspace/state";
+import { useNow } from "@/lib/workspace/hooks";
 import {
   PaneHeader,
   PaneSubCount,
@@ -27,7 +28,7 @@ import {
   FilterChips,
 } from "@/lib/inbox/components";
 import { Button } from "@/lib/workspace/buttons";
-import "../inbox.css";
+import "../gigs.css";
 
 /* ── Page-local types ────────────────────────────────────────── */
 
@@ -37,20 +38,6 @@ type InviteFilter = "all" | "urgent" | "match";
 /* Seed data, helpers, and parsers were lifted to lib/inbox/seed.ts
    so Invites / Messages / System / Now share one source of truth.
    Page-local logic (rendering, state machines) stays here.        */
-
-/* ── SSR-safe "now" hook — returns null on first paint, then a
-       live timestamp after mount. Used to gate any render-time
-       comparison against Date.now() so SSR and client agree. */
-
-function useNow(intervalMs = 60_000): number | null {
-  const [now, setNow] = useState<number | null>(null);
-  useEffect(() => {
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), intervalMs);
-    return () => clearInterval(id);
-  }, [intervalMs]);
-  return now;
-}
 
 /* ── Countdown hook ──────────────────────────────────────────── */
 
@@ -542,7 +529,7 @@ export default function InvitesPage() {
   /* All mutations + state come from the shared context now. The
      side-effects (FTC compliance notification firing on Accept,
      unread badge updates) propagate to /messages, /system, and
-     the Hub Now view automatically. Audit §五 fully closed. */
+     the Hub Now view automatically. */
   const {
     invites,
     declineToast,
@@ -551,7 +538,7 @@ export default function InvitesPage() {
     undoLastDecline,
     toggleAcceptStep,
     acceptTopMatches,
-  } = useInboxState();
+  } = useWorkspaceState();
 
   const [batchAccepted, setBatchAccepted] = useState(false);
   const [batchConfirming, setBatchConfirming] = useState(false);

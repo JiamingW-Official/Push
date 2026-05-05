@@ -880,7 +880,7 @@ export function deriveNowItems(input: {
       body: `${inv.campaign} · expires in ${Math.max(1, Math.floor(ms / 3600_000))}h`,
       brand: inv.brand,
       brandInitial: inv.brandInitial,
-      href: "/creator/inbox/invites",
+      href: "/creator/gigs/invites",
       cta: "Review",
       payoutHint: hint,
     });

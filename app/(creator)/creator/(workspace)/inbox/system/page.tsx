@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { timeAgo } from "@/lib/notifications/useNotifications";
 import { type SystemNotif, type Category } from "@/lib/inbox/seed";
-import { useInboxState } from "@/lib/inbox/state";
+import { useWorkspaceState } from "@/lib/workspace/state";
 import { PaneHeader, PaneSubCount, EmptyState } from "@/lib/inbox/components";
 import { Button } from "@/lib/workspace/buttons";
 import "../inbox.css";
@@ -287,7 +287,7 @@ export default function SystemPage() {
     markNotifRead: markRead,
     markAllNotifsRead: markAllSystemRead,
     snoozeNotif,
-  } = useInboxState();
+  } = useWorkspaceState();
 
   const [activeCategory, setActiveCategory] = useState<Category>("all");
   const [expandedWhyId, setExpandedWhyId] = useState<string | null>(null);

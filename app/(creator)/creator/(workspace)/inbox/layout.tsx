@@ -2,20 +2,18 @@
 
 /* ============================================================
    Inbox Layout — v11.2 unified slim chrome on every route.
-   Now / Messages / Invites / System ALL use the slim segmented-nav
-   chrome — fixed viewport height, no page scroll, premium 64px
-   horizontal margins. The billboard "Inbox." landing has been
-   retired in favor of a dense Now feed.
+   Now / Messages / System use the slim segmented-nav chrome —
+   fixed viewport height, no page scroll, premium 64px margins.
 
-   <InboxStateProvider> wraps everything so accept invite in
-   /invites updates the unread badges on the segmented nav AND
-   propagates to /system + Hub Now feed in real time.
+   WorkspaceStateProvider is upstream in (workspace)/layout.tsx;
+   this layout just consumes the shared context.
+   Invites moved to /creator/gigs/invites (Prompt G).
    ============================================================ */
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { InboxStateProvider, useInboxState } from "@/lib/inbox/state";
+import { useWorkspaceState } from "@/lib/workspace/state";
 import "./inbox.css";
 
 /** Returns `true` for ~400ms after `value` changes — used to toggle
@@ -39,11 +37,7 @@ export default function InboxLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <InboxStateProvider>
-      <InboxShell>{children}</InboxShell>
-    </InboxStateProvider>
-  );
+  return <InboxShell>{children}</InboxShell>;
 }
 
 /** Map a pathname segment to the breadcrumb label rendered next
@@ -52,22 +46,16 @@ export default function InboxLayout({
 function breadcrumbLabel(pathname: string | null | undefined): string {
   if (!pathname) return "Now";
   if (pathname.startsWith("/creator/inbox/messages")) return "Messages";
-  if (pathname.startsWith("/creator/inbox/invites")) return "Invites";
   if (pathname.startsWith("/creator/inbox/system")) return "System";
   return "Now";
 }
 
 function InboxShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const {
-    unreadThreads,
-    unreadInvites,
-    unreadNotifications,
-    liveMessage,
-  } = useInboxState();
+  const { unreadThreads, unreadNotifications, liveMessage } =
+    useWorkspaceState();
 
   const msgPop = usePopOnChange(unreadThreads);
-  const invPop = usePopOnChange(unreadInvites);
   const sysPop = usePopOnChange(unreadNotifications);
 
   const tabs = [
@@ -77,13 +65,6 @@ function InboxShell({ children }: { children: React.ReactNode }) {
       count: unreadThreads,
       pop: msgPop,
       match: (p: string) => p?.startsWith("/creator/inbox/messages") ?? false,
-    },
-    {
-      href: "/creator/inbox/invites",
-      label: "Invites",
-      count: unreadInvites,
-      pop: invPop,
-      match: (p: string) => p?.startsWith("/creator/inbox/invites") ?? false,
     },
     {
       href: "/creator/inbox/system",

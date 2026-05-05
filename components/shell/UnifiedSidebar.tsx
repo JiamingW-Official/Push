@@ -16,6 +16,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Icon, type IconKey } from "./sidebar-icons";
+import { useOptionalWorkspaceState } from "@/lib/workspace/state";
+import { useNow } from "@/lib/workspace/hooks";
 import "./unified-sidebar.css";
 
 // ---------------------------------------------------------------------------
@@ -70,7 +72,7 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
       // Short captions (≤5 chars): live under each icon, no hover needed.
       // Full route name kept in href so analytics/aria still read clean.
       { label: "Today", href: "/creator/dashboard", icon: "home", exact: true },
-      { label: "Gigs", href: "/creator/work", icon: "work" },
+      { label: "Gigs", href: "/creator/gigs", icon: "work" },
       { label: "Find", href: "/creator/discover", icon: "discover" },
       { label: "Pay", href: "/creator/earnings", icon: "earnings" },
       { label: "Stats", href: "/creator/analytics", icon: "analytics" },
@@ -86,7 +88,12 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
     primary: [
       // Camps / Today / Stats / Inbox / Pay are shared with admin & creator
       // for cross-role muscle memory.
-      { label: "Today", href: "/merchant/dashboard", icon: "home", exact: true },
+      {
+        label: "Today",
+        href: "/merchant/dashboard",
+        icon: "home",
+        exact: true,
+      },
       { label: "Camps", href: "/merchant/campaigns", icon: "campaigns" },
       { label: "Pool", href: "/merchant/applicants", icon: "applicants" },
       { label: "Stats", href: "/merchant/analytics", icon: "analytics" },
@@ -140,6 +147,20 @@ export function UnifiedSidebar({
   const showBadge = notificationCount > 0;
   const badgeText = notificationCount > 99 ? "99+" : String(notificationCount);
 
+  const ws = useOptionalWorkspaceState();
+  const now = useNow();
+  const gigsPending =
+    role === "creator" && ws
+      ? ws.invites.filter((i) => i.status === "pending").length
+      : 0;
+  const gigsUrgent =
+    role === "creator" && ws && now != null
+      ? ws.invites.filter(
+          (i) =>
+            i.status === "pending" && i.expiresAt - now < 6 * 60 * 60 * 1000,
+        ).length
+      : 0;
+
   return (
     <aside
       className="us-rail"
@@ -163,16 +184,32 @@ export function UnifiedSidebar({
       <nav className="us-nav" aria-label="Primary">
         {config.primary.map((item) => {
           const active = isActive(item.href, item.exact);
+          const isGigs = item.href === "/creator/gigs";
+          const itemBadge = isGigs && gigsPending > 0 ? gigsPending : 0;
+          const itemBadgeUrgent = isGigs && gigsUrgent > 0;
           return (
             <Link
               key={item.href}
               href={item.href}
               className={`us-item${active ? " is-active" : ""}`}
               aria-current={active ? "page" : undefined}
+              aria-label={
+                isGigs && itemBadge > 0
+                  ? `Gigs, ${itemBadge} pending invite${itemBadge === 1 ? "" : "s"}`
+                  : undefined
+              }
             >
               <span className="us-item__pill">
                 <span className="us-item__icon" aria-hidden="true">
                   <Icon name={item.icon} />
+                  {itemBadge > 0 && (
+                    <span
+                      className={`us-badge${itemBadgeUrgent ? " us-badge--urgent" : ""}`}
+                      aria-hidden="true"
+                    >
+                      {itemBadge > 99 ? "99+" : String(itemBadge)}
+                    </span>
+                  )}
                 </span>
                 <span className="us-item__label">{item.label}</span>
               </span>

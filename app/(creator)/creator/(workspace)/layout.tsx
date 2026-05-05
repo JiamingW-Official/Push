@@ -6,6 +6,7 @@
 import type { ReactNode } from "react";
 import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
+import { WorkspaceStateProvider } from "@/lib/workspace/state";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -16,19 +17,21 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
 
   return (
     <CommandKProvider>
-      <a href="#cw-main-content" className="dh-skip">
-        Skip to main content
-      </a>
-      <div className="dh-shell">
-        <UnifiedSidebar
-          role="creator"
-          userInitial={initial}
-          userName={DEMO_CREATOR.name}
-        />
-        <main id="cw-main-content" className="dh-main">
-          {children}
-        </main>
-      </div>
+      <WorkspaceStateProvider>
+        <a href="#cw-main-content" className="dh-skip">
+          Skip to main content
+        </a>
+        <div className="dh-shell">
+          <UnifiedSidebar
+            role="creator"
+            userInitial={initial}
+            userName={DEMO_CREATOR.name}
+          />
+          <main id="cw-main-content" className="dh-main">
+            {children}
+          </main>
+        </div>
+      </WorkspaceStateProvider>
     </CommandKProvider>
   );
 }

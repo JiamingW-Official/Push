@@ -1,20 +1,22 @@
 "use client";
 
 /* ============================================================
-   Inbox shared state — single React context owning the three
-   data streams (invites · threads · notifications) and every
-   mutation that touches them.
+   Workspace shared state — single React context owning the
+   three data streams (invites · threads · notifications) and
+   every mutation that touches them.
 
-   Why this exists: before this provider, each tab held its own
-   useState fork of the same seed. Accept an invite in /invites
-   → /messages and /system didn't see it. Mark a thread read in
-   /messages → the unread badge on the segmented pill stayed
-   stale. The Hub view derived from seed but never reflected
-   user actions. Audit §五 root cause — solved here.
+   Covers inbox (threads, notifications) + gigs (invites,
+   active, history) so both surfaces consume one source of
+   truth. Accept an invite at /gigs/invites → notification
+   fires at /inbox/system → unread badge updates everywhere.
+
+   TODO(prompt-G-followup): lib/inbox/seed.ts stays at its
+   current path for this PR — renaming / splitting it is out of
+   scope. Update the import once that follow-up ships.
 
    When real APIs land: this provider is what gets replaced.
-   Pages keep importing useInboxState() and the action names
-   stay identical, so the UI surface doesn't move.
+   Pages keep importing useWorkspaceState() and the action
+   names stay identical, so the UI surface doesn't move.
    ============================================================ */
 
 import {
@@ -36,7 +38,7 @@ import {
   type Thread,
   type Message,
   type SystemNotif,
-} from "./seed";
+} from "@/lib/inbox/seed";
 
 /* ── Toast model — surface ephemeral undo for Decline ─────── */
 type DeclineToast = {
@@ -47,7 +49,7 @@ type DeclineToast = {
 
 /* ── Context shape ────────────────────────────────────────── */
 
-type InboxState = {
+type WorkspaceState = {
   invites: Invite[];
   threads: Thread[];
   notifications: SystemNotif[];
@@ -78,31 +80,29 @@ type InboxState = {
   markNotifRead: (id: string) => void;
   markAllNotifsRead: () => void;
   snoozeNotif: (id: string, hours: number) => void;
+
+  /* A11y announcer */
+  announce: (msg: string) => void;
 };
 
-const InboxStateContext = createContext<InboxState | null>(null);
+const WorkspaceStateContext = createContext<WorkspaceState | null>(null);
 
 /* ── Provider ─────────────────────────────────────────────── */
 
-export function InboxStateProvider({ children }: { children: ReactNode }) {
+export function WorkspaceStateProvider({ children }: { children: ReactNode }) {
   const [invites, setInvites] = useState<Invite[]>(SEED_INVITES);
   const [threads, setThreads] = useState<Thread[]>(SEED_THREADS);
   const [notifications, setNotifications] =
     useState<SystemNotif[]>(SEED_NOTIFICATIONS);
   const [declineToast, setDeclineToast] = useState<DeclineToast>(null);
 
-  /* A11y live-region: announce mutations to screen readers.
-     Updates here trigger an aria-live="polite" announcement via
-     <InboxLiveRegion /> rendered at the bottom of the layout. */
   const [liveMessage, setLiveMessage] = useState<string>("");
   const announce = useCallback((msg: string) => {
     setLiveMessage("");
-    // Force re-render with empty so identical-text repeats also fire.
     requestAnimationFrame(() => setLiveMessage(msg));
   }, []);
 
-  /* Auto-dismiss decline toast after 5s. The Undo button calls
-     undoLastDecline() before this fires. */
+  /* Auto-dismiss decline toast after 5s. */
   useEffect(() => {
     if (!declineToast) return;
     const ms = declineToast.expiresAt - Date.now();
@@ -110,8 +110,7 @@ export function InboxStateProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(t);
   }, [declineToast]);
 
-  /* Phase 0: auto-decline invites that have been expired for >24h.
-     Runs on mount and every 60s. No toast — silent system action. */
+  /* Phase 0: auto-decline invites that have been expired for >24h. */
   useEffect(() => {
     const run = () => {
       const cutoff = Date.now() - 24 * 60 * 60 * 1000;
@@ -141,14 +140,9 @@ export function InboxStateProvider({ children }: { children: ReactNode }) {
     );
     if (target) announce(`Accepted ${target.brand}. Sign FTC disclosure next.`);
 
-    /* Side effect: accepting an invite fires a real FTC
-       compliance notification — required by v5.4. This is
-       the kind of cross-stream consequence that used to
-       silently disappear when state was page-local. */
     setNotifications((prev) => {
       const target = SEED_INVITES.find((i) => i.id === id);
       if (!target) return prev;
-      // Don't duplicate if a disclosure prompt already exists
       const already = prev.some(
         (n) =>
           n.category === "compliance" &&
@@ -221,8 +215,6 @@ export function InboxStateProvider({ children }: { children: ReactNode }) {
   );
 
   const acceptTopMatches = useCallback(() => {
-    /* Use the unified acceptInvite per id so the FTC side
-       effect fires once per match — not once for the batch. */
     const ids = invites
       .filter((i) => i.matchScore >= 90 && i.status === "pending")
       .map((i) => i.id);
@@ -316,7 +308,7 @@ export function InboxStateProvider({ children }: { children: ReactNode }) {
     };
   }, [invites, threads, notifications]);
 
-  const value: InboxState = {
+  const value: WorkspaceState = {
     invites,
     threads,
     notifications,
@@ -334,24 +326,32 @@ export function InboxStateProvider({ children }: { children: ReactNode }) {
     markNotifRead,
     markAllNotifsRead,
     snoozeNotif,
+    announce,
   };
 
   return (
-    <InboxStateContext.Provider value={value}>
+    <WorkspaceStateContext.Provider value={value}>
       {children}
-    </InboxStateContext.Provider>
+    </WorkspaceStateContext.Provider>
   );
 }
 
-/* ── Hook ────────────────────────────────────────────────── */
+/* ── Hooks ───────────────────────────────────────────────── */
 
-export function useInboxState(): InboxState {
-  const ctx = useContext(InboxStateContext);
+export function useWorkspaceState(): WorkspaceState {
+  const ctx = useContext(WorkspaceStateContext);
   if (!ctx) {
     throw new Error(
-      "useInboxState must be called inside <InboxStateProvider>. " +
-        "Make sure your page is rendered under app/(creator)/creator/(workspace)/inbox/layout.tsx.",
+      "useWorkspaceState must be called inside <WorkspaceStateProvider>. " +
+        "Make sure your page is rendered under app/(creator)/creator/(workspace)/layout.tsx.",
     );
   }
   return ctx;
+}
+
+/** Returns null when called outside <WorkspaceStateProvider>.
+ *  Use for components (e.g. sidebar) that render in both
+ *  workspace and non-workspace contexts. */
+export function useOptionalWorkspaceState(): WorkspaceState | null {
+  return useContext(WorkspaceStateContext);
 }
