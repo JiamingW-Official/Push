@@ -184,7 +184,7 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   align-items: center;
   gap: 16px;
   align-self: start;   /* don't stretch — take only natural height */
-  padding: 16px 0 0;   /* breathing room from agent-bar */
+  padding: 16px 0 16px; /* top: agent-bar gap · bottom: space before Earnings panel */
 }
 
 /* Greeting card — left-col top panel, vertically centred */
@@ -312,6 +312,9 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   margin: 8px 0 0;
   line-height: 1.4;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── Arrow button — Ghost variant (§ 9.4) ───────────────── */
@@ -356,8 +359,8 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
   border-bottom: 1px solid var(--hairline);
 }
 
@@ -372,7 +375,7 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 
 .cd-earn-num {
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(36px, 4vw, 56px);
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -0.04em;
@@ -393,8 +396,8 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 .cd-earn-breakdown {
   display: flex;
   align-items: center;
-  padding-bottom: 24px;
-  margin-bottom: 24px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
   border-bottom: 1px solid var(--hairline);
 }
 
@@ -437,7 +440,7 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 
 .cd-earn-col-val {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.02em;
@@ -446,6 +449,62 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 
 .cd-earn-col-val--paid {
   color: var(--status-done);
+}
+
+/* Header left group: label + period pill */
+.cd-earn-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Period selector pill — Earnings card header */
+.cd-earn-period {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  transition:
+    opacity 160ms ease,
+    transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cd-earn-period:hover  { opacity: 0.82; transform: translate(1px, 1px); }
+.cd-earn-period:active { opacity: 0.70; transform: translate(2px, 2px) scale(0.98); }
+
+/* Action button row — between breakdown and tier footer */
+.cd-earn-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Compact size modifier for buttons inside Earnings card */
+.cd-earn-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 13px;
+  justify-content: center;
+}
+
+/* Ghost button white-on-orange override */
+.cd-card--brand-orange .btn-ghost.cd-earn-btn {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+}
+.cd-card--brand-orange .btn-ghost.cd-earn-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translate(1px, 1px);
+}
+.cd-card--brand-orange .btn-ghost.cd-earn-btn:active {
+  background: rgba(255, 255, 255, 0.20);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -545,6 +604,24 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   flex-shrink: 0;
 }
 
+/* Title + payout stacked on the left of cd-live-bottom */
+.cd-live-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cd-live-payout-line {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--brand-red);
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1;
+}
+
 /* ── Workflow strip — 5-step attribution pipeline ─────── */
 
 .cd-workflow-strip {
@@ -628,10 +705,10 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 
 .cd-wf-label {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--ink-5);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-align: center;
   line-height: 1.2;
 }
@@ -923,6 +1000,22 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   border-color: var(--status-done);
 }
 
+/* Vertical timeline connector — fades from dot to next dot */
+.cd-slot-radio {
+  position: relative;
+}
+.cd-slot:not(:last-child) .cd-slot-radio::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  width: 1px;
+  height: 54px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, var(--mist) 0%, transparent 88%);
+  pointer-events: none;
+}
+
 /* Shrink category icon inside slots */
 .cd-slot .cd-cat-icon {
   width: 32px;
@@ -947,26 +1040,16 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   letter-spacing: -0.01em;
 }
 
-.cd-slot-biz {
+.cd-slot-meta {
   font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-4);
-  margin: 0 0 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: 0.01em;
-}
-.cd-slot-addr {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--ink-5);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.01em;
 }
 
 .cd-slot-right {
@@ -1215,8 +1298,13 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   transform: translateX(-50%);
 }
 
+.cd-week-col--today .cd-week-bar {
+  background: #ff5e2b; /* GA Orange — today accent per spec §2 */
+  border-radius: 4px 4px 0 0;
+}
+
 .cd-week-col--today .cd-week-day {
-  color: var(--ink-3);
+  color: #ff5e2b;
   font-weight: 700;
 }
 
@@ -1380,7 +1468,7 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 
 .cd-avail-meta {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ink-4);
   margin: 0;
@@ -1390,13 +1478,37 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
   letter-spacing: 0.01em;
 }
 
+/* Shrink icon inside avail rows to match slot rows */
+.cd-avail-item .cd-cat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.cd-avail-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
 .cd-avail-pay {
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.02em;
-  flex-shrink: 0;
+  line-height: 1;
+}
+
+.cd-avail-dist {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-5);
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1970,8 +2082,8 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 /* ── Column row proportions ─────────────────────────────── */
 
 .cd-col--left {
-  /* auto greeting + 3 card rows: Earnings · This Week · Available */
-  grid-template-rows: auto minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 2fr);
+  /* greeting (auto) + Earnings (auto — natural height) + This Week + Available */
+  grid-template-rows: auto auto minmax(0, 1.2fr) minmax(0, 2fr);
 }
 
 .cd-col--center {
@@ -2337,6 +2449,10 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
     inset 0 -1px 0 rgba(0, 0, 0, 0.10);
 }
 
+.cd-card--brand-orange {
+  padding: 18px 20px;
+}
+
 .cd-card--brand-orange .cd-card-label {
   color: rgba(255, 255, 255, 0.72);
 }
@@ -2486,31 +2602,27 @@ body:has(.us-rail) .dh-main:has(> .cd-page) {
 .cd-card--dark-glass .cd-recent-time  { font-size: 12px; }
 
 /* ══════════════════════════════════════════════════════════
-   TODAY TIMELINE — status tints · payout color · status chip
+   TODAY TIMELINE — status tints · payout + scan count color
    ══════════════════════════════════════════════════════════ */
 
-/* Ambient tint on non-done rows */
-.cd-slot[data-status="OVERDUE"]  { background: rgba(193, 18, 31, 0.04); }
+/* Ambient tint on active rows */
+.cd-slot[data-status="OVERDUE"]  { background: rgba(193, 18, 31, 0.06); }
 .cd-slot[data-status="ON GOING"] { background: rgba(217, 119, 6, 0.04); }
 
 /* Payout numeral colored by outcome */
-.cd-slot[data-status="DONE"] .cd-slot-pay    { color: var(--status-done); }
-.cd-slot[data-status="OVERDUE"] .cd-slot-pay { color: var(--brand-red); }
+.cd-slot[data-status="DONE"] .cd-slot-pay     { color: var(--status-done); }
+.cd-slot[data-status="OVERDUE"] .cd-slot-pay  { color: var(--brand-red); }
 .cd-slot[data-status="ON GOING"] .cd-slot-pay { color: var(--status-warn); }
 
-/* Status chip — slot-right bottom badge */
-.cd-slot-chip {
+/* Scan count — right column secondary data */
+.cd-slot-scans {
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding: 3px 6px;
-  border-radius: 4px;
-  line-height: 1.4;
-  flex-shrink: 0;
-  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-5);
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
-.cd-slot-chip--done    { background: rgba(22, 163, 74, 0.10); color: var(--status-done); }
-.cd-slot-chip--overdue { background: rgba(193, 18, 31, 0.08); color: var(--brand-red); }
-.cd-slot-chip--ongoing { background: rgba(217, 119, 6, 0.08); color: var(--status-warn); }
+.cd-slot[data-status="DONE"] .cd-slot-scans     { color: var(--status-done); }
+.cd-slot[data-status="OVERDUE"] .cd-slot-scans  { color: var(--brand-red); }
+.cd-slot[data-status="ON GOING"] .cd-slot-scans { color: var(--status-warn); }

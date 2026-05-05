@@ -277,7 +277,7 @@ const AVAILABLE: AvailableCampaign[] = [
     payout: 22,
     category: "coffee",
     distance: "0.3 mi",
-    reason: "Matches coffee · 0.3 mi",
+    reason: "Coffee match",
   },
   {
     id: "a2",
@@ -286,7 +286,7 @@ const AVAILABLE: AvailableCampaign[] = [
     payout: 28,
     category: "food",
     distance: "0.8 mi",
-    reason: "High conversion · 0.8 mi",
+    reason: "High conversion",
   },
   {
     id: "a3",
@@ -295,7 +295,7 @@ const AVAILABLE: AvailableCampaign[] = [
     payout: 19,
     category: "food",
     distance: "1.1 mi",
-    reason: "Open slot tonight · 1.1 mi",
+    reason: "Open slot tonight",
   },
 ];
 
@@ -623,7 +623,10 @@ export default function CreatorDashboardPage() {
             /* Earnings card — hero + 3-col + tier footer */
             <div className="cd-card cd-card--brand-orange">
               <div className="cd-card-header">
-                <span className="cd-card-label">Earnings · April</span>
+                <div className="cd-earn-header-left">
+                  <span className="cd-card-label">Earnings</span>
+                  <button className="cd-earn-period">Apr ↓</button>
+                </div>
                 <CardArrow href="/creator/earnings" />
               </div>
 
@@ -650,6 +653,22 @@ export default function CreatorDashboardPage() {
                     +$21
                   </span>
                 </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="cd-earn-actions">
+                <Link
+                  href="/creator/earnings/withdraw"
+                  className="btn-ink cd-earn-btn"
+                >
+                  Withdraw $130
+                </Link>
+                <Link
+                  href="/creator/earnings"
+                  className="btn-ghost cd-earn-btn"
+                >
+                  Report
+                </Link>
               </div>
 
               {/* Tier footer — single caption row + 4px bar */}
@@ -682,7 +701,7 @@ export default function CreatorDashboardPage() {
             <div className="cd-card-header">
               <div>
                 <p className="cd-card-title">This week</p>
-                <p className="cd-today-date">$81 earned · ↑ 14% vs last</p>
+                <p className="cd-today-date">$81 earned · ↑ 14%</p>
               </div>
               <CardArrow href="/creator/wallet" />
             </div>
@@ -713,7 +732,9 @@ export default function CreatorDashboardPage() {
               <div className="cd-card-header">
                 <div>
                   <span className="cd-card-title">Available</span>
-                  <p className="cd-today-date">Push matched for you</p>
+                  <p className="cd-today-date">
+                    {availableList.length} matches nearby
+                  </p>
                 </div>
                 <CardArrow href="/creator/discover" />
               </div>
@@ -737,11 +758,21 @@ export default function CreatorDashboardPage() {
                     </span>
                     <div className="cd-avail-body">
                       <p className="cd-avail-biz">{c.business}</p>
-                      <p className="cd-avail-meta">
-                        {c.reason ?? c.distance} · {c.address}
-                      </p>
+                      <p className="cd-avail-meta">{c.reason ?? c.distance}</p>
                     </div>
-                    <span className="cd-avail-pay">${c.payout}</span>
+                    <div className="cd-avail-right">
+                      <span
+                        className="cd-avail-pay"
+                        style={
+                          c.payout >= 25
+                            ? { color: "var(--brand-red)" }
+                            : undefined
+                        }
+                      >
+                        ${c.payout}
+                      </span>
+                      <span className="cd-avail-dist">{c.distance}</span>
+                    </div>
                   </Link>
                 ))}
               </div>
@@ -873,7 +904,7 @@ export default function CreatorDashboardPage() {
 
                 {/* Single meta caption row — replaces alert banner + biz row + eyebrow */}
                 <p className="cd-live-meta-caption">
-                  {live.qrCode} · {live.business} · {live.address}
+                  {live.business} · {live.address}
                   {isOverdue ? (
                     <>
                       {" · "}
@@ -897,9 +928,10 @@ export default function CreatorDashboardPage() {
                 </p>
 
                 <div className="cd-live-bottom">
-                  <h2 className="cd-live-hero-title">
-                    {live.title} · ${live.payout}
-                  </h2>
+                  <div className="cd-live-title-group">
+                    <h2 className="cd-live-hero-title">{live.title}</h2>
+                    <p className="cd-live-payout-line">${live.payout}</p>
+                  </div>
                   <Link
                     href={`/creator/campaigns/${live.id}/post`}
                     className="btn-primary cd-live-submit"
@@ -959,25 +991,16 @@ export default function CreatorDashboardPage() {
                         </span>
                         <div className="cd-slot-body">
                           <p className="cd-slot-title">{slot.title}</p>
-                          <p className="cd-slot-biz">{slot.business}</p>
-                          <p className="cd-slot-addr">{slot.address}</p>
+                          <p className="cd-slot-meta">
+                            {slot.business} · {slot.address}
+                          </p>
                         </div>
                         <div className="cd-slot-right">
                           <span className="cd-slot-pay">${slot.payout}</span>
-                          <span
-                            className={`cd-slot-chip cd-slot-chip--${
-                              slot.status === "DONE"
-                                ? "done"
-                                : slot.status === "OVERDUE"
-                                  ? "overdue"
-                                  : "ongoing"
-                            }`}
-                          >
-                            {slot.status === "ON GOING"
-                              ? "Live"
-                              : slot.status === "DONE"
-                                ? "Done"
-                                : "Overdue"}
+                          <span className="cd-slot-scans">
+                            {slot.scanCount === 0
+                              ? "0 scans"
+                              : `${slot.scanCount} scan${slot.scanCount !== 1 ? "s" : ""}`}
                           </span>
                         </div>
                       </Link>
@@ -1000,25 +1023,9 @@ export default function CreatorDashboardPage() {
               </div>
               <CardArrow href="/creator/inbox/messages" />
             </div>
-            {/* Avatar bubble grid — all 8 contacts, 2 rows of 4 */}
-            <div className="cd-inbox-grid">
-              {INBOX_ITEMS.map((item, i) => (
-                <Link
-                  key={i}
-                  href="/creator/inbox/messages"
-                  className="cd-inbox-avatar"
-                  data-unread={item.unread || undefined}
-                  aria-label={item.name}
-                >
-                  <span className="cd-inbox-initials">{item.initials}</span>
-                  {item.unread && <span className="cd-inbox-dot" aria-hidden />}
-                </Link>
-              ))}
-            </div>
-
-            {/* 3-slot message preview rows */}
+            {/* Message preview rows */}
             <div className="cd-inbox-rows">
-              {INBOX_ITEMS.slice(0, 3).map((item, i) => (
+              {INBOX_ITEMS.slice(0, 5).map((item, i) => (
                 <Link
                   key={i}
                   href="/creator/inbox/messages"
