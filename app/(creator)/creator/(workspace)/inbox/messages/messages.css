@@ -1248,3 +1248,108 @@ body:has(.ib-page--fullbleed) .dh-main {
   .msg-pane-layout .msg-thread-body { padding: 22px 22px 16px; }
   .msg-pane-layout .msg-composer { padding: 16px 22px 20px; }
 }
+
+/* ── P1-A: MerchAgent draft reply chips ───────────────────────
+   Rule-based suggested replies above the composer. Each chip is
+   derived from campaign state — no LLM. Clicking prefills the
+   textarea and hides the chips for this thread session. */
+
+.msg-draft-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 36px 0;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.msg-draft-chips-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  flex-shrink: 0;
+}
+
+.msg-draft-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--snow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.msg-draft-chip:hover {
+  background: var(--surface-2);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue-deep, var(--accent-blue));
+  transform: translate(2px, 2px);
+}
+
+.msg-draft-chip:active {
+  transform: translate(3px, 3px) scale(0.97);
+}
+
+/* ── P1-B: DisclosureBot FTC warning strip ─────────────────────
+   Shows above the composer when the active thread's brand has an
+   unsigned FTC disclosure. Red-tinted left-accent strip with a
+   "Sign now →" link into the compliance flow. */
+
+.msg-disclosure-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 36px 0;
+  padding: 10px 14px;
+  background: rgba(193, 18, 31, 0.06);
+  border-left: 3px solid var(--brand-red);
+  border-radius: 0 8px 8px 0;
+  flex-shrink: 0;
+}
+
+.msg-disclosure-icon {
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
+  color: var(--brand-red);
+}
+
+.msg-disclosure-text {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--brand-red);
+}
+
+.msg-disclosure-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--brand-red);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 160ms ease;
+}
+.msg-disclosure-link:hover { opacity: 0.70; text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-draft-chip { transition: none; }
+  .msg-draft-chip:hover { transform: none; }
+}

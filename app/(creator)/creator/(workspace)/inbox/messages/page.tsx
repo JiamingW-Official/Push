@@ -27,6 +27,7 @@ import {
   type MessageRole,
 } from "@/lib/inbox/seed";
 import { useInboxState } from "@/lib/inbox/state";
+import Link from "next/link";
 import {
   PaneHeader,
   PaneSubCount,
@@ -288,7 +289,8 @@ export default function InboxMessagesPage() {
   /* Threads + thread mutations come from shared context now —
      mark-read, star toggle, send all propagate to the segmented
      nav badge + Hub Now view in real time. */
-  const { threads, markThreadRead, toggleStar, sendMessage } = useInboxState();
+  const { threads, markThreadRead, toggleStar, sendMessage, notifications } =
+    useInboxState();
 
   const [activeId, setActiveId] = useState<string | null>(
     threads[0]?.id ?? null,
@@ -298,6 +300,7 @@ export default function InboxMessagesPage() {
   const [composer, setComposer] = useState("");
   const [infoOpen, setInfoOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [draftChipUsed, setDraftChipUsed] = useState(false);
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLTextAreaElement>(null);
@@ -309,6 +312,11 @@ export default function InboxMessagesPage() {
     const t = setTimeout(() => setToast(null), 3000);
     return () => clearTimeout(t);
   }, [toast]);
+
+  /* Reset draft chips when the active thread changes */
+  useEffect(() => {
+    setDraftChipUsed(false);
+  }, [activeId]);
 
   /* Phone button — voice calls aren't shipped yet, but the button
      reads honest copy + announces to screen readers. */
@@ -395,6 +403,48 @@ export default function InboxMessagesPage() {
     () => threads.find((t) => t.id === activeId) ?? null,
     [threads, activeId],
   );
+
+  /* Rule-based draft reply chips — derived from last merchant message
+     + campaign attribution state. No LLM, no theater. */
+  const draftChips = useMemo<string[]>(() => {
+    if (!active) return [];
+    const last = active.messages[active.messages.length - 1];
+    if (!last || last.from !== "other") return [];
+    const chips: string[] = [];
+    const text = last.text.toLowerCase();
+    if (text.includes("?")) {
+      chips.push("Sounds good — what time works for you?");
+      chips.push("Sure! Planning to shoot this week.");
+    }
+    if (active.attribution) {
+      const dlMs =
+        new Date(active.attribution.deadlineISO).getTime() - Date.now();
+      const dlDays = Math.round(dlMs / (24 * 60 * 60 * 1000));
+      const behind =
+        active.attribution.scansVerified < active.attribution.scansTarget;
+      if (dlDays <= 2 && behind)
+        chips.push("On it — shooting today to hit the target.");
+      else if (active.attribution.scansVerified === 0)
+        chips.push("Got it — picking up the QR and shooting this week.");
+    }
+    if (chips.length === 0) chips.push("Got it, thanks!");
+    return chips.slice(0, 3);
+  }, [active]);
+
+  /* Check for an unsigned FTC disclosure on this thread's brand.
+     Returns the sign href so the banner can link directly. */
+  const hasPendingDisclosure = useMemo<string | null>(() => {
+    if (!active?.campaign) return null;
+    const senderFirst = active.sender.split(" ")[0].toLowerCase();
+    const notif = notifications.find(
+      (n) =>
+        n.category === "compliance" &&
+        !n.read &&
+        n.title.toLowerCase().includes(senderFirst),
+    );
+    return notif?.nextAction?.href ?? notif?.href ?? null;
+  }, [active, notifications]);
+
   const groupedMessages = useMemo(
     () => (active ? groupMessages(active.messages) : []),
     [active],
@@ -737,6 +787,43 @@ export default function InboxMessagesPage() {
               style={{ display: "none" }}
               aria-hidden
             />
+            {/* P1-A: MerchAgent draft reply chips — rule-based, no LLM */}
+            {draftChips.length > 0 && !draftChipUsed && (
+              <div className="msg-draft-chips" aria-label="Suggested replies">
+                <span className="msg-draft-chips-label">Suggested</span>
+                {draftChips.map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    className="msg-draft-chip"
+                    onClick={() => {
+                      setComposer(chip);
+                      setDraftChipUsed(true);
+                      composerRef.current?.focus();
+                    }}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
+            {/* P1-B: DisclosureBot — FTC warning when disclosure is pending */}
+            {hasPendingDisclosure && (
+              <div className="msg-disclosure-banner" role="alert">
+                <span className="msg-disclosure-icon" aria-hidden>
+                  ⚠
+                </span>
+                <span className="msg-disclosure-text">
+                  FTC disclosure required before posting
+                </span>
+                <Link
+                  href={hasPendingDisclosure}
+                  className="msg-disclosure-link"
+                >
+                  Sign now →
+                </Link>
+              </div>
+            )}
             <div className="msg-composer">
               <button
                 type="button"
