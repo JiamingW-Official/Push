@@ -6,8 +6,10 @@
    This file owns local module styling only. */
 
 .work-hub {
-  padding: 80px 10vw 120px;
-  margin: 0 auto;
+  /* Horizontal padding + symmetric 10% L/R bleed are owned by
+     components/shared/hub-shell.css. */
+  padding-top: 24px;
+  padding-bottom: 120px;
   background: var(--snow, #fff);
 }
 
@@ -19,7 +21,8 @@
 
 @media (max-width: 768px) {
   .work-hub {
-    padding: 56px 10vw 96px;
+    padding-top: 16px;
+    padding-bottom: 96px;
   }
   .work-bento {
     gap: 16px;
