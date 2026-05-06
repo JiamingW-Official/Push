@@ -10,7 +10,7 @@
 
 .kpb__eyebrow {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.10em;
   color: var(--ink-4, #61605c);
@@ -25,7 +25,7 @@
 
 .kpb__currency {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--ink-4, #61605c);
   font-variant-numeric: tabular-nums;
@@ -33,26 +33,26 @@
 
 .kpb__value {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(32px, 3.6vw, 52px);
+  font-size: clamp(36px, 4vw, 60px);
   font-weight: 800;
-  letter-spacing: -0.024em;
+  letter-spacing: -0.026em;
   line-height: 1.0;
   color: var(--ink, #111);
   font-variant-numeric: tabular-nums;
 }
 
 .kpb--compact .kpb__value {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .kpb--compact .kpb__currency {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .kpb__delta {
   font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--ink-4, #61605c);
   margin-top: 4px;

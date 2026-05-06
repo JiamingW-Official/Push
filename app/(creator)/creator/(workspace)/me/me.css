@@ -105,8 +105,8 @@
 
 .me-rank-context {
   font-family: var(--font-body, "Open Sans");
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.6;
   color: var(--graphite, #3a3835);
 }
 

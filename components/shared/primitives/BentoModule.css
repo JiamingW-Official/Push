@@ -116,6 +116,15 @@
   }
 }
 
+/* ── Hub-aware eyebrow accent — bento eyebrows pick up the
+   hub's accent color so each hub feels chromatically distinct. ── */
+
+.money-hub .bento__eyebrow { color: #2d6e4a; }
+.me-hub .bento__eyebrow { color: #1e5fad; }
+.comms-hub .bento__eyebrow { color: #c1121f; }
+.work-hub .bento__eyebrow { color: #ff5e2b; }
+.set-hub .bento__eyebrow { color: #8a704a; }
+
 /* ── Head: eyebrow + live indicator ──────────────────────── */
 
 .bento__head {
@@ -128,7 +137,7 @@
 
 .bento__eyebrow {
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.10em;
   color: var(--ink-4, #61605c);
@@ -182,9 +191,9 @@
 
 .bento__sub {
   font-family: var(--font-body, "Open Sans");
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--ink-4, #61605c);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--graphite, #3a3835);
   margin-top: auto;
   padding-top: 12px;
   max-width: 60ch;
