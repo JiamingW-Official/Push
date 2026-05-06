@@ -65,14 +65,20 @@ export default function MoneyHub() {
         </p>
       </header>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Live earnings</h2>
+        <span className="hub-section__count">01 · cash + flow</span>
+      </header>
+
       <section className="money-bento" aria-label="Money modules">
-        {/* ── EARNINGS HERO (span 7) ── */}
+        {/* ── EARNINGS HERO (span 7) — anchor ── */}
         <BentoModule
           href="/creator/money/earnings"
           eyebrow="EARNINGS · THIS MONTH"
           span={7}
           state={moduleState}
           live="live"
+          priority="hero"
           sub={`vs $${fmtMoney(summary.lastMonthEarned)} last month`}
         >
           <KpiBlock
@@ -165,13 +171,21 @@ export default function MoneyHub() {
             </span>
           </div>
         </BentoModule>
+      </section>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Reference</h2>
+        <span className="hub-section__count">02 · history + tax</span>
+      </header>
+
+      <section className="money-bento" aria-label="Money reference modules">
         {/* ── HISTORY (span 7) ── */}
         <BentoModule
           href="/creator/money/history"
           eyebrow="HISTORY · LAST 30 DAYS"
           span={7}
           state={moduleState}
+          priority="quiet"
           sub={`${transactions.length} transactions tracked · $${fmtMoney(lifetime)} lifetime`}
         >
           <KpiBlock
@@ -196,6 +210,7 @@ export default function MoneyHub() {
           eyebrow="TAX · 2026 1099-K ESTIMATE"
           span={12}
           state={moduleState}
+          priority="quiet"
           sub="Push reports payouts ≥ $600/year. Download W-9 + 1099 anytime."
         >
           <div className="money-tax-row">

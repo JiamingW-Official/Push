@@ -40,13 +40,19 @@ export default function CommsHub() {
         </p>
       </header>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Brand threads</h2>
+        <span className="hub-section__count">01 · live messages</span>
+      </header>
+
       <section className="comms-bento" aria-label="Comms modules">
-        {/* ── MESSAGES (span 12) ── */}
+        {/* ── MESSAGES (span 12) — anchor ── */}
         <BentoModule
           href="/creator/inbox/messages"
           eyebrow="MESSAGES · BRAND THREADS"
           span={12}
           live="live"
+          priority="hero"
           sub="Realtime · 3 unread · last reply 12m ago"
         >
           <div className="comms-msg-row">
@@ -58,7 +64,14 @@ export default function CommsHub() {
             </span>
           </div>
         </BentoModule>
+      </section>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Auxiliary</h2>
+        <span className="hub-section__count">02 · system + digest</span>
+      </header>
+
+      <section className="comms-bento" aria-label="Auxiliary modules">
         {/* ── SYSTEM (span 4) ── */}
         <BentoModule
           href="/creator/inbox/system"

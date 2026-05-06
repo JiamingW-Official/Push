@@ -87,69 +87,48 @@
   z-index: 0;
 }
 
-/* MONEY — sage green ledger + champagne payout */
+/* Reduced 4-ellipse → 2-ellipse, alpha pulled to 0.05–0.08. The
+   atmospheric tint is now a subtle hub identity cue, not a gradient
+   that competes with content. */
+
 .money-hub::before {
   background:
-    radial-gradient(ellipse 800px 560px at 6% 10%,
-      rgba(74, 158, 116, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 720px 520px at 94% 22%,
-      rgba(191, 161, 112, 0.16) 0%, transparent 55%),
-    radial-gradient(ellipse 640px 600px at 70% 94%,
-      rgba(74, 158, 116, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 420px at 22% 80%,
-      rgba(191, 161, 112, 0.10) 0%, transparent 60%);
+    radial-gradient(ellipse 720px 520px at 8% 8%,
+      rgba(74, 158, 116, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 640px 480px at 94% 96%,
+      rgba(191, 161, 112, 0.06) 0%, transparent 60%);
 }
 
-/* ME — aubergine identity + cobalt trust */
 .me-hub::before {
   background:
-    radial-gradient(ellipse 800px 560px at 8% 12%,
-      rgba(91, 58, 77, 0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 720px 520px at 92% 20%,
-      rgba(45, 79, 142, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 640px 600px at 72% 92%,
-      rgba(200, 117, 140, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 420px at 22% 82%,
-      rgba(45, 79, 142, 0.10) 0%, transparent 60%);
+    radial-gradient(ellipse 720px 520px at 8% 8%,
+      rgba(91, 58, 77, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 640px 480px at 94% 96%,
+      rgba(45, 79, 142, 0.06) 0%, transparent 60%);
 }
 
-/* COMMS — brand red urgency + N2W blue conversation */
 .comms-hub::before {
   background:
-    radial-gradient(ellipse 800px 560px at 8% 14%,
-      rgba(193, 18, 31, 0.10) 0%, transparent 58%),
-    radial-gradient(ellipse 720px 520px at 92% 18%,
-      rgba(0, 133, 255, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 640px 600px at 70% 94%,
-      rgba(193, 18, 31, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 420px at 22% 80%,
-      rgba(0, 133, 255, 0.10) 0%, transparent 60%);
+    radial-gradient(ellipse 720px 520px at 8% 8%,
+      rgba(193, 18, 31, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 640px 480px at 94% 96%,
+      rgba(0, 133, 255, 0.06) 0%, transparent 60%);
 }
 
-/* WORK — GA orange shoot + clay craft */
 .work-hub::before {
   background:
-    radial-gradient(ellipse 800px 560px at 8% 12%,
-      rgba(255, 94, 43, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 720px 520px at 94% 20%,
-      rgba(176, 133, 96, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 640px 600px at 70% 92%,
-      rgba(255, 94, 43, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 420px at 22% 82%,
-      rgba(200, 144, 48, 0.10) 0%, transparent 60%);
+    radial-gradient(ellipse 720px 520px at 8% 8%,
+      rgba(255, 94, 43, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 640px 480px at 94% 96%,
+      rgba(176, 133, 96, 0.06) 0%, transparent 60%);
 }
 
-/* SETTINGS — champagne control + sage stability */
 .set-hub::before {
   background:
-    radial-gradient(ellipse 800px 560px at 6% 10%,
-      rgba(191, 161, 112, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 720px 520px at 94% 22%,
-      rgba(107, 142, 107, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 640px 600px at 72% 92%,
-      rgba(191, 161, 112, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 420px at 22% 82%,
-      rgba(107, 142, 107, 0.08) 0%, transparent 60%);
+    radial-gradient(ellipse 720px 520px at 8% 8%,
+      rgba(191, 161, 112, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 640px 480px at 94% 96%,
+      rgba(107, 142, 107, 0.06) 0%, transparent 60%);
 }
 
 /* Lift hub content above the atmospheric backdrop. */
@@ -272,7 +251,46 @@
   margin: 0 0 16px;
 }
 
-/* ── Magvix Italic editorial divider (between sections) ─────── */
+/* ── Section divider — splits the bento into editorial groups so
+   the eye has a wayfinding rest stop. Use sparingly: 1-2 per hub. */
+
+.hub-section {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+.hub-section:first-of-type {
+  margin-top: 8px;
+}
+
+.hub-section__title {
+  font-family: "Magvix", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  color: var(--ink, #111);
+  margin: 0;
+  line-height: 1;
+}
+
+.hub-section__count {
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Magvix Italic mid-page divider (analytics-style "fin · " mark). */
 
 .hub-divider {
   font-family: "Magvix", Georgia, serif;

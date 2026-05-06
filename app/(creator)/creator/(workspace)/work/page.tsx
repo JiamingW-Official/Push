@@ -49,6 +49,11 @@ export default function WorkHub() {
         </p>
       </header>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Pipeline status</h2>
+        <span className="hub-section__count">01 · live kanban</span>
+      </header>
+
       <section className="work-bento" aria-label="Work modules">
         {/* ── PIPELINE (span 12 — the hero kanban) ── */}
         <BentoModule
@@ -56,6 +61,7 @@ export default function WorkHub() {
           eyebrow="PIPELINE · KANBAN · OUTREACH → CLOSED"
           span={12}
           live="live"
+          priority="hero"
           sub={`${acceptedCount} active · phase distribution snapshot`}
         >
           <div className="work-pipeline-row">
@@ -162,7 +168,14 @@ export default function WorkHub() {
             />
           </span>
         </BentoModule>
+      </section>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Schedule + risks</h2>
+        <span className="hub-section__count">02 · calendar + disputes</span>
+      </header>
+
+      <section className="work-bento" aria-label="Schedule modules">
         {/* ── CALENDAR (span 4) ── */}
         <BentoModule
           href="/creator/work/calendar"
