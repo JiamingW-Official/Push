@@ -38,8 +38,8 @@ const NAV_SECTIONS: NavSection[] = [
     id: "daily",
     label: "DAILY",
     items: [
-      { label: "Home",     href: "/creator/dashboard", icon: "◐", exact: true },
-      { label: "Work",     href: "/creator/work/today", icon: "◈" },
+      { label: "Home",     href: "/creator/today", icon: "◐", exact: true },
+      { label: "Work",     href: "/creator/today", icon: "◈" },
       { label: "Discover", href: "/creator/discover",   icon: "○" },
     ],
   },

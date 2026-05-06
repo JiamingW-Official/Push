@@ -32,7 +32,7 @@ const MOCK_RESULTS: SearchResult[] = [
     group: "Merchants",
     title: "Matcha House",
     subtitle: "Williamsburg",
-    href: "/creator/work/pipeline",
+    href: "/creator/gigs/active",
   },
 ];
 

@@ -67,7 +67,7 @@ interface PageContext {
 }
 
 function getPageContext(pathname: string): PageContext {
-  // /creator/work/today
+  // /creator/today
   if (pathname.includes("/work/today")) {
     return {
       title: "Today's Schedule",
@@ -84,18 +84,18 @@ function getPageContext(pathname: string): PageContext {
         {
           label: "Lighthouse Coffee",
           date: "2:00 PM",
-          href: "/creator/work/today",
+          href: "/creator/today",
         },
         {
           label: "Breads Bakery",
           date: "5:30 PM",
-          href: "/creator/work/today",
+          href: "/creator/today",
         },
       ],
       actions: [
         {
           label: "Log a Scan",
-          href: "/creator/work/today",
+          href: "/creator/today",
           variant: "primary",
         },
         {
@@ -107,7 +107,7 @@ function getPageContext(pathname: string): PageContext {
     };
   }
 
-  // /creator/work/pipeline
+  // /creator/gigs/active
   if (pathname.includes("/work/pipeline")) {
     return {
       title: "Pipeline Summary",
@@ -126,9 +126,9 @@ function getPageContext(pathname: string): PageContext {
           label: "Breads Bakery",
           date: "2 days",
           urgent: true,
-          href: "/creator/work/pipeline",
+          href: "/creator/gigs/active",
         },
-        { label: "Café Vita", date: "5 days", href: "/creator/work/pipeline" },
+        { label: "Café Vita", date: "5 days", href: "/creator/gigs/active" },
       ],
       actions: [
         {
@@ -138,7 +138,7 @@ function getPageContext(pathname: string): PageContext {
         },
         {
           label: "My Pipeline",
-          href: "/creator/work/pipeline",
+          href: "/creator/gigs/active",
           variant: "secondary",
         },
       ],
@@ -182,7 +182,7 @@ function getPageContext(pathname: string): PageContext {
     };
   }
 
-  // /creator/work/drafts
+  // /creator/gigs/invites
   if (pathname.includes("/work/drafts")) {
     return {
       title: "Drafts Summary",
@@ -201,18 +201,18 @@ function getPageContext(pathname: string): PageContext {
           label: "Breads Bakery reel",
           date: "Overdue",
           urgent: true,
-          href: "/creator/work/drafts",
+          href: "/creator/gigs/invites",
         },
         {
           label: "Lighthouse story",
           date: "Due tomorrow",
-          href: "/creator/work/drafts",
+          href: "/creator/gigs/invites",
         },
       ],
       actions: [
         {
           label: "Submit Drafts",
-          href: "/creator/work/drafts",
+          href: "/creator/gigs/invites",
           variant: "primary",
         },
       ],

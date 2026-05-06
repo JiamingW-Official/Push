@@ -37,7 +37,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
         disallow: [
           "/admin/",
-          "/creator/dashboard",
+          "/creator/today",
           "/creator/earnings",
           "/creator/settings",
           "/creator/profile",

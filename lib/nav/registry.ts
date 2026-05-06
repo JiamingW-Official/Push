@@ -102,8 +102,8 @@ export const CONSUMER_NAV: NavLink[] = [
 // ---------------------------------------------------------------------------
 
 export const CREATOR_PRIMARY: NavLink[] = [
-  { label: "Home", href: "/creator/dashboard", icon: "⬡" },
-  { label: "Work", href: "/creator/work/today", icon: "◈", prefix: true },
+  { label: "Home", href: "/creator/today", icon: "⬡" },
+  { label: "Work", href: "/creator/today", icon: "◈", prefix: true },
   { label: "Discover", href: "/creator/discover", icon: "◐" },
   { label: "Inbox", href: "/creator/inbox", icon: "▣", prefix: true },
   { label: "Earnings", href: "/creator/earnings", icon: "▲" },
@@ -192,7 +192,7 @@ export const DEMO_AUDIENCES: Array<{
     label: "Creator",
     blurb:
       "Apply to campaigns, draft posts, track earnings, move through the 6-tier ladder.",
-    dest: "/creator/dashboard",
+    dest: "/creator/today",
     accent: "#c1121f",
   },
   {

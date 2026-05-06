@@ -1,6 +1,6 @@
 "use client";
 
-/* Repo target: components/creator/dashboard/widgets/PipelineHealth.tsx
+/* Repo target: components/creator/today/widgets/PipelineHealth.tsx
    3×1 — runway gauge for Closer+ creators. State-aware substitute for TierRing. */
 
 import Link from "next/link";
@@ -35,7 +35,7 @@ export function PipelineHealth({
 
   return (
     <Link
-      href="/creator/work/pipeline"
+      href="/creator/gigs/active"
       className={`dh-card is-clickable ${className}`.trim()}
     >
       <div className="dh-card__header">

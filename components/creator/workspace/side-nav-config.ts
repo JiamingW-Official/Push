@@ -6,10 +6,10 @@ export const SIDE_NAV = {
     { href: "/creator/inbox/system", label: "System", icon: "bell" },
   ],
   work: [
-    { href: "/creator/work/today", label: "Today", icon: "sun" },
-    { href: "/creator/work/pipeline", label: "Pipeline", icon: "flow" },
+    { href: "/creator/today", label: "Today", icon: "sun" },
+    { href: "/creator/gigs/active", label: "Pipeline", icon: "flow" },
     { href: "/creator/work/calendar", label: "Calendar", icon: "cal" },
-    { href: "/creator/work/drafts", label: "Drafts", icon: "draft" },
+    { href: "/creator/gigs/invites", label: "Drafts", icon: "draft" },
   ],
   portfolio: [
     { href: "/creator/portfolio/identity", label: "Identity", icon: "id" },

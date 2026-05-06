@@ -65,31 +65,31 @@ interface BreadcrumbConfig {
 }
 
 function getBreadcrumb(pathname: string): BreadcrumbConfig {
-  if (pathname.startsWith("/creator/work/today"))
+  if (pathname.startsWith("/creator/today"))
     return {
       section: "Work",
-      sectionHref: "/creator/work/today",
+      sectionHref: "/creator/today",
       page: "Today",
       title: "Today",
     };
-  if (pathname.startsWith("/creator/work/pipeline"))
+  if (pathname.startsWith("/creator/gigs/active"))
     return {
       section: "Work",
-      sectionHref: "/creator/work/today",
+      sectionHref: "/creator/today",
       page: "Pipeline",
       title: "Pipeline",
     };
   if (pathname.startsWith("/creator/work/calendar"))
     return {
       section: "Work",
-      sectionHref: "/creator/work/today",
+      sectionHref: "/creator/today",
       page: "Calendar",
       title: "Calendar",
     };
-  if (pathname.startsWith("/creator/work/drafts"))
+  if (pathname.startsWith("/creator/gigs/invites"))
     return {
       section: "Work",
-      sectionHref: "/creator/work/today",
+      sectionHref: "/creator/today",
       page: "Drafts",
       title: "Drafts",
     };
@@ -145,7 +145,7 @@ function getBreadcrumb(pathname: string): BreadcrumbConfig {
   // Fallback
   return {
     section: "Dashboard",
-    sectionHref: "/creator/dashboard",
+    sectionHref: "/creator/today",
     title: "Dashboard",
   };
 }
@@ -257,7 +257,7 @@ export function TopNav({
         </button>
 
         <Link
-          href="/creator/dashboard"
+          href="/creator/today"
           className="ws-topnav__logo"
           aria-label="Push Dashboard"
         >
