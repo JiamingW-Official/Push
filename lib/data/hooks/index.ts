@@ -12,3 +12,4 @@ export { useEarnings } from "./useEarnings";
 export type { EarningsPayload } from "./useEarnings";
 export { useScansLive } from "./useScansLive";
 export { useInvitesLive } from "./useInvitesLive";
+export { useNotifications } from "./useNotifications";
