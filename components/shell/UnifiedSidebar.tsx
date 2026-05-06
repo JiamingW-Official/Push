@@ -76,7 +76,7 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
       { label: "Today", href: "/creator/today", icon: "home", exact: true },
       { label: "Gigs", href: "/creator/gigs", icon: "work" },
       { label: "Find", href: "/creator/discover", icon: "discover" },
-      { label: "Pay", href: "/creator/earnings", icon: "earnings" },
+      { label: "Pay", href: "/creator/money", icon: "earnings" },
       { label: "Stats", href: "/creator/analytics", icon: "analytics" },
       { label: "Inbox", href: "/creator/inbox", icon: "inbox" },
       { label: "Ranks", href: "/creator/leaderboard", icon: "trophy" },

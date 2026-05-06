@@ -1,0 +1,63 @@
+/* ============================================================
+   <StatusPill> — state-machine badge. v12.2 tokens.
+   ============================================================ */
+
+.stp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stp__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Variants ────────────────────────────────────────────── */
+
+.stp--neutral {
+  background: var(--surface-2, #f5f3ee);
+  color: var(--ink-3, #555);
+}
+.stp--neutral .stp__dot { background: var(--ink-4, #61605c); }
+
+.stp--blue {
+  background: rgba(0, 133, 255, 0.10);
+  color: var(--accent-blue, #0085ff);
+}
+.stp--blue .stp__dot { background: var(--accent-blue, #0085ff); }
+
+.stp--green {
+  background: rgba(74, 158, 116, 0.12);
+  color: #2d6e4a;
+}
+.stp--green .stp__dot { background: #4a9e74; }
+
+.stp--amber {
+  background: rgba(191, 161, 112, 0.18);
+  color: var(--champagne-deep, #8a704a);
+}
+.stp--amber .stp__dot { background: var(--champagne, #bfa170); }
+
+.stp--red {
+  background: rgba(193, 18, 31, 0.10);
+  color: var(--brand-red, #c1121f);
+}
+.stp--red .stp__dot { background: var(--brand-red, #c1121f); }
+
+.stp--ink {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+}
+.stp--ink .stp__dot { background: var(--snow, #fff); }

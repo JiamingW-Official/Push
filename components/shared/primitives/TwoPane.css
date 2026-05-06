@@ -1,0 +1,99 @@
+/* ============================================================
+   <TwoPane> — list+detail layout primitive. v12.2 tokens only.
+   Replaces 5× ad-hoc implementations (iml-, gi-, ga-, dsp-, cmp-).
+
+   Composition contract:
+     .twp__toolbar  optional — search + filter chips above both panes
+     .twp__list     scrollable list pane
+     .twp__detail   sticky detail pane, width via --twp-detail-w
+
+   Mobile (<900px): the detail pane slides up from bottom as a sheet
+   when .is-open. List remains the primary surface.
+   ============================================================ */
+
+.twp {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  --twp-detail-w: 480px;
+}
+
+.twp__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 32px 16px;
+  flex-wrap: wrap;
+}
+
+.twp__shell {
+  display: grid;
+  grid-template-columns: 1fr var(--twp-detail-w);
+  gap: 32px;
+  padding: 0 32px 64px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .twp__shell {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.twp__list {
+  min-width: 0;
+}
+
+.twp__detail {
+  position: sticky;
+  top: 32px;
+  align-self: start;
+}
+
+@media (max-width: 1024px) {
+  .twp__detail {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    background: var(--snow, #fff);
+    border-radius: 16px 16px 0 0;
+    padding: 8px 16px env(safe-area-inset-bottom);
+    box-shadow:
+      0 -4px 16px rgba(0, 0, 0, 0.08),
+      0 -16px 40px rgba(0, 0, 0, 0.16);
+    transform: translateY(100%);
+    transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1);
+    z-index: 220;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .twp__detail.is-open {
+    transform: translateY(0);
+  }
+}
+
+.twp__dim {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .twp__dim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 20, 0.42);
+    border: none;
+    z-index: 210;
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twp__detail {
+    transition: none;
+  }
+}
