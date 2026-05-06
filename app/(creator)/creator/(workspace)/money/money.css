@@ -3,60 +3,13 @@
    <BentoModule> primitive (audit § 5.3 spec).
    ============================================================ */
 
+/* Hero, eyebrow, title, subtitle styles live in components/shared/hub-shell.css.
+   This file owns local module styling only. */
+
 .money-hub {
   padding: 80px 10vw 120px;
   margin: 0 auto;
   background: var(--snow, #fff);
-}
-
-.money-hero {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 56px;
-  max-width: 880px;
-  position: relative;
-}
-
-.money-hero__eyebrow {
-  font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--ink-4, #61605c);
-  text-transform: uppercase;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.money-hero__eyebrow::before {
-  content: "";
-  width: 40px;
-  height: 1px;
-  background: var(--ink, #111);
-  flex-shrink: 0;
-}
-
-.money-hero__title {
-  font-family: "Magvix", Georgia, serif;
-  font-style: italic;
-  font-size: clamp(56px, 7.5vw, 112px);
-  font-weight: 400;
-  line-height: 0.96;
-  letter-spacing: -0.026em;
-  color: var(--ink, #111);
-  margin: 0;
-}
-
-.money-hero__sub {
-  font-family: var(--font-body, "Open Sans");
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--graphite, #3a3835);
-  margin: 8px 0 0;
-  max-width: 640px;
 }
 
 /* ── Bento grid — 12-col asymmetric ──────────────────────── */
@@ -69,10 +22,7 @@
 
 @media (max-width: 768px) {
   .money-hub {
-    padding: 56px 6vw 96px;
-  }
-  .money-hero {
-    margin-bottom: 40px;
+    padding: 56px 10vw 96px;
   }
   .money-bento {
     gap: 16px;
