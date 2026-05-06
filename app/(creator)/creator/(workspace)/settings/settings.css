@@ -1,0 +1,289 @@
+/* ============================================================
+   /creator/settings — hub layout. v12.2 tokens only.
+   3x3 cell grid on desktop, 2-col on tablet, 1-col on mobile.
+   ============================================================ */
+
+.set-hub {
+  padding: 64px 10vw 96px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.set-hero {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 720px;
+}
+
+.set-hero__eyebrow {
+  font-family: var(--font-mono, "SF Mono", monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.set-hero__title {
+  font-family: "Magvix", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.022em;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.set-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--graphite, #3a3835);
+  margin: 8px 0 0 0;
+}
+
+.set-pulse {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 16px 24px;
+  background: var(--surface-2, #f5f3ee);
+  border-radius: 16px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .set-pulse {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.set-pulse__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.set-pulse__label {
+  font-family: var(--font-mono, "SF Mono", monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+}
+
+.set-pulse__value {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--ink, #111);
+}
+
+.set-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .set-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .set-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.set-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 24px 56px;
+  border-radius: 14px;
+  background: var(--snow, #fff);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: var(--ink, #111);
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+  min-height: 168px;
+}
+
+.set-cell:hover {
+  transform: translate(2px, 2px);
+  border-color: rgba(0, 0, 0, 0.18);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.set-cell:active {
+  transform: translate(3px, 3px) scale(0.99);
+}
+
+.set-cell__icon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface-2, #f5f3ee);
+  color: var(--ink, #111);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.set-cell__eyebrow {
+  font-family: var(--font-mono, "SF Mono", monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  color: var(--ink-5, #888);
+}
+
+.set-cell__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.set-cell__body {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--graphite, #3a3835);
+  margin: 0;
+}
+
+.set-cell__alert {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  font-family: var(--font-mono, "SF Mono", monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(232, 68, 125, 0.10);
+  color: var(--editorial-pink, #e8447d);
+}
+
+.set-cell__arrow {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  font-size: 18px;
+  color: var(--ink-4, #61605c);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.set-cell:hover .set-cell__arrow {
+  transform: translateX(3px);
+  color: var(--ink, #111);
+}
+
+.set-legacy-note {
+  margin-top: 48px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  color: var(--ink-4, #61605c);
+}
+
+.set-legacy-note a {
+  color: var(--ink, #111);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .set-cell,
+  .set-cell__arrow {
+    transition: none;
+  }
+  .set-cell:hover {
+    transform: none;
+  }
+}
+
+/* ── Sub-route shell ───────────────────────────────────────── */
+
+.set-sub {
+  padding: 64px 10vw 96px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.set-sub__back {
+  font-family: var(--font-mono, "SF Mono", monospace);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.set-sub__back:hover {
+  color: var(--ink, #111);
+}
+
+.set-sub__title {
+  font-family: "Magvix", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  margin: 0 0 16px;
+}
+
+.set-sub__body {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--graphite, #3a3835);
+  margin: 0 0 32px;
+  max-width: 60ch;
+}
+
+.set-sub__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 24px;
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+  border-radius: 8px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.set-sub__cta:hover {
+  transform: translate(2px, 2px);
+}
