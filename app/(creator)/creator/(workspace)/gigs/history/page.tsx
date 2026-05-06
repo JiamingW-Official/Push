@@ -10,6 +10,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useHistory } from "@/lib/data/hooks";
 import { SkeletonRow, SkeletonPanel } from "@/components/loading/Skeleton";
+import { TabBar } from "@/components/shared/primitives";
 import "../gigs.css";
 import "./history.css";
 
@@ -166,26 +167,26 @@ export default function HistoryPage() {
         </div>
       </div>
 
-      {/* ☆ Toolbar */}
+      {/* ☆ Toolbar — uses canonical <TabBar> primitive (audit § P0). */}
       <div className="hist-toolbar">
-        <div
-          className="hist-toolbar__filters"
-          role="tablist"
-          aria-label="Status filter"
-        >
-          {(["all", "paid", "declined"] as StatusFilter[]).map((f) => (
-            <button
-              key={f}
-              type="button"
-              role="tab"
-              aria-selected={statusFilter === f}
-              onClick={() => setStatusFilter(f)}
-              className={`hist-toolbar__chip${statusFilter === f ? " is-active" : ""}`}
-            >
-              {f === "all" ? "All" : f === "paid" ? "Paid" : "Declined"}
-            </button>
-          ))}
-        </div>
+        <TabBar<StatusFilter>
+          ariaLabel="Status filter"
+          tabs={[
+            { id: "all", label: "All" },
+            {
+              id: "paid",
+              label: "Paid",
+              count: data?.filter((r) => r.status === "paid").length,
+            },
+            {
+              id: "declined",
+              label: "Declined",
+              count: data?.filter((r) => r.status === "declined").length,
+            },
+          ]}
+          active={statusFilter}
+          onChange={setStatusFilter}
+        />
       </div>
 
       {/* ★★★ Two-column workspace */}
