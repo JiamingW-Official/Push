@@ -1,0 +1,141 @@
+/* ============================================================
+   Mobile bottom-nav (audit § P1-11). 5 icons, 56px tappable, glass
+   surface. Hidden on >=768px. The pages already pad-bottom 88px
+   so floating CTAs don't overlap with this dock.
+   ============================================================ */
+
+.mob-bnav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mob-bnav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+  }
+}
+
+.mob-bnav__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 56px;
+  border: none;
+  background: transparent;
+  color: var(--ink-4, #61605c);
+  text-decoration: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease;
+  font-family: var(--font-body, "Open Sans");
+}
+
+.mob-bnav__btn:hover,
+.mob-bnav__btn.is-active {
+  color: var(--ink, #111);
+}
+
+.mob-bnav__btn.is-active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.mob-bnav__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Me menu pop-up ────────────────────────────── */
+
+.mob-bnav__me-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mob-bnav__menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.10),
+    0 16px 32px rgba(0, 0, 0, 0.14);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: mob-menu-in 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes mob-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mob-bnav__menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink, #111);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 120ms ease;
+}
+
+.mob-bnav__menu-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.mob-bnav__menu-sep {
+  margin: 4px 0;
+  border: none;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-bnav__btn {
+    transition: none;
+  }
+  .mob-bnav__menu {
+    animation: none;
+  }
+}
+
+/* ── Add bottom padding to .dh-main on mobile so the dock doesn't
+   overlap the page footer or floating CTAs. */
+@media (max-width: 768px) {
+  body:has(.mob-bnav) .dh-main {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+}

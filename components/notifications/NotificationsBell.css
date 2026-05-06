@@ -1,0 +1,79 @@
+/* ============================================================
+   NotificationsBell — fixed-position trigger top-right.
+   Coexists with the workspace lumin shell rail nav.
+   ============================================================ */
+
+.notif-bell {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 150;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(0, 0, 0, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  color: var(--ink, #111);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 140ms ease;
+}
+
+.notif-bell:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translate(1px, 1px);
+}
+
+.notif-bell:active {
+  transform: translate(2px, 2px) scale(0.96);
+}
+
+.notif-bell:focus-visible {
+  outline: 3px solid var(--brand-red-focus, rgba(193, 18, 31, 0.4));
+  outline-offset: 3px;
+}
+
+.notif-bell__dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--editorial-pink, #e8447d);
+  color: var(--snow, #fff);
+  border: 1.5px solid var(--snow, #fff);
+  border-radius: 999px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .notif-bell {
+    /* Move to make room for the mobile bottom-nav (P1-11). */
+    top: 12px;
+    right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notif-bell {
+    transition: none;
+  }
+  .notif-bell:hover,
+  .notif-bell:active {
+    transform: none;
+  }
+}

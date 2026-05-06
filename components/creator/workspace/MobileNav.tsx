@@ -22,12 +22,12 @@ interface MobileTab {
 }
 
 const MOBILE_TABS: MobileTab[] = [
-  { id: "work", label: "Work", icon: "◈", href: "/creator/dashboard" },
+  { id: "work", label: "Work", icon: "◈", href: "/creator/today" },
   {
     id: "pipeline",
     label: "Pipeline",
     icon: "◇",
-    href: "/creator/work/pipeline",
+    href: "/creator/gigs/active",
     matchPrefix: true,
   },
   {
@@ -42,7 +42,7 @@ const MOBILE_TABS: MobileTab[] = [
     id: "discover",
     label: "Discover",
     icon: "◐",
-    href: "/creator/explore",
+    href: "/creator/discover",
     matchPrefix: true,
   },
   {
@@ -73,7 +73,7 @@ export function MobileNav({ unreadCounts = {}, onTabClick }: MobileNavProps) {
   const pathname = usePathname();
 
   const isActive = (tab: MobileTab) => {
-    if (tab.href === "/creator/dashboard") return pathname === tab.href;
+    if (tab.href === "/creator/today") return pathname === tab.href;
     if (tab.matchPrefix) return pathname.startsWith(tab.href);
     return pathname === tab.href;
   };

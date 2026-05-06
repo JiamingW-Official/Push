@@ -1,6 +1,6 @@
 "use client";
 
-/* Repo target: components/creator/dashboard/HomeHeader.tsx
+/* Repo target: components/creator/today/HomeHeader.tsx
    Greeting + name on left, date + pulse pills on right. */
 
 import { PulsePill } from "./PulsePill";
@@ -41,7 +41,7 @@ export function HomeHeader({
 
         {pulse.todayCount > 0 && (
           <PulsePill
-            href="/creator/work/today"
+            href="/creator/today"
             icon="⏱"
             label={`${pulse.todayCount} today`}
             tone="urgent"
@@ -59,7 +59,7 @@ export function HomeHeader({
 
         {pulse.streakDays > 0 && (
           <PulsePill
-            href="/creator/work/today"
+            href="/creator/today"
             icon="🔥"
             label={`${pulse.streakDays}-day streak`}
           />

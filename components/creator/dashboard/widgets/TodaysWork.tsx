@@ -1,6 +1,6 @@
 "use client";
 
-/* Repo target: components/creator/dashboard/widgets/TodaysWork.tsx
+/* Repo target: components/creator/today/widgets/TodaysWork.tsx
    8×3 — milestone pipeline rows for active campaigns. Empty state:
    substitutes the OnboardingHero (rendered by parent). */
 
@@ -38,7 +38,7 @@ export function TodaysWork({
           TODAY&rsquo;S WORK · {active.length} ACTIVE
         </span>
         <Link
-          href="/creator/work/today"
+          href="/creator/today"
           className="dh-circle-arrow"
           aria-label="View all work"
         >

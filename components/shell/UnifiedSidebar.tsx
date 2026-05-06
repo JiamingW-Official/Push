@@ -73,7 +73,7 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
     primary: [
       // Short captions (≤5 chars): live under each icon, no hover needed.
       // Full route name kept in href so analytics/aria still read clean.
-      { label: "Today", href: "/creator/dashboard", icon: "home", exact: true },
+      { label: "Today", href: "/creator/today", icon: "home", exact: true },
       { label: "Gigs", href: "/creator/gigs", icon: "work" },
       { label: "Find", href: "/creator/discover", icon: "discover" },
       { label: "Pay", href: "/creator/earnings", icon: "earnings" },
@@ -83,7 +83,10 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
     ],
     notificationsHref: "/creator/notifications",
     settingsHref: "/creator/settings",
-    profileHref: "/creator/profile",
+    /* Profile content moved under /settings/account in audit § P1-7. The
+       avatar bottom-tile still routes to the legacy /creator/profile until
+       the form is migrated; it remains reachable via the Account sub-route. */
+    profileHref: "/creator/settings/account",
   },
   merchant: {
     homeHref: "/merchant/dashboard",

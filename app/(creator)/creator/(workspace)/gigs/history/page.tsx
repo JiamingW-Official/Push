@@ -1,134 +1,327 @@
 "use client";
 
-import { useWorkspaceState } from "@/lib/workspace/state";
-import { PaneHeader, EmptyState } from "@/lib/inbox/components";
-import { getCategoryGradient } from "@/lib/inbox/seed";
+/* ============================================================
+   /creator/gigs/history — v12.2 SaaS canonical
+   Audit § P1-8: Hero · Pulse Strip · Toolbar · Two-column workspace
+   (grouped list left, sticky detail panel right) · Kbd footer.
+   ============================================================ */
 
-function HistoryIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden>
-      <circle cx="20" cy="20" r="13" stroke="currentColor" strokeWidth="1.4" />
-      <path
-        d="M20 13v7l5 3"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useHistory } from "@/lib/data/hooks";
+import { SkeletonRow, SkeletonPanel } from "@/components/loading/Skeleton";
+import "../gigs.css";
+import "./history.css";
+
+const MERCHANT_IDENTITY: Record<string, string> = {
+  Devoción: "aubergine",
+  "Sunday in Brooklyn": "terracotta",
+  "Cha Cha Matcha": "sage",
+  "Superiority Burger": "clay",
+  "Roberta's Pizza": "cobalt",
+  "Roberta's": "cobalt",
+  "Flamingo Estate": "rose",
+  "Saint Bagel": "mustard",
+  "Blank Street Coffee": "mustard",
+  "Brow Theory": "charcoal",
+  "Fort Greene Coffee": "aubergine",
+  "Bed-Stuy Eats": "terracotta",
+};
+
+function merchantIdentity(name: string): string {
+  return MERCHANT_IDENTITY[name] ?? "charcoal";
 }
 
-export default function GigsHistoryPage() {
-  const { invites } = useWorkspaceState();
+function fmtMoney(n: number): string {
+  return n.toLocaleString("en-US", { minimumFractionDigits: 0 });
+}
 
-  const accepted = invites.filter((i) => i.status === "accepted");
-  const declined = invites.filter((i) => i.status === "declined");
+function fmtDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
-  // Accepted first (most valuable), then declined
-  const history = [
-    ...accepted.map((i) => ({ ...i, outcome: "accepted" as const })),
-    ...declined.map((i) => ({ ...i, outcome: "declined" as const })),
-  ];
+function monthKey(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
 
-  const totalGuaranteed = accepted.reduce((sum, i) => {
-    const g = i.payoutTiers.find((t) => t.label === "Guaranteed");
-    return sum + (g?.amount ?? 0);
-  }, 0);
+type StatusFilter = "all" | "paid" | "declined";
 
-  const acceptRate =
-    history.length > 0
-      ? Math.round((accepted.length / history.length) * 100)
-      : 0;
+export default function HistoryPage() {
+  const { data, error, isLoading } = useHistory();
+  if (error) throw error;
+
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    if (!data) return [];
+    return data.filter((r) =>
+      statusFilter === "all" ? true : r.status === statusFilter,
+    );
+  }, [data, statusFilter]);
+
+  const grouped = useMemo(() => {
+    const groups = new Map<string, typeof filtered>();
+    for (const row of filtered) {
+      const key = monthKey(row.paidAt);
+      const arr = groups.get(key) ?? [];
+      arr.push(row);
+      groups.set(key, arr);
+    }
+    return Array.from(groups.entries());
+  }, [filtered]);
+
+  const lifetime = useMemo(
+    () =>
+      (data ?? []).reduce(
+        (s, r) => s + (r.status === "paid" ? r.finalPayout : 0),
+        0,
+      ),
+    [data],
+  );
+
+  const completionRate = useMemo(() => {
+    if (!data || data.length === 0) return 0;
+    const paid = data.filter((r) => r.status === "paid").length;
+    return Math.round((paid / data.length) * 100);
+  }, [data]);
+
+  const active = filtered.find((r) => r.id === activeId) ?? filtered[0] ?? null;
+
+  if (isLoading && (!data || data.length === 0)) {
+    return (
+      <section className="ib-content gigs-pane" aria-label="History (loading)">
+        <header className="giv-hero">
+          <div>
+            <h1 className="giv-hero__title">History</h1>
+            <p className="giv-hero__sub">Loading your past gigs…</p>
+          </div>
+        </header>
+        <div className="hist-shell">
+          <SkeletonRow count={5} />
+          <SkeletonPanel />
+        </div>
+      </section>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <section className="ib-content gigs-pane" aria-label="History (empty)">
+        <header className="giv-hero">
+          <div>
+            <h1 className="giv-hero__title">History</h1>
+            <p className="giv-hero__sub">No history yet.</p>
+          </div>
+        </header>
+        <div className="hist-empty">
+          <p>Accept your first gig to start building it.</p>
+          <Link href="/creator/gigs/invites" className="hist-empty__cta">
+            View invites →
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="ib-content gigs-pane" data-lenis-prevent>
-      <PaneHeader
-        title="History"
-        sub={
-          history.length > 0
-            ? `${history.length} campaign${history.length === 1 ? "" : "s"} total`
-            : "No history yet"
-        }
-      />
-
-      {history.length > 0 && (
-        <div className="gigs-stats-bar" aria-label="Campaign summary">
-          <div className="gigs-stat-tile">
-            <span className="gigs-stat-value">{accepted.length}</span>
-            <span className="gigs-stat-label">Accepted</span>
-          </div>
-          <div className="gigs-stat-tile gigs-stat-tile--money">
-            <span className="gigs-stat-value">${totalGuaranteed}</span>
-            <span className="gigs-stat-label">Guaranteed</span>
-          </div>
-          <div className="gigs-stat-tile">
-            <span className="gigs-stat-value">{declined.length}</span>
-            <span className="gigs-stat-label">Passed</span>
-          </div>
-          <div className="gigs-stat-tile">
-            <span className="gigs-stat-value">{acceptRate}%</span>
-            <span className="gigs-stat-label">Accept rate</span>
-          </div>
+    <section className="ib-content gigs-pane">
+      {/* ★★ Hero */}
+      <header className="giv-hero">
+        <div>
+          <h1 className="giv-hero__title">History</h1>
+          <p className="giv-hero__sub">
+            <strong>{data.length}</strong> completed ·{" "}
+            <strong>${fmtMoney(lifetime)}</strong> lifetime
+          </p>
         </div>
-      )}
+      </header>
 
-      {history.length === 0 ? (
-        <EmptyState
-          icon={<HistoryIcon />}
-          title="Nothing here yet."
-          body="Completed and declined campaigns will appear here."
-          cta={{ label: "View invites", href: "/creator/gigs/invites" }}
-        />
-      ) : (
-        <ul className="gigs-history-list" role="list">
-          {history.map((gig) => {
-            const gradient = getCategoryGradient(gig.category);
-            const guaranteed = gig.payoutTiers.find(
-              (t) => t.label === "Guaranteed",
+      {/* ☆ Pulse Strip */}
+      <div className="hist-pulse" role="group" aria-label="History pulse">
+        <div className="hist-pulse__cell">
+          <span className="hist-pulse__label">Lifetime</span>
+          <span className="hist-pulse__value">${fmtMoney(lifetime)}</span>
+        </div>
+        <div className="hist-pulse__cell">
+          <span className="hist-pulse__label">Total gigs</span>
+          <span className="hist-pulse__value">{data.length}</span>
+        </div>
+        <div className="hist-pulse__cell">
+          <span className="hist-pulse__label">Avg per gig</span>
+          <span className="hist-pulse__value">
+            $
+            {fmtMoney(data.length > 0 ? Math.round(lifetime / data.length) : 0)}
+          </span>
+        </div>
+        <div className="hist-pulse__cell">
+          <span className="hist-pulse__label">Completion</span>
+          <span className="hist-pulse__value">{completionRate}%</span>
+        </div>
+      </div>
+
+      {/* ☆ Toolbar */}
+      <div className="hist-toolbar">
+        <div
+          className="hist-toolbar__filters"
+          role="tablist"
+          aria-label="Status filter"
+        >
+          {(["all", "paid", "declined"] as StatusFilter[]).map((f) => (
+            <button
+              key={f}
+              type="button"
+              role="tab"
+              aria-selected={statusFilter === f}
+              onClick={() => setStatusFilter(f)}
+              className={`hist-toolbar__chip${statusFilter === f ? " is-active" : ""}`}
+            >
+              {f === "all" ? "All" : f === "paid" ? "Paid" : "Declined"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ★★★ Two-column workspace */}
+      <div className="hist-shell">
+        {/* Left: grouped by month */}
+        <div className="hist-list">
+          {grouped.map(([monthLabel, rows]) => {
+            const monthTotal = rows.reduce(
+              (s, r) => s + (r.status === "paid" ? r.finalPayout : 0),
+              0,
             );
-            const isAccepted = gig.outcome === "accepted";
             return (
-              <li key={gig.id}>
-                <div
-                  className={`gigs-history-row gigs-history-row--${gig.outcome}`}
-                >
-                  <span
-                    className="gigs-history-avatar"
-                    style={{ background: gradient }}
-                    aria-hidden
-                  >
-                    {gig.brandInitial}
+              <section key={monthLabel} className="hist-group">
+                <header className="hist-group__head">
+                  <span className="hist-group__title">{monthLabel}</span>
+                  <span className="hist-group__total">
+                    ${fmtMoney(monthTotal)}
                   </span>
-
-                  <div className="gigs-history-body">
-                    <span className="gigs-history-brand">{gig.brand}</span>
-                    <span className="gigs-history-campaign">
-                      {gig.campaign}
-                    </span>
-                    <span className="gigs-history-window">
-                      {gig.shootWindow}
-                    </span>
-                  </div>
-
-                  <div className="gigs-history-right">
-                    <span
-                      className={`gigs-history-badge gigs-history-badge--${gig.outcome}`}
-                    >
-                      {isAccepted ? "ACCEPTED" : "PASSED"}
-                    </span>
-                    {isAccepted && guaranteed && (
-                      <span className="gigs-history-earned">
-                        +${guaranteed.amount} guaranteed
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </li>
+                </header>
+                <ul className="hist-group__rows">
+                  {rows.map((r) => {
+                    const mc = merchantIdentity(r.brand);
+                    const isActive = active?.id === r.id;
+                    return (
+                      <li key={r.id}>
+                        <button
+                          type="button"
+                          className={`hist-row hist-row--mc-${mc}${isActive ? " is-active" : ""}`}
+                          onClick={() => setActiveId(r.id)}
+                          aria-current={isActive}
+                        >
+                          <span className="hist-row__strip" aria-hidden />
+                          <span className="hist-row__monogram" aria-hidden>
+                            {r.brandInitial}
+                          </span>
+                          <span className="hist-row__body">
+                            <span className="hist-row__brand">{r.brand}</span>
+                            <span className="hist-row__campaign">
+                              {r.campaign}
+                            </span>
+                            <span className="hist-row__meta">
+                              {fmtDate(r.paidAt)} · {r.scansAchieved} scans
+                            </span>
+                          </span>
+                          <span className="hist-row__right">
+                            <span className="hist-row__payout">
+                              ${fmtMoney(r.finalPayout)}
+                            </span>
+                            <span
+                              className={`hist-row__tier hist-row__tier--${r.outcomeTier.toLowerCase()}`}
+                            >
+                              {r.outcomeTier}
+                            </span>
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
             );
           })}
-        </ul>
-      )}
+        </div>
+
+        {/* Right: sticky detail panel */}
+        <aside className="hist-detail" aria-label="Selected gig details">
+          {active ? (
+            <div
+              className={`hist-detail__inner hist-detail__inner--mc-${merchantIdentity(active.brand)}`}
+            >
+              <div className="hist-detail__accent" aria-hidden />
+              <p className="hist-detail__eyebrow">
+                BRIEF · {active.category} · {fmtDate(active.paidAt)}
+              </p>
+              <h2 className="hist-detail__title">{active.brand}</h2>
+              <p className="hist-detail__sub">{active.campaign}</p>
+
+              <div className="hist-detail__quick">
+                <div>
+                  <span className="hist-detail__quick__label">
+                    Final payout
+                  </span>
+                  <span className="hist-detail__quick__value">
+                    ${fmtMoney(active.finalPayout)}
+                  </span>
+                </div>
+                <div>
+                  <span className="hist-detail__quick__label">Scans</span>
+                  <span className="hist-detail__quick__value">
+                    {active.scansAchieved}
+                  </span>
+                </div>
+                <div>
+                  <span className="hist-detail__quick__label">Outcome</span>
+                  <span className="hist-detail__quick__value">
+                    {active.outcomeTier}
+                  </span>
+                </div>
+              </div>
+
+              <div className="hist-detail__section">
+                <h3 className="hist-detail__h">Status timeline</h3>
+                <ol className="hist-detail__timeline">
+                  <li>
+                    <span className="hist-detail__dot is-done" /> Accepted
+                  </li>
+                  <li>
+                    <span className="hist-detail__dot is-done" /> Posted
+                  </li>
+                  <li>
+                    <span className="hist-detail__dot is-done" /> Verified
+                  </li>
+                  <li>
+                    <span className="hist-detail__dot is-done" /> Paid ·{" "}
+                    {fmtDate(active.paidAt)}
+                  </li>
+                </ol>
+              </div>
+
+              <div className="hist-detail__cta-row">
+                <a
+                  href={`/api/creator/receipts/${active.id}`}
+                  className="hist-detail__cta"
+                  download
+                >
+                  Download receipt PDF
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="hist-detail__empty">
+              Pick a gig to see its details.
+            </div>
+          )}
+        </aside>
+      </div>
     </section>
   );
 }

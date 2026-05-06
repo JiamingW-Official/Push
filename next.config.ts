@@ -39,6 +39,61 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Audit § P1-6 — collapse legacy /work/* hub into canonical pages.
+      // /work/calendar is the ONE survivor (#27 Phase 1-4 deep refactor still
+      // owns the calendar UX); other /work/* pages were duplicates of
+      // /today, /gigs/active, /gigs/invites, /campaigns/[id].
+      {
+        source: "/creator/work/today",
+        destination: "/creator/today",
+        permanent: true,
+      },
+      {
+        source: "/creator/work/pipeline",
+        destination: "/creator/gigs/active",
+        permanent: true,
+      },
+      {
+        source: "/creator/work/drafts",
+        destination: "/creator/gigs/invites",
+        permanent: true,
+      },
+      {
+        source: "/creator/work/campaign/:id",
+        destination: "/creator/campaigns/:id",
+        permanent: true,
+      },
+      {
+        source: "/creator/work",
+        destination: "/creator/gigs",
+        permanent: true,
+      },
+      // Standalone duplicate routes — /today is the canonical landing.
+      {
+        source: "/creator/dashboard",
+        destination: "/creator/today",
+        permanent: true,
+      },
+      {
+        source: "/creator/overview",
+        destination: "/creator/today",
+        permanent: true,
+      },
+      // /explore was the older Discover surface; /discover is canonical.
+      {
+        source: "/creator/explore",
+        destination: "/creator/discover",
+        permanent: true,
+      },
+      // Audit § P1-10 — standalone /creator/notifications becomes a drawer
+      // anchored in topnav. Direct visits land on /today and auto-open the
+      // drawer via ?notifications=open (NotificationsBell consumes the param).
+      {
+        source: "/creator/notifications",
+        destination: "/creator/today?notifications=open",
+        permanent: true,
+      },
+      // Inbox/invites was lifted to /gigs/invites (sync PR #29).
       {
         source: "/creator/inbox/invites",
         destination: "/creator/gigs/invites",
