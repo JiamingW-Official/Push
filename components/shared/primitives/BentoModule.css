@@ -1,6 +1,8 @@
 /* ============================================================
    <BentoModule> — Liquid Glass agent-surface tile.
-   v12.2 tokens. Span via .bento--span-{N} (1-12).
+   v12.3 — premium register (Wave-2): adopts the analytics-surface
+   stratified glass material, warm-tinted shadow stack, and
+   4-layer specular inset system.
    ============================================================ */
 
 .bento {
@@ -8,44 +10,45 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 20px 22px 56px;
-  border-radius: 14px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.78) 0%,
-      rgba(255, 255, 255, 0.94) 100%
-    ),
-    var(--snow, #fff);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.03),
-    0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 28px 28px 64px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.68);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
   text-decoration: none;
   color: var(--ink, #111);
   cursor: pointer;
+  /* 4-layer Liquid Glass system — specular top, bot inset, edge hairline,
+     warm-tinted soft shadow. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 8px 24px rgba(60, 45, 30, 0.06);
   transition:
     transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 200ms ease,
-    border-color 200ms ease;
-  min-height: 168px;
+    background 200ms ease;
+  min-height: 184px;
   isolation: isolate;
   overflow: hidden;
 }
 
 .bento::before {
-  /* Specular top-edge highlight — Liquid Glass signature. */
+  /* Diagonal 135° sheen overlay — Apple Liquid Glass signature. */
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0) 35%
-    );
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0) 28%,
+    rgba(255, 255, 255, 0) 72%,
+    rgba(255, 255, 255, 0.18) 100%
+  );
   z-index: 0;
 }
 
@@ -56,14 +59,18 @@
 
 .bento:hover {
   transform: translate(2px, 2px) scale(1.006);
-  border-color: rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0.78);
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 12px 32px rgba(0, 0, 0, 0.10);
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.05),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.7),
+    0 2px 4px rgba(60, 45, 30, 0.06),
+    0 16px 48px rgba(60, 45, 30, 0.10);
 }
 
 .bento:active {
-  transform: translate(3px, 3px) scale(0.995);
+  transform: translate(3px, 3px) scale(0.992);
+  transition-duration: 140ms;
 }
 
 .bento:focus-visible {
@@ -103,6 +110,10 @@
   .bento--span-8 {
     grid-column: span 12;
   }
+  .bento {
+    padding: 24px 22px 56px;
+    border-radius: 20px;
+  }
 }
 
 /* ── Head: eyebrow + live indicator ──────────────────────── */
@@ -112,13 +123,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  margin-bottom: 4px;
 }
 
 .bento__eyebrow {
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.12em;
   color: var(--ink-4, #61605c);
   text-transform: uppercase;
   flex: 1;
@@ -133,26 +145,27 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 0 0 currentColor;
 }
 
 .bento__live--live {
-  background: var(--ga-orange, #ff5e2b);
-  animation: bento-pulse 1.6s ease infinite;
+  background: #34c759;
+  color: rgba(52, 199, 89, 0.4);
+  animation: bento-pulse 2.4s ease-in-out infinite;
 }
 
 .bento__live--urgent {
   background: var(--brand-red, #c1121f);
-  animation: bento-pulse 1.4s ease infinite;
+  color: rgba(193, 18, 31, 0.4);
+  animation: bento-pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes bento-pulse {
   0%, 100% {
-    transform: scale(0.85);
-    opacity: 0.85;
+    box-shadow: 0 0 0 0 currentColor;
   }
   50% {
-    transform: scale(1.15);
-    opacity: 1;
+    box-shadow: 0 0 0 6px transparent;
   }
 }
 
@@ -161,7 +174,7 @@
 .bento__body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   min-height: 64px;
 }
 
@@ -169,37 +182,46 @@
 
 .bento__sub {
   font-family: var(--font-body, "Open Sans");
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--ink-4, #61605c);
   margin-top: auto;
+  padding-top: 8px;
 }
 
 /* ── Drill arrow ─────────────────────────────────────────── */
 
 .bento__drill {
   position: absolute;
-  bottom: 18px;
-  right: 22px;
-  width: 28px;
-  height: 28px;
+  bottom: 22px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   color: var(--ink-4, #61605c);
-  background: var(--surface-2, #f5f3ee);
+  background: rgba(255, 255, 255, 0.78);
   border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(60, 45, 30, 0.06);
   transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    background 200ms ease,
+    color 200ms ease,
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1;
 }
 
 .bento:hover .bento__drill {
   background: var(--ink, #111);
   color: var(--snow, #fff);
-  transform: rotate(4deg) translateX(2px);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.1),
+    0 2px 6px rgba(60, 45, 30, 0.18);
+  transform: rotate(8deg) translateX(2px);
 }
 
 /* ── Loading skeleton ────────────────────────────────────── */
@@ -210,9 +232,9 @@
   border-radius: 8px;
   background-image: linear-gradient(
     90deg,
-    var(--surface-2, #f5f3ee) 0%,
-    var(--surface-3, #ece9e0) 50%,
-    var(--surface-2, #f5f3ee) 100%
+    rgba(245, 243, 238, 0.5) 0%,
+    rgba(236, 233, 224, 0.7) 50%,
+    rgba(245, 243, 238, 0.5) 100%
   );
   background-size: 200% 100%;
   animation: bento-shimmer 1.5s linear infinite;
@@ -234,6 +256,23 @@
   font-size: 13px;
   color: var(--ink-4, #61605c);
   font-style: italic;
+}
+
+/* ── Reduced-transparency a11y fallback ──────────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .bento {
+    background: var(--snow, #fff);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.03),
+      0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+  .bento::before {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -21,6 +21,7 @@ import {
   ProgressBar,
   StatusPill,
 } from "@/components/shared/primitives";
+import "@/components/shared/hub-shell.css";
 import "./money.css";
 
 function fmtMoney(n: number): string {
@@ -207,9 +208,7 @@ export default function MoneyHub() {
             <KpiBlock eyebrow="W-9 STATUS" value="Filed" tone="ink" compact />
             <KpiBlock eyebrow="MONTHS REPORTED" value="5" tone="ink" compact />
             <span className="money-tax-cta">
-              <Link href="/creator/money/tax" className="money-tax-cta__link">
-                Download forms →
-              </Link>
+              <span className="money-tax-cta__link">Download forms →</span>
             </span>
           </div>
         </BentoModule>

@@ -20,6 +20,7 @@ import {
   StatusPill,
 } from "@/components/shared/primitives";
 import { useActiveGigs, useToday } from "@/lib/data/hooks";
+import "@/components/shared/hub-shell.css";
 import "./work.css";
 
 export default function WorkHub() {

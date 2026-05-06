@@ -16,6 +16,7 @@
 import Link from "next/link";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useToday } from "@/lib/data/hooks";
+import "@/components/shared/hub-shell.css";
 import "./settings.css";
 
 type Cell = {

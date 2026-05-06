@@ -22,6 +22,7 @@ import {
   KpiBlock,
   StatusPill,
 } from "@/components/shared/primitives";
+import "@/components/shared/hub-shell.css";
 import "./comms.css";
 
 export default function CommsHub() {

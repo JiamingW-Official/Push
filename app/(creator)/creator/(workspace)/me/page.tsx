@@ -24,6 +24,7 @@ import {
   ProgressBar,
   StatusPill,
 } from "@/components/shared/primitives";
+import "@/components/shared/hub-shell.css";
 import "./me.css";
 
 export default function IdentityHub() {
