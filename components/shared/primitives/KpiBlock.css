@@ -10,7 +10,7 @@
 
 .kpb__eyebrow {
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.10em;
   color: var(--ink-4, #61605c);
@@ -28,6 +28,7 @@
   font-size: 18px;
   font-weight: 700;
   color: var(--ink-4, #61605c);
+  font-variant-numeric: tabular-nums;
 }
 
 .kpb__value {

@@ -32,6 +32,10 @@ type Props = {
   dot?: boolean;
   /** Optional aria-label override (defaults to label). */
   ariaLabel?: string;
+  /** Set true when the pill announces a live state change to screen
+   *  readers (failed payouts, verification holds, real-time status).
+   *  When false (default), renders as a passive label without role. */
+  live?: boolean;
 };
 
 export function StatusPill({
@@ -39,11 +43,12 @@ export function StatusPill({
   variant = "neutral",
   dot = false,
   ariaLabel,
+  live = false,
 }: Props) {
   return (
     <span
       className={`stp stp--${variant}${dot ? " stp--has-dot" : ""}`}
-      role="status"
+      role={live ? "status" : undefined}
       aria-label={ariaLabel ?? label}
     >
       {dot ? <span className="stp__dot" aria-hidden /> : null}

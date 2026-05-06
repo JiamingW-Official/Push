@@ -41,28 +41,31 @@
   --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
   --lg-edge: inset 0 0 0 0.5px rgba(255, 255, 255, 0.6);
 
-  /* ── True symmetric 10% L/R bleed from viewport edges ─────────
-     The .dh-shell grid reserves a 72px first column for the rail;
-     .dh-main lives in column 2, then adds its own 10% (--page-gutter)
-     padding. Without compensation the visual L bleed is rail+gutter
-     while R is just gutter. We pull the hub leftward by the rail
-     column width so content sits at a symmetric 10% from BOTH edges. */
-  margin-left: calc(-1 * var(--rl-w-collapsed, 72px));
-  margin-right: 0;
-  padding-left: 0;
-  padding-right: 0;
+  /* ── L/R margin matches /creator/analytics exactly ──────────
+     Analytics' .an2 uses this dual-trick: negative margin-x
+     escapes dh-main's --page-gutter (10%), then re-adds
+     (10vw - 48px) as padding-x. Net effect: hub container
+     extends visually wider than dh-main's content area while
+     the inner content text starts at the same x position as
+     analytics, so bento + hero rhythm is identical across
+     analytics and all 5 hubs. */
+  margin: 0 calc(-1 * (10vw - 48px));
+  padding-left: calc(10vw - 48px);
+  padding-right: calc(10vw - 48px);
 }
 
-@media (max-width: 960px) {
-  /* Below 960px, unified-sidebar.css already compensates the rail
-     offset via padding-left: calc(var(--us-w) + 24px) on .dh-main.
-     Cancel our trick so we don't double-compensate. */
+@media (max-width: 768px) {
+  /* unified-sidebar.css resets dh-main padding to 24px on mobile
+     and the rail moves to a bottom dock — cancel the analytics
+     trick so the hub sits at dh-main's content edges. */
   .money-hub,
   .me-hub,
   .comms-hub,
   .work-hub,
   .set-hub {
-    margin-left: 0;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

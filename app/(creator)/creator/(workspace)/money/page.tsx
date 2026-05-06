@@ -208,7 +208,9 @@ export default function MoneyHub() {
             <KpiBlock eyebrow="W-9 STATUS" value="Filed" tone="ink" compact />
             <KpiBlock eyebrow="MONTHS REPORTED" value="5" tone="ink" compact />
             <span className="money-tax-cta">
-              <span className="money-tax-cta__link">Download forms →</span>
+              <span className="money-tax-cta__link" aria-hidden>
+                Open tax center →
+              </span>
             </span>
           </div>
         </BentoModule>
