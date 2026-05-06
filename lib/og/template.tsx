@@ -21,44 +21,33 @@ export const BRAND = {
 // re-read from disk.
 // ---------------------------------------------------------------------------
 let _darkyBlack: ArrayBuffer | null = null;
-let _genioMono: ArrayBuffer | null = null;
 
 export async function loadFonts(): Promise<{
   darkyBlack: ArrayBuffer;
-  genioMono: ArrayBuffer;
+  openSans: ArrayBuffer;
 }> {
-  const [darkyBlack, genioMono] = await Promise.all([
+  const darkyBlack: ArrayBuffer =
     _darkyBlack ??
-      readFile(join(process.cwd(), "public/fonts/Darky-Black.ttf")).then(
-        (b) => b.buffer as ArrayBuffer,
-      ),
-    _genioMono ??
-      readFile(
-        join(process.cwd(), "public/fonts/CSGenioMono-Regular.ttf"),
-      ).then((b) => b.buffer as ArrayBuffer),
-  ]);
+    (await readFile(join(process.cwd(), "public/fonts/Darky-Black.ttf")).then(
+      (b) => b.buffer as ArrayBuffer,
+    ));
 
   _darkyBlack = darkyBlack;
-  _genioMono = genioMono;
 
-  return { darkyBlack, genioMono };
+  // openSans is kept in the return shape for API compatibility, but OG images
+  // only use Darky — satori cannot parse variable TTF fonts.
+  return { darkyBlack, openSans: darkyBlack };
 }
 
 // ---------------------------------------------------------------------------
 // Shared ImageResponse fonts array — pass straight into ImageResponse options
 // ---------------------------------------------------------------------------
-export function buildFonts(darkyBlack: ArrayBuffer, genioMono: ArrayBuffer) {
+export function buildFonts(darkyBlack: ArrayBuffer, _openSans: ArrayBuffer) {
   return [
     {
       name: "Darky",
       data: darkyBlack,
       weight: 900 as const,
-      style: "normal" as const,
-    },
-    {
-      name: "CSGenioMono",
-      data: genioMono,
-      weight: 400 as const,
       style: "normal" as const,
     },
   ];
@@ -205,7 +194,7 @@ export function ogTemplate({
               style={{
                 fontSize: 11,
                 fontWeight: 400,
-                fontFamily: "CSGenioMono",
+                fontFamily: "Darky",
                 color: logoColor,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
@@ -235,7 +224,7 @@ export function ogTemplate({
                 style={{
                   fontSize: 12,
                   fontWeight: 400,
-                  fontFamily: "CSGenioMono",
+                  fontFamily: "Darky",
                   color: eyebrowColor,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",

@@ -1,8 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import "./grid.css";
+import { useNow } from "@/lib/workspace/hooks";
+import { useOptionalWorkspaceState } from "@/lib/workspace/state";
+import {
+  greetingFor,
+  dateLineFor,
+  selectHeroLine,
+  buildActionQueue,
+  aggregateYesterday,
+  type BriefingInput,
+  type ActionItem,
+} from "@/lib/today/briefing";
 
 /* ── Types ─────────────────────────────────────────────── */
 
@@ -487,10 +498,119 @@ function RecentRow({ item }: { item: RecentItem }) {
   );
 }
 
+/* ── Now-panel helpers ─────────────────────────────────── */
+
+/** Derive 1-2 char initials for an action's brand avatar.
+ *  "Decide on Roberta's Pizza"  → "RP"
+ *  "Reply to Flamingo about…"   → "F"
+ *  Fallback: first char of type. */
+function actionAvatar(action: ActionItem): string {
+  if (action.type === "decide") {
+    const brand = action.title.replace(/^decide on\s+/i, "").trim();
+    const w = brand.split(/\s+/).filter(Boolean);
+    return w.length >= 2
+      ? (w[0][0] + w[w.length - 1][0]).toUpperCase()
+      : (w[0]?.[0] ?? "?").toUpperCase();
+  }
+  if (action.type === "reply") {
+    const m = action.title.match(/^reply to\s+(\S+)/i);
+    return (m?.[1]?.[0] ?? "?").toUpperCase();
+  }
+  if (action.type === "evidence") return "EV";
+  // "post" — and exhaustive fallback
+  return "P";
+}
+
+/** Avatar is muted (surface-3) for reply/evidence; urgent (ink) for decide/post */
+function actionAvatarMuted(action: ActionItem): boolean {
+  return action.type === "reply" || action.type === "evidence";
+}
+
+/** Strip action-verb prefix; show only the subject so the title is scannable.
+ *  "Decide on Roberta's Pizza" → "Roberta's Pizza"
+ *  "Reply to Flamingo Estate"  → "Flamingo Estate"  */
+function actionDisplayTitle(action: ActionItem): string {
+  return action.title
+    .replace(/^decide on\s+/i, "")
+    .replace(/^reply to\s+/i, "")
+    .replace(/^upload evidence for\s+/i, "")
+    .replace(/^post\s+/i, "")
+    .trim();
+}
+
+/** Compact time-remaining badge: "4H" / "2D" / "<1H" / "DUE". */
+function actionTimeRemaining(
+  action: ActionItem,
+  now: number | null,
+): string | null {
+  if (!action.deadlineISO || now == null) return null;
+  const msLeft = new Date(action.deadlineISO).getTime() - now;
+  if (msLeft <= 0) return "DUE";
+  const h = Math.floor(msLeft / 3_600_000);
+  if (h < 1) return "<1H";
+  if (h < 24) return `${h}H`;
+  return `${Math.floor(h / 24)}D`;
+}
+
 /* ── Page ──────────────────────────────────────────────── */
 
 export default function CreatorDashboardPage() {
-  // Derived data — computed outside hooks so they're stable references
+  // ── Morning brief ──────────────────────────────────────────────────────
+  const now = useNow(60_000);
+  const ws = useOptionalWorkspaceState();
+
+  const briefingInput: BriefingInput | null = useMemo(() => {
+    if (now == null || !ws) return null;
+    return {
+      now,
+      threads: ws.threads,
+      invites: ws.invites,
+      notifications: ws.notifications,
+      attributionEvents: ws.attributionEvents ?? [],
+      dismissedActionIds: ws.dismissedActionIds ?? [],
+      snoozedActionIds: ws.snoozedActionIds ?? {},
+      weeklyBonusThreshold: 50,
+      weeklyScansSoFar: (ws.attributionEvents ?? []).filter(
+        (e) =>
+          e.status === "verified" &&
+          new Date(e.occurredAt).getTime() > now - 7 * 24 * 60 * 60 * 1000,
+      ).length,
+      creatorFirstName: "Alex",
+    };
+  }, [now, ws]);
+
+  const hero = useMemo(
+    () => (briefingInput ? selectHeroLine(briefingInput) : null),
+    [briefingInput],
+  );
+  const urgentActions = useMemo(
+    () =>
+      briefingInput
+        ? buildActionQueue(briefingInput).filter((a) => a.urgency > 1.5)
+        : [],
+    [briefingInput],
+  );
+
+  const yesterday = useMemo(
+    () => (briefingInput ? aggregateYesterday(briefingInput) : null),
+    [briefingInput],
+  );
+
+  // Top 3 pending invites by matchScore, still within expiry window
+  const opportunities = useMemo(() => {
+    if (!briefingInput || !ws) return [];
+    return ws.invites
+      .filter(
+        (i) => i.status === "pending" && i.expiresAt - briefingInput.now > 0,
+      )
+      .sort((a, b) => b.matchScore - a.matchScore)
+      .slice(0, 3);
+  }, [briefingInput, ws]);
+
+  const weeklyScans = briefingInput?.weeklyScansSoFar ?? 0;
+  const weeklyTarget = briefingInput?.weeklyBonusThreshold ?? 50;
+
+  // ── Derived data — computed outside hooks so they're stable references ──
   const weekMax = Math.max(...WEEK_EARNINGS.map((d) => d.amount), 1);
   const live =
     TIMELINE.find((s) => s.status === "OVERDUE") ??
@@ -569,8 +689,12 @@ export default function CreatorDashboardPage() {
               A
             </div>
             <div className="cd-greeting-text">
-              <p className="cd-greeting-eyebrow">Good afternoon</p>
-              <h1 className="cd-hi">Hi, Alex</h1>
+              <p className="cd-greeting-eyebrow" suppressHydrationWarning>
+                {now != null ? dateLineFor(now) : "Good afternoon"}
+              </p>
+              <h1 className="cd-hi" suppressHydrationWarning>
+                {now != null ? greetingFor(now, "Alex") : "Hi, Alex."}
+              </h1>
             </div>
           </div>
           {isOnboarding ? (
@@ -1012,65 +1136,279 @@ export default function CreatorDashboardPage() {
           )}
         </div>
 
-        {/* ══ RIGHT: Combined dark Liquid Glass panel (Inbox + Recent) ══ */}
+        {/* ══ RIGHT: Agentic NOW panel — the morning brief ══ */}
         <div className="cd-col cd-col--right">
-          <div className="cd-card cd-card--dark-glass">
-            {/* ── Inbox section ── */}
-            <div className="cd-card-header">
-              <div className="cd-inbox-title-row">
-                <span className="cd-card-title">Inbox</span>
-                <span className="cd-inbox-badge">{unreadCount}</span>
-              </div>
-              <CardArrow href="/creator/inbox/messages" />
+          <div className="cd-card cd-card--dark-glass cd-now-card">
+            {/* ── Nano bar: live heartbeat ── */}
+            <div className="cd-now-bar">
+              <span className="cd-now-bar-dot" aria-hidden />
+              <span className="cd-now-bar-label">Push is watching</span>
+              <span className="cd-now-bar-date" suppressHydrationWarning>
+                {now != null ? dateLineFor(now) : ""}
+              </span>
             </div>
-            {/* Message preview rows */}
-            <div className="cd-inbox-rows">
-              {INBOX_ITEMS.slice(0, 5).map((item, i) => (
-                <Link
-                  key={i}
-                  href="/creator/inbox/messages"
-                  className="cd-inbox-row"
-                  data-unread={item.unread || undefined}
-                >
-                  <span className="cd-inbox-avatar" aria-hidden>
-                    <span className="cd-inbox-initials">{item.initials}</span>
-                    {item.unread && (
-                      <span className="cd-inbox-dot" aria-hidden />
-                    )}
-                  </span>
-                  <div className="cd-inbox-row-body">
-                    <div className="cd-inbox-row-top">
-                      <span className="cd-inbox-row-name">{item.name}</span>
-                      <span className="cd-inbox-row-time">{item.time}</span>
-                    </div>
-                    <p className="cd-inbox-row-snippet">{item.preview}</p>
+
+            {/* ── Scrollable body ── */}
+            <div className="cd-now-body">
+              {/* ── §1 Hero line — one sentence from the agent ── */}
+              {hero && (
+                <div className="cd-now-hero">
+                  <p className="cd-now-hero-text" suppressHydrationWarning>
+                    {hero.text}
+                  </p>
+                  {hero.ctaLabel && hero.ctaHref && (
+                    <Link href={hero.ctaHref} className="cd-now-hero-cta">
+                      {hero.ctaLabel} →
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {/* ── §2 Firing now — urgent action queue (≤5) ── */}
+              {urgentActions.length > 0 && (
+                <div className="cd-now-section cd-now-section--urgent">
+                  <p className="cd-now-section-eyebrow">Firing now</p>
+                  <ul className="cd-now-action-list" role="list">
+                    {urgentActions.slice(0, 5).map((action) => {
+                      const timeRemaining = actionTimeRemaining(action, now);
+                      const isActionUrgent =
+                        timeRemaining === "DUE" || timeRemaining === "<1H";
+                      return (
+                        <li key={action.id} className="cd-now-action">
+                          {/* Brand avatar — ink for urgent, muted for reply */}
+                          <span
+                            className={`cd-now-action-av${actionAvatarMuted(action) ? " cd-now-action-av--muted" : ""}`}
+                            aria-hidden
+                          >
+                            {actionAvatar(action)}
+                          </span>
+                          <div className="cd-now-action-body">
+                            {/* Row 1: clean subject title + compact time badge + arrow */}
+                            <Link
+                              href={action.href}
+                              className="cd-now-action-title-row"
+                            >
+                              <span className="cd-now-action-title">
+                                {actionDisplayTitle(action)}
+                              </span>
+                              {timeRemaining && (
+                                <span
+                                  className={`cd-now-action-time${isActionUrgent ? " cd-now-action-time--urgent" : ""}`}
+                                >
+                                  {timeRemaining}
+                                </span>
+                              )}
+                              <span className="cd-now-action-arr" aria-hidden>
+                                →
+                              </span>
+                            </Link>
+                            {/* Row 2 (hover-only): meta + snooze + dismiss */}
+                            <div className="cd-now-action-hover-detail">
+                              <span
+                                className="cd-now-action-meta"
+                                suppressHydrationWarning
+                              >
+                                {action.meta}
+                              </span>
+                              <div className="cd-now-action-btns">
+                                <button
+                                  className="cd-now-action-snooze"
+                                  onClick={() =>
+                                    ws?.snoozeAction?.(
+                                      action.id,
+                                      2 * 60 * 60 * 1000,
+                                    )
+                                  }
+                                  aria-label="Snooze for 2 hours"
+                                >
+                                  2h
+                                </button>
+                                <button
+                                  className="cd-now-action-dismiss"
+                                  onClick={() => ws?.dismissAction?.(action.id)}
+                                  aria-label="Dismiss"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {urgentActions.length > 5 && (
+                    <Link
+                      href="/creator/inbox"
+                      className="cd-now-action-overflow"
+                    >
+                      +{urgentActions.length - 5} more in Inbox
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {/* ── §3 Live pulse — real-time attribution stream ── */}
+              {ws && (ws.attributionEvents ?? []).length > 0 && (
+                <div className="cd-now-section">
+                  <p className="cd-now-section-eyebrow">Live pulse</p>
+                  <ul
+                    className="cd-now-pulse-list"
+                    role="list"
+                    aria-label="Recent attribution events"
+                  >
+                    {(ws.attributionEvents ?? []).slice(0, 3).map((ev) => {
+                      return (
+                        <li key={ev.id} className="cd-now-pulse-row">
+                          <span
+                            className={`cd-now-pulse-dot cd-now-pulse-dot--${ev.status}`}
+                            aria-hidden
+                          />
+                          <span className="cd-now-pulse-brand">
+                            {ev.campaignLabel}
+                          </span>
+                          <span
+                            className={`cd-now-pulse-pay${ev.status !== "verified" ? " cd-now-pulse-pay--muted" : ""}`}
+                          >
+                            {ev.status === "verified"
+                              ? `+$${(ev.payoutCents / 100).toFixed(2)}`
+                              : "—"}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              {/* ── §4 This week — bonus progress KPI ── */}
+              {briefingInput && (
+                <div className="cd-now-section">
+                  <p className="cd-now-section-eyebrow">This week</p>
+                  {/* Big KPI fraction: "5 / 50" */}
+                  <div className="cd-now-week-kpi" suppressHydrationWarning>
+                    <span className="cd-now-week-kpi-num">{weeklyScans}</span>
+                    <span className="cd-now-week-kpi-denom">
+                      &nbsp;/ {weeklyTarget} scans
+                    </span>
                   </div>
-                </Link>
-              ))}
+                  <div className="cd-now-week-bar-track">
+                    <div
+                      className="cd-now-week-bar-fill"
+                      style={{
+                        width: `${Math.min(100, (weeklyScans / weeklyTarget) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                  <p
+                    className={`cd-now-week-sublabel${weeklyScans >= weeklyTarget ? " cd-now-week-sublabel--done" : ""}`}
+                    suppressHydrationWarning
+                  >
+                    {weeklyScans >= weeklyTarget
+                      ? "Weekly bonus unlocked ✓"
+                      : `${weeklyTarget - weeklyScans} more to weekly bonus`}
+                  </p>
+                </div>
+              )}
+
+              {/* ── §5 Yesterday — collapsed recap ── */}
+              {yesterday && (
+                <details className="cd-now-yesterday">
+                  <summary className="cd-now-yesterday-summary">
+                    <p className="cd-now-section-eyebrow">Yesterday</p>
+                    <span className="cd-now-yesterday-stats">
+                      {yesterday.posts} post
+                      {yesterday.posts !== 1 ? "s" : ""} ·{" "}
+                      {yesterday.scansVerified} scan
+                      {yesterday.scansVerified !== 1 ? "s" : ""} · $
+                      {(yesterday.earningsCents / 100).toFixed(0)}
+                    </span>
+                    <span className="cd-now-yesterday-chevron" aria-hidden>
+                      ›
+                    </span>
+                  </summary>
+                  <div className="cd-now-yesterday-body">
+                    <div className="cd-now-yesterday-row">
+                      <span>Posts</span>
+                      <span>{yesterday.posts}</span>
+                    </div>
+                    <div className="cd-now-yesterday-row">
+                      <span>Verified scans</span>
+                      <span>{yesterday.scansVerified}</span>
+                    </div>
+                    <div className="cd-now-yesterday-row">
+                      <span>Earned</span>
+                      <span>${(yesterday.earningsCents / 100).toFixed(2)}</span>
+                    </div>
+                    {yesterday.newInvites > 0 && (
+                      <div className="cd-now-yesterday-row">
+                        <span>New invites</span>
+                        <span>{yesterday.newInvites}</span>
+                      </div>
+                    )}
+                  </div>
+                </details>
+              )}
+
+              {/* ── §6 Up next — top 3 invites by Watch% ── */}
+              {opportunities.length > 0 && (
+                <div className="cd-now-section">
+                  <p className="cd-now-section-eyebrow">Up next</p>
+                  <ul className="cd-now-opp-list" role="list">
+                    {opportunities.map((inv) => {
+                      const hoursLeft = Math.max(
+                        0,
+                        Math.floor(
+                          (inv.expiresAt - (now ?? Date.now())) / 3_600_000,
+                        ),
+                      );
+                      const daysLeft = Math.floor(hoursLeft / 24);
+                      const timeLabel =
+                        daysLeft >= 2
+                          ? `${daysLeft}d left`
+                          : hoursLeft >= 1
+                            ? `${hoursLeft}h left`
+                            : "Expiring";
+                      const isUrgent = hoursLeft < 6;
+                      return (
+                        <li key={inv.id}>
+                          <Link
+                            href={`/creator/gigs/invites?focus=${inv.id}`}
+                            className="cd-now-opp"
+                          >
+                            <span className="cd-now-opp-av" aria-hidden>
+                              {inv.brandInitial ?? inv.brand[0].toUpperCase()}
+                            </span>
+                            <div className="cd-now-opp-body">
+                              <span className="cd-now-opp-brand">
+                                {inv.brand}
+                              </span>
+                              <div className="cd-now-opp-meta-row">
+                                <span
+                                  className={`cd-now-opp-watch${inv.matchScore >= 90 ? " cd-now-opp-watch--high" : ""}`}
+                                >
+                                  Watch% {inv.matchScore}
+                                </span>
+                                <span
+                                  className={`cd-now-opp-deadline${isUrgent ? " cd-now-opp-deadline--urgent" : ""}`}
+                                  suppressHydrationWarning
+                                >
+                                  {timeLabel}
+                                </span>
+                              </div>
+                            </div>
+                            <span className="cd-now-opp-arr" aria-hidden>
+                              →
+                            </span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
             </div>
-
-            {/* ── Section separator ── */}
-            <div className="cd-right-panel-sep" aria-hidden />
-
-            {/* ── Recent section ── */}
-            {!isOnboarding && (
-              <>
-                <div className="cd-card-header">
-                  <span className="cd-card-title">Recent</span>
-                  <CardArrow href="/creator/analytics" />
-                </div>
-                <div className="cd-card-body">
-                  <p className="cd-status-section-hdr">Today, 27 April</p>
-                  {RECENT_TODAY.map((item) => (
-                    <RecentRow key={item.id} item={item} />
-                  ))}
-                  <p className="cd-status-section-hdr">Yesterday, 26 April</p>
-                  {RECENT_YESTERDAY.map((item) => (
-                    <RecentRow key={item.id} item={item} />
-                  ))}
-                </div>
-              </>
-            )}
+            {/* end .cd-now-body */}
           </div>
         </div>
       </div>

@@ -67,7 +67,7 @@ function sanitizeError(err: unknown): string {
 /* Focus styles handled via signup.css .signup-input:focus */
 
 const inputStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-body)",
   fontSize: 16,
   padding: "12px 16px",
   border: "1px solid var(--ink-4)",
@@ -81,10 +81,10 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: "block",
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-display)",
   fontSize: 12,
   fontWeight: 600,
-  letterSpacing: "0.08em",
+  letterSpacing: "0.14em",
   textTransform: "uppercase",
   color: "var(--ink-3)",
   marginBottom: 8,
@@ -548,7 +548,7 @@ export default function CreatorSignupPage() {
               <h1 className="signup-h1">Join Push</h1>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 14,
                   color: "var(--ink-3)",
                   marginBottom: 32,
@@ -821,7 +821,7 @@ export default function CreatorSignupPage() {
                         </div>
                         <span
                           style={{
-                            fontFamily: "var(--font-mono)",
+                            fontFamily: "var(--font-display)",
                             fontSize: 11,
                             color:
                               pwStrength === "weak"

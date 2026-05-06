@@ -21,12 +21,7 @@ import {
 } from "@/lib/inbox/seed";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
-import {
-  PaneHeader,
-  PaneSubCount,
-  EmptyState,
-  FilterChips,
-} from "@/lib/inbox/components";
+import { EmptyState } from "@/lib/inbox/components";
 import { Button } from "@/lib/workspace/buttons";
 import "../gigs.css";
 
@@ -34,6 +29,28 @@ import "../gigs.css";
 
 type ConfirmAction = "accept" | "decline" | null;
 type InviteFilter = "all" | "urgent" | "match";
+
+/* Merchant Identity Palette (Design.md § 20.3)
+   Each merchant is locked to one of 8 identity colors so creators
+   recognize brands across Today / Gigs / Earnings. The mapping is
+   deterministic — a brand never changes color between pages. */
+const MERCHANT_IDENTITY: Record<string, string> = {
+  "Devoción": "aubergine",
+  "Sunday in Brooklyn": "terracotta",
+  "Cha Cha Matcha": "sage",
+  "Superiority Burger": "clay",
+  "Roberta's Pizza": "cobalt",
+  "Roberta's": "cobalt",
+  "Flamingo Estate": "rose",
+  "Saint Bagel": "mustard",
+  "Blank Street Coffee": "mustard",
+  "Brow Theory": "charcoal",
+  "Fort Greene Coffee": "aubergine",
+  "Bed-Stuy Eats": "terracotta",
+};
+function merchantIdentity(name: string): string {
+  return MERCHANT_IDENTITY[name] ?? "charcoal";
+}
 
 /* Seed data, helpers, and parsers were lifted to lib/inbox/seed.ts
    so Invites / Messages / System / Now share one source of truth.
@@ -217,6 +234,8 @@ function InviteRow({
     <article
       className={[
         "inv-row",
+        "inv-row--mc-accent",
+        `inv-row--mc-${merchantIdentity(invite.brand)}`,
         accepted ? "is-accepted" : "",
         isActive ? "is-active" : "",
         isRecommended && !accepted ? "is-recommended" : "",
@@ -432,9 +451,16 @@ function InviteRow({
   );
 }
 
-/* ── Right-hand preview panel ────────────────────────────────── */
+/* ── Rich Detail Panel — v12.2 prototype port ───────────────────
+   Replaces the old PreviewPanel with the comprehensive structure
+   from /Project Push/creator-gigs.html: brand color accent, eyebrow
+   with brand dot, quick stats row, brief, large Outcome Ladder,
+   Match Score breakdown, Requirements, Calendar peek, Brand
+   reputation, Past creators, sticky glass CTA at bottom.
+   Authority: Design.md § 20.5 / § 20.7
+   ─────────────────────────────────────────────────────────────── */
 
-function PreviewPanel({
+function RichDetailPanel({
   invite,
   onAccept,
   onDecline,
@@ -443,83 +469,340 @@ function PreviewPanel({
   onAccept: (id: string) => void;
   onDecline: (id: string) => void;
 }) {
+  const countdown = useCountdown(invite?.expiresAt ?? 0);
+
   if (!invite) {
     return (
-      <aside
-        className="inv-preview-panel is-empty"
-        aria-label="Invite preview"
-        data-lenis-prevent
-      >
-        <span className="inv-preview-empty-icon" aria-hidden>
+      <div className="giv-detail giv-detail--empty" aria-label="Invite preview">
+        <span className="giv-detail--empty__icon" aria-hidden>
           <PaperIcon />
         </span>
-        <h3 className="inv-preview-empty-title">Pick an invite to preview.</h3>
-        <p className="inv-preview-empty-body">
-          Tap any row to open the full brief, payout details, and one-tap
-          actions.
+        <h3 className="giv-detail--empty__title">Pick an invite to preview.</h3>
+        <p className="giv-detail--empty__body">
+          Tap any row to open the full brief, payout ladder, match score
+          breakdown, and one-tap actions.
         </p>
-      </aside>
+      </div>
     );
   }
 
   const guaranteed = invite.payoutTiers[0]?.amount ?? 0;
   const stretch =
-    invite.payoutTiers[invite.payoutTiers.length - 1]?.amount ?? 0;
+    invite.payoutTiers[invite.payoutTiers.length - 1]?.amount ?? guaranteed;
+  const mc = merchantIdentity(invite.brand);
+
+  /* Match factors — derived from invite.matchScore for visual fidelity.
+     Real implementation should read from a backend ranking decomposition. */
+  const niche = Math.min(100, invite.matchScore + 4);
+  const geo = Math.max(70, invite.matchScore - 2);
+  const audience = Math.max(72, invite.matchScore + 1);
+  const past = Math.max(70, invite.matchScore - 4);
+
+  /* Reputation, calendar, creators are mock until brands API exposes them. */
+  const reputation = {
+    rating: 4.7 + (invite.matchScore % 10) / 30,
+    avg: 48 + (invite.matchScore % 13),
+    onTime: 100,
+    activeCampaigns: 8 + (invite.matchScore % 7),
+  };
 
   return (
-    <aside
-      className="inv-preview-panel"
+    <div
+      className={"giv-detail giv-detail--mc-" + mc}
       aria-label="Invite preview"
       data-lenis-prevent
     >
-      <p className="inv-preview-eyebrow">(BRIEF) · {invite.category}</p>
-      <h2 className="inv-preview-brand">{invite.brand}</h2>
-      <p className="inv-preview-campaign">{invite.campaign}</p>
+      <div className="giv-detail__accent" />
 
-      <dl className="inv-preview-stats">
-        <div>
-          <p className="inv-preview-stat-label">Guaranteed</p>
-          <p className="inv-preview-stat-value">${guaranteed}</p>
+      <div className="giv-detail__head">
+        <div className="giv-detail__eyebrow">
+          <span className="giv-detail__eyebrow__dot" aria-hidden />
+          <span>Brief</span>
+          <span className="giv-detail__eyebrow__sep">·</span>
+          <span>{invite.category}</span>
         </div>
-        <div>
-          <p className="inv-preview-stat-label">Up to</p>
-          <p className="inv-preview-stat-value inv-preview-stat-value--bonus">
-            ${stretch}
-          </p>
-        </div>
-      </dl>
+        <h2 className="giv-detail__title">{invite.brand}</h2>
+        <p className="giv-detail__sub">{invite.campaign}</p>
+      </div>
 
-      <p className="inv-preview-section-title">(Brief)</p>
-      <p className="inv-preview-body">{invite.brief}</p>
+      <div className="giv-detail__quick">
+        <span className="giv-detail__quick__item" suppressHydrationWarning>
+          ⏱ <strong>{countdown || "—"}</strong>
+        </span>
+        <span className="giv-detail__quick__sep" />
+        <span className="giv-detail__quick__item">
+          ⚡ <strong>{invite.matchScore}%</strong> match
+        </span>
+        <span className="giv-detail__quick__sep" />
+        <span className="giv-detail__quick__item">
+          $ <strong>${guaranteed} — ${stretch}</strong>
+        </span>
+        <span className="giv-detail__quick__sep" />
+        <span className="giv-detail__quick__item">
+          ★ <strong>{reputation.rating.toFixed(1)}</strong>
+        </span>
+      </div>
 
-      <p className="inv-preview-section-title">(Shoot window)</p>
-      <p className="inv-preview-body">{invite.shootWindow}</p>
+      <div className="giv-detail__body">
+        {/* The brief */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">The brief</span>
+            <span className="giv-bsec__hint">read · 30s</span>
+          </header>
+          <p className="giv-bsec__body">{invite.brief}</p>
+        </section>
 
-      <p className="inv-preview-section-title">(QR pickup)</p>
-      <p className="inv-preview-body">{invite.qrPickupAddr}</p>
+        {/* Outcome Ladder large */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">Outcome ladder</span>
+            <span className="giv-bsec__hint">3 tiers · pay-per-result</span>
+          </header>
+          <div className="giv-ladder">
+            {invite.payoutTiers.map((tier, idx) => {
+              const variant = idx === 0 ? "gtd" : idx === 1 ? "tgt" : "str";
+              return (
+                <div
+                  key={tier.label}
+                  className={`giv-ladder__rung giv-ladder__rung--${variant}`}
+                >
+                  <div className="giv-ladder__tier">{tier.label}</div>
+                  <div className="giv-ladder__amount">${tier.amount}</div>
+                  <div className="giv-ladder__hint">{tier.trigger}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="giv-ladder-progress">
+            <div className="giv-ladder-progress__bar">
+              <div className="giv-ladder-progress__seg giv-ladder-progress__seg--filled" />
+              <div className="giv-ladder-progress__seg" />
+              <div className="giv-ladder-progress__seg" />
+            </div>
+            <div className="giv-ladder-progress__legend">
+              <span>${guaranteed} on accept</span>
+              <span>up to ${stretch}</span>
+            </div>
+          </div>
+        </section>
 
-      <div className="inv-preview-actions">
-        <Button
-          variant="primary"
-          size="lg"
-          shape="rounded"
-          fullWidth
-          disabled={invite.status !== "pending"}
-          onClick={() => onAccept(invite.id)}
-        >
-          Accept invite
-        </Button>
-        <Button
-          variant="ghost"
-          size="lg"
-          shape="rounded"
+        {/* Match Score Breakdown */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">Why we matched you</span>
+            <span className="giv-bsec__hint">{invite.matchScore}% fit</span>
+          </header>
+          <div className="giv-score">
+            <div className="giv-score__total">
+              <span className="giv-score__pct">{invite.matchScore}%</span>
+              <span className="giv-score__label">
+                {invite.matchScore >= 95
+                  ? "Top 1% creators for this brief"
+                  : invite.matchScore >= 90
+                    ? "Top 5% creators for this brief"
+                    : "Strong fit · niche + geo aligned"}
+              </span>
+            </div>
+            <div className="giv-score__row giv-score__row--strong">
+              <span className="giv-score__name">Niche fit</span>
+              <div className="giv-score__bar">
+                <div
+                  className="giv-score__bar__fill"
+                  style={{ width: `${niche}%` }}
+                />
+              </div>
+              <span className="giv-score__num">{niche}</span>
+            </div>
+            <div className="giv-score__row giv-score__row--strong">
+              <span className="giv-score__name">Geo proximity</span>
+              <div className="giv-score__bar">
+                <div
+                  className="giv-score__bar__fill"
+                  style={{ width: `${geo}%` }}
+                />
+              </div>
+              <span className="giv-score__num">{geo}</span>
+            </div>
+            <div className="giv-score__row giv-score__row--good">
+              <span className="giv-score__name">Audience fit</span>
+              <div className="giv-score__bar">
+                <div
+                  className="giv-score__bar__fill"
+                  style={{ width: `${audience}%` }}
+                />
+              </div>
+              <span className="giv-score__num">{audience}</span>
+            </div>
+            <div className="giv-score__row giv-score__row--good">
+              <span className="giv-score__name">Past scans</span>
+              <div className="giv-score__bar">
+                <div
+                  className="giv-score__bar__fill"
+                  style={{ width: `${past}%` }}
+                />
+              </div>
+              <span className="giv-score__num">{past}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Shoot window calendar peek */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">Shoot window</span>
+            <span className="giv-bsec__hint">{invite.shootWindow}</span>
+          </header>
+          <div className="giv-cal">
+            <div className="giv-cal__head">
+              <span className="giv-cal__month">May 2026</span>
+              <span className="giv-cal__range">{invite.shootWindow}</span>
+            </div>
+            <div className="giv-cal__grid">
+              <span className="giv-cal__dow">M</span>
+              <span className="giv-cal__dow">T</span>
+              <span className="giv-cal__dow">W</span>
+              <span className="giv-cal__dow">T</span>
+              <span className="giv-cal__dow">F</span>
+              <span className="giv-cal__dow">S</span>
+              <span className="giv-cal__dow">S</span>
+              {/* Static demo grid; production would derive from shootWindow */}
+              <span className="giv-cal__day giv-cal__day--past">28</span>
+              <span className="giv-cal__day giv-cal__day--past">29</span>
+              <span className="giv-cal__day giv-cal__day--past">30</span>
+              <span className="giv-cal__day giv-cal__day--past">1</span>
+              <span className="giv-cal__day giv-cal__day--past">2</span>
+              <span className="giv-cal__day giv-cal__day--past">3</span>
+              <span className="giv-cal__day giv-cal__day--past">4</span>
+              <span className="giv-cal__day giv-cal__day--past">5</span>
+              <span className="giv-cal__day giv-cal__day--today">6</span>
+              <span className="giv-cal__day">7</span>
+              <span className="giv-cal__day giv-cal__day--inwindow">8</span>
+              <span className="giv-cal__day giv-cal__day--inwindow giv-cal__day--peak">
+                9
+              </span>
+              <span className="giv-cal__day giv-cal__day--inwindow giv-cal__day--peak">
+                10
+              </span>
+              <span className="giv-cal__day">11</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Brand reputation */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">Brand reputation</span>
+            <span className="giv-bsec__hint">
+              from {reputation.activeCampaigns + 35} creators
+            </span>
+          </header>
+          <div className="giv-rep">
+            <div className="giv-rep__cell giv-rep__cell--featured">
+              <div className="giv-rep__num">
+                <span className="giv-rep__num__star">★</span>
+                {reputation.rating.toFixed(1)}
+              </div>
+              <div className="giv-rep__label">Creator rating</div>
+              <div className="giv-rep__delta">Top 5% of brands</div>
+            </div>
+            <div className="giv-rep__cell">
+              <div className="giv-rep__num">
+                ${reputation.avg}
+                <span className="giv-rep__num__suffix">avg</span>
+              </div>
+              <div className="giv-rep__label">Per-gig payout</div>
+              <div className="giv-rep__delta">+38% vs platform</div>
+            </div>
+            <div className="giv-rep__cell">
+              <div className="giv-rep__num">
+                {reputation.onTime}
+                <span className="giv-rep__num__suffix">%</span>
+              </div>
+              <div className="giv-rep__label">On-time pay</div>
+            </div>
+            <div className="giv-rep__cell">
+              <div className="giv-rep__num">{reputation.activeCampaigns}</div>
+              <div className="giv-rep__label">Active campaigns</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Past creators */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">Past creators worked here</span>
+            <span className="giv-bsec__hint">
+              {reputation.activeCampaigns + 35} total
+            </span>
+          </header>
+          <div className="giv-creators">
+            <div className="giv-creators__avatars">
+              <span
+                className="giv-creators__avatar"
+                style={{ background: "#c98a8a" }}
+              >
+                MK
+              </span>
+              <span
+                className="giv-creators__avatar"
+                style={{ background: "#7a8a6e" }}
+              >
+                JL
+              </span>
+              <span
+                className="giv-creators__avatar"
+                style={{ background: "#c19a3a" }}
+              >
+                RS
+              </span>
+              <span
+                className="giv-creators__avatar"
+                style={{ background: "#5b3a4f" }}
+              >
+                AT
+              </span>
+              <span className="giv-creators__avatar giv-creators__avatar--more">
+                +{reputation.activeCampaigns + 30}
+              </span>
+            </div>
+            <span className="giv-creators__text">
+              <strong>4 of {reputation.activeCampaigns + 35}</strong> creators
+              in your tier — see what worked
+            </span>
+          </div>
+        </section>
+
+        {/* QR pickup */}
+        <section className="giv-bsec">
+          <header className="giv-bsec__head">
+            <span className="giv-bsec__title">QR poster pickup</span>
+            <span className="giv-bsec__hint">required pre-shoot</span>
+          </header>
+          <p className="giv-bsec__body">{invite.qrPickupAddr}</p>
+        </section>
+      </div>
+
+      {/* ✦ Sticky glass CTA */}
+      <div className="giv-detail__cta">
+        <button
+          type="button"
+          className="giv-cta-btn giv-cta-btn--ghost"
           disabled={invite.status !== "pending"}
           onClick={() => onDecline(invite.id)}
         >
           Decline
-        </Button>
+        </button>
+        <button
+          type="button"
+          className="giv-cta-btn giv-cta-btn--primary"
+          disabled={invite.status !== "pending"}
+          onClick={() => onAccept(invite.id)}
+        >
+          Accept gig →
+        </button>
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -641,102 +924,369 @@ export default function InvitesPage() {
     }
   }, [batchConfirming, acceptTopMatches]);
 
+  const acceptedCount = invites.filter((i) => i.status === "accepted").length;
+  const totalUpside = invites
+    .filter((i) => i.status === "pending")
+    .reduce(
+      (sum, i) =>
+        sum + (i.payoutTiers[i.payoutTiers.length - 1]?.amount ?? 0),
+      0,
+    );
+
+  /* Bucket invites for grouped rendering — Top match (≥90%) ·
+     Closing soon (urgent + <90%) · Open (everything else) ·
+     Accepted (in flight). Filter chips at the top further narrow
+     these buckets via filteredInvites. */
+  const groupTop = filteredInvites.filter(
+    (i) => i.status === "pending" && i.matchScore >= 90,
+  );
+  const groupUrgent = filteredInvites.filter(
+    (i) =>
+      i.status === "pending" &&
+      i.matchScore < 90 &&
+      now != null &&
+      i.expiresAt - now < 6 * 60 * 60 * 1000 &&
+      i.expiresAt - now > 0,
+  );
+  const groupOpen = filteredInvites.filter(
+    (i) =>
+      i.status === "pending" &&
+      i.matchScore < 90 &&
+      (now == null || i.expiresAt - now >= 6 * 60 * 60 * 1000),
+  );
+  const groupAccepted = filteredInvites.filter(
+    (i) => i.status === "accepted",
+  );
+
+  const renderRow = (invite: Invite) => (
+    <InviteRow
+      key={invite.id}
+      invite={invite}
+      isActive={invite.id === activeId}
+      isRecommended={invite.id === topRecommendedId}
+      conflicts={conflictsByInviteId[invite.id] ?? []}
+      onSelect={setActiveId}
+      onAccept={handleAccept}
+      onDecline={handleDecline}
+      onCheckStep={handleCheckStep}
+    />
+  );
+
   return (
-    <section className="ib-content ib-invites-layout">
-      <div className="ib-invites-main" data-lenis-prevent>
-        <PaneHeader
-          title="Invites"
-          sub={
-            <>
-              <PaneSubCount count={matchCount} label="match your top niches" />{" "}
-              · {pending.length} open
-            </>
-          }
-          actions={
-            showBatchBar && (
+    <section className="ib-content gigs-pane">
+      {/* ★★ Hero — Magvix Italic title + weekly goal panel */}
+      <header className="giv-hero">
+        <div>
+          <h1 className="giv-hero__title">Invites</h1>
+          <p className="giv-hero__sub" suppressHydrationWarning>
+            <strong>{matchCount}</strong> match your top niches ·{" "}
+            <strong>{pending.length}</strong> open
+            {urgentCount > 0 && (
               <>
-                {batchConfirming && (
-                  <Button
-                    variant="text"
-                    size="sm"
-                    onClick={() => setBatchConfirming(false)}
-                  >
-                    Cancel
-                  </Button>
-                )}
-                <Button
-                  variant={batchConfirming ? "ink" : "primary"}
-                  size="md"
-                  confirming={batchConfirming}
-                  onClick={handleBatchClick}
-                >
-                  {batchConfirming
-                    ? `Confirm · accept ${topMatches.length}`
-                    : `Accept top ${topMatches.length}`}
-                </Button>
+                {" "}
+                ·{" "}
+                <span className="giv-hero__sub__alert">
+                  {urgentCount} urgent
+                </span>
               </>
-            )
-          }
-        />
-
-        <FilterChips
-          ariaLabel="Filter invites"
-          style={{ marginBottom: 20 }}
-          active={filter}
-          onChange={setFilter}
-          options={[
-            { value: "all", label: "All", hideCount: true },
-            { value: "urgent", label: "Urgent", count: urgentCount },
-            { value: "match", label: "Top Match", count: matchCount },
-          ]}
-        />
-
-        {/* List */}
-        {filteredInvites.length === 0 ? (
-          <EmptyState
-            icon={<InboxEmptyIcon />}
-            title={
-              filter === "urgent"
-                ? "Nothing urgent."
-                : filter === "match"
-                  ? "No top matches right now."
-                  : "All caught up."
-            }
-            body={
-              filter === "all"
-                ? "New campaign matches land here when brands invite you."
-                : "Try clearing the filter — or browse open campaigns."
-            }
-            cta={{
-              label: "Browse open campaigns",
-              href: "/creator/discover",
-            }}
-          />
-        ) : (
-          <div className="inv-list">
-            {filteredInvites.map((invite) => (
-              <InviteRow
-                key={invite.id}
-                invite={invite}
-                isActive={invite.id === activeId}
-                isRecommended={invite.id === topRecommendedId}
-                conflicts={conflictsByInviteId[invite.id] ?? []}
-                onSelect={setActiveId}
-                onAccept={handleAccept}
-                onDecline={handleDecline}
-                onCheckStep={handleCheckStep}
-              />
-            ))}
+            )}
+          </p>
+        </div>
+        <div className="giv-goal">
+          <div className="giv-goal__head">
+            <span className="giv-goal__label">Weekly goal</span>
+            <span className="giv-goal__pct">64%</span>
           </div>
-        )}
+          <div className="giv-goal__bar">
+            <div className="giv-goal__bar__fill" style={{ width: "64%" }} />
+          </div>
+          <div className="giv-goal__money">
+            <span>
+              <strong>$224</strong> earned
+            </span>
+            <span>$350 goal</span>
+          </div>
+        </div>
+      </header>
+
+      {/* ☆ Pulse strip · ambient gig metrics (Design.md § 20.6) */}
+      <div className="gigs-pulse-strip" role="group" aria-label="Invites pulse">
+        <div className="gigs-pulse-strip__title">
+          <span className="gigs-pulse-strip__title__dot" aria-hidden />
+          Invites
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--open">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Open</span>
+          <span className="gigs-pulse-stat__value">{pending.length}</span>
+          <span className="gigs-pulse-stat__delta">to triage</span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--match">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Top match</span>
+          <span className="gigs-pulse-stat__value" suppressHydrationWarning>
+            {matchCount}
+          </span>
+          <span className="gigs-pulse-stat__delta">≥ 90%</span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--urgent">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Urgent</span>
+          <span className="gigs-pulse-stat__value" suppressHydrationWarning>
+            {urgentCount}
+          </span>
+          <span
+            className={
+              "gigs-pulse-stat__delta" +
+              (urgentCount > 0 ? " gigs-pulse-stat__delta--alert" : "")
+            }
+            suppressHydrationWarning
+          >
+            {urgentCount > 0 ? "< 6h left" : "none urgent"}
+          </span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--active">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Active</span>
+          <span className="gigs-pulse-stat__value">{acceptedCount}</span>
+          <span className="gigs-pulse-stat__delta">in flight</span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--upside">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Upside</span>
+          <span className="gigs-pulse-stat__value">${totalUpside}</span>
+          <span className="gigs-pulse-stat__delta">all open · stretch</span>
+        </div>
       </div>
 
-      {/* Right preview panel */}
-      <PreviewPanel
-        invite={activeInvite}
-        onAccept={handleAccept}
-        onDecline={handleDecline}
-      />
+      {/* ☆ Toolbar · search + filter + view toggle + bulk action */}
+      <div className="giv-toolbar">
+        <div className="giv-search">
+          <span className="giv-search__icon" aria-hidden>
+            ⌕
+          </span>
+          <input
+            type="text"
+            placeholder="Find a brand or campaign..."
+            aria-label="Search invites"
+          />
+          <span className="giv-kbd" aria-hidden>
+            /
+          </span>
+        </div>
+
+        <div className="giv-tools-group">
+          <span className="giv-tools-group__label">Filter</span>
+          <button
+            type="button"
+            className={
+              "giv-chip" + (filter === "all" ? " giv-chip--active" : "")
+            }
+            onClick={() => setFilter("all")}
+          >
+            All <span className="giv-chip__num">{pending.length}</span>
+          </button>
+          <button
+            type="button"
+            className={
+              "giv-chip" + (filter === "urgent" ? " giv-chip--active" : "")
+            }
+            onClick={() => setFilter("urgent")}
+          >
+            Urgent{" "}
+            <span className="giv-chip__num" suppressHydrationWarning>
+              {urgentCount}
+            </span>
+          </button>
+          <button
+            type="button"
+            className={
+              "giv-chip" + (filter === "match" ? " giv-chip--active" : "")
+            }
+            onClick={() => setFilter("match")}
+          >
+            Top match <span className="giv-chip__num">{matchCount}</span>
+          </button>
+        </div>
+
+        <div className="giv-view-toggle">
+          <button
+            type="button"
+            className="giv-view-toggle__btn giv-view-toggle__btn--active"
+          >
+            List
+          </button>
+          <button type="button" className="giv-view-toggle__btn">
+            Board
+          </button>
+        </div>
+
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {showBatchBar ? (
+            <>
+              {batchConfirming && (
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={() => setBatchConfirming(false)}
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button
+                variant={batchConfirming ? "ink" : "primary"}
+                size="md"
+                confirming={batchConfirming}
+                onClick={handleBatchClick}
+              >
+                {batchConfirming
+                  ? `Confirm · accept ${topMatches.length}`
+                  : `Accept top ${topMatches.length}`}
+              </Button>
+            </>
+          ) : null}
+        </div>
+      </div>
+
+      {/* ★★★ Two-column workspace · grouped list + sticky rich detail */}
+      <div className="giv-workspace">
+        <div className="giv-list-col">
+          {filteredInvites.length === 0 ? (
+            <EmptyState
+              icon={<InboxEmptyIcon />}
+              title={
+                filter === "urgent"
+                  ? "Nothing urgent."
+                  : filter === "match"
+                    ? "No top matches right now."
+                    : "All caught up."
+              }
+              body={
+                filter === "all"
+                  ? "New campaign matches land here when brands invite you."
+                  : "Try clearing the filter — or browse open campaigns."
+              }
+              cta={{
+                label: "Browse open campaigns",
+                href: "/creator/discover",
+              }}
+            />
+          ) : (
+            <>
+              {groupTop.length > 0 && (
+                <section className="giv-group giv-group--top">
+                  <header className="giv-group__head">
+                    <span className="giv-group__title">
+                      <span className="giv-group__icon" aria-hidden>
+                        ★
+                      </span>
+                      Top match for you
+                    </span>
+                    <span className="giv-group__count">
+                      {groupTop.length} invite
+                      {groupTop.length === 1 ? "" : "s"} · ≥ 90% fit
+                    </span>
+                  </header>
+                  <div className="inv-list">{groupTop.map(renderRow)}</div>
+                </section>
+              )}
+
+              {groupUrgent.length > 0 && (
+                <section className="giv-group giv-group--urgent">
+                  <header className="giv-group__head">
+                    <span className="giv-group__title">
+                      <span className="giv-group__icon" aria-hidden>
+                        ⏱
+                      </span>
+                      Closing soon
+                    </span>
+                    <span className="giv-group__count">
+                      {groupUrgent.length} invite
+                      {groupUrgent.length === 1 ? "" : "s"} · &lt; 6h left
+                    </span>
+                  </header>
+                  <div className="inv-list">{groupUrgent.map(renderRow)}</div>
+                </section>
+              )}
+
+              {groupOpen.length > 0 && (
+                <section className="giv-group">
+                  <header className="giv-group__head">
+                    <span className="giv-group__title">
+                      <span className="giv-group__icon" aria-hidden>
+                        ○
+                      </span>
+                      Open
+                    </span>
+                    <span className="giv-group__count">
+                      {groupOpen.length} invite
+                      {groupOpen.length === 1 ? "" : "s"} · 6 h+ left
+                    </span>
+                  </header>
+                  <div className="inv-list">{groupOpen.map(renderRow)}</div>
+                </section>
+              )}
+
+              {groupAccepted.length > 0 && (
+                <section className="giv-group">
+                  <header className="giv-group__head">
+                    <span className="giv-group__title">
+                      <span
+                        className="giv-group__icon"
+                        aria-hidden
+                        style={{
+                          background: "var(--accent-blue, #0085ff)",
+                        }}
+                      >
+                        ✓
+                      </span>
+                      Already accepted
+                    </span>
+                    <span className="giv-group__count">
+                      {groupAccepted.length} active · in flight
+                    </span>
+                  </header>
+                  <div className="inv-list">{groupAccepted.map(renderRow)}</div>
+                </section>
+              )}
+            </>
+          )}
+        </div>
+
+        <aside
+          className="giv-detail-col"
+          aria-label="Invite detail"
+          data-lenis-prevent
+        >
+          <RichDetailPanel
+            invite={activeInvite}
+            onAccept={handleAccept}
+            onDecline={handleDecline}
+          />
+        </aside>
+      </div>
+
+      {/* ☆ Keyboard shortcuts footer */}
+      <footer className="giv-kbd-footer">
+        <ul className="giv-kbd-footer__list">
+          <li className="giv-kbd-footer__sc">
+            <span className="giv-kbd">↑</span>
+            <span className="giv-kbd">↓</span> navigate
+          </li>
+          <li className="giv-kbd-footer__sc">
+            <span className="giv-kbd">A</span> accept
+          </li>
+          <li className="giv-kbd-footer__sc">
+            <span className="giv-kbd">D</span> decline
+          </li>
+          <li className="giv-kbd-footer__sc">
+            <span className="giv-kbd">B</span> brief
+          </li>
+          <li className="giv-kbd-footer__sc">
+            <span className="giv-kbd">/</span> search
+          </li>
+        </ul>
+      </footer>
 
       {/* Decline-with-Undo toast */}
       {declineToast && (

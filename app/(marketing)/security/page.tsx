@@ -125,7 +125,7 @@ export default function SecurityPage() {
           >
             <span
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
@@ -154,7 +154,7 @@ export default function SecurityPage() {
               </div>
               <div
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -188,7 +188,7 @@ export default function SecurityPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 18,
               color: "rgba(255,255,255,0.5)",
               maxWidth: 560,
@@ -220,7 +220,7 @@ export default function SecurityPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -293,7 +293,7 @@ export default function SecurityPage() {
                 </h3>
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 18,
                     color: "var(--ink-3)",
                     lineHeight: 1.55,
@@ -320,7 +320,7 @@ export default function SecurityPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -370,7 +370,7 @@ export default function SecurityPage() {
                 {/* tag eyebrow */}
                 <span
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: "0.12em",
@@ -396,7 +396,7 @@ export default function SecurityPage() {
                   </h3>
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: "0.12em",
@@ -409,7 +409,7 @@ export default function SecurityPage() {
                 </div>
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 16,
                     color: "var(--ink-3)",
                     lineHeight: 1.55,
@@ -437,7 +437,7 @@ export default function SecurityPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -482,7 +482,7 @@ export default function SecurityPage() {
             >
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -521,7 +521,7 @@ export default function SecurityPage() {
                   >
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         fontWeight: 700,
                         color: "var(--accent-blue)",
@@ -533,7 +533,7 @@ export default function SecurityPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 16,
                         color: "var(--ink-3)",
                         lineHeight: 1.55,
@@ -557,7 +557,7 @@ export default function SecurityPage() {
             >
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -596,7 +596,7 @@ export default function SecurityPage() {
                   >
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 16,
                         fontWeight: 700,
                         color: "var(--brand-red)",
@@ -607,7 +607,7 @@ export default function SecurityPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 16,
                         color: "rgba(255,255,255,0.45)",
                         lineHeight: 1.55,
@@ -646,7 +646,7 @@ export default function SecurityPage() {
             <div>
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -674,7 +674,7 @@ export default function SecurityPage() {
               </h2>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 18,
                   color: "rgba(255,255,255,0.55)",
                   lineHeight: 1.55,
@@ -699,7 +699,7 @@ export default function SecurityPage() {
               </p>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 16,
                   color: "rgba(255,255,255,0.35)",
                   lineHeight: 1.55,
@@ -715,7 +715,7 @@ export default function SecurityPage() {
             <div>
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -748,7 +748,7 @@ export default function SecurityPage() {
                     <span
                       key={h}
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         fontWeight: 700,
                         letterSpacing: "0.12em",
@@ -786,7 +786,7 @@ export default function SecurityPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 14,
                         color: "rgba(255,255,255,0.4)",
                         lineHeight: 1.55,
@@ -796,7 +796,7 @@ export default function SecurityPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 14,
                         color: "rgba(255,255,255,0.4)",
                         lineHeight: 1.55,
@@ -806,7 +806,7 @@ export default function SecurityPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 14,
                         color: "var(--snow)",
                         fontWeight: 600,

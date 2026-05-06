@@ -30,7 +30,7 @@ export default async function OGImage({
 }) {
   const { id } = await params;
   const creator = await getCreatorProfile(id);
-  const { darkyBlack, genioMono } = await loadFonts();
+  const { darkyBlack, openSans } = await loadFonts();
 
   const eyebrow = creator.tier
     ? `${creator.tier} Creator · push.nyc`
@@ -45,7 +45,7 @@ export default async function OGImage({
     }),
     {
       ...size,
-      fonts: buildFonts(darkyBlack, genioMono),
+      fonts: buildFonts(darkyBlack, openSans),
     },
   );
 }

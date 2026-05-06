@@ -311,7 +311,7 @@ function StageNode({ stage, isLast }: { stage: Stage; isLast: boolean }) {
       {/* Label */}
       <span
         style={{
-          fontFamily: "'CS Genio Mono', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 9,
           textTransform: "uppercase",
           letterSpacing: "0.06em",
@@ -470,7 +470,7 @@ export function MatchProgress({
   return (
     <div
       style={{
-        fontFamily: "'CS Genio Mono', monospace",
+        fontFamily: "var(--font-display)",
         background: "var(--surface)",
         border: "1px solid rgba(10,10,10,0.14)",
         width: "100%",
@@ -495,7 +495,7 @@ export function MatchProgress({
             display: "flex",
             alignItems: "center",
             fontSize: 11,
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
             textTransform: "uppercase",
             letterSpacing: "0.1em",
             color: "var(--surface)",
@@ -512,7 +512,7 @@ export function MatchProgress({
         {tierLabel && (
           <span
             style={{
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 9,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -528,7 +528,7 @@ export function MatchProgress({
         <span
           style={{
             fontSize: 10,
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
             color: isComplete ? "var(--brand-red)" : "rgba(245,242,236,0.45)",
@@ -568,7 +568,7 @@ export function MatchProgress({
             justifyContent: "space-between",
             fontSize: 9,
             color: "rgba(10,10,10,0.45)",
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
             marginBottom: 24,
             letterSpacing: "0.04em",
           }}
@@ -598,7 +598,7 @@ export function MatchProgress({
         <div
           style={{
             fontSize: 12,
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
             color: "var(--ink)",
             lineHeight: 1.6,
             padding: "12px 14px",
@@ -617,7 +617,7 @@ export function MatchProgress({
           <div
             style={{
               fontSize: 11,
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               color: "rgba(10,10,10,0.65)",
               lineHeight: 1.55,
               padding: "10px 14px",
@@ -665,7 +665,7 @@ export function MatchProgress({
                 padding: "9px 10px",
                 borderRadius: 0,
                 fontSize: 10,
-                fontFamily: "'CS Genio Mono', monospace",
+                fontFamily: "var(--font-display)",
                 color: "var(--ink)",
                 display: "flex",
                 alignItems: "center",
@@ -691,7 +691,7 @@ export function MatchProgress({
               border: "none",
               cursor: "pointer",
               fontSize: 10,
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               color: "rgba(10,10,10,0.4)",
               textTransform: "uppercase",
               letterSpacing: "0.08em",

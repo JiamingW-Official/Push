@@ -29,7 +29,7 @@ export default async function OGImage({
 }) {
   const { slug } = await params;
   const post = await getBlogPost(slug);
-  const { darkyBlack, genioMono } = await loadFonts();
+  const { darkyBlack, openSans } = await loadFonts();
 
   return new ImageResponse(
     ogTemplate({
@@ -40,7 +40,7 @@ export default async function OGImage({
     }),
     {
       ...size,
-      fonts: buildFonts(darkyBlack, genioMono),
+      fonts: buildFonts(darkyBlack, openSans),
     },
   );
 }

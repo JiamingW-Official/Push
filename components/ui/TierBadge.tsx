@@ -1,4 +1,4 @@
-/** Creator tier badge with per-tier color coding, sharp corners, CS Genio Mono. */
+/** Creator tier badge with per-tier color coding, sharp corners, Open Sans. */
 "use client";
 
 type Tier = "seed" | "explorer" | "operator" | "proven" | "closer" | "partner";

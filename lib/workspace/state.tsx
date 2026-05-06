@@ -32,12 +32,14 @@ import {
   SEED_INVITES,
   SEED_THREADS,
   SEED_NOTIFICATIONS,
+  seedAttributionEvents,
   buildAcceptSteps,
   type Invite,
   type AcceptStep,
   type Thread,
   type Message,
   type SystemNotif,
+  type AttributionEvent,
 } from "@/lib/inbox/seed";
 
 /* ── Toast model — surface ephemeral undo for Decline ─────── */
@@ -81,6 +83,16 @@ type WorkspaceState = {
   markAllNotifsRead: () => void;
   snoozeNotif: (id: string, hours: number) => void;
 
+  /* — Attribution events (for /today pulse) — */
+  attributionEvents: AttributionEvent[];
+
+  /* — Action dismissal / snooze (for /today action queue) — */
+  dismissedActionIds: string[];
+  snoozedActionIds: Record<string, number>; // id → snoozedUntil ms timestamp
+  dismissAction: (id: string) => void;
+  snoozeAction: (id: string, durationMs: number) => void;
+  resetAction: (id: string) => void;
+
   /* A11y announcer */
   announce: (msg: string) => void;
 };
@@ -95,6 +107,13 @@ export function WorkspaceStateProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] =
     useState<SystemNotif[]>(SEED_NOTIFICATIONS);
   const [declineToast, setDeclineToast] = useState<DeclineToast>(null);
+  const [attributionEvents] = useState<AttributionEvent[]>(
+    seedAttributionEvents,
+  );
+  const [dismissedActionIds, setDismissedActionIds] = useState<string[]>([]);
+  const [snoozedActionIds, setSnoozedActionIds] = useState<
+    Record<string, number>
+  >({});
 
   const [liveMessage, setLiveMessage] = useState<string>("");
   const announce = useCallback((msg: string) => {
@@ -293,6 +312,32 @@ export function WorkspaceStateProvider({ children }: { children: ReactNode }) {
     [announce],
   );
 
+  /* ── Action dismissal / snooze (for /today action queue) ─ */
+
+  const dismissAction = useCallback(
+    (id: string) => {
+      setDismissedActionIds((prev) =>
+        prev.includes(id) ? prev : [...prev, id],
+      );
+      announce("Action dismissed.");
+    },
+    [announce],
+  );
+
+  const snoozeAction = useCallback((id: string, durationMs: number) => {
+    setSnoozedActionIds((prev) => ({ ...prev, [id]: Date.now() + durationMs }));
+    announce("Snoozed.");
+  }, []);
+
+  const resetAction = useCallback((id: string) => {
+    setDismissedActionIds((prev) => prev.filter((x) => x !== id));
+    setSnoozedActionIds((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }, []);
+
   /* ── Derived counts (drive segmented nav badges) ────── */
 
   const counts = useMemo(() => {
@@ -326,6 +371,12 @@ export function WorkspaceStateProvider({ children }: { children: ReactNode }) {
     markNotifRead,
     markAllNotifsRead,
     snoozeNotif,
+    attributionEvents,
+    dismissedActionIds,
+    snoozedActionIds,
+    dismissAction,
+    snoozeAction,
+    resetAction,
     announce,
   };
 

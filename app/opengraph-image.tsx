@@ -6,7 +6,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OGImage() {
-  const { darkyBlack, genioMono } = await loadFonts();
+  const { darkyBlack, openSans } = await loadFonts();
 
   return new ImageResponse(
     ogTemplate({
@@ -17,7 +17,7 @@ export default async function OGImage() {
     }),
     {
       ...size,
-      fonts: buildFonts(darkyBlack, genioMono),
+      fonts: buildFonts(darkyBlack, openSans),
     },
   );
 }

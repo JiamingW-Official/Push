@@ -25,8 +25,7 @@ export default function GlobalError({
           minHeight: "100svh",
           background: "#f5f2ec",
           color: "var(--ink)",
-          fontFamily:
-            "var(--font-body, 'CS Genio Mono', 'Courier New', monospace)",
+          fontFamily: "var(--font-body)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -85,7 +84,7 @@ export default function GlobalError({
                 background: "#f5f2ec",
                 border: "1px solid rgba(10,10,10,0.12)",
                 fontSize: "11px",
-                fontFamily: "monospace",
+                fontFamily: "var(--font-body)",
               }}
             >
               digest: <code>{error.digest}</code>

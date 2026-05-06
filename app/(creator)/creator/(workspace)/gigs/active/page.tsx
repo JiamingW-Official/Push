@@ -6,6 +6,27 @@ import { useNow } from "@/lib/workspace/hooks";
 import { PaneHeader, EmptyState } from "@/lib/inbox/components";
 import { getCategoryGradient, type Invite } from "@/lib/inbox/seed";
 
+/* Merchant Identity Palette (Design.md § 20.3) — kept in sync with
+   /creator/gigs/invites and /creator/earnings so a brand keeps the
+   same color across every Push surface. */
+const MERCHANT_IDENTITY: Record<string, string> = {
+  "Devoción": "aubergine",
+  "Sunday in Brooklyn": "terracotta",
+  "Cha Cha Matcha": "sage",
+  "Superiority Burger": "clay",
+  "Roberta's Pizza": "cobalt",
+  "Roberta's": "cobalt",
+  "Flamingo Estate": "rose",
+  "Saint Bagel": "mustard",
+  "Blank Street Coffee": "mustard",
+  "Brow Theory": "charcoal",
+  "Fort Greene Coffee": "aubergine",
+  "Bed-Stuy Eats": "terracotta",
+};
+function merchantIdentity(name: string): string {
+  return MERCHANT_IDENTITY[name] ?? "charcoal";
+}
+
 /* Days remaining in a "Mon 5/5 — Sat 5/10" shoot window string */
 function shootDaysLeft(shootWindow: string, now: number): string {
   const m = shootWindow.match(/(\d{1,2})\/(\d{1,2})/g);
@@ -106,7 +127,13 @@ function GigCard({ gig, now }: { gig: Invite; now: number | null }) {
       (daysLeft?.endsWith("d left") ? parseInt(daysLeft) <= 2 : false));
 
   return (
-    <article className={`gig-card${isClosed ? " gig-card--closed" : ""}`}>
+    <article
+      className={
+        "gig-card gig-card--mc-accent gig-card--mc-" +
+        merchantIdentity(gig.brand) +
+        (isClosed ? " gig-card--closed" : "")
+      }
+    >
       {/* Category gradient accent strip */}
       <div
         className="gig-card-accent"
@@ -283,8 +310,59 @@ export default function ActiveGigsPage() {
   const now = useNow();
   const activeGigs = invites.filter((i) => i.status === "accepted");
 
+  /* v12.2 Pulse Strip metrics — derived from accepted invites */
+  const readyCount = activeGigs.filter((g) => {
+    const steps = g.acceptSteps ?? [];
+    return steps.length > 0 && steps.every((s) => s.done);
+  }).length;
+  const inPrepCount = activeGigs.length - readyCount;
+  const totalUpside = activeGigs.reduce(
+    (sum, g) => sum + (g.payoutTiers[g.payoutTiers.length - 1]?.amount ?? 0),
+    0,
+  );
+  const lockedFloor = activeGigs.reduce(
+    (sum, g) => sum + (g.payoutTiers[0]?.amount ?? 0),
+    0,
+  );
+
   return (
     <section className="ib-content gigs-pane" data-lenis-prevent>
+      {/* ── ☆ Pulse Strip · ambient active metrics (Design.md § 20.6) ── */}
+      <div
+        className="gigs-pulse-strip"
+        role="group"
+        aria-label="Active pulse"
+      >
+        <div className="gigs-pulse-strip__title">
+          <span className="gigs-pulse-strip__title__dot" aria-hidden />
+          Active
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--active">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">In flight</span>
+          <span className="gigs-pulse-stat__value">{activeGigs.length}</span>
+          <span className="gigs-pulse-stat__delta">campaigns</span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--ready">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Ready</span>
+          <span className="gigs-pulse-stat__value">{readyCount}</span>
+          <span className="gigs-pulse-stat__delta">to shoot</span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--urgent">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">In prep</span>
+          <span className="gigs-pulse-stat__value">{inPrepCount}</span>
+          <span className="gigs-pulse-stat__delta">checklist open</span>
+        </div>
+        <div className="gigs-pulse-stat gigs-pulse-stat--upside">
+          <span className="gigs-pulse-stat__dot" aria-hidden />
+          <span className="gigs-pulse-stat__label">Total upside</span>
+          <span className="gigs-pulse-stat__value">${totalUpside}</span>
+          <span className="gigs-pulse-stat__delta">${lockedFloor} locked</span>
+        </div>
+      </div>
+
       <PaneHeader
         title="Active"
         sub={

@@ -27,7 +27,7 @@ function sanitizeError(err: unknown): string {
 }
 
 const inputStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-body)",
   fontSize: 16,
   lineHeight: 1.4,
   letterSpacing: "-0.125em",
@@ -46,10 +46,10 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: "block",
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-display)",
   fontSize: 12,
   fontWeight: 700,
-  letterSpacing: "0.12em",
+  letterSpacing: "0.14em",
   textTransform: "uppercase",
   color: "var(--ink-4)",
   marginBottom: 8,
@@ -136,7 +136,7 @@ export default function CreatorLoginPage() {
           padding: "8px 16px",
           zIndex: 100,
           textDecoration: "none",
-          fontFamily: "var(--font-mono)",
+          fontFamily: "var(--font-display)",
           fontSize: 14,
           fontWeight: 600,
         }}
@@ -209,10 +209,10 @@ export default function CreatorLoginPage() {
             {/* Canonical product eyebrow — no parentheses, product register */}
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
-                letterSpacing: "0.12em",
+                letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 color: "rgba(255,255,255,0.40)",
                 marginTop: 40,
@@ -254,7 +254,7 @@ export default function CreatorLoginPage() {
                   </p>
                   <p
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: "0.12em",
@@ -337,10 +337,9 @@ export default function CreatorLoginPage() {
             </h1>
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 fontSize: 16,
                 lineHeight: 1.4,
-                letterSpacing: "-0.125em",
                 color: "var(--ink-3)",
                 margin: "0 0 32px",
               }}
@@ -379,7 +378,7 @@ export default function CreatorLoginPage() {
                 >
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 14,
                       color: "var(--brand-red)",
                     }}
@@ -390,7 +389,7 @@ export default function CreatorLoginPage() {
                     type="button"
                     onClick={handleRetry}
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: "0.06em",
@@ -451,7 +450,7 @@ export default function CreatorLoginPage() {
                     <span
                       id="err-email"
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         color: "var(--brand-red)",
                         marginTop: 6,
@@ -513,7 +512,7 @@ export default function CreatorLoginPage() {
                         background: "none",
                         border: "none",
                         cursor: "pointer",
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 11,
                         fontWeight: 700,
                         letterSpacing: "0.08em",
@@ -529,7 +528,7 @@ export default function CreatorLoginPage() {
                     <span
                       id="err-password"
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         color: "var(--brand-red)",
                         marginTop: 6,
@@ -594,7 +593,7 @@ export default function CreatorLoginPage() {
                 {/* Terms / Privacy — appears under primary CTA */}
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     lineHeight: 1.5,
                     letterSpacing: "0.02em",
@@ -633,10 +632,9 @@ export default function CreatorLoginPage() {
             {/* Footer links below the card */}
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 fontSize: 14,
                 lineHeight: 1.4,
-                letterSpacing: "-0.125em",
                 color: "var(--ink-4)",
                 textAlign: "center",
                 marginTop: 24,
@@ -655,10 +653,9 @@ export default function CreatorLoginPage() {
             </p>
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 fontSize: 14,
                 lineHeight: 1.4,
-                letterSpacing: "-0.125em",
                 color: "var(--ink-4)",
                 textAlign: "center",
                 marginTop: 8,
@@ -680,7 +677,7 @@ export default function CreatorLoginPage() {
               <Link
                 href="/demo/creator"
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.06em",

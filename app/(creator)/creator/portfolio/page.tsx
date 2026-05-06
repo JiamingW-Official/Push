@@ -329,7 +329,7 @@ function GalleryEditor({
               value={addUrl}
               onChange={(e) => setAddUrl(e.target.value)}
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 13,
                 background: "var(--surface)",
                 border: "1px solid var(--mist)",
@@ -347,7 +347,7 @@ function GalleryEditor({
               value={addCaption}
               onChange={(e) => setAddCaption(e.target.value)}
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 13,
                 background: "var(--surface)",
                 border: "1px solid var(--mist)",

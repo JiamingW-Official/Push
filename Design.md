@@ -3176,3 +3176,261 @@ A page-top welcome composition used on `/creator/today` and reserved for any wor
 - Hero text max 25 words. If the source string exceeds, truncate upstream — don't let CSS do it.
 
 ---
+
+## 20. Product UI Tier System (v12.2 addendum)
+
+> **Source**: extracted from canonical `workspace-complete.html` + `creator-gigs.html` + `creator-earnings.html` + `creator-gigs-active.html` (v12.2 build).
+> **Status**: 🟢 Active. Applies to all `/creator/*` and `/brand/*` Product UI surfaces. Does NOT apply to Marketing register (push-six-flax.vercel.app, Push Portal) — Marketing uses 2-tier system (see § 21, planned).
+> **Authority**: Supersedes any per-page tier improvisation. Read alongside § 0 (rule classification) and § 15 (modular panel discipline).
+
+### 20.1 Three Visual Tiers 🔒 STRICT
+
+Every section in every Product UI page is assigned exactly one tier. Tier governs **visual weight only** — not feature presence, not information density.
+
+| Tier | Symbol | Surface | Padding | Shadow | Use for |
+|---|---|---|---|---|---|
+| **Primary** | ★★★ | `--snow` | 28-36px | `--shadow-2` or `--shadow-3` | Sections demanding action / deep work — NOW card, Today's Tasks, list-detail panels, big chart panels |
+| **Secondary** | ★★ | `--snow` | 18-24px | `--shadow-1` | Supporting work — Active campaigns, Open invites, mode tabs, stat 4-up grids |
+| **Tertiary** | ☆ | no shadow OR `--surface-2` bg | 12-16px | none | Ambient context — Pulse Strip, breadcrumb, toolbar, kbd footer, footer recap |
+
+**Page-level rule:** No page has more than **2 primary sections** in a single viewport. If you have a third primary candidate, demote one to secondary.
+
+**Reference page tiers:**
+
+| Page | ★★★ Primary | ★★ Secondary | ☆ Tertiary |
+|---|---|---|---|
+| `/creator/today` (workspace) | NOW · Today's Tasks | Active · Invites | Pulse Strip · Looking Ahead |
+| `/creator/gigs` | List column · Detail panel | Hero+Goal · Mode tabs | Pulse Strip · Toolbar · Kbd footer |
+| `/creator/gigs?mode=active` | List column · Detail panel | Hero+Pipeline · Mode tabs | Pulse Strip · Toolbar · Kbd footer |
+| `/creator/earnings` | Big chart panel · Payout list | Hero · Tier breakdown | Pulse Strip · Tax info · Footer |
+
+### 20.2 Functional Color Roles 🔒 STRICT
+
+Each color in the closed palette (§ 2) is locked to exactly one semantic role. Seeing a color = knowing what it means.
+
+| Token | Role | When | When NOT |
+|---|---|---|---|
+| `--brand-red` `#c1121f` | "Act now" | Primary CTA · urgency countdown · Receive-today stat accent | Status text · success states |
+| `--n2w-blue` `#0085ff` | "Stretch / aspiration / ceiling" | Stretch payout chip · Pending-money stat accent · secondary CTA | Errors · imminent alerts |
+| `--champagne` `#bfa170` | "Target hit / milestone / paid" | Target payout chip · paid status · star rating · weekly progress ring | Primary CTA |
+| `--editorial-pink` `#e8447d` | "You are personally needed" — **≤1 anchor / viewport** | RECOMMENDED stamp · Need-Revise badge · single-page attention magnet | Repeating list items · status systems |
+| `--ga-orange` `#ff5e2b` | "Imminent / live / shooting now" — **≤1 anchor / viewport** | Now-card chip · "Starts in" countdown · live indicator | Permanent badges · decoration |
+| `--ga-green` `#4ade80`, `--ga-sky` `#93c5fd` | Nav chrome only | GA Tri-Color top nav pills | ANY use outside `<nav>` |
+| 11-stop ink scale | Time / status / neutral / dividers | Status timeline · body · dividers · completion checkmarks (filled ink, NOT green) | Brand identity · urgency |
+
+### 20.3 Merchant Identity Palette 📐 STRUCTURED
+
+Push is a multi-brand marketplace. Each merchant gets one identity color from a curated 8-color set so creators recognize brands across pages.
+
+```css
+--mc-aubergine: #5b3a4f;   /* deep purple — specialty coffee, high-end (e.g. Devoción) */
+--mc-terracotta: #b8775a;  /* warm brick — brunch, casual (e.g. Sunday in Brooklyn) */
+--mc-sage: #7a8a6e;        /* muted green — matcha, tea, wellness (e.g. Cha Cha Matcha) */
+--mc-clay: #b8a99a;        /* warm clay — diners, casual food (e.g. Superiority Burger) */
+--mc-cobalt: #2d4a6b;      /* deep navy — fine casual, pizza (e.g. Roberta's) */
+--mc-rose: #c98a8a;        /* dusty rose — lifestyle, beauty (e.g. Flamingo Estate) */
+--mc-mustard: #c19a3a;     /* mustard — bakery, breakfast (e.g. Saint Bagel) */
+--mc-charcoal: #3a3835;    /* warm dark — minimal / luxury default */
+```
+
+**Allowed placements:**
+1. 4px brand accent bar at top (or 4px left-side) of any card representing that merchant
+2. Monogram avatar background (`.mono--{color}`)
+3. Brand brief page hero background fill (low-opacity tint only)
+4. Top-brands list line markers (week-pulse style)
+
+**Forbidden placements:**
+- CTA buttons (CTAs lock to `--brand-red` / `--n2w-blue` / `--ink`)
+- Status indicators (status uses ink scale + role-locked colors)
+- Charts and data viz when they could conflict with role-locked semantics
+
+**Allocation rule:** Each merchant locks one identity color permanently at registration. Creators see the same color across Today / Gigs / Earnings — `Devoción always purple, Sunday always terracotta`. This is the brand-recognition foundation.
+
+### 20.4 Color Budget per Viewport 🔒 STRICT
+
+Each viewport must respect these limits. **Repeating list components count as 1 unique use.**
+
+| Color | Limit / viewport |
+|---|---|
+| `--brand-red` | ≤ 4 unique placements |
+| `--n2w-blue` | ≤ 5 unique placements |
+| `--champagne` | ≤ 4 unique placements |
+| `--editorial-pink` | **= 1 anchor** |
+| `--ga-orange` | **= 1 anchor** |
+| Merchant Identity colors | 1 per merchant card · repeatable |
+| Nav tri-color trio | Inside `<nav>` only · counts as chrome |
+
+**Repeating-list exemption:** an Outcome Ladder rendered on 6 invite cards = 1 use of `--n2w-blue` (Stretch chip), not 6. Same for Target chips on `--champagne`.
+
+**Audit requirement:** every page mockup ships with a visible Color Budget audit footer (dev-only) showing current count vs limit.
+
+### 20.5 Outcome Ladder Component 📐 STRUCTURED
+
+The signature Push pricing component — three-rung horizontal grid representing outcome-based payout (Guaranteed → Target → Stretch).
+
+#### Anatomy
+
+```
+[ Guaranteed ][   Target   ][  Stretch  ]
+  ink-fill      champagne-tint  blue-tint
+   locked       at scan target  at extra signal
+```
+
+#### CSS contract
+
+```css
+.ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ladder__rung { border-radius: 10px; padding: 14px 14px 16px; border: 1px solid transparent; }
+.ladder__rung--gtd { background: var(--ink); color: var(--snow); border-color: var(--ink); }
+.ladder__rung--tgt { background: rgba(191,161,112,0.10); border-color: rgba(191,161,112,0.32); }
+.ladder__rung--str { background: rgba(0,133,255,0.07); border-color: rgba(0,133,255,0.32); }
+.ladder__amount { font: 800 24px var(--font-display); font-variant-numeric: tabular-nums; }
+.ladder__rung--gtd .ladder__amount { color: var(--snow); }
+.ladder__rung--tgt .ladder__amount { color: var(--champagne); }
+.ladder__rung--str .ladder__amount { color: var(--n2w-blue); }
+```
+
+#### Variants
+
+| Variant | Padding | Amount font-size | Hint visible | Use in |
+|---|---|---|---|---|
+| `.ladder` (default) | 14px | 24px | yes (12px) | Today task card · Active card |
+| `.ladder--mini` | 10px | 18px | no | Invite list card (compact) |
+| `.ladder--lg` | 16px | 28px | yes (13px) | Detail panel large variant |
+
+#### Companion: progress bar
+
+3-segment horizontal bar showing which rung is currently unlocked. Sits below the ladder in detail panel context.
+
+```css
+.ladder-progress__bar { display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: var(--surface-3); }
+.ladder-progress__seg { flex: 1; }
+.ladder-progress__seg--filled { background: var(--ink); }
+```
+
+### 20.6 Pulse Strip Component 📐 STRUCTURED
+
+Replaces 6-card stat grids with a single thin status bar. Tier ☆ Tertiary.
+
+#### Anatomy
+
+```
+┌─ Pulse strip — single row · ~52px tall ─────────────────────────────┐
+│ [● Title] │ ● Stat label  $48 ↑$12 │ ● Stat label  $72 4br │ ● ... │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+- Pill-shape title block on left with intent label
+- N stat cells separated by 1px dashed `--hairline`
+- Each cell: color dot · uppercase label · tabular-nums value · delta caption
+- Horizontal scroll allowed on overflow
+
+#### CSS contract
+
+```css
+.pulse-strip {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 14px 8px;
+  display: flex; align-items: stretch;
+  overflow-x: auto;
+}
+.pulse-stat { padding: 0 20px; border-right: 1px dashed var(--hairline); }
+.pulse-stat__dot { width: 6px; height: 6px; border-radius: 50%; }
+.pulse-stat__label { font: 700 11px var(--font-display); text-transform: uppercase; }
+.pulse-stat__value { font: 800 18px var(--font-display); font-variant-numeric: tabular-nums; }
+.pulse-stat__delta { font: 600 11px var(--font-body); }
+```
+
+#### Use cases
+
+| Page | Stats |
+|---|---|
+| `/creator/today` | Received · Pending · Missed · Remaining · Future · Revise |
+| `/creator/gigs` | Open invites · In progress · Month earned · Completion · Avg match |
+| `/creator/earnings` | This month · Lifetime · Avg per gig · Days to milestone |
+
+**Anti-pattern:** Pulse Strip is for ambient awareness. If a stat needs immediate action (e.g. "1 needs revise"), it gets `--editorial-pink` dot + alert delta but stays in the strip — the strip's tertiary role is preserved.
+
+### 20.7 Liquid-Glass in Product UI 📐 STRUCTURED
+
+§ 8.9 documented Liquid-Glass for the Marketing register (6 use cases). v12.2 extends the same token set into Product UI in 5 specific positions:
+
+| # | Use case | Where | Why |
+|---|---|---|---|
+| 1 | Sticky chrome | All pages — top nav + anchor rail | Lets content scroll under chrome with depth, premium feel |
+| 2 | Sticky CTA in detail panels | Right-side detail panel bottom (`/creator/gigs`, `/creator/earnings`) | Floats above scrolling content; commits feel "elevated" |
+| 3 | Floating filter rail | Anchored sticky toolbar above long lists (Active campaigns, History, Payouts) | Lets list scroll under without losing filter context |
+| 4 | Anchored CTA pop | "Submit reupload" / "Pick up QR poster" / "Add to calendar" — fixed bottom-right when scrolled past hero | Push power-user pattern — actionable reminder always visible |
+| 5 | Hero stat tile peek | Hero panel right edge — "$3,240 lifetime" or "94% completion" tile that peeks above the panel boundary | Adds a single editorial moment to otherwise utilitarian Product UI |
+
+#### Token (shared with Marketing)
+
+```css
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-glass);
+}
+```
+
+#### Discipline
+
+- **≤ 3 liquid-glass surfaces per viewport** (chrome counts as 1)
+- Always over a content surface — never on plain `--snow` background (no contrast, defeats purpose)
+- Glass + Brand Red Primary CTA together is forbidden — pick one to be the focal anchor; glass elements should hold secondary or contextual actions
+- Mobile: glass surfaces remain glass (do not flatten to solid) — backdrop-filter is well-supported on iOS 17+
+
+### 20.8 Tertiary Section Treatment 📐 STRUCTURED
+
+For sections at the bottom of a page that summarize / reflect / look-ahead.
+
+#### Visual contract
+
+- Section background: `--surface-2` (warm cream) with cards inside on `--snow` OR no bg with shadow removed entirely
+- Inner panels (if any): `--surface-2` bg, no shadow, 1px `--hairline` border
+- Hover-reveal contrast: panel children on hover return to `--snow` to indicate interactivity
+
+#### CSS pattern
+
+```css
+#week .panel,
+.tertiary-section .panel {
+  background: var(--surface-2);
+  box-shadow: none;
+  border: 1px solid var(--hairline);
+}
+#week .step:hover { background: var(--snow); }
+```
+
+#### Use in
+
+- `/creator/today` — § Looking Ahead (Next Steps + Week Pulse)
+- `/creator/earnings` — Tax info / next payment footer
+- `/creator/profile` — Settings recap footer (when built)
+
+#### Don't use for
+
+- Empty states (those need their own treatment with illustration + CTA)
+- Sections that need urgent attention (those are PRIMARY)
+- Marketing pages (Marketing has different conventions in § 15 / planned § 21)
+
+---
+
+### 20.9 Migration checklist for existing pages
+
+When adopting v12.2 on a page:
+
+- [ ] Replace 6-card stat grids with Pulse Strip (§ 20.6)
+- [ ] Audit every Outcome Ladder placement — confirm uses 3-rung component (§ 20.5)
+- [ ] Verify each viewport against Color Budget (§ 20.4)
+- [ ] Tag each section with explicit tier — confirm ≤2 primary per viewport (§ 20.1)
+- [ ] Confirm merchant identity color allocation per merchant (§ 20.3)
+- [ ] Apply Tertiary Section Treatment to footer panels (§ 20.8)
+- [ ] Add ≥1 liquid-glass moment per page (chrome counts) (§ 20.7)
+- [ ] Page mockup ships with Color Budget audit footer (dev-only)
+
+---

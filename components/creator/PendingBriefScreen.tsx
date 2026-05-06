@@ -103,7 +103,7 @@ function ShootingTimeRow({
     >
       <span
         style={{
-          fontFamily: "CS Genio Mono, monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 11,
           color: "rgba(10,10,10,0.6)",
           width: 80,
@@ -117,7 +117,7 @@ function ShootingTimeRow({
       </div>
       <span
         style={{
-          fontFamily: "CS Genio Mono, monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 11,
           color: "rgba(10,10,10,0.5)",
           width: 60,
@@ -189,7 +189,7 @@ function EstimatedWait({
     >
       <span
         style={{
-          fontFamily: "CS Genio Mono, monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 11,
           color: "rgba(10,10,10,0.5)",
           flexShrink: 0,
@@ -214,7 +214,7 @@ function EstimatedWait({
       </div>
       <span
         style={{
-          fontFamily: "CS Genio Mono, monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 11,
           color: remainingHours === 0 ? "var(--brand-red)" : "rgba(10,10,10,0.5)",
           flexShrink: 0,
@@ -252,7 +252,7 @@ function ProfileTipCard() {
       <div>
         <p
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
@@ -264,7 +264,7 @@ function ProfileTipCard() {
         </p>
         <p
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 12,
             color: "rgba(10,10,10,0.7)",
             margin: 0,
@@ -337,7 +337,7 @@ export default function PendingBriefScreen({
 
         <p
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 12,
             color: "rgba(245,242,236,0.6)",
             margin: 0,
@@ -356,7 +356,7 @@ export default function PendingBriefScreen({
         <div style={{ width: "100%", maxWidth: 340 }}>
           <p
             style={{
-              fontFamily: "CS Genio Mono, monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 10,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
@@ -396,7 +396,7 @@ export default function PendingBriefScreen({
         />
         <p
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
@@ -408,7 +408,7 @@ export default function PendingBriefScreen({
         </p>
         <span
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 11,
             color: "rgba(10,10,10,0.4)",
             marginLeft: "auto",
@@ -437,7 +437,7 @@ export default function PendingBriefScreen({
           >
             <p
               style={{
-                fontFamily: "CS Genio Mono, monospace",
+                fontFamily: "var(--font-display)",
                 fontSize: 11,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
@@ -449,7 +449,7 @@ export default function PendingBriefScreen({
             </p>
             <p
               style={{
-                fontFamily: "CS Genio Mono, monospace",
+                fontFamily: "var(--font-display)",
                 fontSize: 13,
                 color: "var(--ink)",
                 margin: "0 0 4px",
@@ -460,7 +460,7 @@ export default function PendingBriefScreen({
             </p>
             <p
               style={{
-                fontFamily: "CS Genio Mono, monospace",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 color: "rgba(10,10,10,0.6)",
                 margin: "0 0 12px",
@@ -474,7 +474,7 @@ export default function PendingBriefScreen({
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                fontFamily: "CS Genio Mono, monospace",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 color: "var(--brand-red)",
                 textDecoration: "none",
@@ -498,7 +498,7 @@ export default function PendingBriefScreen({
           >
             <p
               style={{
-                fontFamily: "CS Genio Mono, monospace",
+                fontFamily: "var(--font-display)",
                 fontSize: 11,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
@@ -525,7 +525,7 @@ export default function PendingBriefScreen({
                 <li
                   key={i}
                   style={{
-                    fontFamily: "CS Genio Mono, monospace",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     color: "rgba(10,10,10,0.7)",
                     marginBottom: 6,
@@ -545,7 +545,7 @@ export default function PendingBriefScreen({
         {/* Content prep tips */}
         <p
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
@@ -571,7 +571,7 @@ export default function PendingBriefScreen({
               <RedSquareBullet />
               <span
                 style={{
-                  fontFamily: "CS Genio Mono, monospace",
+                  fontFamily: "var(--font-display)",
                   fontSize: 13,
                   color: "rgba(10,10,10,0.75)",
                   lineHeight: 1.55,
@@ -586,7 +586,7 @@ export default function PendingBriefScreen({
         {/* Best shooting times */}
         <p
           style={{
-            fontFamily: "CS Genio Mono, monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 11,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
@@ -617,7 +617,7 @@ export default function PendingBriefScreen({
         >
           <p
             style={{
-              fontFamily: "CS Genio Mono, monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 11,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
@@ -629,7 +629,7 @@ export default function PendingBriefScreen({
           </p>
           <p
             style={{
-              fontFamily: "CS Genio Mono, monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 13,
               color: "var(--ink)",
               margin: "0 0 8px",
@@ -640,7 +640,7 @@ export default function PendingBriefScreen({
           </p>
           <p
             style={{
-              fontFamily: "CS Genio Mono, monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               color: "rgba(10,10,10,0.6)",
               margin: 0,

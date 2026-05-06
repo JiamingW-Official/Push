@@ -59,9 +59,18 @@ function GigsShell({ children }: { children: React.ReactNode }) {
       ? 0
       : pending.filter((i) => i.expiresAt - now < 6 * 60 * 60 * 1000).length;
 
+  /* Pop animation kept on count changes — softens "new invite arrived" beat
+     without the heavy black pill that made the old bar feel stiff. */
   const invPop = usePopOnChange(pendingCount);
   const activePop = usePopOnChange(activeCount);
 
+  /* The 3 modes (Invites / Active / History) are kept as separate routes
+     because they represent distinct creator mental modes: triage vs. in-flight
+     work vs. retrospective. The OLD execution wrapped them in a thick black
+     pill floating in a beige rectangle (visual island, disconnected from
+     content). v12.2 swaps that for editorial text-tabs with a subtle bottom
+     underline — same navigation, much less visual noise.
+     Authority: Design.md § 20.1 (Tier ☆ Tertiary chrome). */
   const tabs = [
     {
       href: "/creator/gigs/invites",
@@ -89,58 +98,51 @@ function GigsShell({ children }: { children: React.ReactNode }) {
     },
   ];
 
+  /* breadcrumbLabel result is no longer rendered (workspace shell already
+     shows the route in the topnav crumb); kept for screen-reader fallback
+     only inside aria-label. */
+  const currentLabel = breadcrumbLabel(pathname);
+
   return (
     <div className="cw-page ib-page ib-page--fullbleed">
-      <header className="cw-header ib-hero-header ib-hero-header--slim">
-        <Link
-          href="/creator/gigs/invites"
-          className="ib-slim-home"
-          aria-label="Back to Gigs"
-        >
-          <span className="ib-slim-home-mark">Gigs.</span>
-          <span className="ib-slim-home-sep" aria-hidden>
-            ›
-          </span>
-          <span className="ib-slim-home-where">
-            {breadcrumbLabel(pathname)}
-          </span>
-        </Link>
-
-        <nav
-          className="ib-segmented-nav"
-          aria-label="Gigs channels"
-          role="tablist"
-        >
-          {tabs.map((tab) => {
-            const active = tab.match(pathname ?? "");
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                role="tab"
-                aria-selected={active}
-                className={`ib-segmented-tab${active ? " is-active" : ""}`}
-              >
-                <span>{tab.label}</span>
-                {tab.count > 0 && (
-                  <span
-                    className={[
-                      "ib-segmented-badge",
-                      tab.pop ? "cw-num-pop" : "",
-                      tab.urgent ? "ib-segmented-badge--urgent" : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    aria-label={`${tab.count} pending`}
-                  >
-                    {tab.count}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-      </header>
+      {/* ☆ Tier ☆ Tertiary chrome — slim editorial mode switcher.
+          Replaces the old segmented pill bar (.ib-segmented-nav). */}
+      <nav
+        className="giv-modes"
+        aria-label={`Gigs view · current ${currentLabel}`}
+        role="tablist"
+      >
+        {tabs.map((tab) => {
+          const active = tab.match(pathname ?? "");
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              role="tab"
+              aria-selected={active}
+              className={[
+                "giv-modes__link",
+                active ? "giv-modes__link--active" : "",
+                tab.urgent ? "giv-modes__link--urgent" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <span className="giv-modes__label">{tab.label}</span>
+              {tab.count > 0 && (
+                <span
+                  className={
+                    "giv-modes__count" + (tab.pop ? " cw-num-pop" : "")
+                  }
+                  aria-label={`${tab.count} ${tab.label.toLowerCase()}`}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
 
       {children}
 

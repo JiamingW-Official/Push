@@ -3,7 +3,7 @@
 // Push Creator Workspace — TopNav  (Wave 3)
 // Design.md: 56px height, --surface-elevated bg, 1px --line bottom border, sticky z-100
 // Colors: --primary #c1121f, --dark #003049, --surface, --line
-// Fonts: Darky (display/logo), CSGenioMono (body/UI)
+// Fonts: Darky (display/logo), Open Sans (body/UI)
 
 import { useEffect } from "react";
 import Link from "next/link";

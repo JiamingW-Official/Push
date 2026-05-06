@@ -49,6 +49,11 @@ const nextConfig: NextConfig = {
         destination: "/creator/gigs/invites/:slug*",
         permanent: true,
       },
+      {
+        source: "/creator/inbox",
+        destination: "/creator/inbox/messages",
+        permanent: true,
+      },
     ];
   },
   async headers() {

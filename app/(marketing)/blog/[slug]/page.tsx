@@ -160,7 +160,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
               York City. What we found surprised even us.
             </p>
 
-            {/* Body paragraphs — CS Genio Mono 18px 1.55 (§3.1 NEVER Darky body) */}
+            {/* Body paragraphs — Open Sans 18px 1.55 (§3.1 NEVER Darky body) */}
             <p className="article-body__p">
               The prevailing narrative in creator commerce — that reach is
               everything, that follower count predicts revenue, that online
@@ -357,7 +357,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             </h2>
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 fontSize: 16,
                 lineHeight: 1.5,
                 color: "var(--ink)",

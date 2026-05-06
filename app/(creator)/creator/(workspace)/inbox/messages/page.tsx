@@ -18,6 +18,7 @@ import {
   useEffect,
   useLayoutEffect,
 } from "react";
+import { usePathname } from "next/navigation";
 import { timeAgo } from "@/lib/notifications/useNotifications";
 import {
   avatarBg,
@@ -28,12 +29,7 @@ import {
 } from "@/lib/inbox/seed";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import Link from "next/link";
-import {
-  PaneHeader,
-  PaneSubCount,
-  EmptyState,
-  FilterChips,
-} from "@/lib/inbox/components";
+import { EmptyState } from "@/lib/inbox/components";
 import "../inbox.css";
 import "./messages.css";
 
@@ -115,15 +111,14 @@ function SearchIcon() {
     </svg>
   );
 }
-function PencilIcon() {
+function HamburgerIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
-        d="M11 2.5l2.5 2.5L5 13.5H2.5V11L11 2.5z"
+        d="M2 4h12M2 8h12M2 12h12"
         stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-        fill="none"
+        strokeWidth="1.5"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -203,6 +198,58 @@ function StarIcon({ filled }: { filled: boolean }) {
         fill={filled ? "currentColor" : "none"}
       />
     </svg>
+  );
+}
+
+/* ── Embedded inbox tab nav ─────────────────────────────────
+   Replaces the old layout-level slim-chrome header. Sits at the
+   very top of the left list-pane so the nav is always visible
+   without burning vertical space on a separate chrome band.   */
+
+function InboxTabNav() {
+  const pathname = usePathname();
+  const { unreadThreads, unreadNotifications } = useWorkspaceState();
+
+  const tabs = [
+    {
+      href: "/creator/inbox/messages",
+      label: "Messages",
+      count: unreadThreads,
+      match: (p: string) => p.startsWith("/creator/inbox/messages"),
+    },
+    {
+      href: "/creator/inbox/system",
+      label: "System",
+      count: unreadNotifications,
+      match: (p: string) => p.startsWith("/creator/inbox/system"),
+    },
+  ];
+
+  return (
+    <nav className="inbox-pane-nav" aria-label="Inbox" role="tablist">
+      {tabs.map((tab) => {
+        const active = tab.match(pathname ?? "");
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            role="tab"
+            aria-selected={active}
+            className={`inbox-pane-nav-tab${active ? " is-active" : ""}`}
+          >
+            <span>{tab.label}</span>
+            {tab.count > 0 && (
+              <span
+                className="inbox-pane-nav-badge"
+                aria-label={`${tab.count} unread`}
+              >
+                {tab.count}
+              </span>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -298,6 +345,7 @@ export default function InboxMessagesPage() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [composer, setComposer] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [draftChipUsed, setDraftChipUsed] = useState(false);
@@ -305,6 +353,7 @@ export default function InboxMessagesPage() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const menuWrapRef = useRef<HTMLDivElement>(null);
 
   /* Auto-dismiss the small inline toast after 3s */
   useEffect(() => {
@@ -312,6 +361,21 @@ export default function InboxMessagesPage() {
     const t = setTimeout(() => setToast(null), 3000);
     return () => clearTimeout(t);
   }, [toast]);
+
+  /* Close filter dropdown on outside click */
+  useEffect(() => {
+    if (!showMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (
+        menuWrapRef.current &&
+        !menuWrapRef.current.contains(e.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showMenu]);
 
   /* Reset draft chips when the active thread changes */
   useEffect(() => {
@@ -505,27 +569,59 @@ export default function InboxMessagesPage() {
       {/* ── Left pane: thread list ─────────────────────────── */}
       <aside className="msg-list-pane" aria-label="Conversations">
         <header className="msg-list-pane-header">
-          <PaneHeader
-            flush
-            title="Messages"
-            sub={
-              unreadCount > 0 ? (
-                <PaneSubCount count={unreadCount} label="unread" />
-              ) : (
-                <strong>All read</strong>
-              )
-            }
-            actions={
+          <div className="msg-list-pane-nav-row">
+            <InboxTabNav />
+            {/* Hamburger → liquid-glass dropdown with vertical filters */}
+            <div className="msg-filter-wrap" ref={menuWrapRef}>
               <button
                 type="button"
                 className="ib-icon-btn"
-                aria-label="New conversation"
-                title="New conversation"
+                aria-label="Filter options"
+                title="Filters"
+                aria-expanded={showMenu}
+                aria-haspopup="true"
+                onClick={() => setShowMenu((v) => !v)}
               >
-                <PencilIcon />
+                <HamburgerIcon />
               </button>
-            }
-          />
+              {showMenu && (
+                <div
+                  className="msg-filter-dropdown"
+                  role="menu"
+                  aria-label="Filter conversations"
+                >
+                  {(
+                    [
+                      { value: "all", label: "All" },
+                      { value: "unread", label: "Unread", count: unreadCount },
+                      {
+                        value: "needs-reply",
+                        label: "Needs reply",
+                        count: needsReplyCount,
+                      },
+                    ] as const
+                  ).map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={filter === opt.value}
+                      className={`msg-filter-item${filter === opt.value ? " is-active" : ""}`}
+                      onClick={() => {
+                        setFilter(opt.value as FilterKey);
+                        setShowMenu(false);
+                      }}
+                    >
+                      <span>{opt.label}</span>
+                      {"count" in opt && opt.count > 0 && (
+                        <span className="msg-filter-badge">{opt.count}</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
 
           <label className="msg-list-search">
             <span className="msg-list-search-icon" aria-hidden>
@@ -539,21 +635,6 @@ export default function InboxMessagesPage() {
               aria-label="Search conversations"
             />
           </label>
-
-          <FilterChips
-            ariaLabel="Filter conversations"
-            active={filter}
-            onChange={setFilter}
-            options={[
-              { value: "all", label: "All", hideCount: true },
-              { value: "unread", label: "Unread", count: unreadCount },
-              {
-                value: "needs-reply",
-                label: "Needs reply",
-                count: needsReplyCount,
-              },
-            ]}
-          />
         </header>
 
         <div className="msg-list-body" data-lenis-prevent>
