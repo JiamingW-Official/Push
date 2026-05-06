@@ -12,6 +12,9 @@ import { SWRProvider } from "@/lib/data/SWRProvider";
 import { ToastProvider } from "@/components/toast/Toaster";
 import { NotificationsBell } from "@/components/notifications/NotificationsBell";
 import { MobileBottomNav } from "@/components/creator/workspace/MobileBottomNav";
+import { CommandPalette } from "@/components/cmdk/CommandPalette";
+import { GlobalKeybindings } from "@/components/keyboard/GlobalKeybindings";
+import { AxeInit } from "@/lib/a11y/axe-init";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -45,6 +48,12 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
             </Suspense>
             {/* Mobile bottom nav — display:none on >=768px (CSS handles it). */}
             <MobileBottomNav />
+            {/* ⌘K palette — listens at document level, renders modal when open. */}
+            <CommandPalette />
+            {/* Global "g <letter>" navigation + ? cheatsheet. */}
+            <GlobalKeybindings />
+            {/* Dev-only: axe-core a11y violations stream to the console. */}
+            <AxeInit />
           </WorkspaceStateProvider>
         </CommandKProvider>
       </ToastProvider>

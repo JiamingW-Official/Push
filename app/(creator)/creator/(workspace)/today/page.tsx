@@ -5,6 +5,7 @@ import { useWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
 import { useToday } from "@/lib/data/hooks";
 import { SkeletonCard, SkeletonPanel } from "@/components/loading/Skeleton";
+import { Tour } from "@/components/onboarding/Tour";
 import {
   selectHeroLine,
   buildActionQueue,
@@ -218,6 +219,9 @@ export default function TodayPage() {
           <YesterdayRecap stats={yesterday} />
         </div>
       </div>
+      {/* First-visit 3-step welcome tour. Auto-fires once per browser
+          unless localStorage[push_tour_completed] is set. */}
+      <Tour />
     </main>
   );
 }

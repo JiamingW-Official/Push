@@ -1,0 +1,133 @@
+/* ============================================================
+   Keyboard shortcut cheatsheet — modal overlay triggered by "?".
+   v12.2 tokens. Centered card with sectioned shortcut list.
+   ============================================================ */
+
+.kbd-cheatsheet {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.42);
+  z-index: 480;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: kbd-cheat-in 200ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes kbd-cheat-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.kbd-cheatsheet__card {
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: var(--snow, #fff);
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 16px 40px rgba(0, 0, 0, 0.18),
+    0 32px 80px rgba(0, 0, 0, 0.24);
+}
+
+.kbd-cheatsheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.kbd-cheatsheet__head h2 {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.kbd-cheatsheet__close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink-4, #61605c);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.kbd-cheatsheet__close:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--ink, #111);
+}
+
+.kbd-cheatsheet__body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.kbd-cheatsheet__body section h3 {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.kbd-cheatsheet__body ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kbd-cheatsheet__body li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: center;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  color: var(--ink, #111);
+}
+
+.kbd-cheatsheet__body kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: var(--surface-2, #f5f3ee);
+  color: var(--ink, #111);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  margin-right: 4px;
+}
+
+.kbd-cheatsheet__body li span {
+  color: var(--graphite, #3a3835);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kbd-cheatsheet {
+    animation: none;
+  }
+}
