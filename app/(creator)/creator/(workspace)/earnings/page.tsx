@@ -8,6 +8,7 @@ import {
 } from "@/lib/payments/mock-transactions";
 import { aggregateBalances } from "@/lib/payments/calculate";
 import { useEarnings } from "@/lib/data/hooks";
+import { SkeletonCard, SkeletonPanel } from "@/components/loading/Skeleton";
 import "./earnings.css";
 
 /* ── Types ───────────────────────────────────────────────── */
@@ -281,12 +282,13 @@ function BigAmount({
 export default function CreatorEarningsPage() {
   const [cashoutOpen, setCashoutOpen] = useState(false);
 
-  /* Server data via SWR. While loading (or on cache miss after error),
-     fall back to MOCK_CREATOR_TRANSACTIONS so the page never paints empty
-     in dev demo mode. Once /api/creator/earnings is wired to real Stripe +
-     Supabase rows, the fallback path becomes a true loading skeleton
-     (added in prompt 2). */
-  const { data: earnings } = useEarnings();
+  /* Server data via SWR. While the cache is empty AND the page hasn't
+     received its first server payload, render a skeleton (see early return
+     below). On error, throw to /earnings/error.tsx. After hydration we keep
+     the MOCK fallback as a defense-in-depth so a partial response never
+     paints zero balances. */
+  const { data: earnings, error: earningsError, isLoading } = useEarnings();
+  if (earningsError) throw earningsError;
   const transactions = earnings?.transactions ?? MOCK_CREATOR_TRANSACTIONS;
   const balances =
     earnings?.balances ?? aggregateBalances(MOCK_CREATOR_TRANSACTIONS);
@@ -333,6 +335,27 @@ export default function CreatorEarningsPage() {
   ];
 
   const recentTxns = transactions.slice(0, 20);
+
+  /* Initial paint: SWR cache empty, no fallback context — show skeleton.
+     The MOCK fallback above means once SWR errors or returns, we have data
+     to render. Skeleton only shows on the very first cold-start render
+     where neither cache nor mock has been resolved. */
+  if (isLoading && !earnings) {
+    return (
+      <div className="cw-page earn-page" aria-label="Earnings (loading)">
+        <header className="cw-header">
+          <div className="cw-header__left">
+            <p className="cw-eyebrow cw-eyebrow--live">EARNINGS · LOADING</p>
+            <h1 className="cw-title">Earnings</h1>
+          </div>
+        </header>
+        <div style={{ padding: "0 10vw 64px", display: "grid", gap: 32 }}>
+          <SkeletonPanel />
+          <SkeletonCard count={4} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="cw-page earn-page">

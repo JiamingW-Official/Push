@@ -7,5 +7,6 @@
 export { useToday } from "./useToday";
 export type { TodayPayload } from "./useToday";
 export { useInvites } from "./useInvites";
+export { useActiveGigs } from "./useActiveGigs";
 export { useEarnings } from "./useEarnings";
 export type { EarningsPayload } from "./useEarnings";

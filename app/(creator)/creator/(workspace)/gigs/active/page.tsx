@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useState, useMemo, useCallback } from "react";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
+import { useActiveGigs } from "@/lib/data/hooks";
 import { EmptyState } from "@/lib/inbox/components";
+import { SkeletonCard, SkeletonPanel } from "@/components/loading/Skeleton";
 import {
   getCategoryGradient,
   type AcceptStep,
@@ -22,7 +24,7 @@ import {
 
 /* ── Merchant Identity Palette · § 20.3 ──────────────────────── */
 const MERCHANT_IDENTITY: Record<string, string> = {
-  "Devoción": "aubergine",
+  Devoción: "aubergine",
   "Sunday in Brooklyn": "terracotta",
   "Cha Cha Matcha": "sage",
   "Superiority Burger": "clay",
@@ -223,7 +225,9 @@ function ActiveCard({
         <div className="gav-card__row__cell">
           <span className="gav-card__row__label">Locked</span>
           <span className="gav-card__row__val">${lockedFloor} paid</span>
-          <span className="gav-card__row__sub">up to ${stretchAmount} stretch</span>
+          <span className="gav-card__row__sub">
+            up to ${stretchAmount} stretch
+          </span>
         </div>
         <div className="gav-card__row__cell">
           <span className="gav-card__row__label">Match</span>
@@ -281,7 +285,10 @@ function ActiveCard({
             >
               Go shoot →
             </Link>
-            <Link href={gig.briefHref} className="giv-cta-btn giv-cta-btn--ghost">
+            <Link
+              href={gig.briefHref}
+              className="giv-cta-btn giv-cta-btn--ghost"
+            >
               Brief
             </Link>
           </>
@@ -293,7 +300,10 @@ function ActiveCard({
             >
               Calendar
             </Link>
-            <Link href={gig.briefHref} className="giv-cta-btn giv-cta-btn--ghost">
+            <Link
+              href={gig.briefHref}
+              className="giv-cta-btn giv-cta-btn--ghost"
+            >
               Brief
             </Link>
           </>
@@ -334,8 +344,8 @@ function RichActiveDetailPanel({
         </span>
         <h3 className="giv-detail--empty__title">Pick a campaign.</h3>
         <p className="giv-detail--empty__body">
-          Tap any active card to see status timeline, scan progress, and
-          one-tap actions.
+          Tap any active card to see status timeline, scan progress, and one-tap
+          actions.
         </p>
       </div>
     );
@@ -378,7 +388,12 @@ function RichActiveDetailPanel({
           {phase === "revise" && (
             <>
               <span className="giv-detail__eyebrow__sep">·</span>
-              <span style={{ color: "var(--editorial-pink, #e8447d)", fontWeight: 800 }}>
+              <span
+                style={{
+                  color: "var(--editorial-pink, #e8447d)",
+                  fontWeight: 800,
+                }}
+              >
                 Needs revise
               </span>
             </>
@@ -728,13 +743,7 @@ function RichActiveDetailPanel({
 
 /* ── Floating glass reminder pop ─────────────────────────────── */
 
-function ReminderPop({
-  gig,
-  hours,
-}: {
-  gig: Invite;
-  hours: number;
-}) {
+function ReminderPop({ gig, hours }: { gig: Invite; hours: number }) {
   const display =
     hours < 1
       ? `${Math.max(0, Math.round(hours * 60))} min`
@@ -749,9 +758,7 @@ function ReminderPop({
         ⚡
       </span>
       <span className="gav-reminder-pop__text">
-        <span className="gav-reminder-pop__label">
-          Imminent · {display}
-        </span>
+        <span className="gav-reminder-pop__label">Imminent · {display}</span>
         <span className="gav-reminder-pop__msg">
           {gig.brand} · {gig.campaign}
         </span>
@@ -765,14 +772,25 @@ function ReminderPop({
 
 export default function ActiveGigsPage() {
   const { invites, toggleAcceptStep } = useWorkspaceState();
+  const {
+    data: serverActive,
+    error: activeError,
+    isLoading: activeLoading,
+  } = useActiveGigs();
+  if (activeError) throw activeError;
+
   const now = useNow();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [phaseFilter, setPhaseFilter] = useState<"all" | Phase>("all");
 
-  const accepted = useMemo(
-    () => invites.filter((i) => i.status === "accepted"),
-    [invites],
-  );
+  /* Merge SWR active list with local WorkspaceState mutations. Same
+     pattern as /gigs/invites — server is the canonical list, local copies
+     of toggled accept-steps overlay so the UI feels instant pre-prompt-5. */
+  const accepted = useMemo(() => {
+    const localById = new Map(invites.map((i) => [i.id, i]));
+    const base = serverActive ?? invites.filter((i) => i.status === "accepted");
+    return base.map((s) => localById.get(s.id) ?? s);
+  }, [invites, serverActive]);
 
   const gigsWithPhase = useMemo(
     () =>
@@ -823,8 +841,7 @@ export default function ActiveGigsPage() {
   }, [filtered]);
 
   const selected = useMemo(() => {
-    if (activeId)
-      return gigsWithPhase.find((g) => g.id === activeId) ?? null;
+    if (activeId) return gigsWithPhase.find((g) => g.id === activeId) ?? null;
     return null;
   }, [activeId, gigsWithPhase]);
 
@@ -846,6 +863,34 @@ export default function ActiveGigsPage() {
       toggleAcceptStep(gigId, stepId),
     [toggleAcceptStep],
   );
+
+  /* Cold start: SWR cache empty AND no local accepted invites → skeleton. */
+  if (activeLoading && accepted.length === 0) {
+    return (
+      <section
+        className="ib-content gigs-pane"
+        aria-label="Active gigs (loading)"
+      >
+        <header className="giv-hero">
+          <div>
+            <h1 className="giv-hero__title">Active</h1>
+            <p className="giv-hero__sub">Loading your in-flight gigs…</p>
+          </div>
+        </header>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 480px",
+            gap: 32,
+            padding: "0 32px 64px",
+          }}
+        >
+          <SkeletonCard count={4} />
+          <SkeletonPanel />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="ib-content gigs-pane">
@@ -925,23 +970,38 @@ export default function ActiveGigsPage() {
           </div>
           <div className="gav-pipeline__legend">
             <span>
-              <span className="gav-pipeline__legend__dot" style={{ background: "var(--ink-3)" }} />
+              <span
+                className="gav-pipeline__legend__dot"
+                style={{ background: "var(--ink-3)" }}
+              />
               Prep
             </span>
             <span>
-              <span className="gav-pipeline__legend__dot" style={{ background: "var(--ga-orange, #ff5e2b)" }} />
+              <span
+                className="gav-pipeline__legend__dot"
+                style={{ background: "var(--ga-orange, #ff5e2b)" }}
+              />
               Shoot
             </span>
             <span>
-              <span className="gav-pipeline__legend__dot" style={{ background: "var(--accent-blue, #0085ff)" }} />
+              <span
+                className="gav-pipeline__legend__dot"
+                style={{ background: "var(--accent-blue, #0085ff)" }}
+              />
               Review
             </span>
             <span>
-              <span className="gav-pipeline__legend__dot" style={{ background: "var(--editorial-pink, #e8447d)" }} />
+              <span
+                className="gav-pipeline__legend__dot"
+                style={{ background: "var(--editorial-pink, #e8447d)" }}
+              />
               Revise
             </span>
             <span>
-              <span className="gav-pipeline__legend__dot" style={{ background: "var(--champagne, #bfa170)" }} />
+              <span
+                className="gav-pipeline__legend__dot"
+                style={{ background: "var(--champagne, #bfa170)" }}
+              />
               Ready
             </span>
           </div>
@@ -949,11 +1009,7 @@ export default function ActiveGigsPage() {
       </header>
 
       {/* ☆ Pulse Strip · ambient active metrics */}
-      <div
-        className="gigs-pulse-strip"
-        role="group"
-        aria-label="Active pulse"
-      >
+      <div className="gigs-pulse-strip" role="group" aria-label="Active pulse">
         <div className="gigs-pulse-strip__title">
           <span className="gigs-pulse-strip__title__dot" aria-hidden />
           Active
@@ -1084,13 +1140,19 @@ export default function ActiveGigsPage() {
                       aria-hidden
                       style={
                         group.phase === "ready"
-                          ? { background: "var(--champagne, #bfa170)", color: "var(--ink)" }
+                          ? {
+                              background: "var(--champagne, #bfa170)",
+                              color: "var(--ink)",
+                            }
                           : group.phase === "shoot"
                             ? { background: "var(--ga-orange, #ff5e2b)" }
                             : group.phase === "review"
                               ? { background: "var(--accent-blue, #0085ff)" }
                               : group.phase === "revise"
-                                ? { background: "var(--editorial-pink, #e8447d)" }
+                                ? {
+                                    background:
+                                      "var(--editorial-pink, #e8447d)",
+                                  }
                                 : { background: "var(--ink-3)" }
                       }
                     >

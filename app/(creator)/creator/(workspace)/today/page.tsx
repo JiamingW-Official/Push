@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
 import { useToday } from "@/lib/data/hooks";
+import { SkeletonCard, SkeletonPanel } from "@/components/loading/Skeleton";
 import {
   selectHeroLine,
   buildActionQueue,
@@ -25,8 +26,13 @@ export default function TodayPage() {
      (dismissedActionIds/snoozedActionIds) still live in WorkspaceStateProvider —
      prompt 5 will replace those with optimistic mutations. */
   const ws = useWorkspaceState();
-  const { data: today } = useToday();
+  const { data: today, error, isLoading } = useToday();
   const now = useNow(30_000);
+
+  /* Errors throw to the per-route error.tsx boundary — Next mounts it
+     with the reset() callback. Loading state shows the skeleton trio
+     below the hero placeholder. */
+  if (error) throw error;
 
   /* Briefing waits for both `now` (clock hydrated) and `today` (SWR initial
      fetch). Until both are present we render in the same null-input shape
@@ -102,6 +108,25 @@ export default function TodayPage() {
           ).length;
     return { openInvites, activeCampaigns, weekScans, urgentInvites };
   }, [today, now]);
+
+  /* Initial cache miss → render skeleton trio matching the post-data layout
+     (hero placeholder + action queue cards + attribution pulse). Once SWR
+     hydrates, the real components mount in place. */
+  if (isLoading || !today) {
+    return (
+      <main className="today-page" aria-label="Today (loading)">
+        <div className="today-skel-hero">
+          <SkeletonPanel />
+        </div>
+        <div className="today-grid">
+          <SkeletonCard count={3} />
+          <SkeletonPanel />
+          <SkeletonCard count={2} />
+          <SkeletonPanel />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="today-page" aria-label="Today">

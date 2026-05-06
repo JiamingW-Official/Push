@@ -24,6 +24,7 @@ import { useNow } from "@/lib/workspace/hooks";
 import { useInvites } from "@/lib/data/hooks";
 import { EmptyState } from "@/lib/inbox/components";
 import { Button } from "@/lib/workspace/buttons";
+import { SkeletonRow, SkeletonPanel } from "@/components/loading/Skeleton";
 import "../gigs.css";
 
 /* ── Page-local types ────────────────────────────────────────── */
@@ -823,7 +824,15 @@ export default function InvitesPage() {
      We mirror local mutations into the rendered list via a memo so the UI
      stays responsive without round-tripping the API. */
   const ws = useWorkspaceState();
-  const { data: serverInvites } = useInvites({ status: "all" });
+  const {
+    data: serverInvites,
+    error: invitesError,
+    isLoading: invitesLoading,
+  } = useInvites({ status: "all" });
+  /* Errors throw to the per-route error.tsx boundary. Loading state is
+     handled below — when the SWR cache is empty AND local state is empty
+     too, we paint the skeleton list. */
+  if (invitesError) throw invitesError;
   const {
     declineToast,
     acceptInvite,
@@ -987,6 +996,36 @@ export default function InvitesPage() {
       onCheckStep={handleCheckStep}
     />
   );
+
+  /* Initial cache miss + no local seed yet → render skeleton list +
+     detail panel placeholder. Once SWR hydrates OR local state seeds,
+     the real list mounts in place. */
+  if (invitesLoading && invites.length === 0) {
+    return (
+      <section className="ib-content gigs-pane" aria-label="Invites (loading)">
+        <header className="giv-hero">
+          <div>
+            <h1 className="giv-hero__title">Invites</h1>
+            <p className="giv-hero__sub">Loading your queue…</p>
+          </div>
+        </header>
+        <div
+          className="giv-shell"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 480px",
+            gap: "32px",
+            padding: "0 32px 64px",
+          }}
+        >
+          <div>
+            <SkeletonRow count={5} />
+          </div>
+          <SkeletonPanel />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="ib-content gigs-pane">
