@@ -18,6 +18,7 @@ import type { ReactNode } from "react";
 import { Icon, type IconKey } from "./sidebar-icons";
 import { useOptionalWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
+import { buildActionQueue } from "@/lib/today/briefing";
 import "./unified-sidebar.css";
 
 // ---------------------------------------------------------------------------
@@ -161,6 +162,19 @@ export function UnifiedSidebar({
         ).length
       : 0;
 
+  const todayActionCount =
+    role === "creator" && ws && now != null
+      ? buildActionQueue({
+          now,
+          threads: ws.threads,
+          invites: ws.invites,
+          notifications: ws.notifications,
+          attributionEvents: ws.attributionEvents ?? [],
+          dismissedActionIds: ws.dismissedActionIds ?? [],
+          snoozedActionIds: ws.snoozedActionIds ?? {},
+        }).filter((a) => a.urgency > 1.5).length
+      : 0;
+
   return (
     <aside
       className="us-rail"
@@ -185,8 +199,15 @@ export function UnifiedSidebar({
         {config.primary.map((item) => {
           const active = isActive(item.href, item.exact);
           const isGigs = item.href === "/creator/gigs";
-          const itemBadge = isGigs && gigsPending > 0 ? gigsPending : 0;
-          const itemBadgeUrgent = isGigs && gigsUrgent > 0;
+          const isTodayItem = item.href === "/creator/dashboard";
+          const itemBadge =
+            isGigs && gigsPending > 0
+              ? gigsPending
+              : isTodayItem && todayActionCount > 0
+                ? todayActionCount
+                : 0;
+          const itemBadgeUrgent =
+            (isGigs && gigsUrgent > 0) || (isTodayItem && todayActionCount > 0);
           return (
             <Link
               key={item.href}
@@ -196,7 +217,9 @@ export function UnifiedSidebar({
               aria-label={
                 isGigs && itemBadge > 0
                   ? `Gigs, ${itemBadge} pending invite${itemBadge === 1 ? "" : "s"}`
-                  : undefined
+                  : isTodayItem && itemBadge > 0
+                    ? `Today, ${itemBadge} urgent action${itemBadge === 1 ? "" : "s"}`
+                    : undefined
               }
             >
               <span className="us-item__pill">
@@ -219,30 +242,6 @@ export function UnifiedSidebar({
       </nav>
 
       <div className="us-foot">
-        <Link
-          href={config.notificationsHref}
-          className={`us-item${
-            isActive(config.notificationsHref) ? " is-active" : ""
-          }`}
-          aria-label={
-            showBadge
-              ? `Notifications, ${notificationCount} unread`
-              : "Notifications"
-          }
-        >
-          <span className="us-item__pill">
-            <span className="us-item__icon" aria-hidden="true">
-              <Icon name="bell" />
-              {showBadge && (
-                <span className="us-badge" aria-hidden="true">
-                  {badgeText}
-                </span>
-              )}
-            </span>
-            <span className="us-item__label">Alerts</span>
-          </span>
-        </Link>
-
         <Link
           href={config.settingsHref}
           className={`us-item${
