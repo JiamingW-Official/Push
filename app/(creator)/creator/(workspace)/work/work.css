@@ -63,9 +63,9 @@
 
 .work-pipeline-cell__count {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.024em;
   color: var(--ink, #111);
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -73,9 +73,9 @@
 
 .work-pipeline-cell__label {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.10em;
   color: var(--ink-4, #61605c);
   text-transform: uppercase;
 }
@@ -106,8 +106,9 @@
 
 .work-timeline-row__text {
   font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.45;
   color: var(--ink, #111);
   white-space: nowrap;
   overflow: hidden;
@@ -130,24 +131,25 @@
 
 .work-list-row {
   display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 8px;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
   align-items: center;
 }
 
 .work-list-row__date {
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   color: var(--ink-4, #61605c);
   text-transform: uppercase;
 }
 
 .work-list-row__text {
   font-family: var(--font-body, "Open Sans");
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.45;
   color: var(--ink, #111);
   white-space: nowrap;
   overflow: hidden;

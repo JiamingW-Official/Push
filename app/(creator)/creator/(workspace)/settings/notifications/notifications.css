@@ -13,14 +13,28 @@
 .notif-push-banner {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 24px 28px;
-  border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.94) 60%),
-    var(--surface-2, #f5f3ee);
-  border: 0.5px solid rgba(0, 0, 0, 0.06);
-  margin-bottom: 32px;
+  gap: 16px;
+  padding: 28px 32px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.68);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(20px) saturate(1.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 8px 24px rgba(60, 45, 30, 0.06);
+  margin-bottom: 40px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .notif-push-banner {
+    background: var(--snow, #fff);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
 }
 
 .notif-push-banner__head {
@@ -32,17 +46,17 @@
 
 .notif-push-banner__head h2 {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.018em;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.022em;
   color: var(--ink, #111);
   margin: 0;
 }
 
 .notif-push-banner__body {
   font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--graphite, #3a3835);
   margin: 0;
   max-width: 60ch;
@@ -83,12 +97,12 @@
 
 .notif-h2 {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-4, #61605c);
-  margin: 0 0 12px;
+  margin: 0 0 16px;
 }
 
 .notif-prefs-list {
@@ -105,15 +119,37 @@
   grid-template-columns: 1fr auto;
   gap: 24px;
   align-items: center;
-  padding: 18px 22px;
-  background: var(--snow, #fff);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-  transition: border-color 140ms ease;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.68);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(20px) saturate(1.35);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 6px 18px rgba(60, 45, 30, 0.05);
+  transition: box-shadow 200ms ease, background 200ms ease;
 }
 
 .notif-pref-row:hover {
-  border-color: rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.05),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.7),
+    0 2px 4px rgba(60, 45, 30, 0.06),
+    0 12px 32px rgba(60, 45, 30, 0.08);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .notif-pref-row {
+    background: var(--snow, #fff);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
 }
 
 .notif-pref-row.is-disabled {
@@ -129,15 +165,15 @@
 
 .notif-pref-row__label {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.018em;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.022em;
   color: var(--ink, #111);
 }
 
 .notif-pref-row__desc {
   font-family: var(--font-body, "Open Sans");
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--graphite, #3a3835);
 }
