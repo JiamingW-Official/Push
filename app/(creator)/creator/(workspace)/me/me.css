@@ -73,18 +73,18 @@
 
 .me-profile-name {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.022em;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.024em;
   color: var(--ink, #111);
 }
 
 .me-profile-handle {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--ink-4, #61605c);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .me-profile-badges {
@@ -105,8 +105,8 @@
 
 .me-rank-context {
   font-family: var(--font-body, "Open Sans");
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 15px;
+  line-height: 1.55;
   color: var(--graphite, #3a3835);
 }
 
@@ -187,17 +187,17 @@
 
 .me-public-handle {
   font-family: var(--font-mono, monospace);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--ink, #111);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .me-public-action {
   font-family: var(--font-body, "Open Sans");
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   color: var(--ink, #111);
   text-transform: uppercase;
   transition: color 200ms ease;

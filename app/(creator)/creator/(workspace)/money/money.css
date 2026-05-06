@@ -50,7 +50,8 @@
 
 .money-empty {
   font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--ink-4, #61605c);
   font-style: italic;
 }
@@ -69,10 +70,10 @@
 
 .money-milestone-row__brand {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--ink, #111);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.018em;
 }
 
 .money-row-status {
@@ -95,10 +96,10 @@
 
 .money-methods-row__hint {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--ink-4, #61605c);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 /* ── TAX module: horizontal stat row ──────────────────────── */
