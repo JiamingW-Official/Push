@@ -501,3 +501,44 @@ body:has(.us-rail) main [class*="-page"] {
     padding-bottom: calc(56px + 32px); /* clear bottom dock */
   }
 }
+
+/* ── Realtime invite-arrival pulse on the avatar tile ─────────
+   Fires for ~2s on each new invite (via useInvitesLive). The dot
+   sits over the bottom-right corner of the avatar circle. */
+
+.us-avatar-circle {
+  position: relative;
+}
+
+.us-avatar-pulse {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: var(--editorial-pink, #e8447d);
+  border: 2px solid var(--snow, #fff);
+  border-radius: 50%;
+  animation: us-avatar-pulse-anim 1.4s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+}
+
+@keyframes us-avatar-pulse-anim {
+  0% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(232, 68, 125, 0.55);
+  }
+  60% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(232, 68, 125, 0);
+  }
+  100% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(232, 68, 125, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .us-avatar-pulse {
+    animation: none;
+  }
+}

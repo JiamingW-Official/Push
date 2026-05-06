@@ -7,6 +7,8 @@ import {
   type TransactionStatus,
 } from "@/lib/payments/mock-transactions";
 import { aggregateBalances } from "@/lib/payments/calculate";
+import { useEarnings } from "@/lib/data/hooks";
+import { SkeletonCard, SkeletonPanel } from "@/components/loading/Skeleton";
 import "./earnings.css";
 
 /* ── Types ───────────────────────────────────────────────── */
@@ -86,7 +88,7 @@ function fmtDate(iso: string): string {
 /* Merchant Identity Palette (§ 20.3) — deterministic merchant → color
    so Devoción always purple, Sunday always terracotta across the product. */
 const MERCHANT_IDENTITY: Record<string, string> = {
-  "Devoción": "aubergine",
+  Devoción: "aubergine",
   "Sunday in Brooklyn": "terracotta",
   "Cha Cha Matcha": "sage",
   "Superiority Burger": "clay",
@@ -280,8 +282,23 @@ function BigAmount({
 export default function CreatorEarningsPage() {
   const [cashoutOpen, setCashoutOpen] = useState(false);
 
-  const balances = aggregateBalances(MOCK_CREATOR_TRANSACTIONS);
-  const delta = THIS_MONTH_EARNED - LAST_MONTH_EARNED;
+  /* Server data via SWR. While the cache is empty AND the page hasn't
+     received its first server payload, render a skeleton (see early return
+     below). On error, throw to /earnings/error.tsx. After hydration we keep
+     the MOCK fallback as a defense-in-depth so a partial response never
+     paints zero balances. */
+  const { data: earnings, error: earningsError, isLoading } = useEarnings();
+  if (earningsError) throw earningsError;
+  const transactions = earnings?.transactions ?? MOCK_CREATOR_TRANSACTIONS;
+  const balances =
+    earnings?.balances ?? aggregateBalances(MOCK_CREATOR_TRANSACTIONS);
+  const summary = earnings?.summary ?? {
+    thisMonthEarned: THIS_MONTH_EARNED,
+    lastMonthEarned: LAST_MONTH_EARNED,
+    delta: THIS_MONTH_EARNED - LAST_MONTH_EARNED,
+    pendingNext: PENDING_NEXT,
+  };
+  const delta = summary.delta;
   const deltaPositive = delta >= 0;
   const canCashout = balances.cleared >= MIN_CASHOUT;
 
@@ -317,7 +334,28 @@ export default function CreatorEarningsPage() {
     },
   ];
 
-  const recentTxns = MOCK_CREATOR_TRANSACTIONS.slice(0, 20);
+  const recentTxns = transactions.slice(0, 20);
+
+  /* Initial paint: SWR cache empty, no fallback context — show skeleton.
+     The MOCK fallback above means once SWR errors or returns, we have data
+     to render. Skeleton only shows on the very first cold-start render
+     where neither cache nor mock has been resolved. */
+  if (isLoading && !earnings) {
+    return (
+      <div className="cw-page earn-page" aria-label="Earnings (loading)">
+        <header className="cw-header">
+          <div className="cw-header__left">
+            <p className="cw-eyebrow cw-eyebrow--live">EARNINGS · LOADING</p>
+            <h1 className="cw-title">Earnings</h1>
+          </div>
+        </header>
+        <div style={{ padding: "0 10vw 64px", display: "grid", gap: 32 }}>
+          <SkeletonPanel />
+          <SkeletonCard count={4} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="cw-page earn-page">
@@ -325,7 +363,7 @@ export default function CreatorEarningsPage() {
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">
-            EARNINGS · ${fmtInt(THIS_MONTH_EARNED)} THIS MONTH
+            EARNINGS · ${fmtInt(summary.thisMonthEarned)} THIS MONTH
           </p>
           <h1 className="cw-title">Earnings</h1>
         </div>
@@ -360,7 +398,9 @@ export default function CreatorEarningsPage() {
         <div className="earn-pulse-stat earn-pulse-stat--month">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Month</span>
-          <span className="earn-pulse-stat__value">${fmtInt(THIS_MONTH_EARNED)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmtInt(summary.thisMonthEarned)}
+          </span>
           <span
             className={`earn-pulse-stat__delta ${
               deltaPositive ? "earn-pulse-stat__delta--up" : ""
@@ -372,15 +412,19 @@ export default function CreatorEarningsPage() {
         <div className="earn-pulse-stat earn-pulse-stat--lifetime">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Lifetime</span>
-          <span className="earn-pulse-stat__value">${fmtInt(LIFETIME_TOTAL)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmtInt(LIFETIME_TOTAL)}
+          </span>
           <span className="earn-pulse-stat__delta">
-            {MOCK_CREATOR_TRANSACTIONS.length} txns
+            {transactions.length} txns
           </span>
         </div>
         <div className="earn-pulse-stat earn-pulse-stat--cleared">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Available</span>
-          <span className="earn-pulse-stat__value">${fmt(balances.cleared)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmt(balances.cleared)}
+          </span>
           <span className="earn-pulse-stat__delta">
             {canCashout ? "ready" : `min $${fmt(MIN_CASHOUT)}`}
           </span>
@@ -388,13 +432,17 @@ export default function CreatorEarningsPage() {
         <div className="earn-pulse-stat earn-pulse-stat--pending">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Pending</span>
-          <span className="earn-pulse-stat__value">${fmt(balances.pending)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmt(balances.pending)}
+          </span>
           <span className="earn-pulse-stat__delta">in flight</span>
         </div>
         <div className="earn-pulse-stat earn-pulse-stat--milestone">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Next payout</span>
-          <span className="earn-pulse-stat__value">${fmt(PENDING_NEXT)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmt(summary.pendingNext)}
+          </span>
           <span className="earn-pulse-stat__delta">May 1</span>
         </div>
       </div>
@@ -427,8 +475,14 @@ export default function CreatorEarningsPage() {
 
           <div className="earn-hero-substats">
             {[
-              { label: "THIS MONTH", value: `$${fmt(THIS_MONTH_EARNED)}` },
-              { label: "LAST MONTH", value: `$${fmt(LAST_MONTH_EARNED)}` },
+              {
+                label: "THIS MONTH",
+                value: `$${fmt(summary.thisMonthEarned)}`,
+              },
+              {
+                label: "LAST MONTH",
+                value: `$${fmt(summary.lastMonthEarned)}`,
+              },
               { label: "AVG / SCAN", value: "$0.05" },
             ].map((s) => (
               <div key={s.label} className="earn-hero-substat">
@@ -485,7 +539,7 @@ export default function CreatorEarningsPage() {
               BALANCE BREAKDOWN
             </span>
             <span className="earn-section-meta">
-              {MOCK_CREATOR_TRANSACTIONS.length} transactions tracked
+              {transactions.length} transactions tracked
             </span>
           </header>
           <div className="earn-balance-grid">
@@ -615,7 +669,7 @@ export default function CreatorEarningsPage() {
               <BigAmount
                 className="earn-upcoming-amount"
                 currencyClass="earn-upcoming-amount__currency"
-                value={fmt(PENDING_NEXT)}
+                value={fmt(summary.pendingNext)}
               />
               <p className="earn-upcoming-meta">
                 Est. May 1, 2026 · Stripe Connect · USD
@@ -648,7 +702,7 @@ export default function CreatorEarningsPage() {
               TRANSACTION HISTORY
             </span>
             <span className="earn-section-meta">
-              Showing {recentTxns.length} of {MOCK_CREATOR_TRANSACTIONS.length}
+              Showing {recentTxns.length} of {transactions.length}
             </span>
           </header>
           <div className="earn-txn-table">

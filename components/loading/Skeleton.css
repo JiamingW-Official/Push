@@ -1,0 +1,255 @@
+/* ============================================================
+   Skeleton placeholders — shared shimmer animation + 3 shapes
+   matching the v12.2 component grid (row / card / panel).
+
+   Tokens:
+     - --skel-base : surface-2  (flat resting tone)
+     - --skel-tint : surface-3  (shimmer crest)
+   No colors outside the warm-gray ladder (Design.md § 2 Allowed-Color List).
+
+   Performance: one shared `@keyframes skel-shimmer-slide` runs across all
+   instances on the page via `.skel-shimmer`. Browsers reuse the timeline,
+   so 50 skeletons cost the same as 1 (vs declaring keyframes per element).
+   ============================================================ */
+
+:root {
+  --skel-base: var(--surface-2, #f5f3ee);
+  --skel-tint: var(--surface-3, #ece9e0);
+}
+
+.skel-shimmer {
+  background-color: var(--skel-base);
+  background-image: linear-gradient(
+    90deg,
+    var(--skel-base) 0%,
+    var(--skel-tint) 50%,
+    var(--skel-base) 100%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  animation: skel-shimmer-slide 1.5s linear infinite;
+  border-radius: 8px;
+}
+
+@keyframes skel-shimmer-slide {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Row — list-style placeholder ────────────────────────── */
+
+.skel-row-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skel-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 96px;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--snow, #fff);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.skel-row__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.skel-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.skel-row__title {
+  height: 16px;
+  width: 60%;
+}
+
+.skel-row__meta {
+  height: 12px;
+  width: 40%;
+}
+
+.skel-row__action {
+  height: 32px;
+  border-radius: 16px;
+}
+
+/* ── Card — gigs/active + gigs/history placeholder ───────── */
+
+.skel-card-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .skel-card-stack {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.skel-card {
+  position: relative;
+  background: var(--snow, #fff);
+  border-radius: 16px;
+  padding: 20px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.skel-card__strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 0;
+}
+
+.skel-card__head {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.skel-card__monogram {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.skel-card__head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skel-card__brand {
+  height: 14px;
+  width: 70%;
+}
+
+.skel-card__campaign {
+  height: 18px;
+  width: 90%;
+}
+
+.skel-card__row {
+  height: 12px;
+  width: 100%;
+}
+
+.skel-card__row:nth-of-type(2) {
+  width: 75%;
+}
+
+.skel-card__phase {
+  height: 28px;
+  width: 100%;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+/* ── Panel — sticky detail placeholder ───────────────────── */
+
+.skel-panel {
+  background: var(--snow, #fff);
+  border-radius: 16px;
+  padding: 24px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skel-panel__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.skel-panel__eyebrow {
+  height: 10px;
+  width: 35%;
+  margin-top: 8px;
+}
+
+.skel-panel__title {
+  height: 28px;
+  width: 80%;
+}
+
+.skel-panel__sub {
+  height: 14px;
+  width: 60%;
+}
+
+.skel-panel__quick {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+  border-block: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.skel-panel__stat {
+  height: 36px;
+  border-radius: 8px;
+}
+
+.skel-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skel-panel__row {
+  height: 14px;
+  width: 100%;
+}
+
+.skel-panel__row:nth-of-type(2) {
+  width: 85%;
+}
+
+.skel-panel__row:nth-of-type(3) {
+  width: 60%;
+}
+
+.skel-panel__cta {
+  height: 48px;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+/* ── Reduced-motion: kill the shimmer, keep the layout ──── */
+
+@media (prefers-reduced-motion: reduce) {
+  .skel-shimmer {
+    animation: none;
+    background-image: none;
+  }
+}
