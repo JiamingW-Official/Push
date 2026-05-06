@@ -3013,6 +3013,12 @@ a.inv-row-view {
 .gav-scan-chart__live::before {
   content: "";
   width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-5, #aaa);
+  /* Default = static gray dot. .gav-scan-chart__live--pulsing flips to
+     orange + animation when realtime channel reports a recent scan. */
+}
+.gav-scan-chart__live--pulsing { color: var(--ga-orange, #ff5e2b); }
+.gav-scan-chart__live--pulsing::before {
   background: var(--ga-orange, #ff5e2b);
   animation: gav-pulse 1.4s ease infinite;
 }

@@ -18,6 +18,7 @@ import type { ReactNode } from "react";
 import { Icon, type IconKey } from "./sidebar-icons";
 import { useOptionalWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
+import { useInvitesLive } from "@/lib/data/hooks";
 import { buildActionQueue } from "@/lib/today/briefing";
 import "./unified-sidebar.css";
 
@@ -162,6 +163,13 @@ export function UnifiedSidebar({
         ).length
       : 0;
 
+  /* Realtime invite-arrival pulse. Subscribes only on the creator surface
+     (no creatorId in non-creator roles → no-op). The dot fires for 2s
+     when a new campaign_application row hits Supabase. */
+  const { pendingPulse } = useInvitesLive(
+    role === "creator" ? (userName ?? undefined) : undefined,
+  );
+
   const todayActionCount =
     role === "creator" && ws && now != null
       ? buildActionQueue({
@@ -271,6 +279,11 @@ export function UnifiedSidebar({
                   <AvatarImg src={avatarUrl} alt={name} />
                 ) : (
                   <span className="us-avatar-circle__initial">{initial}</span>
+                )}
+                {/* Live invite-arrival dot. Visible 2s when a new invite
+                    lands via subscribeInvites. Pure presentation. */}
+                {pendingPulse && (
+                  <span className="us-avatar-pulse" aria-hidden />
                 )}
               </span>
             </span>

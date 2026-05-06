@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useMemo, useCallback } from "react";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
-import { useActiveGigs } from "@/lib/data/hooks";
+import { useActiveGigs, useScansLive } from "@/lib/data/hooks";
 import { EmptyState } from "@/lib/inbox/components";
 import { SkeletonCard, SkeletonPanel } from "@/components/loading/Skeleton";
 import {
@@ -362,12 +362,12 @@ function RichActiveDetailPanel({
   const totalSteps = steps.length;
   const daysLeft = now ? shootDaysLeft(gig.shootWindow, now) : null;
 
-  /* Synthetic scan-progress visualization for the demo. Replace with
-     real attribution data when the backend exposes per-gig scan counts. */
-  const synthScans = Math.min(
-    target ? Math.floor((doneCount / Math.max(totalSteps, 1)) * 8) : 0,
-    target ?? 0,
-  );
+  /* Real-time scan counts via Supabase Realtime + SWR initial fetch.
+     `isLive` flips true for 60s after each verified scan — the
+     `gav-scan-chart__live` pill flashes only when there's actual recent
+     activity (replaces the fake "live" we used to print unconditionally). */
+  const { count: liveScans, isLive } = useScansLive(gig.id);
+  const synthScans = liveScans;
   const targetScans = 10;
   const scansPct = Math.min(100, (synthScans / targetScans) * 100);
 
@@ -520,8 +520,11 @@ function RichActiveDetailPanel({
                     / {targetScans}
                   </span>
                 </div>
-                <span className="gav-scan-chart__live">
-                  live · {Math.max(0, synthScans - 6)} in last 30m
+                <span
+                  className={`gav-scan-chart__live${isLive ? " gav-scan-chart__live--pulsing" : ""}`}
+                  aria-live="polite"
+                >
+                  {isLive ? "live · scan just landed" : "no recent scans"}
                 </span>
               </div>
               <div className="gav-scan-chart__bar">

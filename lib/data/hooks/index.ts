@@ -10,3 +10,5 @@ export { useInvites } from "./useInvites";
 export { useActiveGigs } from "./useActiveGigs";
 export { useEarnings } from "./useEarnings";
 export type { EarningsPayload } from "./useEarnings";
+export { useScansLive } from "./useScansLive";
+export { useInvitesLive } from "./useInvitesLive";
