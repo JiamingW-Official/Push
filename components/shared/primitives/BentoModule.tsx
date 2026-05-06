@@ -48,6 +48,9 @@ type Props = {
   emptyMessage?: string;
   /** ARIA label override. */
   ariaLabel?: string;
+  /** Visual priority. "hero" = champagne-bordered anchor (one per hub).
+   *  "quiet" = de-emphasized supporting tile. Default unranked. */
+  priority?: "hero" | "quiet";
 };
 
 export function BentoModule({
@@ -60,11 +63,13 @@ export function BentoModule({
   state = "ready",
   emptyMessage,
   ariaLabel,
+  priority,
 }: Props) {
+  const priorityClass = priority ? ` bento--${priority}` : "";
   return (
     <Link
       href={href}
-      className={`bento bento--span-${span} bento--state-${state}`}
+      className={`bento bento--span-${span} bento--state-${state}${priorityClass}`}
       aria-label={ariaLabel ?? eyebrow}
     >
       <div className="bento__head">

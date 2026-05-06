@@ -127,6 +127,11 @@ export default function SettingsHub() {
         </p>
       </header>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Status snapshot</h2>
+        <span className="hub-section__count">at a glance</span>
+      </header>
+
       <div className="set-pulse" role="group" aria-label="Settings pulse">
         <span className="set-pulse__cell">
           <span className="set-pulse__label">Verification</span>
@@ -145,6 +150,11 @@ export default function SettingsHub() {
           <span className="set-pulse__value">2 of 3</span>
         </span>
       </div>
+
+      <header className="hub-section">
+        <h2 className="hub-section__title">Nine focused areas</h2>
+        <span className="hub-section__count">tap a tile</span>
+      </header>
 
       <div className="set-grid">
         {enriched.map((c) => (

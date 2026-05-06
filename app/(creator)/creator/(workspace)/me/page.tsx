@@ -41,13 +41,19 @@ export default function IdentityHub() {
         </p>
       </header>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Identity anchor</h2>
+        <span className="hub-section__count">01 · profile + tier</span>
+      </header>
+
       <section className="me-bento" aria-label="Identity modules">
-        {/* ── PROFILE PHOTO + BADGES (span 7) ── */}
+        {/* ── PROFILE PHOTO + BADGES (span 7) — anchor ── */}
         <BentoModule
           href="/creator/profile"
           eyebrow="PROFILE · YOUR ANCHOR"
           span={7}
           live="off"
+          priority="hero"
           sub="Edit name, bio, photo, niches, neighborhoods"
         >
           <div className="me-profile-row">
@@ -113,7 +119,14 @@ export default function IdentityHub() {
             </span>
           </div>
         </BentoModule>
+      </section>
 
+      <header className="hub-section">
+        <h2 className="hub-section__title">Public surface</h2>
+        <span className="hub-section__count">02 · portfolio + link</span>
+      </header>
+
+      <section className="me-bento" aria-label="Public-facing modules">
         {/* ── PORTFOLIO (span 7) ── */}
         <BentoModule
           href="/creator/portfolio"
