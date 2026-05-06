@@ -50,10 +50,10 @@
 .cdp-stat__value--neutral { color: var(--ink); }
 
 .cdp-stat__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
@@ -72,8 +72,8 @@
 }
 
 .cdp-tab {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -146,8 +146,8 @@
 
 .cdp-chip {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -187,7 +187,7 @@
   text-align: center;
   padding: 64px 24px;
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -202,7 +202,7 @@
 }
 
 .cdp-empty__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink-3);
@@ -212,8 +212,8 @@
 }
 
 .cdp-empty__sub {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -247,7 +247,7 @@
 
   .cdp-tab {
     padding: 8px 12px;
-    font-size: 11px;
+    font-size: 14px;
   }
 }
 

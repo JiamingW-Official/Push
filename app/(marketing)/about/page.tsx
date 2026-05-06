@@ -97,7 +97,7 @@ export default function AboutPage() {
             Brooklyn.
           </h1>
 
-          {/* Mission statement — 18px CS Genio Mono per brief */}
+          {/* Mission statement — 18px Open Sans per brief */}
           <p className="about-hero-mission">
             Push started in Williamsburg because that&rsquo;s where we live,
             eat, and know by name. Performance marketing on the street — pay per

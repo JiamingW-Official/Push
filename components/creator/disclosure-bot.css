@@ -76,10 +76,10 @@
 .dbot-badge-scanning,
 .dbot-badge-ok,
 .dbot-badge-fail {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   padding: 4px 10px;
 }
 
@@ -113,10 +113,10 @@
 
 .dbot-label {
   display: block;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.04em;
   color: rgba(245, 242, 236, 0.4);
   margin-bottom: 10px;
 }
@@ -132,8 +132,8 @@
   border: none;
   border-bottom: 1.5px solid rgba(245, 242, 236, 0.18);
   padding: 14px 56px 14px 14px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.65;
   color: var(--surface);
   resize: vertical;
@@ -155,8 +155,8 @@
   position: absolute;
   bottom: 10px;
   right: 12px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.3);
 }
 
@@ -166,8 +166,8 @@
   background: rgba(245, 242, 236, 0.06);
   border: 1.5px solid rgba(245, 242, 236, 0.2);
   color: var(--surface);
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 14px 24px;
@@ -252,8 +252,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -270,10 +270,10 @@
 }
 
 .dbot-method-badge {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   padding: 3px 8px;
   background: rgba(201, 169, 110, 0.12);
   border: 1px solid rgba(201, 169, 110, 0.25);
@@ -282,8 +282,8 @@
 }
 
 .dbot-result-reason {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.6;
   color: rgba(245, 242, 236, 0.65);
   margin: 0;
@@ -291,8 +291,8 @@
 
 .dbot-disclosure-found {
   display: inline-block;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   padding: 6px 12px;
   background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.25);
@@ -312,10 +312,10 @@
 }
 
 .dbot-suggestions-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   color: var(--brand-red);
   margin: 0 0 4px;
 }
@@ -333,8 +333,8 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.6;
   color: rgba(245, 242, 236, 0.75);
 }
@@ -343,15 +343,15 @@
   color: var(--brand-red);
   font-weight: 700;
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.06em;
 }
 
 /* ── Footer ───────────────────────────────────────────────── */
 
 .dbot-footer {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.6;
   color: rgba(245, 242, 236, 0.3);
   margin: 0;

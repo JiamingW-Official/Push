@@ -41,7 +41,7 @@
 }
 
 .admin-sidebar-logo-sub {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -59,7 +59,7 @@
 }
 
 .admin-nav-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -72,7 +72,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px var(--space-3);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
@@ -106,7 +106,7 @@
   margin-left: auto;
   background: var(--brand-red);
   color: white;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   padding: 1px 6px;
   border-radius: var(--r-sm);
@@ -130,7 +130,7 @@
   height: 32px;
   background: var(--brand-red);
   color: white;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -139,13 +139,13 @@
 }
 
 .admin-sidebar-user-name {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.85);
 }
 
 .admin-sidebar-user-role {
-  font-size: 10px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.4);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -176,7 +176,7 @@
 }
 
 .admin-topbar-breadcrumb {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   display: flex;
   align-items: center;
@@ -217,7 +217,7 @@
 }
 
 .users-hero-eyebrow {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -249,7 +249,7 @@
 }
 
 .users-hero-stat-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 36px;
   font-weight: 200;
   color: var(--surface-2);
@@ -258,7 +258,7 @@
 }
 
 .users-hero-stat-label {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -299,7 +299,7 @@
   align-items: center;
   gap: 6px;
   padding: 14px 20px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   cursor: pointer;
@@ -323,7 +323,7 @@
 .users-tab-count {
   background: var(--surface);
   color: var(--graphite);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   padding: 1px 6px;
   border-radius: var(--r-sm);
@@ -366,7 +366,7 @@
   border: 1px solid var(--line);
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   outline: none;
   border-radius: var(--r-md);
@@ -387,7 +387,7 @@
   border: 1px solid var(--line);
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   border-radius: var(--r-md);
   appearance: none;
@@ -426,7 +426,7 @@
 }
 
 .bulk-bar-count {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
@@ -453,7 +453,7 @@
 
 .users-table th {
   padding: 10px 16px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -489,7 +489,7 @@
 
 .users-table td {
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
@@ -542,7 +542,7 @@
   top: -2px;
   left: 1px;
   color: white;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -574,7 +574,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   background: rgba(0, 48, 73, 0.08);
@@ -582,13 +582,13 @@
 
 .user-name {
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.2;
 }
 
 .user-handle {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -597,7 +597,7 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -654,7 +654,7 @@
 .action-btn {
   padding: 4px 8px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   border: 1px solid var(--line);
@@ -694,7 +694,7 @@
 }
 
 .pagination-info {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -711,7 +711,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   border: 1px solid var(--line);
   background: var(--surface-2);
@@ -745,7 +745,7 @@
   gap: 6px;
   padding: 8px 16px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   border-radius: var(--r-lg);
@@ -847,7 +847,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
@@ -884,7 +884,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 32px;
   font-weight: 900;
   color: rgba(255, 255, 255, 0.6);
@@ -960,7 +960,7 @@
 }
 
 .quick-stat-label {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -986,7 +986,7 @@
 
 .detail-tab {
   padding: 14px 18px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   border: none;
@@ -1026,7 +1026,7 @@
 }
 
 .detail-section-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1048,7 +1048,7 @@
 .detail-field:last-child { border-bottom: none; }
 
 .detail-field-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -1056,7 +1056,7 @@
 }
 
 .detail-field-value {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -1094,19 +1094,19 @@
 .timeline-body { flex: 1; }
 
 .timeline-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   font-weight: 500;
 }
 
 .timeline-time {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
 }
 
 .timeline-meta {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
 }
@@ -1124,7 +1124,7 @@
   border: 1px solid var(--line);
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   resize: vertical;
   outline: none;
@@ -1142,19 +1142,19 @@
 .note-item:last-child { border-bottom: none; }
 
 .note-author {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .note-date {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-left: 8px;
 }
 
 .note-content {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 4px;
   line-height: 1.5;
@@ -1196,7 +1196,7 @@
 }
 
 .danger-zone-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1232,7 +1232,7 @@
 }
 
 .danger-action-sub {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
 }
@@ -1265,7 +1265,7 @@
 }
 
 .modal-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -1305,7 +1305,7 @@
   padding: 10px var(--space-5);
   background: var(--ink);
   color: rgba(255, 255, 255, 0.9);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   position: fixed;
   bottom: 0;
@@ -1449,7 +1449,7 @@
 
 .adm-confirm__eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1458,7 +1458,7 @@
 }
 
 .adm-confirm__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 800;
   color: var(--ink);
@@ -1491,7 +1491,7 @@
 
 .adm-confirm__btn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1575,7 +1575,7 @@
 /* Header export button: align with v11 ghost variant */
 .adm-page-header .btn-ghost {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1624,7 +1624,7 @@
 
 .adm-avatar__initials {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.02em;

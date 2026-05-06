@@ -1,7 +1,7 @@
 /* ── Public Creator Profile ─────────────────────────────────────────────────
    Design system: border-radius 0 everywhere (exceptions: avatar 50%, tier badge 50%)
    Colors: var(--brand-red) / var(--brand-red) / var(--ink) / var(--accent-blue) / var(--surface)
-   Fonts: Darky (headlines), CS Genio Mono (all UI text)
+   Fonts: Darky (headlines), Open Sans (body/UI)
    Grid: 8px base
 ────────────────────────────────────────────────────────────────────────────── */
 
@@ -12,7 +12,7 @@
   margin: 0 auto;
   background: var(--surface);
   min-height: 100vh;
-  font-family: "CS Genio Mono", "Courier New", monospace;
+  font-family: var(--font-body);
   color: var(--ink);
 }
 
@@ -45,8 +45,8 @@
 }
 
 .header-back {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--accent-blue);
   text-decoration: none;
   letter-spacing: 0.02em;
@@ -58,8 +58,8 @@
 }
 
 .header-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -139,8 +139,8 @@
 }
 
 .pub-location {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0;
   display: flex;
@@ -149,20 +149,20 @@
 }
 
 .pub-location-icon {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .pub-handle {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
   letter-spacing: 0.01em;
 }
 
 .pub-bio {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.65;
   color: var(--ink);
@@ -193,8 +193,8 @@
 }
 
 .pub-available-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -213,8 +213,8 @@
 /* ── Shared section eyebrow ────────────────────────────────────────────────── */
 
 .pub-section-eyebrow {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -257,8 +257,8 @@
 }
 
 .pub-stat-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -311,15 +311,15 @@
 }
 
 .pub-campaign-business {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .pub-campaign-category {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -337,14 +337,14 @@
 }
 
 .pub-campaign-date {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .pub-campaign-payout {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--success);
   letter-spacing: 0.02em;
@@ -365,10 +365,10 @@
 }
 
 .pub-cta-eyebrow {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(245, 242, 236, 0.45);
   margin: 0 0 12px;
@@ -385,7 +385,7 @@
 }
 
 .pub-cta-sub {
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: rgba(245, 242, 236, 0.7);
   margin: 0 0 32px;
@@ -399,7 +399,7 @@
   display: inline-block;
   background: var(--brand-red);
   color: var(--surface-2);
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -415,8 +415,8 @@
 }
 
 .pub-cta-note {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.4);
   margin: 20px 0 0;
   letter-spacing: 0.02em;
@@ -428,8 +428,8 @@
   background: var(--surface);
   padding: 20px 24px;
   text-align: center;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
   border-top: 1px solid var(--surface-3);
@@ -466,7 +466,7 @@
 .profile-not-found {
   padding: 80px 24px;
   text-align: center;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-4);
 }

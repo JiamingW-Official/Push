@@ -2,7 +2,7 @@
  * Push email templates — v5.3-EXEC P0-4.
  *
  * Plain-string HTML templates with `${var}` interpolation. Matches the
- * Design.md palette (Flag Red + Pearl Stone + Darky / CS Genio Mono
+ * Design.md palette (Flag Red + Pearl Stone + Darky / Open Sans
  * fallbacks — emails render without our webfonts so we use
  * Helvetica / Courier substitutes).
  *
@@ -51,7 +51,7 @@ const baseStyles = `
   .body { padding: 28px; font-size: 15px; line-height: 1.6; }
   .body h1 { font-size: 22px; letter-spacing: -0.02em; margin: 0 0 16px; color: #003049; }
   .cta { display: inline-block; margin-top: 18px; padding: 14px 24px; background: #c1121f; color: #ffffff; text-decoration: none; font-weight: 700; letter-spacing: 0.04em; }
-  .foot { padding: 20px 28px; font-size: 12px; color: #669bbc; border-top: 1px solid #f5f2ec; font-family: 'Courier New', Courier, monospace; }
+  .foot { padding: 20px 28px; font-size: 12px; color: #669bbc; border-top: 1px solid #f5f2ec; font-family: Arial, Helvetica, sans-serif; }
 `;
 
 function shell(

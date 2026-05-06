@@ -21,11 +21,11 @@
   align-items: center;
   justify-content: center;
   height: 100svh;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -57,10 +57,10 @@
 /* ── Eyebrow (canonical product UI form) ────────────────────── */
 
 .pf-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   display: block;
@@ -135,7 +135,7 @@
 }
 
 .pf-photo-card__name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   line-height: 1.25;
@@ -148,8 +148,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -166,8 +166,8 @@
   border-radius: var(--r-pill);
   background: rgba(10, 10, 10, 0.72);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -212,7 +212,7 @@
   border-radius: 10px;
   text-decoration: none;
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -248,7 +248,7 @@
 }
 
 .pf-handle-row__handle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   overflow: hidden;
@@ -257,7 +257,7 @@
 }
 
 .pf-handle-row__followers {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -278,8 +278,8 @@
 }
 
 .pf-member-since {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-5);
@@ -306,8 +306,8 @@
   background: transparent;
   padding: 8px 16px;
   border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -388,8 +388,8 @@
 }
 
 .pf-stat__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -420,8 +420,8 @@
 }
 
 .pf-completeness__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -434,8 +434,8 @@
   background: transparent;
   padding: 0;
   margin-top: 4px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--brand-red);
@@ -463,7 +463,7 @@
 }
 
 .pf-bio {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink-3);
@@ -476,8 +476,8 @@
   border: none;
   background: transparent;
   padding: 0;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   cursor: pointer;
   text-align: left;
@@ -518,7 +518,7 @@
 }
 
 .pf-earnings-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 700;
   color: var(--ink);
@@ -527,8 +527,8 @@
 }
 
 .pf-earnings-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -552,8 +552,8 @@
 }
 
 .pf-tier-card__caption {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -624,8 +624,8 @@
 }
 
 .pf-social-tile__platform {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -633,7 +633,7 @@
 }
 
 .pf-social-tile__handle {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
@@ -650,7 +650,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 700;
   color: var(--ink);
@@ -659,8 +659,8 @@
 }
 
 .pf-social-tile__stat em {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   font-style: normal;
   letter-spacing: 0.08em;
@@ -677,7 +677,7 @@
 }
 
 .pf-pref-empty {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink-4);
@@ -701,10 +701,10 @@
 }
 
 .pf-edit-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   display: block;
@@ -731,8 +731,8 @@
 }
 
 .pf-form-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -744,14 +744,14 @@
   text-transform: none;
   letter-spacing: 0;
   color: var(--ink-4);
-  font-size: 11px;
+  font-size: 14px;
   margin-left: 4px;
 }
 
 .pf-form-label-count {
   float: right;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 400;
   color: var(--ink-4);
   text-transform: none;
@@ -761,7 +761,7 @@
 /* ── Form inputs ────────────────────────────────────────────── */
 
 .pf-input {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   background: var(--surface);
@@ -786,7 +786,7 @@
 }
 
 .pf-textarea {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   background: var(--surface);
@@ -827,7 +827,7 @@
   border: 1px solid var(--hairline);
   border-right: none;
   border-radius: var(--r-sm) 0 0 var(--r-sm);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-4);
   font-weight: 600;
@@ -860,16 +860,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   flex-shrink: 0;
 }
 
 .pf-avatar-notice-text {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 

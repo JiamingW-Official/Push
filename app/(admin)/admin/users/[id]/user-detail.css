@@ -11,8 +11,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -37,10 +37,10 @@
    Page-level eyebrow
    ------------------------------------------------------------ */
 .ud-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 16px;
@@ -108,8 +108,8 @@
 }
 
 .ud-meta {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 10px;
 }
@@ -156,8 +156,8 @@
 }
 
 .ud-stat__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -198,8 +198,8 @@
 }
 
 .ud-card__title {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -228,8 +228,8 @@
 }
 
 .ud-field__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -238,8 +238,8 @@
 }
 
 .ud-field__value {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   word-break: break-all;
 }
@@ -255,8 +255,8 @@
 }
 
 .ud-tab {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -303,8 +303,8 @@
 }
 
 .ud-panel__title {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -347,8 +347,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -358,15 +358,15 @@
 }
 
 .ud-row__desc {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   line-height: 1.4;
 }
 
 .ud-row__meta {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
 }
@@ -377,14 +377,14 @@
 .ud-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
 }
 
 .ud-table th {
   padding: 8px 16px;
   text-align: left;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -396,7 +396,7 @@
 
 .ud-table td {
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   border-bottom: 1px solid var(--surface-3);
 }
@@ -447,8 +447,8 @@
 }
 
 .ud-fin-item__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -462,8 +462,8 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -517,8 +517,8 @@
 }
 
 .ud-note-textarea {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface-3);
   border: 1px solid var(--hairline);
@@ -550,22 +550,22 @@
 }
 
 .ud-note-item__author {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .ud-note-item__date {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-left: 8px;
 }
 
 .ud-note-item__content {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   margin-top: 4px;
   line-height: 1.6;
@@ -605,31 +605,31 @@
 }
 
 .ud-flag__type {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .ud-flag__severity-label {
   margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .ud-flag__desc {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
 }
 
 .ud-flag__time {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 4px;
 }
@@ -640,8 +640,8 @@
 .ud-empty {
   padding: 24px 16px;
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -657,10 +657,10 @@
 }
 
 .ud-danger-zone__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brand-red);
   margin-bottom: 16px;
@@ -681,7 +681,7 @@
 }
 
 .ud-danger-action__title {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -689,8 +689,8 @@
 }
 
 .ud-danger-action__sub {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -699,9 +699,9 @@
    ------------------------------------------------------------ */
 .ud-footer-meta {
   padding: 12px 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   color: var(--ink-4);
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 8px;
 }
 
@@ -719,8 +719,8 @@
   align-items: center;
   gap: 12px;
   padding: 14px 24px;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   z-index: 9999;
 }

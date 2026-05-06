@@ -38,7 +38,7 @@
   z-index: 200;
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -98,7 +98,7 @@
 
 .exp-view-tab {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -134,7 +134,7 @@
 
 .exp-topbar-back {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -191,7 +191,7 @@
 }
 
 .exp-rail-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -202,7 +202,7 @@
 
 .exp-rail-count {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -215,7 +215,7 @@
 
 .exp-rail-clear {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -242,7 +242,7 @@
 
 .exp-filter-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -260,7 +260,7 @@
 
 .exp-chip {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 5px 12px;
@@ -296,7 +296,7 @@
 
 .exp-tier-btn {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -332,7 +332,7 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -381,7 +381,7 @@
 
 .exp-deadline-btn {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 4px 10px;
@@ -468,7 +468,7 @@
 
 .exp-map-wrap .map-pill {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.03em;
   padding: 4px 8px;
@@ -530,7 +530,7 @@
   bottom: 8px;
   left: 8px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.03em;
   padding: 3px 8px;
@@ -553,7 +553,7 @@
   color: var(--snow);
   border: none;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -571,7 +571,7 @@
 
 .exp-map-wrap .map-popup-biz {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -580,7 +580,7 @@
 
 .exp-map-wrap .map-popup-spots {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
 }
@@ -599,7 +599,7 @@
 
 .exp-map-wrap .map-popup-neighborhood {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 10px;
 }
@@ -608,7 +608,7 @@
   display: block;
   text-align: center;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -681,7 +681,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 32px;
   font-weight: 900;
   color: var(--ink-5);
@@ -700,7 +700,7 @@
 
 .exp-gcard-tier {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -722,7 +722,7 @@
 }
 
 .exp-gcard-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -732,7 +732,7 @@
 .exp-gcard-payout--free { color: var(--ink-4); }
 
 .exp-gcard-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -747,7 +747,7 @@
 
 .exp-gcard-merchant {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -763,7 +763,7 @@
   align-items: center;
   justify-content: space-between;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 8px;
 }
@@ -785,7 +785,7 @@
   width: 100%;
   margin-top: 12px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -820,7 +820,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -854,7 +854,7 @@
 
 .exp-list-th {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -884,7 +884,7 @@
   padding: 12px 16px;
   vertical-align: middle;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -906,7 +906,7 @@
 
 /* Title column */
 .exp-list-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -920,7 +920,7 @@
 
 .exp-list-merchant {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -931,7 +931,7 @@
 /* Tier badge */
 .exp-list-tier {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -954,7 +954,7 @@
 
 /* Payout */
 .exp-list-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -967,7 +967,7 @@
 /* Spots */
 .exp-list-spots {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -979,7 +979,7 @@
 /* Deadline */
 .exp-list-deadline {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap;
   color: var(--ink-4);
 }
@@ -992,7 +992,7 @@
 /* Apply button in list */
 .exp-list-apply {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1034,7 +1034,7 @@
 }
 
 .exp-empty-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1044,7 +1044,7 @@
 
 .exp-empty-sub {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
   max-width: 280px;

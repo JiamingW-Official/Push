@@ -151,7 +151,7 @@
 
 .fp-headline-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -170,7 +170,7 @@
 
 .fp-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(245, 242, 236, 0.5);
@@ -226,7 +226,7 @@
 
 .fp-tier-badge-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(245, 242, 236, 0.7);
@@ -234,7 +234,7 @@
 
 .fp-tier-badge-tier {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -246,7 +246,7 @@
   position: relative;
   z-index: 1;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.45);
   text-align: center;
   max-width: 320px;
@@ -292,7 +292,7 @@
 }
 
 .fp-card-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 900;
   font-size: 18px;
   color: var(--ink);
@@ -301,7 +301,7 @@
 
 .fp-card-date {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   color: var(--ink);
   opacity: 0.6;
@@ -315,7 +315,7 @@
 .fp-card-payto,
 .fp-card-for {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink);
@@ -325,7 +325,7 @@
 }
 
 .fp-card-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 22px;
   color: var(--ink);
@@ -334,7 +334,7 @@
 
 .fp-card-amount-words {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink);
   letter-spacing: 0.04em;
   display: block;
@@ -343,7 +343,7 @@
 }
 
 .fp-card-campaign {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 14px;
   color: var(--ink);
@@ -352,7 +352,7 @@
 
 .fp-card-merchant {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink);
   opacity: 0.6;
   display: block;
@@ -370,7 +370,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 900;
   transform: rotate(-15deg);
@@ -414,7 +414,7 @@
 .fp-share-btn,
 .fp-continue-btn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 12px 20px;

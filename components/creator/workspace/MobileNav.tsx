@@ -3,7 +3,7 @@
 // Push Creator Workspace — MobileNav  (Wave 3)
 // Design.md: 56px height, --surface-elevated bg, fixed bottom bar
 // 5 tabs: Work / Pipeline / Inbox / Discover / Portfolio
-// Active: --primary color; Fonts: CS Genio Mono 10px uppercase
+// Active: --primary color; Fonts: Open Sans 10px uppercase
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";

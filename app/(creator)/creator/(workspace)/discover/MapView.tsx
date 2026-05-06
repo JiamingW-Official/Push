@@ -3,43 +3,111 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useMemo, useState, useEffect, useRef } from "react";
 
 // Fix Leaflet default icon issue in Next.js / webpack
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
 
-/* ── Custom red square icon (Push brand) ───────────────────── */
-// Design.md exception: map pins may use 50% border-radius
-// But here we use a square flag-red pin per brand spec.
-const createPinIcon = (payout: string) =>
-  L.divIcon({
+/* ── Category colors — synced with CATEGORY_THEMES in discover/page.tsx ──── */
+const CAT_COLOR: Record<string, string> = {
+  "FOOD & DRINK": "#ff5e2b",
+  FITNESS: "#16a34a",
+  BEAUTY: "#e8447d",
+  WELLNESS: "#0d9488",
+  RETAIL: "#7c3aed",
+  LIFESTYLE: "#1e5fad",
+};
+
+/* ── Category SVG icons — uniform visual weight set.
+   Every icon: 24×24 viewBox · solid fill · ink bbox ~x:3-21 y:3-21 ·
+   roughly equal ink density (60% fill of inner box). */
+const CAT_ICON: Record<string, string> = {
+  // Coffee mug with handle — food/drink
+  "FOOD & DRINK": `
+    <path fill="currentColor" d="M5 8a2 2 0 0 1 2-2h9v11a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8zm11 3v3h1.5a1.5 1.5 0 1 0 0-3H16zM8 3a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0V3zm4 0a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0V3z"/>
+  `,
+  // Shopping bag with curved handle
+  RETAIL: `
+    <path fill="currentColor" d="M9 6a3 3 0 0 1 6 0v1H9V6zm-2 1V6a5 5 0 1 1 10 0v1h2.5a1 1 0 0 1 .996 1.09l-1.1 12A2 2 0 0 1 17.4 22H6.6a2 2 0 0 1-1.992-1.91l-1.1-12A1 1 0 0 1 4.5 7H7z"/>
+  `,
+  // Heart — wellness / health
+  WELLNESS: `
+    <path fill="currentColor" d="M12 21.5s-9-5.5-9-12.5c0-3.038 2.462-5.5 5.5-5.5 1.59 0 3.067.677 4.114 1.794a.5.5 0 0 0 .772 0A5.49 5.49 0 0 1 17.5 3.5C20.538 3.5 23 5.962 23 9c0 7-9 12.5-9 12.5h-2z"/>
+  `,
+  // Five-point star — beauty
+  BEAUTY: `
+    <path fill="currentColor" d="M12 2.5l3.09 6.26 6.91 1-5 4.87 1.18 6.87L12 18.27l-6.18 3.23L7 14.63l-5-4.87 6.91-1L12 2.5z"/>
+  `,
+  // Horizontal dumbbell — fitness
+  FITNESS: `
+    <path fill="currentColor" d="M3 10a1 1 0 0 1 2 0v4a1 1 0 1 1-2 0v-4zm3-2a1 1 0 0 1 2 0v8a1 1 0 1 1-2 0V8zm3 3h6v2H9v-2zm7-3a1 1 0 0 1 2 0v8a1 1 0 1 1-2 0V8zm3 2a1 1 0 0 1 2 0v4a1 1 0 1 1-2 0v-4z"/>
+  `,
+  // Camera — lifestyle / capture
+  LIFESTYLE: `
+    <path fill="currentColor" d="M9.5 4 8 6H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4l-1.5-2h-5zM12 9.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+  `,
+};
+
+/** Cache by `cat|active|locked` — there are at most 6 cats × 2 × 2 = 24
+ *  unique icon shapes, so we lazily build each once and reuse forever. */
+const ICON_CACHE = new Map<string, L.DivIcon>();
+
+function getCategoryMarker(
+  category: string,
+  active = false,
+  locked = false,
+): L.DivIcon {
+  const key = `${category}|${active ? 1 : 0}|${locked ? 1 : 0}`;
+  const hit = ICON_CACHE.get(key);
+  if (hit) return hit;
+  const fresh = createCategoryMarker(category, active, locked);
+  ICON_CACHE.set(key, fresh);
+  return fresh;
+}
+
+function createCategoryMarker(
+  category: string,
+  active = false,
+  locked = false,
+) {
+  const color = CAT_COLOR[category] ?? "#9a9a9a";
+  const icon =
+    CAT_ICON[category] ?? `<circle cx="12" cy="12" r="5" fill="currentColor"/>`;
+  // Locked pins paint as gray regardless of category; --pin-accent stays the
+  // category color so hover-flip on the locked variant still shows category.
+  const accent = locked ? "#9aa0a6" : color;
+  const style = `--pin-accent:${accent};color:${accent};`;
+  const cls = [
+    "push-cat-pin",
+    active ? "push-cat-pin--active" : "",
+    locked ? "push-cat-pin--locked" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  return L.divIcon({
     html: `
-      <div class="push-map-pin">
-        <span class="push-map-pin-label">${payout}</span>
-        <div class="push-map-pin-tail"></div>
+      <div class="${cls}" style="${style}">
+        <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:block;">
+          ${icon}
+        </svg>
       </div>
     `,
     className: "",
-    iconSize: [58, 40],
-    iconAnchor: [29, 40],
-    popupAnchor: [0, -44],
+    iconSize: [26, 26],
+    iconAnchor: [13, 13],
+    popupAnchor: [0, -18],
   });
+}
 
-/* ── Campaign location data ─────────────────────────────────── */
+/* ── CampaignPin type ───────────────────────────────────────── */
 
 export interface CampaignPin {
   id: string;
   title: string;
   merchantName: string;
   neighborhood: string;
-  payout: number;
-  payoutLabel: string;
+  category: string;
   slotsRemaining: number;
   slotsTotal: number;
   lat: number;
@@ -47,15 +115,14 @@ export interface CampaignPin {
   applicationStatus?: "none" | "applied" | "pending";
 }
 
-// NYC neighborhood mock coordinates
+/* ── Fallback pins (used when campaigns prop is not provided) ── */
 export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
   {
     id: "disc-001",
     title: "Rooftop Coffee Series",
     merchantName: "Blank Street Coffee",
     neighborhood: "Williamsburg, BK",
-    payout: 32,
-    payoutLabel: "per visit",
+    category: "FOOD & DRINK",
     slotsTotal: 20,
     slotsRemaining: 6,
     lat: 40.7144,
@@ -66,8 +133,7 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Chelsea Market Food Walk",
     merchantName: "Chelsea Market",
     neighborhood: "Chelsea, NYC",
-    payout: 45,
-    payoutLabel: "per post",
+    category: "FOOD & DRINK",
     slotsTotal: 10,
     slotsRemaining: 2,
     lat: 40.7424,
@@ -78,8 +144,7 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Flatiron Brunch Story",
     merchantName: "Eataly NYC Flatiron",
     neighborhood: "Flatiron, NYC",
-    payout: 60,
-    payoutLabel: "per reel",
+    category: "FOOD & DRINK",
     slotsTotal: 8,
     slotsRemaining: 4,
     lat: 40.7421,
@@ -90,8 +155,7 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Pilates Studio Grand Opening",
     merchantName: "Forma Pilates Chelsea",
     neighborhood: "Chelsea, NYC",
-    payout: 40,
-    payoutLabel: "per visit",
+    category: "FITNESS",
     slotsTotal: 12,
     slotsRemaining: 7,
     lat: 40.7448,
@@ -102,8 +166,7 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Gallery Opening Night",
     merchantName: "Tara Downs Gallery",
     neighborhood: "Chelsea, NYC",
-    payout: 75,
-    payoutLabel: "per campaign",
+    category: "LIFESTYLE",
     slotsTotal: 6,
     slotsRemaining: 3,
     lat: 40.7464,
@@ -114,8 +177,7 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Beauty Lab Skincare Series",
     merchantName: "Bluemercury SoHo",
     neighborhood: "SoHo, NYC",
-    payout: 55,
-    payoutLabel: "per story set",
+    category: "BEAUTY",
     slotsTotal: 8,
     slotsRemaining: 5,
     lat: 40.7228,
@@ -126,32 +188,18 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Boutique Opening Campaign",
     merchantName: "Madewell Soho",
     neighborhood: "SoHo, NYC",
-    payout: 28,
-    payoutLabel: "per post",
+    category: "RETAIL",
     slotsTotal: 15,
     slotsRemaining: 10,
     lat: 40.7244,
     lng: -74.0003,
   },
   {
-    id: "disc-008",
-    title: "Morning Ritual Brew",
-    merchantName: "Intelligentsia Coffee",
-    neighborhood: "West Village, NYC",
-    payout: 0,
-    payoutLabel: "free entry",
-    slotsTotal: 20,
-    slotsRemaining: 14,
-    lat: 40.7344,
-    lng: -74.0054,
-  },
-  {
     id: "disc-009",
     title: "Wellness Studio Launch",
     merchantName: "The Well NYC",
     neighborhood: "Midtown, NYC",
-    payout: 85,
-    payoutLabel: "per campaign",
+    category: "WELLNESS",
     slotsTotal: 5,
     slotsRemaining: 1,
     lat: 40.7489,
@@ -162,12 +210,22 @@ export const CAMPAIGN_LOCATIONS: Omit<CampaignPin, "applicationStatus">[] = [
     title: "Farm-to-Table Dinner Series",
     merchantName: "Blue Hill Restaurant",
     neighborhood: "West Village, NYC",
-    payout: 250,
-    payoutLabel: "per campaign",
+    category: "FOOD & DRINK",
     slotsTotal: 2,
     slotsRemaining: 1,
     lat: 40.7332,
     lng: -74.0037,
+  },
+  {
+    id: "disc-011",
+    title: "Spring Retail Lookbook",
+    merchantName: "COS Soho",
+    neighborhood: "SoHo, NYC",
+    category: "RETAIL",
+    slotsTotal: 4,
+    slotsRemaining: 2,
+    lat: 40.7268,
+    lng: -73.9987,
   },
 ];
 
@@ -177,298 +235,151 @@ interface MapViewProps {
   campaigns?: CampaignPin[];
   applications: Record<string, "none" | "applied" | "pending">;
   onApply: (id: string) => void;
+  /** Highlights the matching pin (scale + ring) when set. */
+  activeId?: string | null;
+  /** Optional accent color for the active pin's pulse ring. */
+  accent?: string;
+  /** Set of campaign IDs that the creator is NOT eligible to apply for. */
+  lockedIds?: Set<string>;
 }
 
-/* ── MapView Component ──────────────────────────────────────── */
+/* ── MapView ────────────────────────────────────────────────── */
 
 export default function MapView({
   campaigns,
   applications,
   onApply,
+  activeId,
+  accent,
+  lockedIds,
 }: MapViewProps) {
+  const [mapKey, setMapKey] = useState(() => Date.now());
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return () => {
+      // On unmount, nuke any Leaflet instance attached to the container
+      // so StrictMode/HMR remounts don't hit "Map container is being reused"
+      if (containerRef.current) {
+        const el = containerRef.current.querySelector(
+          ".leaflet-container",
+        ) as HTMLElement & { _leaflet_id?: number };
+        if (el && el._leaflet_id) {
+          // Force Leaflet to forget this container
+          delete (el as any)._leaflet_id;
+          el.innerHTML = "";
+        }
+      }
+    };
+  }, []);
+
   const pins: CampaignPin[] = (campaigns ?? CAMPAIGN_LOCATIONS).map((c) => ({
     ...c,
     applicationStatus: applications[c.id] ?? "none",
   }));
 
+  const isDark =
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const tileUrl = isDark
+    ? "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+
   return (
-    <>
-      {/* Leaflet CSS overrides — injected inline to scope to map view */}
-      <style>{`
-        /* Map container: sharp edges, Push border */
-        .push-leaflet-wrap .leaflet-container {
-          border-radius: 0 !important;
-          font-family: inherit;
-        }
-
-        /* Popup: no border-radius, surface-2 bg */
-        .push-leaflet-wrap .leaflet-popup-content-wrapper {
-          border-radius: 0 !important;
-          background: var(--surface-2) !important;
-          border: 1px solid var(--hairline) !important;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
-          padding: 0 !important;
-        }
-
-        .push-leaflet-wrap .leaflet-popup-tip-container {
-          display: none;
-        }
-
-        .push-leaflet-wrap .leaflet-popup-close-button {
-          color: var(--ink-4) !important;
-          font-size: 16px !important;
-          top: 8px !important;
-          right: 10px !important;
-          font-weight: 400 !important;
-        }
-
-        .push-leaflet-wrap .leaflet-popup-close-button:hover {
-          color: #c1121f !important;
-        }
-
-        .push-leaflet-wrap .leaflet-popup-content {
-          margin: 0 !important;
-          width: auto !important;
-        }
-
-        /* Control buttons: square */
-        .push-leaflet-wrap .leaflet-bar a,
-        .push-leaflet-wrap .leaflet-bar a:hover {
-          border-radius: 0 !important;
-        }
-
-        /* Custom pin styles */
-        .push-map-pin {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .push-map-pin-label {
-          display: block;
-          background: #c1121f;
-          color: #fff;
-          font-family: 'CS Genio Mono', 'Courier New', monospace;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          padding: 4px 8px;
-          white-space: nowrap;
-          box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-          line-height: 1.4;
-        }
-
-        .push-map-pin-tail {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-top: 7px solid #c1121f;
-        }
-
-        /* Popup card styles */
-        .push-map-popup {
-          width: 220px;
-          padding: 16px;
-          font-family: 'CS Genio Mono', 'Courier New', monospace;
-        }
-
-        .push-map-popup-eyebrow {
-          font-size: 9px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--ink-4);
-          margin-bottom: 4px;
-        }
-
-        .push-map-popup-name {
-          font-size: 14px;
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          color: var(--ink);
-          margin-bottom: 2px;
-          line-height: 1.3;
-        }
-
-        .push-map-popup-merchant {
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: var(--ink-4);
-          margin-bottom: 12px;
-        }
-
-        .push-map-popup-earn {
-          display: flex;
-          align-items: baseline;
-          gap: 4px;
-          margin-bottom: 10px;
-        }
-
-        .push-map-popup-amount {
-          font-size: 26px;
-          font-weight: 900;
-          letter-spacing: -0.04em;
-          color: #c9a96e;
-          line-height: 1;
-        }
-
-        .push-map-popup-amount--free {
-          color: var(--accent-blue);
-          font-size: 18px;
-        }
-
-        .push-map-popup-unit {
-          font-size: 10px;
-          font-weight: 700;
-          color: rgba(201,169,110,0.65);
-          letter-spacing: 0.03em;
-        }
-
-        .push-map-popup-slots {
-          font-size: 10px;
-          font-weight: 700;
-          color: var(--ink-4);
-          letter-spacing: 0.03em;
-          margin-bottom: 12px;
-        }
-
-        .push-map-popup-slots--urgent {
-          color: #c1121f;
-        }
-
-        .push-map-popup-apply {
-          width: 100%;
-          padding: 9px 0;
-          font-family: 'CS Genio Mono', 'Courier New', monospace;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          background: var(--brand-red);
-          color: var(--snow);
-          border: none;
-          cursor: pointer;
-          border-radius: var(--r-sm);
-          transition: transform 0.15s, box-shadow 0.15s;
-        }
-
-        .push-map-popup-apply:hover {
-          transform: translate(2px, 2px);
-          box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
-        }
-
-        .push-map-popup-apply--applied {
-          background: var(--surface-3);
-          color: var(--ink-4);
-          cursor: default;
-          border: 1px solid var(--hairline);
-        }
-
-        .push-map-popup-apply--applied:hover {
-          transform: none;
-          box-shadow: none;
-        }
-
-        .push-map-popup-apply--pending {
-          background: rgba(201,169,110,0.12);
-          color: #7a5a18;
-          border: 1px solid rgba(201,169,110,0.35);
-          cursor: default;
-        }
-
-        .push-map-popup-apply--pending:hover {
-          background: rgba(201,169,110,0.12);
-        }
-      `}</style>
-
-      <div
-        className="push-leaflet-wrap"
-        style={{ height: 480, border: "1px solid var(--hairline)" }}
+    <div
+      ref={containerRef}
+      className="push-leaflet-wrap"
+      style={{
+        height: "100%",
+        width: "100%",
+        borderRadius: "inherit",
+        overflow: "hidden",
+      }}
+    >
+      <MapContainer
+        key={mapKey}
+        center={[40.7278, -74.0]}
+        zoom={13}
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom={true}
       >
-        <MapContainer
-          center={[40.7278, -74.0]}
-          zoom={13}
-          style={{ height: "100%", width: "100%" }}
-          scrollWheelZoom={false}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+        {/* CartoDB Voyager — premium pastel basemap, no API key.
+              {r} resolves to "@2x" on retina for crisp tiles.
+              Attribution required by CartoDB ToS — visually hidden via CSS
+              (.leaflet-control-attribution { display: none }). */}
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url={tileUrl}
+          subdomains={["a", "b", "c", "d"]}
+          maxZoom={20}
+        />
 
-          {pins.map((pin) => {
-            const isFree = pin.payout === 0;
-            const payoutDisplay = isFree ? "FREE" : `$${pin.payout}`;
-            const slotsUrgent = pin.slotsRemaining < 3;
-            const appStatus = pin.applicationStatus ?? "none";
+        {pins.map((pin) => {
+          const slotsUrgent = pin.slotsRemaining < 3;
+          const appStatus = pin.applicationStatus ?? "none";
+          const catColor = CAT_COLOR[pin.category] ?? "#9a9a9a";
 
-            return (
-              <Marker
-                key={pin.id}
-                position={[pin.lat, pin.lng]}
-                icon={createPinIcon(payoutDisplay)}
-              >
-                <Popup>
-                  <div className="push-map-popup">
-                    <div className="push-map-popup-eyebrow">
-                      {pin.neighborhood}
-                    </div>
-                    <div className="push-map-popup-name">{pin.title}</div>
-                    <div className="push-map-popup-merchant">
-                      {pin.merchantName}
-                    </div>
-
-                    <div className="push-map-popup-earn">
-                      <span
-                        className={`push-map-popup-amount${isFree ? " push-map-popup-amount--free" : ""}`}
-                      >
-                        {payoutDisplay}
-                      </span>
-                      {!isFree && (
-                        <span className="push-map-popup-unit">
-                          /{pin.payoutLabel}
-                        </span>
-                      )}
-                    </div>
-
-                    <div
-                      className={`push-map-popup-slots${slotsUrgent ? " push-map-popup-slots--urgent" : ""}`}
-                    >
-                      {slotsUrgent
-                        ? `Only ${pin.slotsRemaining} spot${pin.slotsRemaining !== 1 ? "s" : ""} left!`
-                        : `${pin.slotsRemaining}/${pin.slotsTotal} slots remaining`}
-                    </div>
-
-                    <button
-                      className={`push-map-popup-apply${
-                        appStatus === "applied"
-                          ? " push-map-popup-apply--applied"
-                          : appStatus === "pending"
-                            ? " push-map-popup-apply--pending"
-                            : ""
-                      }`}
-                      onClick={() => {
-                        if (appStatus === "none") onApply(pin.id);
-                      }}
-                      disabled={appStatus !== "none"}
-                    >
-                      {appStatus === "applied"
-                        ? "✓ APPLIED"
-                        : appStatus === "pending"
-                          ? "⏳ PENDING"
-                          : "APPLY NOW"}
-                    </button>
+          const isActive = pin.id === activeId;
+          const isLocked = lockedIds?.has(pin.id) ?? false;
+          return (
+            <Marker
+              /* Stable key — `icon` prop updates in place via setIcon, no
+                   remount needed. Including state in the key would re-mount
+                   ALL 80+ markers on every card hover. */
+              key={pin.id}
+              position={[pin.lat, pin.lng]}
+              icon={getCategoryMarker(pin.category, isActive, isLocked)}
+              zIndexOffset={isActive ? 1000 : isLocked ? -100 : 0}
+            >
+              <Popup>
+                <div className="push-map-popup">
+                  <div className="push-map-popup-cat">
+                    <span
+                      className="push-map-popup-cat-dot"
+                      style={{ background: catColor }}
+                    />
+                    {pin.category}
                   </div>
-                </Popup>
-              </Marker>
-            );
-          })}
-        </MapContainer>
-      </div>
-    </>
+
+                  <div className="push-map-popup-title">{pin.title}</div>
+                  <div className="push-map-popup-merchant">
+                    {pin.merchantName} · {pin.neighborhood}
+                  </div>
+
+                  <div
+                    className={`push-map-popup-slots${slotsUrgent ? " push-map-popup-slots--urgent" : ""}`}
+                  >
+                    {slotsUrgent
+                      ? `Only ${pin.slotsRemaining} spot${pin.slotsRemaining !== 1 ? "s" : ""} left`
+                      : `${pin.slotsRemaining} of ${pin.slotsTotal} slots open`}
+                  </div>
+
+                  <button
+                    className={`push-map-popup-apply${
+                      appStatus === "applied"
+                        ? " push-map-popup-apply--applied"
+                        : appStatus === "pending"
+                          ? " push-map-popup-apply--pending"
+                          : ""
+                    }`}
+                    onClick={() => {
+                      if (appStatus === "none") onApply(pin.id);
+                    }}
+                    disabled={appStatus !== "none"}
+                  >
+                    {appStatus === "applied"
+                      ? "✓ Applied"
+                      : appStatus === "pending"
+                        ? "Accepted"
+                        : "Apply Now"}
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
+    </div>
   );
 }

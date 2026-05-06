@@ -57,10 +57,10 @@
 
 .ap-glass-eyebrow {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -75,8 +75,8 @@
 
 .ap-glass-caption {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
 }
@@ -88,8 +88,8 @@
   color: var(--ink-4);
   display: flex;
   flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   gap: 8px;
   letter-spacing: 0.04em;
@@ -103,8 +103,8 @@
   border-radius: var(--r-xs);
   color: var(--ink);
   display: inline-flex;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   height: 20px;
   justify-content: center;
@@ -131,10 +131,10 @@
   box-shadow: var(--shadow-1);
   color: var(--ink);
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   padding: 8px 16px;
   text-transform: uppercase;
 }
@@ -231,7 +231,7 @@
 
 .ap-photo-name {
   color: var(--snow);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.005em;
@@ -244,8 +244,8 @@
 
 .ap-photo-meta {
   color: rgba(255, 255, 255, 0.85);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   margin: 0;
@@ -270,7 +270,7 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.18);
   color: var(--snow);
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   gap: 6px;
   padding: 6px 10px;
   position: absolute;
@@ -280,7 +280,7 @@
 }
 
 .ap-match-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -289,9 +289,9 @@
 
 .ap-match-lbl {
   color: rgba(255, 255, 255, 0.78);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
 }
 
 /* ---- Card body ---- */
@@ -311,8 +311,8 @@
 
 .ap-campaign {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.4;
@@ -346,16 +346,16 @@
 
 .ap-stat dt {
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .ap-stat dd {
   color: var(--ink);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -368,8 +368,8 @@
 
 .ap-applied {
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   margin: 0;
@@ -435,10 +435,10 @@
 
 .ap-drawer-eyebrow {
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -455,7 +455,7 @@
 
 .ap-drawer-handle {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -508,8 +508,8 @@
   background: var(--surface-3);
   border-radius: var(--r-pill);
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 4px 12px;
@@ -535,10 +535,10 @@
 
 .ap-drawer-stats dt {
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -560,17 +560,17 @@
 
 .ap-drawer-label {
   color: var(--ink-4);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
 
 .ap-drawer-text {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;

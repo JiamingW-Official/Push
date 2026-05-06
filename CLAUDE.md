@@ -46,9 +46,9 @@ v11 layers a Grain-Archive editorial register on top of the v10 N2W foundation; 
   - Adjacent buttons in row 16px desktop / 12px mobile
 - **Corner-anchored titles (NEW v11):** Hero title hugs panel **bottom-left** (NOT centered); section titles hug **top-left**; footer Giant Wordmark hugs **bottom-left**. Centered titles only allowed inside Ticket Panel + Photo Card overlay + Modal.
 - **v11 type scale — pushed larger this pass:** Magvix Hero `clamp(64,9vw,160)px` (was 96 max), Darky Display `clamp(56,8vw,128)px`, **Footer Giant Wordmark `clamp(140,18vw,320)px`** (was 240), H1 `clamp(40,5vw,72)px`, H2 `40px` (was 36), KPI numeral `clamp(40,5vw,72)px`. Body 18px / Caption 12px / Eyebrow 12px unchanged. Vertical rhythm = 8px-grid line-heights.
-- **Three fonts, role-locked:** Magvix (Regular + Italic) hero / wordmark / Signature Divider (≤1 hero block per page). Darky display / heading / numerals / **Giant Footer Wordmark**. CS Genio Mono body / UI / labels / parenthetical eyebrow. Magvix never below 28px.
+- **Three fonts, role-locked:** Magvix (Regular + Italic) hero / wordmark / Signature Divider / Ticket Panel headline (≤1 hero block per page). Darky 500-900 display / heading / numerals / ALL UI labels / buttons / navs / eyebrows / badges / chips / pills / table headers / **Giant Footer Wordmark**. Open Sans 400-700 body / paragraph / message content / form inputs / card descriptions / table data cells (tabular-nums on numeric). Magvix never below 28px. CS Genio Mono REMOVED in v12.
 - **Unified button system — 5 variants, mandatory:**
-  - **Filled Primary** — Brand Red fill + Snow text + 8px radius + 14×28 padding + mono 16px 600 uppercase 0.04em (mobile 12×24 + 14px)
+  - **Filled Primary** — Brand Red fill + Snow text + 8px radius + 14×28 padding + Darky 16px 600 uppercase 0.06em (mobile 12×24 + 14px)
   - **Filled Secondary** — N2W Blue fill + Snow text (other props identical to Primary)
   - **Filled Ink** — Ink fill + Snow text (Ticket Panel + dark surface only)
   - **Ghost** — transparent + 1px ink border + Ink text
@@ -60,7 +60,7 @@ v11 layers a Grain-Archive editorial register on top of the v10 N2W foundation; 
 - **Bottom-right hover shift** is the Push interaction signature on every clickable element. **Does NOT shift:** GA Tri-Color nav pills, Ticket Panel grommets + perforation, Footer Giant Wordmark, Magvix Italic Signature Divider, static badges, body text.
 - **Modular Panel Discipline:** Marketing pages = 3-5 stacked panels, alternating warm/cool tone, ≤1 floating liquid-glass tile + ≤1 image card + ≤1 saturated editorial moment per panel.
 - **Footer:** Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peeking above + 3-column parenthetical eyebrow grid + **Darky 800 giant `clamp(140,18vw,320)px` "PUSH" bottom-left** (replaces v10 Magvix Italic wordmark).
-- **GA Tri-Color Nav (global chrome every page):** sticky top, 32×32 Ink monogram (left) + 3 pills center (Home Orange / Active Green / Last Sky), CS Genio Mono 14px 600 uppercase 0.04em, no hover shift on pills.
+- **GA Tri-Color Nav (global chrome every page):** sticky top, 32×32 Ink monogram (left) + 3 pills center (Home Orange / Active Green / Last Sky), Darky 14px 600 uppercase 0.04em, no hover shift on pills.
 - **Ticket Panel:** GA Orange fill + 10px radius + 4 ink-solid grommet circles (16px, 24px inset) + dashed 2px perforation lines top + bottom + Magvix Italic `clamp(40,5vw,56)px` centered headline + Filled Ink CTA + flat no-shadow + ≤1 per page + Marketing-only.
 - **Mono Eyebrow with Parenthetical:** Marketing surfaces use `(LINKS)` `(CONNECT)` `(WHY THIS EXISTS)`; Product UI uses canonical `LINKS`. Two registers do not mix in the same viewport.
 - **Magvix Italic Signature Divider:** between sections — `End of campaign · Fin ·` / `Posted · Scanned · Verified ·` style, 28-40px italic `--ink-3` + middle-dot separators, ≤2 per page, no hover.

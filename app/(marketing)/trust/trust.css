@@ -151,7 +151,7 @@
 
 .trust-hero-strip-num {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -160,7 +160,7 @@
 }
 
 .trust-hero-strip-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(15px, 1.2vw, 18px);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -201,7 +201,7 @@
 }
 
 .trust-verify-step-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(80px, 8vw, 140px);
   font-weight: 200;
   letter-spacing: -0.06em;
@@ -216,7 +216,7 @@
 
 .trust-verify-step-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -338,7 +338,7 @@
 }
 
 .trust-money-card-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -378,7 +378,7 @@
 
 .trust-rights-num {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.18em;
   color: var(--ink-5, var(--ink-4));
@@ -388,7 +388,7 @@
 
 .trust-rights-framework {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -439,7 +439,7 @@
 
 .trust-retention-header {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -448,7 +448,7 @@
 }
 
 .trust-retention-signal {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14.5px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -457,7 +457,7 @@
 
 .trust-retention-window {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--brand-red);
   letter-spacing: 0.02em;
@@ -465,7 +465,7 @@
 
 .trust-retention-reason {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.55;
 }
@@ -479,7 +479,7 @@
     gap: 6px;
   }
   .trust-retention-window {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -537,7 +537,7 @@
 
 .trust-timeline-time {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -652,7 +652,7 @@
 
 .trust-cert-link {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -719,7 +719,7 @@
 }
 
 .trust-faq-q-text {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(17px, 1.4vw, 20px);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -838,7 +838,7 @@
 
 .trust-founder-sig-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -847,7 +847,7 @@
 }
 
 .trust-founder-sig-email {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(18px, 1.6vw, 22px);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -918,7 +918,7 @@
 
 .trust-founder-link-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -927,7 +927,7 @@
 
 .trust-founder-link-value {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.74);
   line-height: 1.45;
 }
@@ -937,7 +937,7 @@
    ------------------------------------------------------------ */
 .trust-dispute-cta .btn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;

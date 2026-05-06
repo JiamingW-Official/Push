@@ -60,8 +60,8 @@
 }
 
 .tc-month {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.5;
@@ -94,8 +94,8 @@
 
 /* ── Push Score ─────────────────────────────────────────── */
 .tc-score-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   opacity: 0.6;
@@ -133,8 +133,8 @@
 }
 
 .tc-stat-label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.5;
@@ -142,8 +142,8 @@
 
 /* ── Location ────────────────────────────────────────────── */
 .tc-location {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   opacity: 0.6;
   margin-bottom: 16px;
   letter-spacing: 0.02em;
@@ -155,8 +155,8 @@
   align-items: center;
   padding: 3px 10px;
   border-radius: var(--r-xl);
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 16px;
@@ -166,8 +166,8 @@
 /* ── Footer ──────────────────────────────────────────────── */
 .tc-footer {
   margin-top: auto;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   opacity: 0.4;
   letter-spacing: 0.06em;
 }
@@ -179,7 +179,7 @@
 
 .tc-footer-tagline {
   margin-top: 2px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 /* ── Controls outside the card ───────────────────────────── */
@@ -191,7 +191,7 @@
 
 .tc-share-btn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   background: var(--brand-red);
@@ -209,7 +209,7 @@
 
 .tc-close-btn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   background: transparent;

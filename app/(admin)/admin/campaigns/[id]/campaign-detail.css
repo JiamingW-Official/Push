@@ -22,7 +22,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -53,7 +53,7 @@
 /* Eyebrow — "(CAMPAIGN·REVIEW)" — product register mono parenthetical */
 .cd-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -142,7 +142,7 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -157,7 +157,7 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -195,7 +195,7 @@
 
 .cd-kpi-tile__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -220,7 +220,7 @@
 
 .cd-kpi-tile__sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 4px;
 }
@@ -264,7 +264,7 @@
 
 .cd-card__title {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -304,7 +304,7 @@
 
 .cd-spec-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -319,7 +319,7 @@
 }
 
 .cd-spec-value--muted {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--ink-3);
   line-height: 1.6;
@@ -339,7 +339,7 @@
   align-items: flex-start;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
 }
@@ -378,7 +378,7 @@
 
 .cd-check__label {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink);
   line-height: 1.4;
@@ -386,7 +386,7 @@
 
 .cd-check__note {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--brand-red);
   margin-top: 3px;
 }
@@ -394,7 +394,7 @@
 /* Passes tally */
 .cd-pass-count {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -441,7 +441,7 @@
 
 .cd-flag__type {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -458,14 +458,14 @@
 
 .cd-flag__severity {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
 }
 
 .cd-flag__desc {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
   margin-bottom: 6px;
@@ -473,7 +473,7 @@
 
 .cd-flag__meta {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -530,7 +530,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-3);
   text-transform: uppercase;
@@ -555,13 +555,13 @@
 
 .cd-applicant-handle {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .cd-applicant-meta {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
 }
@@ -569,7 +569,7 @@
 /* Milestone tag */
 .cd-milestone-tag {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -624,14 +624,14 @@
 
 .cd-row__primary {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .cd-row__secondary {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
 }
@@ -643,13 +643,13 @@
 
 .cd-row__time {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .cd-verified-tag {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -692,14 +692,14 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 6px;
 }
 
 /* Large spend numeral */
 .cd-spend-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 900;
   letter-spacing: -0.02em;
@@ -726,7 +726,7 @@
 
 .cd-note__author {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   margin-bottom: 4px;
@@ -734,14 +734,14 @@
 
 .cd-note__body {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.6;
 }
 
 .cd-note__time {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 4px;
 }
@@ -754,7 +754,7 @@
 
 .cd-note-textarea {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface-3);
   border: 1px solid var(--hairline);
@@ -786,7 +786,7 @@
 
 .cd-dispute-item {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent-blue);
   padding: 8px 16px;
@@ -809,7 +809,7 @@
 /* Approve → btn-primary (Brand Red) */
 .cd-btn-approve {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -840,7 +840,7 @@
 /* Pause / Request Changes → btn-ghost */
 .cd-btn-ghost {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -871,7 +871,7 @@
 /* Reject — ghost with brand-red text */
 .cd-btn-reject {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -902,7 +902,7 @@
 /* Request Changes → btn-secondary (N2W Blue) */
 .cd-btn-secondary {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -933,7 +933,7 @@
 /* Danger / Force Refund */
 .cd-btn-danger {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1000,7 +1000,7 @@
 
 .cd-stats-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -1046,7 +1046,7 @@
 
 .cd-perf-tile__eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1079,7 +1079,7 @@
 
 .cd-perf-metric__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1091,7 +1091,7 @@
    ------------------------------------------------------------ */
 .cd-empty {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   padding: 8px 0;
 }
@@ -1106,7 +1106,7 @@
   background: var(--ink);
   color: var(--snow);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   border-radius: 8px;
   padding: 10px 20px;

@@ -1,6 +1,6 @@
 /* ============================================================
    Creator ReferralTable — per-customer referral ledger
-   Authority: Design.md (sharp corners, CSGenioMono)
+   Authority: Design.md (sharp corners, Open Sans)
    ============================================================ */
 
 .wrapper {
@@ -81,7 +81,7 @@
   padding: 4px 12px;
   border-radius: var(--r-xl);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

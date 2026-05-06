@@ -47,8 +47,8 @@
 }
 
 .article-hero__badge-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -69,8 +69,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -90,8 +90,8 @@
 }
 
 .article-hero__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -128,7 +128,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 900;
   font-size: 14px;
   color: var(--snow);
@@ -136,7 +136,7 @@
 }
 
 .article-hero__author-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--snow);
@@ -146,8 +146,8 @@
 }
 
 .article-hero__author-role {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.4);
   margin: 0;
   letter-spacing: 0.06em;
@@ -162,16 +162,16 @@
 }
 
 .article-hero__date {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   margin: 0 0 4px;
   letter-spacing: 0.04em;
 }
 
 .article-hero__readtime {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -201,8 +201,8 @@
 }
 
 .article-sidebar__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -221,8 +221,8 @@
 
 /* Ghost button style for tags */
 .article-tag {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -242,7 +242,7 @@
 
 /* Lead paragraph — body 20px Mono, slightly bolder */
 .article-body__lead {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
@@ -251,9 +251,9 @@
   margin: 0 0 24px;
 }
 
-/* Body paragraph — CS Genio Mono 20px 1.40 (NEVER Darky body) */
+/* Body paragraph — Open Sans 20px 1.40 (NEVER Darky body) */
 .article-body__p {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
@@ -315,8 +315,8 @@
 }
 
 .article-kpi-cap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -338,8 +338,8 @@
 }
 
 .article-pullquote__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -360,8 +360,8 @@
 }
 
 .article-pullquote__attribution {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -398,8 +398,8 @@
 }
 
 .article-related__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -475,8 +475,8 @@
 }
 
 .related-photo-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -486,7 +486,7 @@
 
 /* Photo Card Title: Darky 20px 700 snow (§8.7) */
 .related-photo-card__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   line-height: 1.25;
@@ -501,8 +501,8 @@
 
 /* Photo Card Metadata: Mono 12px 500 uppercase 0.04em rgba(255,255,255,0.85) */
 .related-photo-card__meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;

@@ -88,7 +88,7 @@ export default function ApiDocsPage() {
             right: "clamp(24px,6vw,96px)",
             top: "50%",
             transform: "translateY(-50%)",
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(11px,1vw,13px)",
             color: "rgba(255,255,255,0.04)",
             lineHeight: 1.75,
@@ -115,7 +115,7 @@ export default function ApiDocsPage() {
           >
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
@@ -150,7 +150,7 @@ export default function ApiDocsPage() {
               />
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.1em",
@@ -182,7 +182,7 @@ export default function ApiDocsPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 18,
               color: "rgba(255,255,255,0.5)",
               lineHeight: 1.55,
@@ -212,7 +212,7 @@ export default function ApiDocsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -259,7 +259,7 @@ export default function ApiDocsPage() {
                 <span
                   key={h}
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: "0.12em",
@@ -299,7 +299,7 @@ export default function ApiDocsPage() {
                       display: "inline-block",
                       background: mc.bg,
                       color: mc.text,
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 11,
                       fontWeight: 700,
                       letterSpacing: "0.08em",
@@ -313,7 +313,7 @@ export default function ApiDocsPage() {
                   {/* Endpoint path — Darky first column (20px) */}
                   <code
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 16,
                       fontWeight: 700,
                       color: "var(--ink)",
@@ -326,7 +326,7 @@ export default function ApiDocsPage() {
                   {/* Description — mono 16px */}
                   <p
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 16,
                       color: "var(--ink-3)",
                       lineHeight: 1.55,
@@ -352,7 +352,7 @@ export default function ApiDocsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -398,7 +398,7 @@ export default function ApiDocsPage() {
                 </h2>
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 18,
                     color: "var(--ink-3)",
                     lineHeight: 1.55,
@@ -420,7 +420,7 @@ export default function ApiDocsPage() {
                   . Keys are prefixed{" "}
                   <code
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 14,
                       background: "var(--surface-3)",
                       padding: "2px 6px",
@@ -472,7 +472,7 @@ export default function ApiDocsPage() {
                     ))}
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         color: "rgba(255,255,255,0.3)",
                         marginLeft: 8,
@@ -485,7 +485,7 @@ export default function ApiDocsPage() {
                   <div style={{ padding: "20px 24px" }}>
                     <code
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 14,
                         color: "rgba(255,255,255,0.8)",
                         display: "block",
@@ -508,7 +508,7 @@ export default function ApiDocsPage() {
                 >
                   <p
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: "0.12em",
@@ -542,7 +542,7 @@ export default function ApiDocsPage() {
                       >
                         <span
                           style={{
-                            fontFamily: "var(--font-mono)",
+                            fontFamily: "var(--font-display)",
                             fontSize: 14,
                             color: "var(--ink-4)",
                           }}
@@ -551,7 +551,7 @@ export default function ApiDocsPage() {
                         </span>
                         <span
                           style={{
-                            fontFamily: "var(--font-mono)",
+                            fontFamily: "var(--font-display)",
                             fontSize: 14,
                             fontWeight: 700,
                             color: "var(--ink)",
@@ -588,7 +588,7 @@ export default function ApiDocsPage() {
             <div>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -614,7 +614,7 @@ export default function ApiDocsPage() {
               </h2>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 18,
                   color: "rgba(255,255,255,0.45)",
                   lineHeight: 1.55,
@@ -666,7 +666,7 @@ export default function ApiDocsPage() {
                   ))}
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       color: "rgba(255,255,255,0.3)",
                       marginLeft: 8,
@@ -678,7 +678,7 @@ export default function ApiDocsPage() {
                 </div>
                 <span
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: "0.06em",
@@ -694,7 +694,7 @@ export default function ApiDocsPage() {
               {/* Code content */}
               <pre
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: "clamp(12px,1.1vw,14px)",
                   color: "rgba(255,255,255,0.75)",
                   lineHeight: 1.75,
@@ -782,7 +782,7 @@ export default function ApiDocsPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",

@@ -83,6 +83,24 @@ function fmtDate(iso: string): string {
   });
 }
 
+/* Merchant Identity Palette (§ 20.3) — deterministic merchant → color
+   so Devoción always purple, Sunday always terracotta across the product. */
+const MERCHANT_IDENTITY: Record<string, string> = {
+  "Devoción": "aubergine",
+  "Sunday in Brooklyn": "terracotta",
+  "Cha Cha Matcha": "sage",
+  "Superiority Burger": "clay",
+  "Roberta's Pizza": "cobalt",
+  "Roberta's": "cobalt",
+  "Flamingo Estate": "rose",
+  "Saint Bagel": "mustard",
+  "Blank Street Coffee": "mustard",
+  "Brow Theory": "charcoal",
+};
+function merchantIdentity(name: string): string {
+  return MERCHANT_IDENTITY[name] ?? "charcoal";
+}
+
 const STATUS_CONFIG: Record<
   TransactionStatus,
   { label: string; chipClass: string }
@@ -329,6 +347,58 @@ export default function CreatorEarningsPage() {
         </div>
       </header>
 
+      {/* ── ☆ Pulse Strip · ambient earnings metrics (§ 20.6) ── */}
+      <div
+        className="earn-pulse-strip"
+        role="group"
+        aria-label="Earnings pulse"
+      >
+        <div className="earn-pulse-strip__title">
+          <span className="earn-pulse-strip__title__dot" aria-hidden />
+          Earnings pulse
+        </div>
+        <div className="earn-pulse-stat earn-pulse-stat--month">
+          <span className="earn-pulse-stat__dot" aria-hidden />
+          <span className="earn-pulse-stat__label">Month</span>
+          <span className="earn-pulse-stat__value">${fmtInt(THIS_MONTH_EARNED)}</span>
+          <span
+            className={`earn-pulse-stat__delta ${
+              deltaPositive ? "earn-pulse-stat__delta--up" : ""
+            }`}
+          >
+            {deltaPositive ? "↑" : "↓"} ${fmt(Math.abs(delta))}
+          </span>
+        </div>
+        <div className="earn-pulse-stat earn-pulse-stat--lifetime">
+          <span className="earn-pulse-stat__dot" aria-hidden />
+          <span className="earn-pulse-stat__label">Lifetime</span>
+          <span className="earn-pulse-stat__value">${fmtInt(LIFETIME_TOTAL)}</span>
+          <span className="earn-pulse-stat__delta">
+            {MOCK_CREATOR_TRANSACTIONS.length} txns
+          </span>
+        </div>
+        <div className="earn-pulse-stat earn-pulse-stat--cleared">
+          <span className="earn-pulse-stat__dot" aria-hidden />
+          <span className="earn-pulse-stat__label">Available</span>
+          <span className="earn-pulse-stat__value">${fmt(balances.cleared)}</span>
+          <span className="earn-pulse-stat__delta">
+            {canCashout ? "ready" : `min $${fmt(MIN_CASHOUT)}`}
+          </span>
+        </div>
+        <div className="earn-pulse-stat earn-pulse-stat--pending">
+          <span className="earn-pulse-stat__dot" aria-hidden />
+          <span className="earn-pulse-stat__label">Pending</span>
+          <span className="earn-pulse-stat__value">${fmt(balances.pending)}</span>
+          <span className="earn-pulse-stat__delta">in flight</span>
+        </div>
+        <div className="earn-pulse-stat earn-pulse-stat--milestone">
+          <span className="earn-pulse-stat__dot" aria-hidden />
+          <span className="earn-pulse-stat__label">Next payout</span>
+          <span className="earn-pulse-stat__value">${fmt(PENDING_NEXT)}</span>
+          <span className="earn-pulse-stat__delta">May 1</span>
+        </div>
+      </div>
+
       <div className="earn-stack">
         {/* ── 1. Hero KPI panel — lifetime total ─────── */}
         <section className="earn-hero" aria-label="Lifetime earnings summary">
@@ -451,7 +521,10 @@ export default function CreatorEarningsPage() {
           </header>
           <div className="earn-campaign-list">
             {ACTIVE_CAMPAIGNS.map((camp) => (
-              <article key={camp.id} className="earn-campaign-card">
+              <article
+                key={camp.id}
+                className={`earn-campaign-card earn-mc-accent earn-mc-accent--${merchantIdentity(camp.merchant)}`}
+              >
                 <div className="earn-campaign-header">
                   <div>
                     <span className="earn-campaign-merchant">
@@ -637,6 +710,39 @@ export default function CreatorEarningsPage() {
           </div>
         </section>
       </div>
+
+      {/* ── ✦ Liquid Glass Anchored Cashout (§ 20.7 · use case 4) ── */}
+      {/* Hide while the modal is open so we don't layer two cashout
+         affordances on top of each other. */}
+      {!cashoutOpen && (
+        <button
+          type="button"
+          className={
+            "earn-glass-cashout" +
+            (canCashout ? "" : " earn-glass-cashout--disabled")
+          }
+          onClick={() => canCashout && setCashoutOpen(true)}
+          aria-disabled={!canCashout}
+          aria-label={
+            canCashout
+              ? `Cash out $${fmt(balances.cleared)}`
+              : `Minimum cashout $${fmt(MIN_CASHOUT)} not yet reached`
+          }
+        >
+          <span className="earn-glass-cashout__dot" aria-hidden />
+          <span className="earn-glass-cashout__text">
+            <span className="earn-glass-cashout__label">
+              {canCashout ? "Available now" : "Building up"}
+            </span>
+            <span className="earn-glass-cashout__amt">
+              ${fmt(balances.cleared)}
+            </span>
+          </span>
+          <span className="earn-glass-cashout__cta">
+            {canCashout ? "Cash out →" : `Min $${fmt(MIN_CASHOUT)}`}
+          </span>
+        </button>
+      )}
 
       {/* ── Cashout Modal ─────────────────────────── */}
       {cashoutOpen && (

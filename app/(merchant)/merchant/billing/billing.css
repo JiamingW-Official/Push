@@ -48,10 +48,10 @@
 
 .bill-hero-tile__eyebrow {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -68,8 +68,8 @@
 
 .bill-hero-tile__caption {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   margin: 0;
@@ -110,10 +110,10 @@
 
 .bill-eyebrow {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0 0 8px;
   text-transform: uppercase;
 }
@@ -150,21 +150,21 @@
 
 .bill-table th {
   color: var(--ink-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .bill-table td {
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
 }
 
 .bill-table td.bill-table-id {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -173,7 +173,7 @@
 
 /* Money cells — Darky numerals, slightly larger than meta */
 .bill-table td.bill-table-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.005em;
@@ -214,7 +214,7 @@
 /* Compact button variant for inline row actions — keeps 5-button system,
    only reduces padding so it fits inside table row height. */
 .bill-row-btn {
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.04em;
   padding: 8px 16px;
 }
@@ -266,7 +266,7 @@
 
 .bill-method-meta {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.08em;

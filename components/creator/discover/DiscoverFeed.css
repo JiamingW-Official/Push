@@ -11,8 +11,8 @@
 }
 
 .discover-agent-banner__text {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -48,8 +48,8 @@
 
 .discover-chip {
   padding: 4px 12px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -76,8 +76,8 @@
 
 .discover-sort {
   padding: 4px 8px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   border: 1px solid var(--line, var(--hairline));
@@ -103,8 +103,8 @@
 }
 
 .discover-count__label {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -142,11 +142,11 @@
 }
 
 .discover-row__business {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   color: var(--accent-blue);
 }
 
@@ -162,8 +162,8 @@
 }
 
 .discover-row__meta {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -185,8 +185,8 @@
 
 .discover-row__cta {
   padding: 4px 10px;
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -230,8 +230,8 @@
 }
 
 .discover-empty__body {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   margin: 8px 0 0;
 }

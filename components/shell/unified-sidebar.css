@@ -2,7 +2,7 @@
  * Push — Unified Sidebar (vertical caption layout, fixed full-height rail)
  *
  * Replaces the per-item hover-pill flyout with iPhone-style stacked
- * captions: each icon sits above an always-visible 11px CS Genio Mono
+ * captions: each icon sits above an always-visible 11px Open Sans
  * label. No hover dependency, no horizontal flyout pill, no parking
  * margin needed. Works identically on desktop, iPad, touch.
  *
@@ -15,12 +15,12 @@
 
 :root {
   --us-w:           96px;   /* rail width */
-  --us-tile:        40px;   /* icon tile */
+  --us-tile:        32px;   /* icon tile */
   --us-icon:        22px;   /* icon glyph */
   --us-item-inset:  10px;   /* horizontal inset of pill from rail edge */
   --us-item-gap:    6px;    /* between items */
   --us-pad-x:       12px;   /* rail outer padding */
-  --us-cap-size:    11px;   /* caption font-size */
+  --us-cap-size:    14px;   /* nav label font-size — v12.1 floor */
   --us-radius:      14px;   /* iOS 26 continuous corner */
   --us-t-fast:      180ms;
   --us-t-medium:    260ms;
@@ -99,7 +99,7 @@
   position: relative;
   width: calc(100% - 2 * var(--us-item-inset));
   margin: 0 auto;
-  padding: 6px 0 8px;
+  padding: 6px 0 12px;
   border-radius: var(--us-radius);
   text-decoration: none;
   color: var(--ink-3, #61605c);
@@ -166,13 +166,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 0px;
   width: 100%;
 }
 
-/* ICON — 40×40 tile, glyph centered */
+/* ICON — 32×32 tile, glyph centered */
 .us-item__icon {
-  position: relative;
   width: var(--us-tile);
   height: var(--us-tile);
   display: flex;
@@ -192,16 +191,16 @@
   opacity: 1;
 }
 
-/* CAPTION — always visible, 11px CS Genio Mono uppercase */
+/* NAV LABEL — Open Sans lowercase, product register */
 .us-item__label {
-  font-family: var(--font-mono, 'CS Genio Mono', ui-monospace, monospace);
+  font-family: var(--font-body);
   font-size: var(--us-cap-size);
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: lowercase;
   letter-spacing: 0.02em;
   color: inherit;
   white-space: nowrap;
-  line-height: 1;
+  line-height: 1.3;
   max-width: 68px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -294,18 +293,18 @@
 
 .us-badge {
   position: absolute;
-  top: -2px;
-  right: 2px;
+  top: 4px;
+  right: 4px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
   border-radius: 999px;
   background: var(--brand-red, #c1121f);
   color: var(--snow, #ffffff);
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,6 +312,10 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
+  background: var(--accent-blue, #0085ff);
+}
+.us-badge--urgent {
+  background: var(--brand-red, #c1121f);
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -347,7 +350,7 @@
 }
 .us-avatar-circle__initial {
   font-family: var(--font-display, 'Darky', sans-serif);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--ink, #1c1814);
@@ -403,9 +406,9 @@
   .us-item__icon { width: 32px; height: 32px; opacity: 0.86; }
   .us-item__icon svg { width: 20px; height: 20px; }
   .us-item__label {
-    font-size: 9px;
+    font-size: 14px;
     max-width: 52px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
   }
   .us-item--logo { display: none; }
   .us-item.is-active::after { bottom: -1px; }

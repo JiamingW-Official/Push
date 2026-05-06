@@ -61,7 +61,7 @@
 
 .ob2-sidebar-role {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -91,7 +91,7 @@
 
 .ob2-sidebar-progress-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   color: rgba(245, 242, 236, 0.4);
   letter-spacing: 0.04em;
@@ -105,7 +105,7 @@
 }
 
 .ob2-sidebar-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 200;
   font-size: clamp(80px, 10vw, 120px);
   color: rgba(245, 242, 236, 0.08);
@@ -114,7 +114,7 @@
 }
 
 .ob2-sidebar-denom {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 200;
   font-size: clamp(40px, 5vw, 64px);
   color: rgba(245, 242, 236, 0.06);
@@ -149,7 +149,7 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -173,8 +173,8 @@
 }
 
 .ob2-progress-text {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -302,7 +302,7 @@
 }
 
 .chk-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 14px;
   color: var(--ink-4);
@@ -331,7 +331,7 @@
 
 .chk-step-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -353,7 +353,7 @@
 
 .chk-description {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
   margin-top: 4px;
@@ -363,7 +363,7 @@
 
 .chk-badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -436,8 +436,8 @@
 
 .ob2-label {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -453,7 +453,7 @@
   padding: 12px 16px;
   border: 1px solid var(--ink-4);
   border-radius: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   color: var(--ink);
   background: var(--surface-2);
@@ -485,7 +485,7 @@
 
 .ob2-input-hint {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 4px;
 }
@@ -518,14 +518,14 @@
 
 .ob2-toggle-name {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .ob2-toggle-desc {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -588,7 +588,7 @@
   border: none;
   border-radius: var(--r-lg);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -620,7 +620,7 @@
   border: 1.5px solid var(--line-strong);
   border-radius: var(--r-lg);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -646,7 +646,7 @@
   border: none;
   padding: 0;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   cursor: pointer;
@@ -677,8 +677,8 @@
   border-radius: 10px;
   background: var(--surface-2);
   cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -730,16 +730,16 @@
 
 /* platform name in mono 14px */
 .ob2-social-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   letter-spacing: 0.04em;
 }
 
 .ob2-social-status {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--brand-red);
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -796,7 +796,7 @@
 
 .ob2-invite-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -828,7 +828,7 @@
   flex: 1;
   padding: 10px 14px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface);
   border: none;
@@ -842,7 +842,7 @@
   color: #ffffff;
   border: none;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -876,7 +876,7 @@
   border-right: none;
   border-radius: var(--r-lg);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface-2);
   outline: none;
@@ -909,7 +909,7 @@
   border: none;
   padding: 0;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--accent-blue);
   cursor: pointer;
@@ -969,7 +969,7 @@
 
 .ob2-integration-name {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: 0.02em;
@@ -977,7 +977,7 @@
 
 .ob2-integration-sub {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -1005,7 +1005,7 @@
 
 .ob2-tour-eyebrow {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1026,7 +1026,7 @@
 
 .ob2-tour-desc {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(245, 242, 236, 0.65);
   line-height: 1.6;
   position: relative;
@@ -1067,7 +1067,7 @@
 }
 
 .ob2-qr-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 18px;
   color: var(--ink);
@@ -1076,7 +1076,7 @@
 
 .ob2-qr-desc {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
 }
@@ -1107,14 +1107,14 @@
 
 .ob2-link-step-title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .ob2-link-step-sub {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.45);
 }
 
@@ -1151,7 +1151,7 @@
 
 .ob2-upload-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   text-align: center;
@@ -1159,7 +1159,7 @@
 
 .ob2-upload-hint {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.35);
   text-align: center;
 }
@@ -1202,14 +1202,14 @@
 
 .ob2-avatar-title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .ob2-avatar-sub {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.45);
 }
 
@@ -1245,7 +1245,7 @@
 
 .ob2-celebrate-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1301,7 +1301,7 @@
 
 .ob2-char-count {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.35);
   text-align: right;
   margin-top: 4px;

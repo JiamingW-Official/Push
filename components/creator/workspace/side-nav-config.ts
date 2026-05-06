@@ -1,7 +1,7 @@
 export const SIDE_NAV = {
   inbox: [
     { href: "/creator/inbox", label: "All", icon: "inbox" },
-    { href: "/creator/inbox/invites", label: "Invites", icon: "mail" },
+    { href: "/creator/gigs/invites", label: "Invites", icon: "mail" },
     { href: "/creator/inbox/messages", label: "Messages", icon: "chat" },
     { href: "/creator/inbox/system", label: "System", icon: "bell" },
   ],

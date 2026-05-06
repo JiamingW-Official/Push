@@ -72,7 +72,7 @@ export default function ReferralsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto", position: "relative" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -111,7 +111,7 @@ export default function ReferralsPage() {
           >
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 18,
                 color: "rgba(255,255,255,0.55)",
                 lineHeight: 1.55,
@@ -148,7 +148,7 @@ export default function ReferralsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -195,7 +195,7 @@ export default function ReferralsPage() {
                 </h2>
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 18,
                     color: "var(--ink-3)",
                     lineHeight: 1.55,
@@ -223,7 +223,7 @@ export default function ReferralsPage() {
                   <div>
                     <p
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         fontWeight: 700,
                         letterSpacing: "0.12em",
@@ -278,7 +278,7 @@ export default function ReferralsPage() {
                     <div>
                       <div
                         style={{
-                          fontFamily: "var(--font-mono)",
+                          fontFamily: "var(--font-display)",
                           fontSize: 12,
                           fontWeight: 700,
                           color: "var(--ink-4)",
@@ -291,7 +291,7 @@ export default function ReferralsPage() {
                       </div>
                       <div
                         style={{
-                          fontFamily: "var(--font-mono)",
+                          fontFamily: "var(--font-display)",
                           fontSize: 12,
                           color: "var(--ink-4)",
                         }}
@@ -330,7 +330,7 @@ export default function ReferralsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -404,7 +404,7 @@ export default function ReferralsPage() {
                 {/* body */}
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 18,
                     color: "var(--ink-3)",
                     lineHeight: 1.55,
@@ -445,7 +445,7 @@ export default function ReferralsPage() {
             <div>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -472,7 +472,7 @@ export default function ReferralsPage() {
             </div>
             <span
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 color: "var(--ink-4)",
                 letterSpacing: "0.06em",
@@ -506,7 +506,7 @@ export default function ReferralsPage() {
                 <span
                   key={h}
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: "0.12em",
@@ -559,7 +559,7 @@ export default function ReferralsPage() {
                 </span>
                 <span
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 16,
                     color: "var(--ink-4)",
                     letterSpacing: "0.02em",
@@ -569,7 +569,7 @@ export default function ReferralsPage() {
                 </span>
                 <span
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 16,
                     fontWeight: 700,
                     color: "var(--ink)",
@@ -584,7 +584,7 @@ export default function ReferralsPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               color: "var(--ink-4)",
               marginTop: 16,
@@ -663,7 +663,7 @@ export default function ReferralsPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",

@@ -39,7 +39,7 @@
 
 .pl-sort-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -54,7 +54,7 @@
   height: 24px;
   padding: 0 12px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -121,7 +121,7 @@
 
 .pl-focus-cap {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -137,7 +137,7 @@
 .pl-focus-note {
   margin: 12px 0 0;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.04em;
   color: var(--ink-4);
 }
@@ -202,7 +202,7 @@
 .pl-col-eyebrow {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -212,7 +212,7 @@
 .pl-col-caption {
   margin: 2px 0 0;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
@@ -225,7 +225,7 @@
   height: 24px;
   padding: 0 8px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-3);
@@ -273,7 +273,7 @@
 
 .pl-col-empty-title {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -283,14 +283,14 @@
 .pl-col-empty-hint {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
 }
 
 .pl-col-empty-cta {
   margin-top: 8px;
-  font-size: 11px;
+  font-size: 14px;
   padding: 8px 16px;
   border-radius: var(--r-sm);
 }
@@ -389,8 +389,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0;
   color: var(--snow);
@@ -405,7 +405,7 @@
 
 .pl-card-merchant {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -419,7 +419,7 @@
 .pl-card-name {
   margin: 4px 0 0;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.4;
   white-space: nowrap;
@@ -428,7 +428,7 @@
 }
 
 .pl-card-earn {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -453,7 +453,7 @@
 
 .pl-card-timing {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -471,12 +471,12 @@
 
 .pl-card-dot {
   color: var(--ink-5);
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .pl-card-status {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
@@ -520,7 +520,7 @@
 
 .pl-card-progress-num {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -553,7 +553,7 @@
 .pl-expand-label {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -563,7 +563,7 @@
 .pl-expand-text {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
 }
@@ -573,7 +573,7 @@
   flex-wrap: wrap;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -588,7 +588,7 @@
 
 /* button overrides — adopt 5-variant defaults from globals */
 .pl-action {
-  font-size: 11px;
+  font-size: 14px;
   padding: 8px 16px;
   border-radius: var(--r-sm);
   white-space: nowrap;
@@ -599,7 +599,7 @@
   border: none;
   padding: 8px 4px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -617,7 +617,7 @@
 
 .pl-action-status {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   font-style: italic;
   padding: 8px 0;
@@ -682,6 +682,6 @@
   .pl-card-logo {
     width: 28px;
     height: 28px;
-    font-size: 10px;
+    font-size: 14px;
   }
 }

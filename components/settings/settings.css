@@ -37,7 +37,7 @@
   border: 1px solid var(--hairline-2);
   border-radius: 12px;
   padding: 10px 14px;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
@@ -76,8 +76,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -127,8 +127,8 @@
   border: 0;
   background: transparent;
   outline: none;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   padding: 0;
 }
@@ -157,10 +157,10 @@
 
 .settings-side__group { display: flex; flex-direction: column; gap: 4px; }
 .settings-side__group-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 4px 0 6px 12px;
@@ -178,7 +178,7 @@
   border: 0;
   background: transparent;
   border-radius: 10px;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
   color: var(--ink-3);
@@ -228,8 +228,8 @@
 }
 
 .settings-side__empty {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   padding: 20px 14px;
   text-align: center;
@@ -278,8 +278,8 @@
   margin: 0;
 }
 .settings-page-heading__sub {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.005em;
 }
@@ -374,7 +374,7 @@
   border-bottom: 1px solid var(--hairline);
 }
 .settings-section__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 700;
   color: var(--ink);
@@ -382,7 +382,7 @@
   margin: 0;
 }
 .settings-section__desc {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12.5px;
   color: var(--ink-4);
   line-height: 1.5;
@@ -418,10 +418,10 @@
     0 10px 30px rgba(0, 0, 0, 0.20),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   color: var(--snow);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 .settings-save-bar__status {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--snow);
@@ -437,7 +437,7 @@
 .settings-save-bar .btn-primary {
   height: 32px;
   padding: 0 14px;
-  font-size: 12px;
+  font-size: 14px;
   border-radius: 999px;
 }
 .settings-save-bar .btn-ghost {
@@ -546,7 +546,7 @@
 .channel-chip {
   padding: 3px 10px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   border: 1px solid var(--line);
@@ -616,7 +616,7 @@
 }
 
 .input-row__counter {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   text-align: right;
 }
@@ -626,7 +626,7 @@
 .push-select {
   width: 100%;
   padding: 11px 14px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 13.5px;
   color: var(--ink);
   background: #ffffff;
@@ -793,7 +793,7 @@
 .team-table th {
   text-align: left;
   padding: var(--space-1) var(--space-2);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -825,7 +825,7 @@
 .role-badge {
   display: inline-block;
   padding: 2px 8px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -895,7 +895,7 @@
 .scope-chip {
   display: inline-block;
   padding: 2px 8px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   border: 1px solid var(--accent-blue);
@@ -1075,7 +1075,7 @@
   padding: 3px 8px;
   background: var(--ink);
   color: var(--surface-2);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -1206,7 +1206,7 @@
   margin: 0 0 8px;
 }
 
-/* Body — CS Genio Mono 18px, ink-3 */
+/* Body — Open Sans 18px, ink-3 */
 .settings-section-heading__sub {
   font-family: var(--font-body);
   font-size: 18px;
@@ -1254,7 +1254,7 @@
   margin: 0 0 12px;
 }
 
-/* Body description — CS Genio Mono 18px ink-3 */
+/* Body description — Open Sans 18px ink-3 */
 .settings-modal-v11__desc {
   font-family: var(--font-body);
   font-size: 18px;
@@ -1290,7 +1290,7 @@
 /* Label — eyebrow 12px 700 uppercase 0.12em */
 .settings-modal-v11__label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1394,7 +1394,7 @@
   margin: 0 0 8px;
 }
 
-/* Description — CS Genio Mono 18px ink-3 */
+/* Description — Open Sans 18px ink-3 */
 .settings-billing-desc {
   font-family: var(--font-body);
   font-size: 18px;
@@ -1428,7 +1428,7 @@
 /* Date / meta cell — caption style */
 .settings-table__date {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-4);
 }
@@ -1465,7 +1465,7 @@
 /* Warning eyebrow — 12px 700 brand-red uppercase */
 .settings-key-revealed__warning {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--brand-red);
   display: block;
@@ -1500,7 +1500,7 @@
 /* Ghost danger: transparent bg + brand-red border + brand-red text */
 .settings-revoke-btn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;

@@ -76,7 +76,7 @@ export default function NeighborhoodDetailMap({
           <Popup closeButton={false}>
             <div
               style={{
-                fontFamily: "var(--font-body, monospace)",
+                fontFamily: "var(--font-body)",
                 minWidth: 160,
                 padding: "4px 0",
               }}

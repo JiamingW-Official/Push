@@ -110,8 +110,8 @@
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.35);
   color: var(--surface-2);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -142,8 +142,8 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -182,8 +182,8 @@
 }
 
 .cdp-merchant {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -191,8 +191,8 @@
 }
 
 .cdp-neighborhood {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   letter-spacing: 0.02em;
 }
@@ -243,8 +243,8 @@
 }
 
 .cdp-stat-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -260,8 +260,8 @@
 .cdp-progress-labels {
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -296,8 +296,8 @@
 }
 
 .cdp-section-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -306,7 +306,7 @@
 }
 
 .cdp-desc {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.75;
   color: var(--graphite);
@@ -337,8 +337,8 @@
 }
 
 .cdp-check-text {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink);
 }
@@ -385,15 +385,15 @@
 }
 
 .cdp-merchant-addr {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.4;
 }
 
 .cdp-merchant-cat {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -414,8 +414,8 @@
 }
 
 .cdp-queue-label {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -432,8 +432,8 @@
 }
 
 .cdp-queue-sub {
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.5;
   margin-top: 4px;
@@ -460,8 +460,8 @@
   align-items: center;
   justify-content: center;
   padding: 13px 20px;
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -556,8 +556,8 @@
   padding: 12px 24px;
   background: var(--ink);
   color: var(--surface-2);
-  font-family: var(--font-body, "CS Genio Mono", monospace);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   border-radius: var(--r-2xl);

@@ -17,7 +17,7 @@ export default function SubscribeForm() {
     return (
       <p
         style={{
-          fontFamily: "'CSGenioMono', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: "13px",
           color: "rgba(255,255,255,0.7)",
           margin: 0,

@@ -35,8 +35,8 @@
    Local tweaks only when needed. */
 
 .earn-section-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -72,10 +72,10 @@
 .earn-hero > * { position: relative; z-index: 1; }
 
 .earn-hero-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
   margin: 0 0 16px;
@@ -102,7 +102,7 @@
 
 .earn-hero-amount__unit {
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.45);
@@ -115,8 +115,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   padding: 6px 12px;
   border-radius: 8px;
@@ -135,7 +135,7 @@
 }
 
 .earn-hero-delta-arrow {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1;
 }
 
@@ -155,8 +155,8 @@
 }
 
 .earn-hero-substat-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -208,10 +208,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 8px;
@@ -245,7 +245,7 @@
 }
 
 .earn-cashout-amount__unit {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
@@ -255,8 +255,8 @@
 }
 
 .earn-cashout-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 8px 0 0;
 }
@@ -266,8 +266,8 @@
 }
 
 .earn-cashout-hint {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 12px 0 0;
 }
@@ -318,8 +318,8 @@
 .earn-balance-dot--paid       { background: var(--ink-5); }
 
 .earn-balance-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -347,8 +347,8 @@
 }
 
 .earn-balance-sublabel {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
   line-height: 1.4;
@@ -394,8 +394,8 @@
 
 .earn-campaign-merchant {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -405,7 +405,7 @@
 
 .earn-campaign-name {
   display: block;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -414,7 +414,7 @@
 }
 
 .earn-campaign-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.025em;
@@ -472,8 +472,8 @@
 }
 
 .earn-milestone-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -504,7 +504,7 @@
 }
 
 .earn-upcoming-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 32px;
   font-weight: 900;
   color: var(--ink);
@@ -523,8 +523,8 @@
 }
 
 .earn-upcoming-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
 }
@@ -540,8 +540,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-3);
   background: var(--surface-3);
@@ -581,10 +581,10 @@
 }
 
 .earn-txn-head-cell {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
   text-transform: uppercase;
 }
@@ -611,8 +611,8 @@
 }
 
 .earn-txn-date {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -624,7 +624,7 @@
 }
 
 .earn-txn-campaign {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -634,13 +634,13 @@
 }
 
 .earn-txn-merchant {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .earn-txn-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -658,8 +658,8 @@
 }
 
 .earn-txn-ref {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   text-align: right;
 }
@@ -667,7 +667,7 @@
 .earn-txn-empty {
   padding: 48px 24px;
   text-align: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-4);
 }
@@ -681,8 +681,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -754,10 +754,10 @@
 }
 
 .earn-modal-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 8px;
@@ -775,7 +775,7 @@
 }
 
 .earn-modal-body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
@@ -783,8 +783,8 @@
 }
 
 .earn-modal-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -831,15 +831,15 @@
 }
 
 .earn-method-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .earn-method-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -947,7 +947,294 @@
   }
 
   .earn-milestone-label {
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 0.02em;
   }
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   v12.2 ADDITIONS — Tier system (§ 20.1) · Pulse Strip (§ 20.6)
+   · Liquid Glass Anchored CTA (§ 20.7) · Merchant Identity (§ 20.3)
+   · Outcome Ladder mini (§ 20.5)
+   Authority: Design.md § 20 Product UI Tier System
+   ──────────────────────────────────────────────────────────── */
+
+/* ── ☆ TERTIARY · Pulse Strip — earnings ambient metrics ─── */
+
+.earn-pulse-strip {
+  /* Tier ☆ — no shadow, 1px hairline border, surface white over surface-2 page bg */
+  background: var(--snow);
+  border: 1px solid rgba(10, 10, 10, 0.06);
+  border-radius: 12px;
+  padding: 14px 8px;
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 0 24px;
+}
+.earn-pulse-strip::-webkit-scrollbar { display: none; }
+
+.earn-pulse-strip__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  padding: 0 18px 0 14px;
+  border-right: 1px dashed rgba(10, 10, 10, 0.08);
+  white-space: nowrap;
+}
+.earn-pulse-strip__title__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+
+.earn-pulse-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0 20px;
+  border-right: 1px dashed rgba(10, 10, 10, 0.08);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.earn-pulse-stat:last-child { border-right: 0; }
+.earn-pulse-stat:hover { transform: translate(2px, 0); }
+
+.earn-pulse-stat__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-5);
+  align-self: center;
+  flex-shrink: 0;
+}
+.earn-pulse-stat--month     .earn-pulse-stat__dot { background: var(--brand-red); }
+.earn-pulse-stat--lifetime  .earn-pulse-stat__dot { background: var(--champagne); }
+.earn-pulse-stat--cleared   .earn-pulse-stat__dot { background: var(--ink); }
+.earn-pulse-stat--pending   .earn-pulse-stat__dot { background: var(--accent-blue, #0085ff); }
+.earn-pulse-stat--milestone .earn-pulse-stat__dot { background: var(--editorial-pink, #e8447d); }
+
+.earn-pulse-stat__label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+}
+.earn-pulse-stat__value {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.earn-pulse-stat__delta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-4);
+}
+.earn-pulse-stat__delta--up    { color: var(--champagne, #bfa170); }
+.earn-pulse-stat__delta--alert { color: var(--editorial-pink, #e8447d); }
+
+
+/* ── ✦ LIQUID GLASS · Anchored Cashout CTA (fixed bottom-right) ─── */
+
+.earn-glass-cashout {
+  /* § 20.7 use case 4 — Anchored CTA Pop */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 16px 48px rgba(10, 10, 10, 0.16);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-width: 1px;
+  border-style: solid;
+}
+.earn-glass-cashout:hover { transform: translate(2px, 2px); }
+.earn-glass-cashout:active { transform: translate(3px, 3px) scale(0.98); }
+.earn-glass-cashout:disabled,
+.earn-glass-cashout[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.earn-glass-cashout__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--champagne, #bfa170);
+  box-shadow: 0 0 0 3px rgba(191, 161, 112, 0.22);
+  animation: earn-pulse-soft 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes earn-pulse-soft {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+.earn-glass-cashout__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.2;
+  text-align: left;
+}
+.earn-glass-cashout__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+}
+.earn-glass-cashout__amt {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.earn-glass-cashout__cta {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ink);
+  color: var(--snow);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-left: 4px;
+}
+.earn-glass-cashout--disabled .earn-glass-cashout__cta {
+  background: var(--ink-5);
+}
+
+
+/* ── 📐 STRUCTURED · Merchant Identity Palette accent (§ 20.3) ─── */
+
+.earn-mc-accent {
+  position: relative;
+  overflow: hidden;
+}
+.earn-mc-accent::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--ink-3);
+}
+.earn-mc-accent--aubergine::before  { background: #5b3a4f; }
+.earn-mc-accent--terracotta::before { background: #b8775a; }
+.earn-mc-accent--sage::before       { background: #7a8a6e; }
+.earn-mc-accent--clay::before       { background: #b8a99a; }
+.earn-mc-accent--cobalt::before     { background: #2d4a6b; }
+.earn-mc-accent--rose::before       { background: #c98a8a; }
+.earn-mc-accent--mustard::before    { background: #c19a3a; }
+.earn-mc-accent--charcoal::before   { background: #3a3835; }
+
+
+/* ── 📐 STRUCTURED · Outcome Ladder mini (§ 20.5) ─── */
+
+.earn-ladder-mini {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 16px;
+}
+.earn-ladder-mini__rung {
+  border-radius: 8px;
+  padding: 10px 12px 12px;
+  border: 1px solid transparent;
+}
+.earn-ladder-mini__rung--gtd {
+  background: var(--ink);
+  color: var(--snow);
+  border-color: var(--ink);
+}
+.earn-ladder-mini__rung--tgt {
+  background: rgba(191, 161, 112, 0.10);
+  border-color: rgba(191, 161, 112, 0.32);
+}
+.earn-ladder-mini__rung--str {
+  background: rgba(0, 133, 255, 0.07);
+  border-color: rgba(0, 133, 255, 0.32);
+}
+.earn-ladder-mini__amount {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 3px;
+}
+.earn-ladder-mini__rung--gtd .earn-ladder-mini__amount { color: var(--snow); }
+.earn-ladder-mini__rung--tgt .earn-ladder-mini__amount { color: var(--champagne, #bfa170); }
+.earn-ladder-mini__rung--str .earn-ladder-mini__amount { color: var(--accent-blue, #0085ff); }
+.earn-ladder-mini__tier {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.earn-ladder-mini__rung--gtd .earn-ladder-mini__tier { color: var(--ink-6); }
+
+
+/* ── Responsive · v12.2 additions ──────────────────────────── */
+
+@media (max-width: 768px) {
+  .earn-glass-cashout {
+    left: 24px;
+    right: 24px;
+  }
+  .earn-glass-cashout__text { flex: 1; }
+  .earn-ladder-mini {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .earn-glass-cashout {
+    background: var(--snow);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .earn-glass-cashout__dot { animation: none; }
+  .earn-glass-cashout, .earn-pulse-stat { transition: none; }
 }

@@ -72,8 +72,8 @@
 }
 
 .blog-hero__badge-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -90,8 +90,8 @@
 }
 
 .blog-hero__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -112,7 +112,7 @@
 }
 
 .blog-hero__sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.5);
@@ -161,8 +161,8 @@
 }
 
 .blog-stats-strip__cap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -188,8 +188,8 @@
 }
 
 .blog-filter__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -215,8 +215,8 @@
 
 /* btn-pill spec: surface-3 bg, ink text, pill radius, 8×18 padding */
 .blog-pill {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -305,8 +305,8 @@
   top: 24px;
   left: 24px;
   z-index: 2;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -326,8 +326,8 @@
 }
 
 .blog-featured-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -337,7 +337,7 @@
 
 /* Photo Card Title: Darky 20px 700 snow (§8.7) */
 .blog-featured-card__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   line-height: 1.25;
@@ -349,8 +349,8 @@
 
 /* Photo Card Metadata: Mono 12px 500 rgba(255,255,255,0.85) */
 .blog-featured-card__meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -385,8 +385,8 @@
 }
 
 .blog-perspectives__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -406,8 +406,8 @@
 }
 
 .blog-perspectives__body {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.5);
   max-width: 38ch;
@@ -437,8 +437,8 @@
 }
 
 .blog-cat-row__num {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.25);
   letter-spacing: 0.06em;
@@ -447,7 +447,7 @@
 }
 
 .blog-cat-row__name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 18px;
   color: var(--snow);
@@ -455,8 +455,8 @@
 }
 
 .blog-cat-row__count {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -479,8 +479,8 @@
 }
 
 .blog-grid-section__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -557,8 +557,8 @@
 }
 
 .photo-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -568,7 +568,7 @@
 
 /* Photo Card Title: Darky 20px 700 snow */
 .photo-card__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   line-height: 1.25;
@@ -583,8 +583,8 @@
 
 /* Photo Card Metadata: Mono 12px 500 uppercase 0.04em */
 .photo-card__meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;

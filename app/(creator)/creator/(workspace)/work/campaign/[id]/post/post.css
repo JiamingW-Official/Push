@@ -9,7 +9,7 @@
 .post-page {
   min-height: 100vh;
   background: var(--surface);
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  font-family: var(--font-body);
   color: var(--ink);
   padding-bottom: 80px;
 }
@@ -23,7 +23,7 @@
   padding: 16px 32px;
   border-bottom: 1px solid var(--hairline);
   background: var(--surface-2);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -65,7 +65,7 @@
 }
 
 .post-eyebrow {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -109,7 +109,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--snow);
@@ -135,7 +135,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -154,7 +154,7 @@
 }
 
 .post-summary-brief {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.5;
   margin: 0;
@@ -198,8 +198,8 @@
 }
 
 .post-section-num {
-  font-family: "CS Genio Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--graphite);
@@ -217,7 +217,7 @@
 }
 
 .post-section-hint {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   letter-spacing: 0.02em;
 }
@@ -297,7 +297,7 @@
 }
 
 .post-dropzone-formats {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
   letter-spacing: 0.04em;
   margin: 0;
@@ -307,7 +307,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   font-weight: 600;
   padding: 16px 24px;
@@ -321,7 +321,7 @@
 /* ── Error ──────────────────────────────────────────────────── */
 
 .post-error {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--brand-red);
   font-weight: 600;
   margin: 8px 0 0;
@@ -392,7 +392,7 @@
 }
 
 .post-thumb-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 2px;
@@ -402,7 +402,7 @@
 }
 
 .post-thumb-size {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   margin: 0;
 }
@@ -434,7 +434,7 @@
   width: 100%;
   min-height: 120px;
   padding: 14px 16px;
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   background: var(--surface-2);
@@ -456,7 +456,7 @@
 }
 
 .post-caption-count {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   text-align: right;
   margin: 4px 0 0;
@@ -482,8 +482,8 @@
   background: var(--surface-3);
   border: 1px solid var(--hairline);
   color: var(--ink);
-  font-family: "CS Genio Mono", monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: 5px 12px;
@@ -508,7 +508,7 @@
 
 /* Attribution note */
 .post-attribution-note {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
   display: flex;
   align-items: center;
@@ -630,7 +630,7 @@
 }
 
 .post-submit-oracle {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
   display: flex;
@@ -650,7 +650,7 @@
 }
 
 .post-submit-earn {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-5);
   margin: 0;
 }
@@ -666,7 +666,7 @@
   color: var(--snow);
   border: none;
   border-radius: var(--r-sm);
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -769,7 +769,7 @@
 }
 
 .post-verified-sub {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
   margin: 0;
@@ -777,7 +777,7 @@
 
 .post-verified-back {
   color: var(--champagne);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -959,7 +959,7 @@
 
 .post-upload-formats {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
   letter-spacing: 0.04em;
@@ -990,7 +990,7 @@
 
 .post-attr-code {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--champagne-deep, #8b6914);
   background: rgba(191, 161, 112, 0.12);
@@ -1066,7 +1066,7 @@
 
 .post-success-desc {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0;
   line-height: 1.5;
@@ -1099,7 +1099,7 @@ input:focus-visible {
 
 .post-breadcrumb-link {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1114,12 +1114,12 @@ input:focus-visible {
 
 .post-breadcrumb-sep {
   color: var(--hairline);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .post-breadcrumb-current {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1211,20 +1211,20 @@ input:focus-visible {
 
 .post-header-earn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--accent-blue);
 }
 
 .post-header-deadline {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .post-header-brief {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin-top: 8px;
   line-height: 1.5;
@@ -1233,7 +1233,7 @@ input:focus-visible {
 /* Category badge */
 .post-header-category {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -1254,7 +1254,7 @@ input:focus-visible {
 /* Section num badge */
 .post-step-num {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   background: var(--ink);
@@ -1272,7 +1272,7 @@ input:focus-visible {
 
 .post-step-title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1282,7 +1282,7 @@ input:focus-visible {
 
 .post-step-hint {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-left: auto;
 }
@@ -1325,14 +1325,14 @@ input:focus-visible {
 
 .post-caption-count-normal {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 0;
 }
 
 .post-caption-count-max {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--brand-red);
   margin: 0;
@@ -1369,7 +1369,7 @@ input:focus-visible {
 
 .post-hashtag-note-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0;
   line-height: 1.5;
@@ -1436,7 +1436,7 @@ input:focus-visible {
 
 .post-custom-checkbox-mark {
   color: var(--snow);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
 }
@@ -1496,7 +1496,7 @@ input:focus-visible {
   align-items: center;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0;
 }
@@ -1517,7 +1517,7 @@ input:focus-visible {
 
 .post-cta-earn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0;
 }
@@ -1609,7 +1609,7 @@ input:focus-visible {
 
 .post-thumb-file-name {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   margin: 0;
@@ -1620,7 +1620,7 @@ input:focus-visible {
 
 .post-thumb-file-size {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 2px 0 0;
 }
@@ -1633,7 +1633,7 @@ input:focus-visible {
   background: var(--surface);
   color: var(--ink-4);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1664,7 +1664,7 @@ input:focus-visible {
 /* Error message */
 .post-drag-error {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--brand-red);
   margin-top: 8px;
   padding: 8px 12px;
@@ -1689,7 +1689,7 @@ input:focus-visible {
 
 .post-upload-add-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 

@@ -379,7 +379,7 @@ export default function BlogPage() {
             </h2>
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 16,
                 lineHeight: 1.5,
                 color: "var(--ink)",

@@ -23,7 +23,7 @@ export default function CalendarError({
         alignItems: "center",
         justifyContent: "center",
         padding: "48px 24px",
-        fontFamily: "'CS Genio Mono', monospace",
+        fontFamily: "var(--font-body)",
       }}
     >
       <div style={{ maxWidth: 480, width: "100%" }}>
@@ -89,7 +89,7 @@ export default function CalendarError({
               color: "var(--snow)",
               border: "none",
               borderRadius: "var(--r-sm)",
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-body)",
               fontSize: 13,
               fontWeight: 600,
               letterSpacing: "0.04em",
@@ -109,7 +109,7 @@ export default function CalendarError({
               color: "var(--ink)",
               border: "1px solid var(--ink)",
               borderRadius: "var(--r-sm)",
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-body)",
               fontSize: 13,
               fontWeight: 600,
               letterSpacing: "0.04em",

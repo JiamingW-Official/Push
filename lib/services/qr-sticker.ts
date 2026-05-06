@@ -7,11 +7,11 @@
  * Design alignment (Design.md):
  *   - Background uses Pearl Stone #f5f2ec (light surface color).
  *   - Headline "SCAN TO CLAIM" in Flag Red #c1121f, Darky-substitute (Helvetica-Bold).
- *   - Body / attribution in CS Genio Mono-substitute (Courier).
+ *   - Body / attribution in Open Sans-substitute (Helvetica).
  *   - Square frames, zero border-radius, 8px-grid inset.
  *   - QR code uses error-correction level H (handles print scratches).
  *
- * Real Darky / Genio Mono TTFs are not embedded yet — swap StandardFonts
+ * Real Darky / Open Sans TTFs are not embedded yet — swap StandardFonts
  * for pdf.embedFont(readFileSync('public/fonts/Darky.ttf')) when the
  * licensed webfonts are available server-side.
  */
@@ -99,8 +99,8 @@ export async function generateStickerPDF({
 
   // Darky-substitute (Helvetica-Bold) for display text
   const darkyFont = await pdf.embedFont(StandardFonts.HelveticaBold);
-  // CS Genio Mono-substitute (Courier) for body / meta
-  const monoFont = await pdf.embedFont(StandardFonts.Courier);
+  // Open Sans-substitute (Helvetica) for body / meta
+  const monoFont = await pdf.embedFont(StandardFonts.Helvetica);
 
   // Headline "SCAN TO CLAIM" centered above the QR
   const headline = "SCAN TO CLAIM";
@@ -129,7 +129,7 @@ export async function generateStickerPDF({
     color: COLOR_DEEP_SPACE,
   });
 
-  // Business name (Courier / mono)
+  // Business name (Helvetica / sans-serif)
   const bizSize = dims.w * 0.025;
   const bizW = monoFont.widthOfTextAtSize(businessName, bizSize);
   page.drawText(businessName, {

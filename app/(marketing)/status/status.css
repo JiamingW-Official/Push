@@ -3,7 +3,7 @@
    Authority: Design.md
    Colors: Flag Red #c1121f | Molten Lava var(--brand-red) | Pearl Stone var(--surface-2)
            Deep Space Blue var(--editorial-blue) | Steel Blue var(--accent-blue) | Champagne Gold var(--champagne)
-   Fonts: Darky (headings) | CS Genio Mono (body/UI)
+   Fonts: Darky (headings) | Open Sans (body/UI)
    Shape: border-radius: 0 everywhere (exception: status dots 50%)
    ============================================================ */
 
@@ -24,7 +24,7 @@
 .status-page {
   background: var(--surface, var(--surface-2));
   min-height: 100vh;
-  font-family: "CSGenioMono", "SF Mono", "Fira Code", monospace;
+  font-family: var(--font-body);
   color: var(--dark, var(--editorial-blue));
 }
 
@@ -59,8 +59,8 @@
 }
 
 .status-eyebrow {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -101,8 +101,8 @@
 }
 
 .status-hero-meta {
-  font-family: "CSGenioMono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
   display: flex;
@@ -164,8 +164,8 @@
 }
 
 .status-section-num {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -224,8 +224,8 @@
 }
 
 .service-name {
-  font-family: "CSGenioMono", monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -236,8 +236,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: "CSGenioMono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -288,8 +288,8 @@
 }
 
 .service-uptime-label {
-  font-family: "CSGenioMono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -342,8 +342,8 @@
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
-  font-family: "CSGenioMono", monospace;
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -358,7 +358,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: "CSGenioMono", monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: rgba(0, 48, 73, 0.6);
 }
@@ -421,8 +421,8 @@
 }
 
 .incident-meta-item {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(0, 48, 73, 0.5);
@@ -438,8 +438,8 @@
 }
 
 .incident-service-tag {
-  font-family: "CSGenioMono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -451,8 +451,8 @@
 }
 
 .incident-severity-badge {
-  font-family: "CSGenioMono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -507,8 +507,8 @@
 }
 
 .timeline-time {
-  font-family: "CSGenioMono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(0, 48, 73, 0.45);
@@ -550,8 +550,8 @@
 }
 
 .timeline-phase {
-  font-family: "CSGenioMono", monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -572,8 +572,8 @@
 }
 
 .timeline-message {
-  font-family: "CSGenioMono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.7);
   line-height: 1.55;
   margin: 0;
@@ -591,15 +591,15 @@
 }
 
 .incident-duration {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: rgba(0, 48, 73, 0.5);
 }
 
 .incident-postmortem-link {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -650,8 +650,8 @@
 }
 
 .perf-metric-label {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -684,8 +684,8 @@
 }
 
 .perf-metric-trend {
-  font-family: "CSGenioMono", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -735,8 +735,8 @@
 }
 
 .subscribe-sub {
-  font-family: "CSGenioMono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
@@ -759,8 +759,8 @@
   flex: 1;
   height: 48px;
   padding: 0 16px;
-  font-family: "CSGenioMono", monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-right: none;
@@ -782,8 +782,8 @@
 .subscribe-btn {
   height: 48px;
   padding: 0 24px;
-  font-family: "CSGenioMono", monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

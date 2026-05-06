@@ -1,6 +1,6 @@
 /* ============================================================
    Admin CreatorTable — funnel row listing
-   Authority: Design.md (sharp corners, CSGenioMono)
+   Authority: Design.md (sharp corners, Open Sans)
    ============================================================ */
 
 .wrapper {
@@ -87,7 +87,7 @@
   border: 1px solid currentColor;
   border-radius: var(--r-sm);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

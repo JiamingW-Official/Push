@@ -1,7 +1,7 @@
 /* =============================================================
    Push Creator — Campaign Detail Page — campaign.css
    Design system v11: Product register, candy-panel, 8px grid
-   Fonts: var(--font-display) Darky, var(--font-body) CS Genio Mono
+   Fonts: var(--font-display) Darky, var(--font-body) Open Sans
    ============================================================= */
 
 /* ── 1. PAGE SHELL ─────────────────────────────────────────── */
@@ -31,7 +31,7 @@ body:has(.campaign-page) .dh-shell {
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -65,7 +65,7 @@ body:has(.campaign-page) .dh-shell {
   align-items: center;
   padding: 4px 10px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -90,7 +90,7 @@ body:has(.campaign-page) .dh-shell {
   align-items: center;
   padding: 4px 10px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -123,7 +123,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-business-addr {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0 0 24px;
 }
@@ -174,7 +174,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-stat-sub {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-3);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -305,7 +305,7 @@ body:has(.campaign-page) .dh-shell {
 /* Step label */
 .cp-milestone-label {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -397,7 +397,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-req-number {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-3);
   opacity: 0.5;
@@ -424,7 +424,7 @@ body:has(.campaign-page) .dh-shell {
   padding: 8px 0;
   border-bottom: 1px solid var(--hairline);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .campaign-biz-row:first-child {
@@ -438,7 +438,7 @@ body:has(.campaign-page) .dh-shell {
   color: var(--ink-3);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-size: 10px;
+  font-size: 14px;
   padding-top: 2px;
 }
 
@@ -460,7 +460,7 @@ body:has(.campaign-page) .dh-shell {
   border-radius: 8px;
   padding: 0 16px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -491,7 +491,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-qr-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--ink-3);
   margin: 0;
@@ -532,7 +532,7 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .cp-payout-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 48px;
   font-weight: 900;
   color: var(--ink);
@@ -546,7 +546,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-payout-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -555,7 +555,7 @@ body:has(.campaign-page) .dh-shell {
   align-items: center;
   gap: 4px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
   margin-bottom: 16px;
 }
@@ -595,7 +595,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-sidebar-row-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -605,7 +605,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-sidebar-row-value {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   text-align: right;
@@ -618,7 +618,7 @@ body:has(.campaign-page) .dh-shell {
   gap: 8px;
   padding: 12px 0;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink);
 }
@@ -640,7 +640,7 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .cp-elig-text {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -663,7 +663,7 @@ body:has(.campaign-page) .dh-shell {
   width: 100%;
   height: 44px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -683,7 +683,7 @@ body:has(.campaign-page) .dh-shell {
   width: 100%;
   height: 44px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -698,7 +698,7 @@ body:has(.campaign-page) .dh-shell {
 /* ── 17. COMMISSION NOTE ───────────────────────────────────── */
 .cp-commission-note {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
   text-align: center;
@@ -926,8 +926,8 @@ body:has(.campaign-page) .dh-shell {
   border-radius: var(--r-pill);
   background: rgba(0, 0, 0, 0.55);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   z-index: 2;
@@ -997,8 +997,8 @@ body:has(.campaign-page) .dh-shell {
 .campaign-page .cp-status-badge,
 .campaign-page .cp-category-badge {
   padding: 6px 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   border-radius: var(--r-pill);
@@ -1017,7 +1017,7 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .campaign-page .cp-business-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
@@ -1025,8 +1025,8 @@ body:has(.campaign-page) .dh-shell {
   letter-spacing: -0.005em;
 }
 .campaign-page .cp-business-addr {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-3);
   margin: 0 0 32px;
@@ -1060,10 +1060,10 @@ body:has(.campaign-page) .dh-shell {
   padding-left: 24px;
 }
 .campaign-page .cp-stat-card .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 4px;
@@ -1083,8 +1083,8 @@ body:has(.campaign-page) .dh-shell {
   color: var(--ink);
 }
 .campaign-page .cp-stat-sub {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-3);
   margin-top: 4px;
@@ -1114,10 +1114,10 @@ body:has(.campaign-page) .dh-shell {
 
 /* Section eyebrow — accent rule + uppercase */
 .campaign-page .cp-section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 20px;
@@ -1158,7 +1158,7 @@ body:has(.campaign-page) .dh-shell {
   gap: 16px;
   padding: 20px 0;
   align-items: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
@@ -1174,8 +1174,8 @@ body:has(.campaign-page) .dh-shell {
   border-top: 1px solid var(--hairline);
 }
 .campaign-page .cp-req-number {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   opacity: 1;
@@ -1184,8 +1184,8 @@ body:has(.campaign-page) .dh-shell {
   letter-spacing: 0.04em;
 }
 .campaign-page .cp-req-text {
-  font-family: var(--font-display);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   font-weight: 600;
   color: var(--ink);
   letter-spacing: -0.005em;
@@ -1211,14 +1211,14 @@ body:has(.campaign-page) .dh-shell {
   align-items: baseline;
 }
 .campaign-page .campaign-biz-row dt {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.10em;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
   width: 96px;
 }
 .campaign-page .campaign-biz-row dd {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -1226,7 +1226,7 @@ body:has(.campaign-page) .dh-shell {
 }
 .campaign-page .cp-map-placeholder {
   height: 64px;
-  font-size: 12px;
+  font-size: 14px;
   border-radius: var(--r-md);
 }
 
@@ -1272,7 +1272,7 @@ body:has(.campaign-page) .dh-shell {
   margin-bottom: 6px;
 }
 .campaign-page .cp-payout-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(48px, 5vw, 64px);
   font-weight: 800;
   letter-spacing: -0.045em;
@@ -1283,21 +1283,21 @@ body:has(.campaign-page) .dh-shell {
   color: var(--accent-blue);
 }
 .campaign-page .cp-payout-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   letter-spacing: 0.02em;
 }
 
 .campaign-page .cp-commission-row {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   margin-bottom: 24px;
   color: var(--ink-3);
   letter-spacing: 0.01em;
 }
 .campaign-page .cp-commission-pct {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--accent-blue);
@@ -1314,14 +1314,14 @@ body:has(.campaign-page) .dh-shell {
   border-bottom: none;
 }
 .campaign-page .cp-sidebar-row-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
 }
 .campaign-page .cp-sidebar-row-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -1338,7 +1338,7 @@ body:has(.campaign-page) .dh-shell {
   gap: 10px;
 }
 .campaign-page .cp-elig-text {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -1362,7 +1362,7 @@ body:has(.campaign-page) .dh-shell {
 
 .campaign-page .cp-commission-note {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink-3);
   margin-top: 14px;
@@ -1372,10 +1372,10 @@ body:has(.campaign-page) .dh-shell {
 
 /* ── Action area (post-apply step) ─────────────────────── */
 .campaign-page .cp-action-area .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   margin-bottom: 16px;
 }
 .campaign-page .cp-action-btn-full {
@@ -1439,10 +1439,10 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .cp-current-step-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brand-red);
   margin: 0 0 12px;
@@ -1474,8 +1474,8 @@ body:has(.campaign-page) .dh-shell {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--ink-3);
@@ -1521,8 +1521,8 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .cp-current-step-beat-num {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -1536,7 +1536,7 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .cp-current-step-beat-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
   color: var(--ink);
@@ -1547,7 +1547,7 @@ body:has(.campaign-page) .dh-shell {
 
 .cp-current-step-beat-meta {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin: 0;
   line-height: 1.4;
@@ -1622,7 +1622,7 @@ body:has(.campaign-page) .dh-shell {
 }
 
 .cp-proof-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 

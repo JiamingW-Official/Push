@@ -54,7 +54,7 @@
 }
 
 .thread-header__campaign {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
@@ -67,8 +67,8 @@
 }
 
 .thread-header__tier {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -79,8 +79,8 @@
 }
 
 .thread-header__status {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -113,8 +113,8 @@
 }
 
 .thread-header__earn-label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -145,8 +145,8 @@
 
 .thread-mininav__item {
   padding: 0 16px;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -182,8 +182,8 @@
 
 .thread-section__label {
   display: block;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -201,7 +201,7 @@
 }
 
 .thread-section__text {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   line-height: 1.6;
@@ -210,8 +210,8 @@
 }
 
 .thread-subsection__title {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -230,8 +230,8 @@
 }
 
 .thread-requirements__item {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   padding-left: 16px;
   position: relative;
@@ -252,8 +252,8 @@
 
 .thread-hashtags__label {
   display: block;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -268,8 +268,8 @@
 }
 
 .thread-hashtag {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent-blue);
   background: rgba(0, 133, 255, 0.06);
@@ -296,8 +296,8 @@
 
 .thread-guidelines__label {
   display: block;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -315,8 +315,8 @@
 }
 
 .thread-guidelines__item {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   padding-left: 20px;
   position: relative;
@@ -328,7 +328,7 @@
   position: absolute;
   left: 0;
   color: var(--champagne);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* ── Deadline ──────────────────────────────────────────────── */
@@ -344,8 +344,8 @@
 }
 
 .thread-deadline__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -402,8 +402,8 @@
 }
 
 .submission-step__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -439,16 +439,16 @@
 }
 
 .submission-approved__title {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
 }
 
 .submission-approved__sub {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.5;
 }
@@ -463,8 +463,8 @@
 }
 
 .submit-form__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -474,7 +474,7 @@
 .submit-form__input {
   height: 48px;
   padding: 0 16px;
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   border: 1px solid var(--hairline);
   background: var(--surface-2);
@@ -509,8 +509,8 @@
 }
 
 .submit-form__dropzone-text {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -519,8 +519,8 @@
   height: 48px;
   background: var(--brand-red);
   color: var(--snow);
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -547,8 +547,8 @@
   background: rgba(201, 169, 110, 0.08);
   border: 1px solid rgba(201, 169, 110, 0.3);
   border-radius: var(--r-sm);
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--champagne);
   text-transform: uppercase;
@@ -597,8 +597,8 @@
 }
 
 .verify-status__item {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -636,8 +636,8 @@
 }
 
 .qr-block__code-label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -652,8 +652,8 @@
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--r-sm);
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -673,8 +673,8 @@
 }
 
 .qr-how__title {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -693,8 +693,8 @@
 }
 
 .qr-how__list li {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
   padding-left: 24px;
@@ -723,11 +723,11 @@
 }
 
 .earnings-hero__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   color: var(--ink-4);
   margin-bottom: 4px;
 }
@@ -743,8 +743,8 @@
 }
 
 .earnings-hero__sub {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.4;
 }
@@ -774,8 +774,8 @@
 }
 
 .thread-earnings__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -783,8 +783,8 @@
 }
 
 .thread-earnings__meta {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
 }
@@ -830,8 +830,8 @@
 }
 
 .keydate-item__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -854,8 +854,8 @@
 }
 
 .keydate-item__countdown {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -920,8 +920,8 @@
 }
 
 .milestone-node__label {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -943,8 +943,8 @@
   border: 1px solid var(--ink);
   border-radius: var(--r-sm);
   background: transparent;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   text-decoration: none;
   margin-bottom: 20px;
@@ -963,7 +963,7 @@
 
 .thread-inbox-link__arrow {
   margin-left: auto;
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   transition: transform 200ms ease;
 }
@@ -1012,8 +1012,8 @@
 }
 
 .thread-chat__sender {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -1021,16 +1021,16 @@
 }
 
 .thread-chat__text {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
   margin: 0;
 }
 
 .thread-chat__time {
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -1043,8 +1043,8 @@
   flex: 1;
   height: 40px;
   padding: 0 12px;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   border: 1px solid var(--hairline);
   background: var(--surface-2);
   color: var(--ink);
@@ -1063,8 +1063,8 @@
   height: 40px;
   background: var(--ink);
   color: var(--snow);
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1087,8 +1087,8 @@
   background: none;
   border: 1px dashed var(--hairline);
   padding: 4px 12px;
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1134,7 +1134,7 @@
 }
 
 .thread-celebrate__body {
-  font-family: 'CS Genio Mono', monospace;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--graphite);
   line-height: 1.5;
@@ -1146,8 +1146,8 @@
   padding: 12px 32px;
   background: var(--brand-red);
   color: var(--snow);
-  font-family: 'CS Genio Mono', monospace;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;

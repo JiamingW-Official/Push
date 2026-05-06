@@ -29,7 +29,7 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
+  font-family: var(--font-body);
 }
 
 /* ── Rail row ───────────────────────────────────────────────── */
@@ -214,7 +214,7 @@
 }
 
 .tj__node-lock {
-  font-size: 13px;
+  font-size: 14px;
   opacity: 0.6;
 }
 
@@ -233,7 +233,7 @@
 .tj__tier-name {
   font-family: "Darky", sans-serif;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: -0.02em;
   line-height: 1.1;
   white-space: nowrap;
@@ -241,8 +241,8 @@
 }
 
 .tj__tier-benefit {
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.01em;
   line-height: 1.3;
   white-space: nowrap;
@@ -251,7 +251,7 @@
 
 .tj__current-tag {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -282,7 +282,7 @@
 
 .tj__max-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
@@ -315,8 +315,8 @@
 }
 
 .tj__progress-label {
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.04em;
   color: var(--ink-4);
   white-space: nowrap;
@@ -337,8 +337,8 @@
 }
 
 .tj__cta-text {
-  font-family: "CS Genio Mono", "SF Mono", "Fira Code", monospace;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   letter-spacing: 0.01em;
 }
@@ -534,7 +534,7 @@
   }
 
   .tj__tier-benefit {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .tj__current-tag {

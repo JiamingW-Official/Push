@@ -507,7 +507,7 @@ export default function CreatorSettingsPage() {
             <SettingsSection title="Password">
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-body)",
                   fontSize: 13,
                   color: "var(--ink-4)",
                   marginBottom: 12,
@@ -641,7 +641,7 @@ export default function CreatorSettingsPage() {
             <SettingsSection title="Bank account">
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-body)",
                   fontSize: 13,
                   color: "var(--ink-4)",
                   padding: "12px 0",

@@ -71,17 +71,24 @@
   font-style: normal;
   font-display: optional;
 }
+/* Open Sans — variable font, body + UI default. Replaces CS Genio Mono.
+   Variable axes: wght 300-800, wdth 75-100. We use only wght; do NOT
+   set wdth in production CSS (it stays at 100% normal). */
 @font-face {
-  font-family: 'CSGenioMono';
-  src: url('/fonts/CSGenioMono-Regular.ttf') format('truetype');
-  font-weight: 400;
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype-variations'),
+       url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'CSGenioMono';
-  src: url('/fonts/CSGenioMono-Italic.ttf') format('truetype');
-  font-weight: 400;
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype-variations'),
+       url('/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
   font-style: italic;
   font-display: swap;
 }
@@ -214,8 +221,10 @@
     transparent 4px 8px
   );
 
-  /* ---- v11 font alias ---- */
-  --font-mono: 'CSGenioMono', 'SF Mono', 'Fira Code', monospace;
+  /* --font-mono REMOVED in v12. CS Genio Mono is no longer
+     part of the Push type system. If you find any reference to
+     var(--font-mono) in production CSS, it is a bug — replace per
+     Design.md § 3 role table. */
 
   /* ---- v9 · Glass Tokens (warm/deep Candy Panel variants) ---- */
   --glass-bg-warm:    rgba(255, 255, 255, 0.72);
@@ -324,21 +333,34 @@
   --gray-400:         var(--ink-5);
   --gray-500:         var(--ink-4);
 
-  /* ---- Typography ---- */
-  --font-hero:    'Magvix', serif;              /* v9 — hero/wordmark/signature, max 1 per page */
-  --font-display: 'Darky', sans-serif;
-  --font-body:    'CSGenioMono', 'SF Mono', 'Fira Code', monospace;
+  /* ---- Typography font families — locked. Three fonts only. ---- */
+  --font-hero:    'Magvix', Georgia, serif;     /* v9 — hero/wordmark/signature, max 1 per page */
+  --font-display: 'Darky', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* v12: CS Genio Mono removed. --font-mono abolished. Darky = labels/buttons/nav. Open Sans = body/inputs. */
 
-  /* ---- Type Scale (v12 — synced with Design.md § 3.1 / Figma SSOT 2026-04-26) ---- */
+  /* ---- Type Scale (v12.1 — floor lifted 12→14px, Design.md § 3.1 2026-05-05) ---- */
   --text-display: clamp(64px,  9vw, 200px);  /* Magvix Hero — landing only, 1 per page */
   --text-h1:      clamp(40px,  5vw, 72px);
   --text-h2:      40px;
   --text-h3:      28px;
   --text-h4:      24px;
-  --text-body:    20px;                       /* v12: 18→20 */
-  --text-small:   14px;
-  --text-caption: 10px;                       /* v12: 12→10 (documented exception, UPPERCASE) */
-  --text-eyebrow: 12px;
+  --text-body:    18px;  /* body-small tier — paragraph 2 (body p1 = 20px via p{} rule) */
+  --text-small:   16px;  /* was 14px — small/label tier */
+  --text-eyebrow: 14px;  /* was 12px — caption/eyebrow/table-header tier */
+  /* --text-caption REMOVED — floor is now 14px (--text-eyebrow); no sub-14 exceptions */
+
+  /* ---- Semantic font-size tokens (v12.1) ---- */
+  --fs-body:         20px;  /* paragraph 1 — unchanged */
+  --fs-body-small:   18px;  /* paragraph 2 — was 16px */
+  --fs-table-body:   18px;  /* editorial table body cell */
+  --fs-small:        16px;  /* small / label */
+  --fs-numbered:     16px;  /* numbered section marker */
+  --fs-stat-caption: 16px;  /* stat card caption (below KPI numeral) */
+  --fs-eyebrow:      14px;  /* eyebrow canonical + parenthetical */
+  --fs-caption:      14px;  /* caption — floor value, exception removed */
+  --fs-table-header: 14px;  /* editorial table column header */
+  --fs-photo-meta:   14px;  /* photo card metadata overlay */
 
   /* ---- Grid base unit ---- */
   --grid:      8px;   /* 8px grid base — all spacing must snap to multiples */
@@ -426,14 +448,24 @@ body {
     radial-gradient(ellipse 800px 400px at 70% 85%, rgba(93, 74, 107, 0.05), transparent 70%),
     linear-gradient(180deg, var(--surface) 0%, var(--surface) 40%, var(--surface-2) 100%);
   background-attachment: fixed;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--ink-3);
-  line-height: 1.40;
-  letter-spacing: -0.1em;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "calt";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   position: relative;
+}
+
+/* Apply to any element rendering numeric data (KPI, timestamps,
+   money, percentages, table cells with numbers, attribution payouts).
+   Recovers the fixed-width ledger feel that CS Genio Mono provided. */
+.tabular,
+.tabular *,
+[data-numeric],
+[data-numeric] * {
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 /* Subtle film-grain noise on body — barely perceptible paper/canvas texture */
@@ -586,7 +618,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
    6. Button primitives (Design.md)
    ------------------------------------------------------------ */
 /* v7 Buttons — iOS 26 hierarchy (Design.md §Buttons). 7 variants;
-   all use CS Genio Mono, radius --r-lg (14px), spring press, --shadow-focus ring. */
+   all use Darky (var(--font-display)), radius --r-lg (14px), spring press, --shadow-focus ring. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -644,7 +676,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   gap: var(--space-1);
 }
 .form-field label {
-  font-size: var(--text-caption);
+  font-size: var(--text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -669,7 +701,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   box-shadow: var(--shadow-focus);
 }
 .form-field .error-msg {
-  font-size: var(--text-caption);
+  font-size: var(--text-eyebrow);
   color: var(--primary);
 }
 
@@ -971,7 +1003,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   align-items: baseline;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 16px;  /* v12.1 — was 14px, Small/Label tier */
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -991,7 +1023,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   align-items: center;
   gap: 10px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1071,7 +1103,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   gap: 6px;
   padding: 4px 10px;
   font-family: var(--font-body);
-  font-size: 12px;                       /* raised from 10px to meet 12px min-floor § 3.1 */
+  font-size: 14px;                       /* raised from 10px to meet 12px min-floor § 3.1 */
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1097,7 +1129,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   align-items: center;
   gap: var(--space-2);
   font-family: var(--font-body);
-  font-size: 12px;                       /* raised from 11px to meet 12px min-floor § 3.1 */
+  font-size: 14px;                       /* raised from 11px to meet 12px min-floor § 3.1 */
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1119,7 +1151,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   align-items: center;
   gap: 10px;
   font-family: var(--font-body);
-  font-size: 12px;                       /* raised from 10px to meet 12px min-floor § 3.1 */
+  font-size: 14px;                       /* raised from 10px to meet 12px min-floor § 3.1 */
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1195,9 +1227,10 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;                              /* snapped 5px→4px (half-grid) */
-  padding: 4px 8px;                      /* snapped 3px→4px, 10px→8px (8px grid) */
-  font-size: 10px;
+  gap: 4px;
+  padding: 4px 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1403,7 +1436,7 @@ p  { font-size: 20px; line-height: 1.40; letter-spacing: -0.1em; color: var(--in
   color: var(--snow);
   padding: 8px 16px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1449,7 +1482,7 @@ a, button {
 
   a[href]:after {
     content: " (" attr(href) ")";
-    font-size: 10px;
+    font-size: 14px;
   }
 }
 
@@ -1649,11 +1682,11 @@ a, button {
 .btn-primary {
   background: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 14px 28px;
   border: none;
   border-radius: var(--r-sm);
@@ -1669,16 +1702,16 @@ a, button {
 .btn-primary:active { transform: translate(2px,2px) scale(0.98); background: var(--brand-red-deep); }
 .btn-primary:focus-visible { outline: 4px solid var(--brand-red-focus); outline-offset: 2px; }
 .btn-primary:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
-@media (max-width: 768px) { .btn-primary { padding: 12px 24px; font-size: 14px; } }
+@media (max-width: 768px) { .btn-primary { padding: 12px 24px; font-size: 16px; } }  /* v12.1 — was 14px */
 
 .btn-secondary {
   background: var(--accent-blue);
   color: var(--snow);
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 14px 28px;
   border: none;
   border-radius: var(--r-sm);
@@ -1694,16 +1727,16 @@ a, button {
 .btn-secondary:active { transform: translate(2px,2px) scale(0.98); background: var(--accent-blue-deep); }
 .btn-secondary:focus-visible { outline: 4px solid var(--accent-blue-tint); outline-offset: 2px; }
 .btn-secondary:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
-@media (max-width: 768px) { .btn-secondary { padding: 12px 24px; font-size: 14px; } }
+@media (max-width: 768px) { .btn-secondary { padding: 12px 24px; font-size: 16px; } }  /* v12.1 */
 
 .btn-ink {
   background: var(--ink);
   color: var(--snow);
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 14px 28px;
   border: none;
   border-radius: var(--r-sm);
@@ -1719,17 +1752,17 @@ a, button {
 .btn-ink:active { transform: translate(2px,2px) scale(0.98); background: var(--char); }
 .btn-ink:focus-visible { outline: 4px solid var(--brand-red-focus); outline-offset: 2px; }
 .btn-ink:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
-@media (max-width: 768px) { .btn-ink { padding: 12px 24px; font-size: 14px; } }
+@media (max-width: 768px) { .btn-ink { padding: 12px 24px; font-size: 16px; } }  /* v12.1 */
 
 .btn-ghost {
   background: transparent;
   color: var(--ink);
   border: 1px solid var(--ink);
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 14px 28px;
   border-radius: var(--r-sm);
   cursor: pointer;
@@ -1744,16 +1777,16 @@ a, button {
 .btn-ghost:active { transform: translate(2px,2px) scale(0.98); background: var(--surface-3); }
 .btn-ghost:focus-visible { outline: 4px solid var(--brand-red-focus); outline-offset: 2px; }
 .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-@media (max-width: 768px) { .btn-ghost { padding: 12px 24px; font-size: 14px; } }
+@media (max-width: 768px) { .btn-ghost { padding: 12px 24px; font-size: 16px; } }  /* v12.1 */
 
 .btn-pill {
   background: var(--surface-3);
   color: var(--ink);
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 16px;  /* v12.1 — was 14px */
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 8px 18px;
   border: none;
   border-radius: var(--r-pill);
@@ -1784,11 +1817,11 @@ a, button {
 .btn-editorial {
   background: var(--editorial-pink);
   color: var(--snow);
-  font-family: var(--font-mono, var(--font-body));
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   padding: 14px 28px;
   border: none;
   border-radius: var(--r-sm);
@@ -1804,7 +1837,7 @@ a, button {
 .btn-editorial:active { transform: translate(2px,2px) scale(0.98); background: var(--editorial-pink-deep); }
 .btn-editorial:focus-visible { outline: 4px solid var(--editorial-pink-tint); outline-offset: 2px; }
 .btn-editorial:disabled { background: var(--ink-6); color: var(--ink-4); cursor: not-allowed; transform: none; }
-@media (max-width: 768px) { .btn-editorial { padding: 12px 24px; font-size: 14px; } }
+@media (max-width: 768px) { .btn-editorial { padding: 12px 24px; font-size: 16px; } }  /* v12.1 */
 
 /* ============================================================
    v11 — Hover / Interaction signature (§ 16)
@@ -1820,11 +1853,11 @@ a, button {
    v11 — Eyebrow utility (§ 8.4)
    ============================================================ */
 .eyebrow {
-  font-family: var(--font-mono, var(--font-body));
-  font-size: 12px;
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--ink-3);
   margin: 0 0 16px;
   display: block;

@@ -8,10 +8,10 @@
    Page header — dispute ID eyebrow (DISPUTE·#) 12px mono
    ------------------------------------------------------------ */
 .dsp-detail-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-bottom: 8px;
@@ -42,7 +42,7 @@
 }
 
 .dsp-detail-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -55,8 +55,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -113,10 +113,10 @@
 }
 
 .dsp-detail-card__section-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 14px;
@@ -125,8 +125,8 @@
 }
 
 .dsp-detail-card__field-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -151,17 +151,17 @@
 }
 
 .dsp-status-glass__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-bottom: 12px;
 }
 
 .dsp-status-glass__status {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -176,7 +176,7 @@
   padding: 8px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .dsp-status-glass__row:last-child {
@@ -251,8 +251,8 @@
 }
 
 .dsp-evidence-zone__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -262,7 +262,7 @@
 
 .dsp-evidence-zone__sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   line-height: 1.5;
 }
@@ -283,21 +283,21 @@
 }
 
 .dsp-note-card__author {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .dsp-note-card__time {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-5);
 }
 
 .dsp-note-card__content {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.6;
   margin: 0;
@@ -314,7 +314,7 @@
   background: var(--surface);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   outline: none;
   resize: vertical;
   box-sizing: border-box;
@@ -341,7 +341,7 @@
   color: var(--snow);
   border-radius: 8px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   z-index: 300;
   box-shadow: var(--shadow-2);

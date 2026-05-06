@@ -26,7 +26,7 @@
 }
 
 .map-popup-business {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -35,14 +35,14 @@
 }
 
 .map-popup-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
 }
 
 .map-popup-payout {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--brand-red);
   font-weight: 700;
 }

@@ -1,6 +1,6 @@
 /* ============================================================
    Creator LeaderboardTable — weekly ranking
-   Authority: Design.md (sharp corners, CSGenioMono)
+   Authority: Design.md (sharp corners, Open Sans)
    ============================================================ */
 
 .wrapper {
@@ -96,7 +96,7 @@
   padding: 2px 6px;
   background: var(--brand-red);
   color: var(--snow);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
