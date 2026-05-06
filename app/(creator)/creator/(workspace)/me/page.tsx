@@ -174,7 +174,9 @@ export default function IdentityHub() {
             />
             <span className="me-public-cta">
               <span className="me-public-handle">push.app/c/maya</span>
-              <span className="me-public-action">Copy link →</span>
+              <span className="me-public-action" aria-hidden>
+                Preview public profile →
+              </span>
             </span>
           </div>
         </BentoModule>

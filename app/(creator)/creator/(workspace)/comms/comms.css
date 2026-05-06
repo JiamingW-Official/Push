@@ -30,7 +30,7 @@
 }
 
 @media (max-width: 640px) {
-  .comms-bento { grid-template-columns: 1fr; gap: 14px; }
+  .comms-bento { grid-template-columns: 1fr; gap: 16px; }
 }
 
 /* ── Messages module: KPI row ─────────────────────────────── */

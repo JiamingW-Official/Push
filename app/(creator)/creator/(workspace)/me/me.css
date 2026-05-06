@@ -35,7 +35,7 @@
 @media (max-width: 640px) {
   .me-bento {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 16px;
   }
 }
 
@@ -198,6 +198,11 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--accent-blue, #0085ff);
+  color: var(--ink, #111);
   text-transform: uppercase;
+  transition: color 200ms ease;
+}
+
+.bento:hover .me-public-action {
+  color: var(--accent-blue, #0085ff);
 }

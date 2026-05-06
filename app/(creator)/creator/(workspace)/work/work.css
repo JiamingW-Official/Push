@@ -30,7 +30,7 @@
 }
 
 @media (max-width: 640px) {
-  .work-bento { grid-template-columns: 1fr; gap: 14px; }
+  .work-bento { grid-template-columns: 1fr; gap: 16px; }
 }
 
 /* ── Pipeline kanban row ──────────────────────────────────── */
