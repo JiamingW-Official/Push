@@ -65,7 +65,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -140,7 +140,7 @@
 
 .ob-avatar-hint-title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
@@ -148,7 +148,7 @@
 
 .ob-avatar-hint-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -178,7 +178,7 @@
 
 .ob-completeness-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   white-space: nowrap;
@@ -195,7 +195,7 @@
 .ob-label {
   display: block;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -231,7 +231,7 @@
 
 .ob-char-count {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   text-align: right;
   margin-top: 4px;
@@ -259,7 +259,7 @@
   border: 2px solid var(--mist);
   border-radius: 40px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -287,7 +287,7 @@
 
 .ob-chip-badge {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -310,7 +310,7 @@
 
 .ob-calendar-group-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -332,7 +332,7 @@
   border: 1px solid var(--mist);
   border-radius: 8px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -361,7 +361,7 @@
 
 .ob-welcome-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -390,7 +390,7 @@
 
 .ob-seed-callout-title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
@@ -398,7 +398,7 @@
 
 .ob-seed-callout-desc {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: 12px;
 }
@@ -408,7 +408,7 @@
   align-items: flex-start;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
 }
@@ -428,7 +428,7 @@
 
 .ob-unlock-heading {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -471,7 +471,7 @@
 
 .ob-tier-card-name {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -481,7 +481,7 @@
 
 .ob-tier-card-now {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -491,7 +491,7 @@
 }
 
 .ob-tier-card-benefit {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
@@ -500,13 +500,13 @@
 
 .ob-tier-card-detail {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .ob-tier-card-unlock {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 4px;
   padding-top: 6px;
@@ -529,7 +529,7 @@
 
 .ob-promise-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -585,7 +585,7 @@
 
 .ob-tier-name {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -637,7 +637,7 @@
 
 .ob-back-btn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   background: none;
@@ -687,7 +687,7 @@
 
 .ob-error {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--brand-red);
   margin-top: 8px;
 }

@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────────────
    Push Admin — Campaign Moderation & Monitoring
    Design System: border-radius 0, 6 brand colors, 8px grid,
-   Darky (headings) + CS Genio Mono (body/UI)
+   Darky (headings) + Open Sans (body/UI)
 ───────────────────────────────────────────────────────────── */
 
 /* === SHELL & LAYOUT === */
@@ -43,7 +43,7 @@
 }
 
 .adm-nav__badge {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -58,7 +58,7 @@
 }
 
 .adm-nav__link {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
@@ -88,7 +88,7 @@
 }
 
 .adm-hero__eyebrow {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -114,7 +114,7 @@
 }
 
 .adm-hero__stat {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -160,7 +160,7 @@
   border-radius: var(--r-md);
   padding: 0 12px 0 36px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   outline: none;
   transition: border-color 0.15s;
@@ -190,7 +190,7 @@
   border-radius: var(--r-md);
   padding: 0 32px 0 12px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   outline: none;
   cursor: pointer;
@@ -215,7 +215,7 @@
 
 .adm-status-tab {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -247,7 +247,7 @@
 }
 
 .adm-tab-count {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   padding: 2px 6px;
   background: rgba(0, 48, 73, 0.08);
@@ -278,7 +278,7 @@
 }
 
 .adm-table-header__cell {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -315,7 +315,7 @@
 }
 
 .adm-row__title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   white-space: nowrap;
@@ -325,7 +325,7 @@
 }
 
 .adm-row__merchant {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 2px;
   white-space: nowrap;
@@ -335,13 +335,13 @@
 }
 
 .adm-row__cell {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
 }
 
 .adm-row__cell--muted {
   color: var(--graphite);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .adm-row__actions {
@@ -356,7 +356,7 @@
 .adm-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -404,7 +404,7 @@
 
 .adm-tier {
   display: inline-block;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -447,7 +447,7 @@
 
 .adm-action-btn {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -518,7 +518,7 @@
 }
 
 .adm-empty__sub {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -566,7 +566,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--graphite);
@@ -641,7 +641,7 @@
 }
 
 .adm-card__title {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -668,7 +668,7 @@
 }
 
 .adm-spec-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -684,7 +684,7 @@
 .adm-spec-value--muted {
   font-weight: 400;
   color: var(--graphite);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -702,7 +702,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -750,14 +750,14 @@
 }
 
 .adm-check__label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   line-height: 1.4;
 }
 
 .adm-check__note {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--brand-red);
   margin-top: 3px;
 }
@@ -794,7 +794,7 @@
 }
 
 .adm-flag__type {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -810,7 +810,7 @@
 }
 
 .adm-flag__severity {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -830,13 +830,13 @@
 }
 
 .adm-flag__desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
 }
 
 .adm-flag__meta {
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.45);
   margin-top: 6px;
 }
@@ -863,24 +863,24 @@
 }
 
 .adm-applicant__name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .adm-applicant__handle {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
 }
 
 .adm-applicant__meta {
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.45);
   margin-top: 2px;
 }
 
 .adm-milestone-tag {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -912,7 +912,7 @@
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 12px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 8px 0;
   border-bottom: 1px solid rgba(0, 48, 73, 0.07);
 }
@@ -927,20 +927,20 @@
 }
 
 .adm-visit__code {
-  font-size: 11px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: var(--graphite);
   margin-top: 2px;
 }
 
 .adm-visit__time {
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.45);
   text-align: right;
 }
 
 .adm-visit__verified {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -974,7 +974,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 6px;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -993,20 +993,20 @@
 }
 
 .adm-note__author {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--graphite);
   margin-bottom: 4px;
 }
 
 .adm-note__body {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   line-height: 1.5;
 }
 
 .adm-note__time {
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.4);
   margin-top: 6px;
 }
@@ -1023,7 +1023,7 @@
   min-height: 72px;
   padding: 10px 12px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface-2);
   border: 1px solid rgba(0, 48, 73, 0.18);
@@ -1047,7 +1047,7 @@
 
 .adm-btn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1123,7 +1123,7 @@
   right: 32px;
   background: var(--ink);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   padding: 12px 20px;
   z-index: 200;
@@ -1243,7 +1243,7 @@
 
 .adm-kpi-strip__label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1297,7 +1297,7 @@
 
 .adm-cgrid__head {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1306,7 +1306,7 @@
 
 .adm-cgrid__title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   overflow: hidden;
@@ -1316,14 +1316,14 @@
 
 .adm-cgrid__merchant {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-5);
   margin-top: 4px;
 }
 
 .adm-cgrid__num {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   font-weight: 600;
 }
@@ -1335,7 +1335,7 @@
 
 .adm-cgrid__date {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
 }
 
@@ -1420,7 +1420,7 @@
 
 .adm-confirm__eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1433,7 +1433,7 @@
 }
 
 .adm-confirm__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 800;
   color: var(--ink);
@@ -1466,7 +1466,7 @@
 
 .adm-confirm__btn {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;

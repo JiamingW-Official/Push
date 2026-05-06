@@ -40,11 +40,11 @@
 
 .rt-topbar-email {
   color: var(--ink-4);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 700;
   justify-self: center;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -58,7 +58,7 @@
   border: 1px solid var(--ink);
   color: var(--ink);
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 600;
   justify-content: center;
@@ -105,11 +105,11 @@
 .rt-toast {
   background: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
   left: 12px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   padding: 14px 16px;
   position: fixed;
   right: 12px;
@@ -139,19 +139,19 @@
 
 .rt-eyebrow,
 .rt-search-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--ink-3);
   font-size: var(--text-eyebrow);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
 }
 
 .rt-search-status {
   color: var(--ink-4);
   display: inline-flex;
-  font-family: var(--font-mono);
-  font-size: 12px; /* v11 min-font-size compliance */
+  font-family: var(--font-body);
+  font-size: 14px; /* v11 min-font-size compliance */
   font-weight: 700;
   gap: 8px;
   letter-spacing: 0.1em;
@@ -168,7 +168,7 @@
   border-left: 1px solid var(--hairline);
   color: var(--ink-4);
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 700;
   gap: 6px;
@@ -194,7 +194,7 @@
   background: var(--surface);
   border: 1px solid var(--ink);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: clamp(28px, 8vw, 40px);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -220,7 +220,7 @@
 
 .rt-search-helper,
 .rt-search-error {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -258,7 +258,7 @@
 
 .rt-empty-copy {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   line-height: 1.4;
   max-width: 28ch;
@@ -308,17 +308,17 @@
 
 .rt-result-source {
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
 
 .rt-result-meta {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-eyebrow);
   letter-spacing: 0.08em;
   margin: 0;
@@ -331,7 +331,7 @@
   border: none;
   color: var(--snow);
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 600;
   justify-content: center;
@@ -375,7 +375,7 @@
 .rt-success-title,
 .rt-success-credit,
 .rt-success-description {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
 }
 
 .rt-success-mark {
@@ -408,7 +408,7 @@
 
 .rt-success-remaining {
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -460,10 +460,10 @@
 }
 
 .rt-success-footer {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin-top: 14px;
   text-align: center;
   text-transform: uppercase;
@@ -513,7 +513,7 @@
   }
 
   .rt-topbar-email {
-    font-size: 12px; /* v11 min-font-size compliance */
+    font-size: 14px; /* v11 min-font-size compliance */
     padding: 0 8px;
   }
 

@@ -112,7 +112,7 @@ export default function RootLayout({
         />
         <link
           rel="preload"
-          href="/fonts/CSGenioMono-Regular.ttf"
+          href="/fonts/OpenSans-VariableFont_wdth,wght.ttf"
           as="font"
           type="font/truetype"
           crossOrigin="anonymous"

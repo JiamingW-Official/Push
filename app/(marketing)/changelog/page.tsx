@@ -112,7 +112,7 @@ export default function ChangelogPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto", position: "relative" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -141,7 +141,7 @@ export default function ChangelogPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 18,
               color: "rgba(255,255,255,0.5)",
               lineHeight: 1.55,
@@ -199,7 +199,7 @@ export default function ChangelogPage() {
                   >
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 11,
                         fontWeight: 700,
                         letterSpacing: "0.1em",
@@ -217,7 +217,7 @@ export default function ChangelogPage() {
                     {entry.isLatest && (
                       <span
                         style={{
-                          fontFamily: "var(--font-mono)",
+                          fontFamily: "var(--font-display)",
                           fontSize: 10,
                           fontWeight: 700,
                           letterSpacing: "0.1em",
@@ -236,7 +236,7 @@ export default function ChangelogPage() {
                   {/* Date */}
                   <p
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       color: "var(--ink-4)",
                       letterSpacing: "0.08em",
@@ -265,7 +265,7 @@ export default function ChangelogPage() {
                         <span
                           key={tag}
                           style={{
-                            fontFamily: "var(--font-mono)",
+                            fontFamily: "var(--font-display)",
                             fontSize: 11,
                             fontWeight: 700,
                             letterSpacing: "0.08em",
@@ -312,7 +312,7 @@ export default function ChangelogPage() {
                       <li
                         key={bi}
                         style={{
-                          fontFamily: "var(--font-mono)",
+                          fontFamily: "var(--font-display)",
                           fontSize: 18,
                           color: "var(--ink-3)",
                           lineHeight: 1.55,
@@ -366,7 +366,7 @@ export default function ChangelogPage() {
           <div>
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
@@ -392,7 +392,7 @@ export default function ChangelogPage() {
             </h2>
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 18,
                 color: "var(--ink-3)",
                 lineHeight: 1.55,
@@ -425,7 +425,7 @@ export default function ChangelogPage() {
           >
             <p
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
@@ -464,7 +464,7 @@ export default function ChangelogPage() {
                   </div>
                   <p
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       color: "rgba(255,255,255,0.35)",
                       letterSpacing: "0.06em",

@@ -33,9 +33,9 @@
 }
 
 .ms-filter-tabs-count {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums lining-nums;
   font-weight: 600;
   opacity: 0.68;
 }

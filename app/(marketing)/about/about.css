@@ -22,7 +22,7 @@
 /* Marketing register: (PARENTHETICAL) style per § 3.1 */
 .about-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
   margin: 0 0 24px;
 }
 
-/* Mission statement — 18px CS Genio Mono per brief */
+/* Mission statement — 18px Open Sans per brief */
 .about-hero-mission {
   font-family: var(--font-body);
   font-size: 18px;
@@ -202,7 +202,7 @@
 
 /* Name: Darky 20px per brief */
 .about-team-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 16px;
   letter-spacing: -0.02em;
@@ -214,7 +214,7 @@
 /* Role: mono 12px per brief */
 .about-team-role {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -225,7 +225,7 @@
 /* Bio line below avatar */
 .about-team-origin {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.45;
   margin: 0;
@@ -286,7 +286,7 @@
 
 /* Value title: Darky 20px per brief */
 .about-value-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
@@ -370,7 +370,7 @@
 
 .about-kpi-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -410,7 +410,7 @@
 }
 
 .about-press-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.02em;

@@ -145,7 +145,7 @@ function NycMapPin({ active }: { active: boolean }) {
         <text
           x="10"
           y="215"
-          fontFamily="monospace"
+          fontFamily="system-ui, sans-serif"
           fontSize="9"
           fill="#669bbc"
           letterSpacing="1"

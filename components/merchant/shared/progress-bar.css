@@ -44,8 +44,8 @@
 .ms-progress-label {
   color: var(--ink-3);
   display: block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   margin-bottom: 8px;

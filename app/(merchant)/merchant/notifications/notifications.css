@@ -21,10 +21,10 @@
 
 .notif-error {
   color: var(--brand-red);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -32,7 +32,7 @@
 /* ── Mark-all-read action (Ghost button override) ──────────── */
 
 .notif-mark-all {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
 }
 
@@ -64,11 +64,11 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--ink-3);
   flex-shrink: 0;
 }
@@ -107,8 +107,8 @@
 }
 
 .notif-summary-key {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.10em;
@@ -137,10 +137,10 @@
   align-items: baseline;
   gap: 8px;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -272,8 +272,8 @@
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.10em;
@@ -299,7 +299,7 @@
 }
 
 .notif-item-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -314,7 +314,7 @@
 }
 
 .notif-item--read .notif-item-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   color: var(--ink-3);
@@ -322,8 +322,8 @@
 }
 
 .notif-item-text {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
   margin: 0;
@@ -357,8 +357,8 @@
 }
 
 .notif-mark-read {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   padding: 8px 16px;
 }
 
@@ -425,7 +425,7 @@
 }
 
 .notif-empty-body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink-3);
   line-height: 1.55;

@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-4);
@@ -67,7 +67,7 @@
 
 .ps-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.38);
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -119,7 +119,7 @@
 
 .ps-status-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -134,7 +134,7 @@
 
 .ps-card-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -209,7 +209,7 @@
 }
 
 .ps-preview-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -225,7 +225,7 @@
 
 .ps-preview-merchant {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -235,13 +235,13 @@
 
 .ps-preview-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .ps-preview-link {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--accent-blue);
   text-decoration: none;
   overflow: hidden;
@@ -255,7 +255,7 @@
 
 .ps-preview-timestamp {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 16px 0 0;
   letter-spacing: 0.02em;
@@ -276,7 +276,7 @@
 
 .ps-detail-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   text-transform: uppercase;
@@ -293,7 +293,7 @@
 
 .ps-card-next-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -353,7 +353,7 @@
 
 .ps-step-num {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -384,7 +384,7 @@
 
 .ps-step-desc {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-4);
   line-height: 1.5;
   margin: 0 0 6px;
@@ -392,7 +392,7 @@
 
 .ps-step-time {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   background: var(--surface-3);
   border: 1px solid var(--hairline);
@@ -416,7 +416,7 @@
 
 .ps-tip-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.06em;
@@ -427,7 +427,7 @@
 
 .ps-tip-text {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.6;
   margin: 0;

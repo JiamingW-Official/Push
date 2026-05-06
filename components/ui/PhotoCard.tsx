@@ -72,11 +72,11 @@ export function PhotoCard({
             top: 16,
             right: 16,
             padding: "8px 14px",
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-display)",
             fontSize: 12,
             fontWeight: 600,
             textTransform: "uppercase",
-            letterSpacing: "0.04em",
+            letterSpacing: "0.06em",
             lineHeight: 1,
             whiteSpace: "nowrap",
           }}
@@ -110,15 +110,15 @@ export function PhotoCard({
           {title}
         </p>
 
-        {/* CS Genio Mono metadata */}
+        {/* Display font metadata */}
         {metadata && (
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 500,
               textTransform: "uppercase",
-              letterSpacing: "0.04em",
+              letterSpacing: "0.06em",
               color: "rgba(255,255,255,0.85)",
               margin: 0,
               marginTop: 8,

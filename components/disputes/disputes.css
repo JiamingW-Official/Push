@@ -33,7 +33,7 @@
 
 .disputes-hero__eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -82,7 +82,7 @@
 
 .disputes-stat__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -111,7 +111,7 @@
 
 .disputes-tab {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -146,7 +146,7 @@
 
 .disputes-file-btn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -185,7 +185,7 @@
 
 .disputes-list__col-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -219,7 +219,7 @@
 }
 
 .disputes-row__id {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
@@ -241,12 +241,12 @@
 
 .disputes-row__party {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .disputes-row__amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   color: var(--ink);
@@ -261,13 +261,13 @@
 
 .disputes-row__filed-name {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink);
 }
 
 .disputes-row__filed-role {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
@@ -275,7 +275,7 @@
 
 .disputes-row__age {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -292,7 +292,7 @@
 .dispute-badge {
   display: inline-block;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -371,7 +371,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -403,7 +403,7 @@
 
 .dispute-detail-header__id-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -435,7 +435,7 @@
 
 .dispute-detail-header__meta-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -483,7 +483,7 @@
 
 .dispute-sidebar-card__label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -507,13 +507,13 @@
 
 .dispute-sidebar-card__key {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .dispute-sidebar-card__value {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   text-align: right;
@@ -532,7 +532,7 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent-blue);
   text-decoration: none;
@@ -566,7 +566,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 800;
   color: var(--ink);
@@ -580,7 +580,7 @@
 
 .dispute-participant__name {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
@@ -590,7 +590,7 @@
 
 .dispute-participant__role {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
@@ -613,14 +613,14 @@
 
 .dispute-campaign-mini__title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .dispute-campaign-mini__merchant {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -661,7 +661,7 @@
 
 .dispute-outcome-banner__label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -670,7 +670,7 @@
 }
 
 .dispute-outcome-banner__title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   color: var(--ink);
@@ -679,14 +679,14 @@
 
 .dispute-outcome-banner__note {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   margin-top: 4px;
 }
 
 .dispute-outcome-banner__reopen {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -768,7 +768,7 @@
 
 .dispute-timeline-event__role-pill {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -793,14 +793,14 @@
 
 .dispute-timeline-event__author-name {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .dispute-timeline-event__time {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -813,7 +813,7 @@
 
 .dispute-timeline-event__type-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -859,7 +859,7 @@
 
 .dispute-evidence-thumb__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink);
   max-width: 120px;
   overflow: hidden;
@@ -880,7 +880,7 @@
 
 .dispute-composer__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -920,7 +920,7 @@
 
 .dispute-composer__attach {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   background: transparent;
@@ -941,7 +941,7 @@
 
 .dispute-composer__submit {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -991,7 +991,7 @@
 
 .evidence-uploader__title {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
@@ -999,13 +999,13 @@
 
 .evidence-uploader__sub {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .evidence-uploader__or {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   margin: 16px 0;
 }
@@ -1017,7 +1017,7 @@
   border: 1px solid var(--hairline);
   background: var(--surface-2);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   border-radius: 8px;
   outline: none;
@@ -1068,7 +1068,7 @@
   color: var(--snow);
   border: none;
   border-radius: 8px;
-  font-size: 10px;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1163,7 +1163,7 @@
 
 .dispute-modal__field label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1218,7 +1218,7 @@
 
 .dispute-modal__cancel {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1237,7 +1237,7 @@
 
 .dispute-modal__submit {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;

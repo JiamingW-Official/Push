@@ -84,7 +84,7 @@
 
 .ms-modal-body {
   color: var(--ink-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   line-height: 1.5;
 }

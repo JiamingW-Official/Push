@@ -1,404 +1,636 @@
 "use client";
 
-import { useMemo, useState, useRef, useEffect } from "react";
+import {
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  forwardRef,
+  memo,
+  useDeferredValue,
+  useTransition,
+} from "react";
+import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import NextImage from "next/image";
 import "./discover.css";
-import type { CampaignPin } from "@/components/layout/MapView";
+import {
+  MOCK_CAMPAIGNS,
+  type Campaign,
+  type TierLevel,
+} from "@/lib/mocks/campaigns";
+import {
+  normalizePay,
+  totalNormalizedPay,
+  estimatedHours,
+  effectiveHourlyRate,
+} from "@/lib/services/pricing";
 
-/* ── Dynamic MapView (Leaflet requires no-SSR) ────────────── */
+/* ── Dynamic MapView (Leaflet SSR guard) ──────────────────── */
 
-const MapView = dynamic(() => import("@/components/layout/MapView"), {
+const MapView = dynamic(() => import("./MapView"), {
   ssr: false,
   loading: () => <div className="disc-map-loading" />,
 });
 
 /* ── Types ────────────────────────────────────────────────── */
 
-type Category =
-  | "ALL"
-  | "FOOD & DRINK"
-  | "RETAIL"
-  | "WELLNESS"
-  | "BEAUTY"
-  | "FITNESS"
-  | "LIFESTYLE";
-type TypeFilter = "ALL" | "IN-PERSON" | "REMOTE OK";
-type SortKey = "match" | "payout" | "ending-soon" | "spots";
-type ApplicationStatus = "none" | "applied" | "pending";
+type SortKey =
+  | "match"
+  | "payout"
+  | "rate"
+  | "ending-soon"
+  | "spots"
+  | "closest";
+
+/** Quick-intent toggles — 1-tap creator-meaningful pre-built filters. */
+type QuickIntent = "near" | "soon" | "quick" | "top-rate" | "saved";
 type ViewMode = "grid" | "split";
+type PayRangeKey = "0-50" | "50-150" | "150+";
+type FormatFilter = "in-person" | "remote" | "hybrid";
+type StatusFilter = "new" | "saved" | "applied" | "all";
+type ApplicationStatus = "none" | "in_review" | "accepted" | "rejected";
 
-interface Campaign {
-  id: string;
-  title: string;
-  merchantName: string;
-  neighborhood: string;
-  category: string;
-  payout: number;
-  payoutLabel: string;
-  slotsTotal: number;
-  slotsRemaining: number;
-  distanceMi: number;
-  isRemoteOk: boolean;
-  matchScore: number;
-  deadlineIso?: string;
-  lat: number;
-  lng: number;
-  images: string[];
-}
-
-/* ── Mock data ────────────────────────────────────────────── */
-
-const MOCK_CAMPAIGNS: Campaign[] = [
-  {
-    id: "disc-001",
-    title: "Rooftop Coffee Series",
-    merchantName: "Blank Street Coffee",
-    neighborhood: "Williamsburg, BK",
-    category: "Coffee",
-    payout: 32,
-    payoutLabel: "per visit",
-    slotsTotal: 20,
-    slotsRemaining: 6,
-    distanceMi: 0.4,
-    isRemoteOk: false,
-    matchScore: 94,
-    deadlineIso: "2026-05-10",
-    lat: 40.7141,
-    lng: -73.9614,
-    images: [
-      "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-002",
-    title: "Chelsea Market Food Walk",
-    merchantName: "Chelsea Market",
-    neighborhood: "Chelsea, NYC",
-    category: "FOOD & DRINK",
-    payout: 45,
-    payoutLabel: "per post",
-    slotsTotal: 10,
-    slotsRemaining: 2,
-    distanceMi: 1.2,
-    isRemoteOk: false,
-    matchScore: 88,
-    deadlineIso: "2026-05-08",
-    lat: 40.7422,
-    lng: -74.0051,
-    images: [
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1432139509613-5c4255815697?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-003",
-    title: "Flatiron Brunch Story",
-    merchantName: "Eataly NYC Flatiron",
-    neighborhood: "Flatiron, NYC",
-    category: "FOOD & DRINK",
-    payout: 60,
-    payoutLabel: "per reel",
-    slotsTotal: 8,
-    slotsRemaining: 4,
-    distanceMi: 0.8,
-    isRemoteOk: false,
-    matchScore: 81,
-    deadlineIso: "2026-05-12",
-    lat: 40.7412,
-    lng: -73.9897,
-    images: [
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-004",
-    title: "Pilates Studio Grand Opening",
-    merchantName: "Forma Pilates Chelsea",
-    neighborhood: "Chelsea, NYC",
-    category: "FITNESS",
-    payout: 40,
-    payoutLabel: "per visit",
-    slotsTotal: 12,
-    slotsRemaining: 7,
-    distanceMi: 1.5,
-    isRemoteOk: false,
-    matchScore: 72,
-    deadlineIso: "2026-05-20",
-    lat: 40.747,
-    lng: -73.9983,
-    images: [
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1599447421416-3414500d18a5?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1591291621164-2c6367723315?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-005",
-    title: "Gallery Opening Night",
-    merchantName: "Tara Downs Gallery",
-    neighborhood: "Chelsea, NYC",
-    category: "LIFESTYLE",
-    payout: 75,
-    payoutLabel: "per campaign",
-    slotsTotal: 6,
-    slotsRemaining: 3,
-    distanceMi: 0.9,
-    isRemoteOk: false,
-    matchScore: 65,
-    deadlineIso: "2026-05-05",
-    lat: 40.745,
-    lng: -74.004,
-    images: [
-      "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1545987796-200677ee1011?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1577720580479-7d839d829c73?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-006",
-    title: "Beauty Lab Skincare Series",
-    merchantName: "Bluemercury SoHo",
-    neighborhood: "SoHo, NYC",
-    category: "BEAUTY",
-    payout: 55,
-    payoutLabel: "per story set",
-    slotsTotal: 8,
-    slotsRemaining: 5,
-    distanceMi: 0.7,
-    isRemoteOk: false,
-    matchScore: 78,
-    deadlineIso: "2026-05-15",
-    lat: 40.7239,
-    lng: -74.0019,
-    images: [
-      "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-007",
-    title: "Boutique Opening Campaign",
-    merchantName: "Madewell SoHo",
-    neighborhood: "SoHo, NYC",
-    category: "RETAIL",
-    payout: 28,
-    payoutLabel: "per post",
-    slotsTotal: 15,
-    slotsRemaining: 10,
-    distanceMi: 0.5,
-    isRemoteOk: true,
-    matchScore: 58,
-    deadlineIso: "2026-05-20",
-    lat: 40.7225,
-    lng: -73.9974,
-    images: [
-      "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-008",
-    title: "Morning Ritual Brew",
-    merchantName: "Intelligentsia Coffee",
-    neighborhood: "West Village, NYC",
-    category: "Coffee",
-    payout: 0,
-    payoutLabel: "free entry",
-    slotsTotal: 20,
-    slotsRemaining: 14,
-    distanceMi: 1.8,
-    isRemoteOk: false,
-    matchScore: 91,
-    deadlineIso: "2026-05-18",
-    lat: 40.734,
-    lng: -74.0054,
-    images: [
-      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-009",
-    title: "Wellness Studio Launch",
-    merchantName: "The Well NYC",
-    neighborhood: "Midtown, NYC",
-    category: "WELLNESS",
-    payout: 85,
-    payoutLabel: "per campaign",
-    slotsTotal: 5,
-    slotsRemaining: 1,
-    distanceMi: 1.1,
-    isRemoteOk: false,
-    matchScore: 84,
-    deadlineIso: "2026-05-06",
-    lat: 40.7561,
-    lng: -73.9864,
-    images: [
-      "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-  {
-    id: "disc-010",
-    title: "Farm-to-Table Dinner Series",
-    merchantName: "Blue Hill Restaurant",
-    neighborhood: "West Village, NYC",
-    category: "FOOD & DRINK",
-    payout: 250,
-    payoutLabel: "per campaign",
-    slotsTotal: 2,
-    slotsRemaining: 1,
-    distanceMi: 1.4,
-    isRemoteOk: false,
-    matchScore: 76,
-    deadlineIso: "2026-05-20",
-    lat: 40.7317,
-    lng: -74.0002,
-    images: [
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&h=900&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1551218372-a8789b81b253?w=1200&h=900&fit=crop&q=80",
-    ],
-  },
-];
+const CREATOR_TIER: TierLevel = 2;
 
 /* ── Helpers ──────────────────────────────────────────────── */
+
+function pluralize(n: number, word: string): string {
+  return `${n} ${n === 1 ? word : `${word}s`}`;
+}
 
 function daysLeft(iso?: string): number | null {
   if (!iso) return null;
   return Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000);
 }
 
-function formatEarn(payout: number): string {
-  if (payout === 0) return "FREE";
-  return `$${payout}`;
+function showSpotsBadge(remaining: number, total: number): boolean {
+  return remaining <= 2 || remaining / total <= 0.2;
 }
 
-function toCampaignPin(c: Campaign): CampaignPin {
+function tierChipLabel(minimumTier: TierLevel): string {
+  const labels: Record<TierLevel, string> = {
+    1: "Open to all",
+    2: "Bronze+",
+    3: "Steel+",
+    4: "Gold+",
+    5: "Ruby+",
+    6: "Obsidian only",
+  };
+  return labels[minimumTier];
+}
+
+function tierDotColor(minimumTier: TierLevel): string {
+  const colors: Record<TierLevel, string> = {
+    1: "var(--ink-5)",
+    2: "var(--champagne)",
+    3: "var(--ink-4)",
+    4: "var(--brand-red)",
+    5: "var(--accent-blue)",
+    6: "var(--ink)",
+  };
+  return colors[minimumTier];
+}
+
+function payRangeMatches(cashPay: number, ranges: PayRangeKey[]): boolean {
+  if (!ranges.length) return true;
+  return ranges.some((r) => {
+    if (r === "0-50") return cashPay <= 50;
+    if (r === "50-150") return cashPay > 50 && cashPay <= 150;
+    return cashPay > 150;
+  });
+}
+
+/* ── URL state helpers ────────────────────────────────────── */
+
+/* ── localStorage persistence — remembers creator's pattern across sessions.
+   URL params still win when present (share-link semantics). */
+
+const STORED_PREFS_KEY = "push.discover.prefs.v1";
+
+type StoredPrefs = {
+  activeCategories: string[];
+  quickIntents: string[];
+  tierOnly: boolean;
+  distanceMi: number;
+  deadlineDays: number | null;
+  sortKey: string;
+};
+
+function readStoredPrefs(): StoredPrefs | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORED_PREFS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<StoredPrefs>;
+    return {
+      activeCategories: Array.isArray(parsed.activeCategories)
+        ? parsed.activeCategories
+        : [],
+      quickIntents: Array.isArray(parsed.quickIntents)
+        ? parsed.quickIntents
+        : [],
+      tierOnly: parsed.tierOnly !== false,
+      distanceMi: typeof parsed.distanceMi === "number" ? parsed.distanceMi : 5,
+      deadlineDays:
+        typeof parsed.deadlineDays === "number" ? parsed.deadlineDays : null,
+      sortKey: typeof parsed.sortKey === "string" ? parsed.sortKey : "match",
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredPrefs(prefs: StoredPrefs) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORED_PREFS_KEY, JSON.stringify(prefs));
+  } catch {
+    /* localStorage might be disabled (incognito, quota); silent fail */
+  }
+}
+
+function readUrlFilters() {
+  if (typeof window === "undefined") return null;
+  const p = new URLSearchParams(window.location.search);
   return {
-    id: c.id,
-    title: c.title,
-    business_name: c.merchantName,
-    payout: c.payout,
-    lat: c.lat,
-    lng: c.lng,
-    spots_remaining: c.slotsRemaining,
-    description: null,
-    category: c.category,
+    query: p.get("q") ?? "",
+    payRanges: (p.get("pay") ?? "").split(",").filter(Boolean) as PayRangeKey[],
+    tierOnly: p.get("tier") !== "0",
+    formats: (p.get("format") ?? "")
+      .split(",")
+      .filter(Boolean) as FormatFilter[],
+    distanceMi: Number(p.get("dist") ?? 5),
+    deadlineDays:
+      p.get("deadline") === "week"
+        ? 7
+        : p.get("deadline") === "2week"
+          ? 14
+          : p.get("deadline") === "month"
+            ? 30
+            : null,
+    statusFilter: (p.get("status") ?? "all") as StatusFilter,
+    sortKey: (p.get("sort") ?? "match") as SortKey,
   };
 }
+
+function writeUrlFilters(state: {
+  query: string;
+  payRanges: PayRangeKey[];
+  tierOnly: boolean;
+  formats: FormatFilter[];
+  distanceMi: number;
+  deadlineDays: number | null;
+  statusFilter: StatusFilter;
+  sortKey: SortKey;
+}) {
+  const p = new URLSearchParams();
+  if (state.query) p.set("q", state.query);
+  if (state.payRanges.length) p.set("pay", state.payRanges.join(","));
+  if (!state.tierOnly) p.set("tier", "0");
+  if (state.formats.length) p.set("format", state.formats.join(","));
+  if (state.distanceMi !== 5) p.set("dist", String(state.distanceMi));
+  if (state.deadlineDays === 7) p.set("deadline", "week");
+  else if (state.deadlineDays === 14) p.set("deadline", "2week");
+  else if (state.deadlineDays === 30) p.set("deadline", "month");
+  if (state.statusFilter !== "all") p.set("status", state.statusFilter);
+  if (state.sortKey !== "match") p.set("sort", state.sortKey);
+  const qs = p.toString();
+  window.history.replaceState(
+    null,
+    "",
+    qs ? `?${qs}` : window.location.pathname,
+  );
+}
+
+/* ── Constants ────────────────────────────────────────────── */
+
+const CATEGORIES = [
+  { key: "ALL", label: "All" },
+  { key: "FOOD & DRINK", label: "Food & drink" },
+  { key: "FITNESS", label: "Fitness" },
+  { key: "BEAUTY", label: "Beauty" },
+  { key: "WELLNESS", label: "Wellness" },
+  { key: "RETAIL", label: "Retail" },
+  { key: "LIFESTYLE", label: "Lifestyle" },
+];
+
+/* Per-category accent palette — { accent · soft (chip glass tint) · glow (button halo) · deep (gradient bottom) }.
+   Hex chosen to harmonize with Push brand tokens (Brand Red, GA Orange, Editorial Pink, Editorial Blue). */
+type ThemePalette = {
+  accent: string;
+  soft: string;
+  glow: string;
+  deep: string;
+};
+const CATEGORY_THEMES: Record<string, ThemePalette> = {
+  ALL: {
+    accent: "#c1121f",
+    soft: "rgba(193, 18, 31, 0.82)",
+    glow: "rgba(193, 18, 31, 0.20)",
+    deep: "#a21015",
+  },
+  "FOOD & DRINK": {
+    accent: "#ff5e2b",
+    soft: "rgba(255, 94, 43, 0.82)",
+    glow: "rgba(255, 94, 43, 0.22)",
+    deep: "#d94d20",
+  },
+  FITNESS: {
+    accent: "#16a34a",
+    soft: "rgba(22, 163, 74, 0.82)",
+    glow: "rgba(22, 163, 74, 0.20)",
+    deep: "#107a37",
+  },
+  BEAUTY: {
+    accent: "#e8447d",
+    soft: "rgba(232, 68, 125, 0.82)",
+    glow: "rgba(232, 68, 125, 0.22)",
+    deep: "#c0356a",
+  },
+  WELLNESS: {
+    accent: "#0d9488",
+    soft: "rgba(13, 148, 136, 0.82)",
+    glow: "rgba(13, 148, 136, 0.20)",
+    deep: "#0a7368",
+  },
+  RETAIL: {
+    accent: "#7c3aed",
+    soft: "rgba(124, 58, 237, 0.82)",
+    glow: "rgba(124, 58, 237, 0.22)",
+    deep: "#5b21b6",
+  },
+  LIFESTYLE: {
+    accent: "#1e5fad",
+    soft: "rgba(30, 95, 173, 0.82)",
+    glow: "rgba(30, 95, 173, 0.22)",
+    deep: "#194f8f",
+  },
+};
+
+function getThemeStyle(cat: string): React.CSSProperties {
+  const t = CATEGORY_THEMES[cat] ?? CATEGORY_THEMES.ALL;
+  return {
+    ["--theme-accent" as string]: t.accent,
+    ["--theme-accent-soft" as string]: t.soft,
+    ["--theme-accent-glow" as string]: t.glow,
+    ["--theme-accent-deep" as string]: t.deep,
+  };
+}
+
+const SORT_OPTIONS: { key: SortKey; label: string; tooltip: string }[] = [
+  {
+    key: "match",
+    label: "Best for you",
+    tooltip:
+      "Composite of tier fit, distance, hourly rate, and urgency — tuned for one-shot decisions.",
+  },
+  {
+    key: "rate",
+    label: "Top hourly rate",
+    tooltip:
+      "Effective $/hour after normalizing total pay over estimated work hours.",
+  },
+  {
+    key: "payout",
+    label: "Highest total pay",
+    tooltip: "Highest absolute pay first (ignores time investment).",
+  },
+  {
+    key: "closest",
+    label: "Closest first",
+    tooltip: "Shortest distance from your saved location.",
+  },
+  {
+    key: "ending-soon",
+    label: "Ending soon",
+    tooltip: "Soonest deadline first — for last-minute apply windows.",
+  },
+  {
+    key: "spots",
+    label: "Most spots",
+    tooltip: "Most slots remaining first — better odds.",
+  },
+];
+
+/** Quick-intent definitions. Each is a single creator-meaningful filter
+ *  that maps to a campaign predicate. UI lives next to category strip. */
+const QUICK_INTENTS: { key: QuickIntent; label: string; hint: string }[] = [
+  { key: "near", label: "Near me", hint: "≤1 mi" },
+  { key: "soon", label: "This week", hint: "≤7 days" },
+  { key: "quick", label: "Quick wins", hint: "≤1 hr work" },
+  { key: "top-rate", label: "Top rate", hint: "≥$80/hr" },
+  { key: "saved", label: "Saved", hint: "Hearts only" },
+];
 
 /* ── Discover Page ────────────────────────────────────────── */
 
 export default function DiscoverPage() {
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string>("ALL");
-  const [activeType, setActiveType] = useState<TypeFilter>("ALL");
-  const [budgetMin, setBudgetMin] = useState(0);
-  const [budgetMax, setBudgetMax] = useState(100);
-  const [radiusMi, setRadiusMi] = useState(5);
+  const deferredQuery = useDeferredValue(query);
+  const [, startTransition] = useTransition();
+  const [payRanges, setPayRanges] = useState<PayRangeKey[]>([]);
+  const [tierOnly, setTierOnly] = useState(true);
+  const [formats, setFormats] = useState<FormatFilter[]>([]);
+  const [distanceMi, setDistanceMi] = useState(5);
   const [deadlineDays, setDeadlineDays] = useState<number | null>(null);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sortKey, setSortKey] = useState<SortKey>("match");
+  /** Multi-select categories. Empty set = "All" (no category filter).
+   *  Single tap toggles inclusion. "All" pill clears the set. */
+  const [activeCategories, setActiveCategories] = useState<Set<string>>(
+    () => new Set(),
+  );
+
+  /** Quick-intent toggles — independent of category strip, AND-applied. */
+  const [quickIntents, setQuickIntents] = useState<Set<QuickIntent>>(
+    () => new Set(),
+  );
+
+  /** Active category for theme color. Picks first selected; falls back to ALL.
+   *  Keeps existing themeStyle plumbing working without major surgery. */
+  const activeCategory = useMemo(() => {
+    if (activeCategories.size === 0) return "ALL";
+    return Array.from(activeCategories)[0];
+  }, [activeCategories]);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [sortDropOpen, setSortDropOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("split");
-  const [activeId, setActiveId] = useState<string | null>(null);
   const [mapFullscreen, setMapFullscreen] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [applications, setApplications] = useState<
     Record<string, ApplicationStatus>
   >({});
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(true);
 
-  const listRef = useRef<HTMLDivElement>(null);
+  const [filterAnchor, setFilterAnchor] = useState<{
+    top: number;
+    right: number;
+  } | null>(null);
+  const [sortAnchor, setSortAnchor] = useState<{
+    top: number;
+    right: number;
+  } | null>(null);
+
   const scrollRef = useRef<HTMLDivElement>(null);
+  const searchWrapRef = useRef<HTMLDivElement>(null);
+  const gearBtnRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const sortDropRef = useRef<HTMLDivElement>(null);
+  const sortTriggerRef = useRef<HTMLButtonElement>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Force wheel scroll on the list panel — body:overflow:hidden + Leaflet can swallow wheel events
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      el.scrollTop += e.deltaY;
-      e.stopPropagation();
-    };
-    el.addEventListener("wheel", onWheel, { passive: true });
-    return () => el.removeEventListener("wheel", onWheel);
+  const handleCardHover = useCallback((id: string) => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => setActiveId(id), 60);
+  }, []);
+  const handleCardLeave = useCallback(() => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = null;
+    setActiveId(null);
   }, []);
 
+  /* On mount: URL params win, then localStorage, then defaults.
+     URL is for sharing exact filter combos; localStorage remembers the
+     creator's normal browsing pattern across sessions. */
   useEffect(() => {
-    if (!activeId || !listRef.current) return;
-    const el = listRef.current.querySelector(
+    const urlF = readUrlFilters();
+    const hasUrlState =
+      typeof window !== "undefined" && window.location.search.length > 1;
+    let stored: ReturnType<typeof readStoredPrefs> = null;
+    if (!hasUrlState) {
+      stored = readStoredPrefs();
+    }
+    const f = urlF;
+    if (f) {
+      if (f.query) setQuery(f.query);
+      if (f.payRanges.length) setPayRanges(f.payRanges);
+      if (!f.tierOnly) setTierOnly(false);
+      if (f.formats.length) setFormats(f.formats);
+      if (f.distanceMi !== 5) setDistanceMi(f.distanceMi);
+      if (f.deadlineDays !== null) setDeadlineDays(f.deadlineDays);
+      if (f.statusFilter !== "all") setStatusFilter(f.statusFilter);
+      if (f.sortKey !== "match") setSortKey(f.sortKey);
+    }
+    if (stored) {
+      if (stored.activeCategories.length)
+        setActiveCategories(new Set(stored.activeCategories));
+      if (stored.quickIntents.length)
+        setQuickIntents(new Set(stored.quickIntents as QuickIntent[]));
+      if (stored.tierOnly === false) setTierOnly(false);
+      if (stored.distanceMi !== 5) setDistanceMi(stored.distanceMi);
+      if (stored.deadlineDays !== null) setDeadlineDays(stored.deadlineDays);
+      if (stored.sortKey !== "match") setSortKey(stored.sortKey as SortKey);
+    }
+    setTimeout(() => setIsLoading(false), 160);
+  }, []);
+
+  /* Persist to localStorage whenever creator-meaningful prefs change.
+     Skipped during SSR / first hydration burst by checking `window`. */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    writeStoredPrefs({
+      activeCategories: Array.from(activeCategories),
+      quickIntents: Array.from(quickIntents),
+      tierOnly,
+      distanceMi,
+      deadlineDays,
+      sortKey,
+    });
+  }, [
+    activeCategories,
+    quickIntents,
+    tierOnly,
+    distanceMi,
+    deadlineDays,
+    sortKey,
+  ]);
+
+  // Sync URL
+  useEffect(() => {
+    writeUrlFilters({
+      query,
+      payRanges,
+      tierOnly,
+      formats,
+      distanceMi,
+      deadlineDays,
+      statusFilter,
+      sortKey,
+    });
+  }, [
+    query,
+    payRanges,
+    tierOnly,
+    formats,
+    distanceMi,
+    deadlineDays,
+    statusFilter,
+    sortKey,
+  ]);
+
+  // Scroll active card into view
+  useEffect(() => {
+    if (!activeId || !scrollRef.current) return;
+    const el = scrollRef.current.querySelector<HTMLElement>(
       `[data-campaign-id="${activeId}"]`,
     );
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [activeId]);
+
+  // Close filter popover on outside click (uses refs, not search-wrap, because popover is fixed-position)
+  useEffect(() => {
+    if (!filterOpen) return;
+    const handler = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (
+        !gearBtnRef.current?.contains(t) &&
+        !popoverRef.current?.contains(t)
+      ) {
+        setFilterOpen(false);
+        setFilterAnchor(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [filterOpen]);
+
+  // Close sort dropdown on outside click — checks both trigger and portaled drop
+  useEffect(() => {
+    if (!sortDropOpen) return;
+    const handler = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (
+        !sortTriggerRef.current?.contains(t) &&
+        !sortDropRef.current?.contains(t)
+      ) {
+        setSortDropOpen(false);
+        setSortAnchor(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [sortDropOpen]);
 
   const activeFilterCount = useMemo(() => {
     let n = 0;
-    if (activeCategory !== "ALL") n++;
-    if (activeType !== "ALL") n++;
-    if (budgetMin > 0 || budgetMax < 100) n++;
-    if (radiusMi < 5) n++;
+    if (payRanges.length) n++;
+    if (!tierOnly) n++;
+    if (formats.length) n++;
+    if (distanceMi !== 5) n++;
     if (deadlineDays !== null) n++;
+    if (statusFilter !== "all") n++;
     return n;
-  }, [
-    activeCategory,
-    activeType,
-    budgetMin,
-    budgetMax,
-    radiusMi,
-    deadlineDays,
-  ]);
+  }, [payRanges, tierOnly, formats, distanceMi, deadlineDays, statusFilter]);
 
-  function clearFilters() {
-    setActiveCategory("ALL");
-    setActiveType("ALL");
-    setBudgetMin(0);
-    setBudgetMax(100);
-    setRadiusMi(5);
-    setDeadlineDays(null);
+  const clearFilters = useCallback(() => {
     setQuery("");
-  }
+    setPayRanges([]);
+    setTierOnly(true);
+    setFormats([]);
+    setDistanceMi(5);
+    setDeadlineDays(null);
+    setStatusFilter("all");
+    setActiveCategories(new Set());
+    setQuickIntents(new Set());
+  }, []);
 
-  function handleApply(id: string) {
+  /** Single-select category. Click "All" clears; click any other category
+   *  makes it the sole active selection. Click an already-active chip
+   *  deselects it (back to "All" implicitly). */
+  const toggleCategory = useCallback((key: string) => {
+    startTransition(() => {
+      if (key === "ALL") {
+        setActiveCategories(new Set());
+        return;
+      }
+      setActiveCategories((prev) => {
+        if (prev.has(key) && prev.size === 1) return new Set();
+        return new Set([key]);
+      });
+    });
+  }, []);
+
+  /** Toggle a quick intent on/off. */
+  const toggleQuickIntent = useCallback((key: QuickIntent) => {
+    setQuickIntents((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
+
+  // Open filter anchored to gear button using fixed position — bypasses Leaflet stacking context
+  const handleGearClick = useCallback(() => {
+    if (filterOpen) {
+      setFilterOpen(false);
+      setFilterAnchor(null);
+    } else if (gearBtnRef.current) {
+      const r = gearBtnRef.current.getBoundingClientRect();
+      setFilterAnchor({
+        top: r.bottom + 8,
+        right: window.innerWidth - r.right,
+      });
+      setFilterOpen(true);
+    }
+  }, [filterOpen]);
+
+  /* Recalculate anchor on resize/scroll while popovers are open — without
+     this they drift away from their trigger as the page reflows. */
+  useEffect(() => {
+    if (!filterOpen && !sortDropOpen) return;
+    const reanchor = () => {
+      if (filterOpen && gearBtnRef.current) {
+        const r = gearBtnRef.current.getBoundingClientRect();
+        setFilterAnchor({
+          top: r.bottom + 8,
+          right: window.innerWidth - r.right,
+        });
+      }
+      if (sortDropOpen && sortTriggerRef.current) {
+        const r = sortTriggerRef.current.getBoundingClientRect();
+        setSortAnchor({
+          top: r.bottom + 8,
+          right: window.innerWidth - r.right,
+        });
+      }
+    };
+    window.addEventListener("resize", reanchor);
+    window.addEventListener("scroll", reanchor, true);
+    return () => {
+      window.removeEventListener("resize", reanchor);
+      window.removeEventListener("scroll", reanchor, true);
+    };
+  }, [filterOpen, sortDropOpen]);
+
+  const handleApply = useCallback((id: string) => {
     setApplications((prev) => {
       if (prev[id] && prev[id] !== "none") return prev;
-      return { ...prev, [id]: "applied" };
+      return { ...prev, [id]: "in_review" };
     });
-    setTimeout(() => {
-      setApplications((prev) => ({ ...prev, [id]: "pending" }));
-    }, 1800);
-  }
+  }, []);
 
-  function toggleSave(id: string) {
+  const toggleSave = useCallback((id: string) => {
     setSavedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
-  }
+  }, []);
 
-  const filteredCampaigns = useMemo(() => {
-    let list = [...MOCK_CAMPAIGNS];
-
-    if (query.trim()) {
-      const q = query.toLowerCase();
+  /* Two-tier filter: stable filters + sort happen first, only re-runs when
+     campaign-shape filters change. The status post-pass (saved / applied)
+     is cheap and reruns separately, so save/apply actions don't trigger
+     a full re-filter+re-sort of the universe. */
+  const baseFilteredCampaigns = useMemo(() => {
+    let list = MOCK_CAMPAIGNS.filter((c) => c.cashPay > 0);
+    if (deferredQuery.trim()) {
+      const q = deferredQuery.toLowerCase();
       list = list.filter(
         (c) =>
           c.title.toLowerCase().includes(q) ||
@@ -406,432 +638,1008 @@ export default function DiscoverPage() {
           c.neighborhood.toLowerCase().includes(q),
       );
     }
-
-    if (activeCategory !== "ALL") {
-      list = list.filter(
-        (c) => c.category.toUpperCase() === activeCategory.toUpperCase(),
-      );
+    /* Multi-select categories — empty set means "all". */
+    if (activeCategories.size > 0) {
+      list = list.filter((c) => activeCategories.has(c.category.toUpperCase()));
     }
-
-    if (budgetMin > 0 || budgetMax < 100) {
-      list = list.filter((c) => c.payout >= budgetMin && c.payout <= budgetMax);
-    }
-
-    if (radiusMi < 5) {
-      list = list.filter((c) => c.distanceMi <= radiusMi);
-    }
-
-    if (deadlineDays !== null) {
+    if (payRanges.length)
+      list = list.filter((c) => payRangeMatches(c.cashPay, payRanges));
+    if (tierOnly) list = list.filter((c) => c.minimumTier <= CREATOR_TIER);
+    if (formats.length) list = list.filter((c) => formats.includes(c.format));
+    if (distanceMi < 10) list = list.filter((c) => c.distanceMi <= distanceMi);
+    if (deadlineDays !== null)
       list = list.filter(
         (c) => (daysLeft(c.deadlineIso) ?? 9999) <= deadlineDays,
       );
-    }
 
-    if (activeType === "REMOTE OK") {
-      list = list.filter((c) => c.isRemoteOk);
-    } else if (activeType === "IN-PERSON") {
-      list = list.filter((c) => !c.isRemoteOk);
-    }
+    /* Quick intents — composable creator-meaningful filters. AND-combined
+       with the popover filters above. */
+    if (quickIntents.has("near")) list = list.filter((c) => c.distanceMi <= 1);
+    if (quickIntents.has("soon"))
+      list = list.filter((c) => (daysLeft(c.deadlineIso) ?? 9999) <= 7);
+    if (quickIntents.has("quick"))
+      list = list.filter((c) => {
+        const h = estimatedHours(c.deliverables);
+        return h > 0 && h <= 1;
+      });
+    if (quickIntents.has("top-rate"))
+      list = list.filter(
+        (c) => effectiveHourlyRate(c.cashPay, c.deliverables) >= 80,
+      );
+    if (quickIntents.has("saved"))
+      list = list.filter((c) => savedIds.has(c.id));
 
     switch (sortKey) {
       case "payout":
-        list = list.sort((a, b) => b.payout - a.payout);
+        list = [...list].sort(
+          (a, b) =>
+            totalNormalizedPay(b.cashPay, b.deliverables) -
+            totalNormalizedPay(a.cashPay, a.deliverables),
+        );
+        break;
+      case "rate":
+        list = [...list].sort(
+          (a, b) =>
+            effectiveHourlyRate(b.cashPay, b.deliverables) -
+            effectiveHourlyRate(a.cashPay, a.deliverables),
+        );
+        break;
+      case "closest":
+        list = [...list].sort((a, b) => a.distanceMi - b.distanceMi);
         break;
       case "ending-soon":
-        list = list.sort((a, b) => {
-          const da = daysLeft(a.deadlineIso) ?? 9999;
-          const db = daysLeft(b.deadlineIso) ?? 9999;
-          return da - db;
-        });
+        list = [...list].sort(
+          (a, b) =>
+            (daysLeft(a.deadlineIso) ?? 9999) -
+            (daysLeft(b.deadlineIso) ?? 9999),
+        );
         break;
       case "spots":
-        list = list.sort((a, b) => b.slotsRemaining - a.slotsRemaining);
+        list = [...list].sort((a, b) => b.slotsRemaining - a.slotsRemaining);
         break;
       default:
-        list = list.sort((a, b) => b.matchScore - a.matchScore);
+        /* "Best for you" — composite ranking that creator can trust:
+           - Tier eligibility is binary, already handled by tierOnly
+           - Match score from server (matchScore field)
+           - $/hr nudge (high-rate campaigns get +1pt per $20 over $50)
+           - Urgency penalty doesn't apply (creators don't want time pressure)
+           - Distance nudge (close < 1mi = +5pts)
+           Capped at +/-15pts of base matchScore so server intent dominates. */
+        list = [...list].sort((a, b) => {
+          const composite = (c: Campaign) => {
+            const rate = effectiveHourlyRate(c.cashPay, c.deliverables);
+            const ratePts = rate > 50 ? Math.min(8, (rate - 50) / 20) : 0;
+            const distPts = c.distanceMi <= 1 ? 5 : c.distanceMi <= 3 ? 2 : 0;
+            return c.matchScore + ratePts + distPts;
+          };
+          return composite(b) - composite(a);
+        });
     }
-
     return list;
   }, [
-    query,
-    activeCategory,
-    budgetMin,
-    budgetMax,
-    radiusMi,
+    deferredQuery,
+    activeCategories,
+    payRanges,
+    tierOnly,
+    formats,
+    distanceMi,
     deadlineDays,
-    activeType,
+    quickIntents,
+    savedIds,
     sortKey,
   ]);
 
+  const filteredCampaigns = useMemo(() => {
+    if (statusFilter === "all") return baseFilteredCampaigns;
+    return baseFilteredCampaigns.filter((c) => {
+      if (statusFilter === "new")
+        return !savedIds.has(c.id) && !applications[c.id];
+      if (statusFilter === "saved") return savedIds.has(c.id);
+      if (statusFilter === "applied") return !!applications[c.id];
+      return true;
+    });
+  }, [baseFilteredCampaigns, statusFilter, savedIds, applications]);
+
   const mapCenter = useMemo((): [number, number] => {
-    if (filteredCampaigns.length === 0) return [40.7141, -73.9614];
-    const avgLat =
+    if (!filteredCampaigns.length) return [40.7278, -74.0];
+    const lat =
       filteredCampaigns.reduce((s, c) => s + c.lat, 0) /
       filteredCampaigns.length;
-    const avgLng =
+    const lng =
       filteredCampaigns.reduce((s, c) => s + c.lng, 0) /
       filteredCampaigns.length;
-    return [avgLat, avgLng];
+    return [lat, lng];
   }, [filteredCampaigns]);
 
-  /* ── Toolbar — sticky liquid-glass rail (§ 8.9.5) ───────── */
+  const mapPins = useMemo(
+    () =>
+      filteredCampaigns.map((c) => ({
+        id: c.id,
+        title: c.title,
+        merchantName: c.merchantName,
+        neighborhood: c.neighborhood,
+        category: c.category,
+        slotsRemaining: c.slotsRemaining,
+        slotsTotal: c.slotsTotal,
+        lat: c.lat,
+        lng: c.lng,
+      })),
+    [filteredCampaigns],
+  );
+
+  /** Pins for campaigns the creator can't apply to (tier gate failed). Empty
+   *  set when "Only what I qualify for" is on, since those campaigns are
+   *  already filtered out of the list. */
+  const lockedIds = useMemo(() => {
+    if (tierOnly) return new Set<string>();
+    return new Set(
+      filteredCampaigns
+        .filter((c) => c.minimumTier > CREATOR_TIER)
+        .map((c) => c.id),
+    );
+  }, [tierOnly, filteredCampaigns]);
+
+  /* "All-locked" empty state: list is empty AND tierOnly is on AND turning
+     it off would actually surface campaigns. Drives EmptyState variant. */
+  const wouldShowIfTierOff = useMemo(() => {
+    if (!tierOnly) return false;
+    return MOCK_CAMPAIGNS.some(
+      (c) => c.cashPay > 0 && c.minimumTier > CREATOR_TIER,
+    );
+  }, [tierOnly]);
+  const isAllLockedEmpty =
+    filteredCampaigns.length === 0 && tierOnly && wouldShowIfTierOff;
+
+  /* Intent-driven sections — what creators actually decide between, not
+     a duplicate of the category strip. Each row answers "should I do this
+     tonight?" along a different axis: match · urgency · proximity · rate ·
+     time investment · stretch goals. Order matters: most personal first. */
+  const sectionGroups = useMemo(() => {
+    const eligible = MOCK_CAMPAIGNS.filter(
+      (c) => c.cashPay > 0 && c.minimumTier <= CREATOR_TIER,
+    );
+
+    const byCompositeMatch = [...eligible].sort((a, b) => {
+      const score = (c: Campaign) => {
+        const rate = effectiveHourlyRate(c.cashPay, c.deliverables);
+        const ratePts = rate > 50 ? Math.min(8, (rate - 50) / 20) : 0;
+        const distPts = c.distanceMi <= 1 ? 6 : c.distanceMi <= 2 ? 3 : 0;
+        return c.matchScore + ratePts + distPts;
+      };
+      return score(b) - score(a);
+    });
+
+    const closingSoon = eligible
+      .filter((c) => {
+        const d = daysLeft(c.deadlineIso);
+        return d !== null && d >= 0 && d <= 2;
+      })
+      .sort(
+        (a, b) =>
+          (daysLeft(a.deadlineIso) ?? 999) - (daysLeft(b.deadlineIso) ?? 999),
+      );
+
+    const walking = eligible
+      .filter((c) => c.distanceMi <= 1)
+      .sort((a, b) => a.distanceMi - b.distanceMi);
+
+    const topRate = [...eligible].sort(
+      (a, b) =>
+        effectiveHourlyRate(b.cashPay, b.deliverables) -
+        effectiveHourlyRate(a.cashPay, a.deliverables),
+    );
+
+    const quickWins = eligible.filter((c) => {
+      const h = estimatedHours(c.deliverables);
+      return h > 0 && h <= 1;
+    });
+
+    const stretchTier = MOCK_CAMPAIGNS.filter(
+      (c) =>
+        c.cashPay > 0 &&
+        c.minimumTier > CREATOR_TIER &&
+        c.minimumTier <= CREATOR_TIER + 2,
+    ).sort((a, b) => b.matchScore - a.matchScore);
+
+    return [
+      {
+        key: "picked",
+        label: "Picked for you tonight",
+        sublabel: "Composite of tier, distance, hourly rate, urgency",
+        accent: "#c1121f",
+        campaigns: byCompositeMatch.slice(0, 14),
+      },
+      {
+        key: "closing",
+        label: "Closing in 48 hours",
+        sublabel: "Last call to apply — short windows, quiet competition",
+        accent: "#ff5e2b",
+        campaigns: closingSoon.slice(0, 14),
+      },
+      {
+        key: "walking",
+        label: "Within walking distance",
+        sublabel: "Under one mile from your saved location",
+        accent: "#16a34a",
+        campaigns: walking.slice(0, 14),
+      },
+      {
+        key: "top-rate",
+        label: "Top hourly rate",
+        sublabel: "Best $/hour ratios after deliverables × time normalize",
+        accent: "#0d9488",
+        campaigns: topRate.slice(0, 14),
+      },
+      {
+        key: "quick",
+        label: "Quick wins",
+        sublabel: "One hour or less — short visits, in-and-out content",
+        accent: "#7c3aed",
+        campaigns: quickWins.slice(0, 14),
+      },
+      {
+        key: "stretch",
+        label: "Stretch tier",
+        sublabel: "One tier above yours — applying signals ambition to brands",
+        accent: "#1e5fad",
+        campaigns: stretchTier.slice(0, 14),
+      },
+    ].filter((g) => g.campaigns.length >= 3);
+  }, []);
+
+  /** When a section's "See all →" is clicked, apply the matching filter
+   *  combo so the flat grid below shows the full intent-filtered set. */
+  const handleSectionSeeAll = useCallback(
+    (key: string) => {
+      switch (key) {
+        case "closing":
+          setDeadlineDays(2);
+          setSortKey("ending-soon");
+          break;
+        case "walking":
+          setDistanceMi(1);
+          setSortKey("closest");
+          break;
+        case "top-rate":
+          setSortKey("rate");
+          break;
+        case "quick":
+          if (!quickIntents.has("quick")) toggleQuickIntent("quick");
+          break;
+        case "stretch":
+          setTierOnly(false);
+          break;
+        default:
+          /* "picked" is the default sort — no extra filter needed */
+          setSortKey("match");
+      }
+      scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof window !== "undefined")
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [quickIntents, toggleQuickIntent],
+  );
+
+  const legacyApps = useMemo(() => {
+    const out: Record<string, "none" | "applied" | "pending"> = {};
+    for (const [id, status] of Object.entries(applications)) {
+      out[id] =
+        status === "in_review"
+          ? "applied"
+          : status === "accepted"
+            ? "pending"
+            : "none";
+    }
+    return out;
+  }, [applications]);
+
+  /* ── Toolbar — 2-row Liquid Glass (shared across both views) ── */
+
+  const currentSortLabel =
+    SORT_OPTIONS.find((s) => s.key === sortKey)?.label ?? "Best match";
+
   const toolbar = (
     <div className="disc-toolbar">
-      <div className="disc-search-wrap">
-        <span className="disc-search-icon" aria-hidden="true">
-          ⌕
-        </span>
-        <input
-          type="search"
-          className="disc-search-input"
-          placeholder="Search campaigns, merchants, neighborhoods"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          autoComplete="off"
-          aria-label="Search campaigns"
-        />
-      </div>
-
-      <div className="disc-toolbar-right">
-        <button
-          type="button"
-          className="btn-pill disc-filter-btn"
-          aria-expanded={filterOpen}
-          aria-pressed={activeFilterCount > 0}
-          aria-haspopup="dialog"
-          onClick={() => setFilterOpen((v) => !v)}
-        >
-          Filter
-          {activeFilterCount > 0 && (
-            <span className="disc-filter-btn-count" aria-hidden="true">
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-      </div>
-
-      <div className="disc-view-toggle" role="group" aria-label="View mode">
-        <button
-          type="button"
-          className={`disc-view-btn${viewMode === "grid" ? " disc-view-btn--active" : ""}`}
-          aria-pressed={viewMode === "grid"}
-          onClick={() => setViewMode("grid")}
-        >
-          Grid
-        </button>
-        <button
-          type="button"
-          className={`disc-view-btn${viewMode === "split" ? " disc-view-btn--active" : ""}`}
-          aria-pressed={viewMode === "split"}
-          onClick={() => setViewMode("split")}
-        >
-          Map
-        </button>
-      </div>
-    </div>
-  );
-
-  /* ── Sort row — segmented pill group ────────────────────── */
-  const sortRow = (
-    <div className="disc-sort-row">
-      <span className="disc-sort-label">
-        <strong>{filteredCampaigns.length}</strong>{" "}
-        {activeFilterCount > 0 || query.trim() ? "matching" : "open"}
-      </span>
-      <div className="disc-sort-pills" role="group" aria-label="Sort campaigns">
-        {(
-          [
-            { key: "match" as SortKey, label: "Best match" },
-            { key: "payout" as SortKey, label: "Highest pay" },
-            { key: "ending-soon" as SortKey, label: "Ending soon" },
-            { key: "spots" as SortKey, label: "Most spots" },
-          ] satisfies { key: SortKey; label: string }[]
-        ).map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className={`disc-sort-btn${sortKey === key ? " disc-sort-btn--active" : ""}`}
-            aria-pressed={sortKey === key}
-            onClick={() => setSortKey(key)}
+      {/* Row 1: Search pill (with gear filter trigger) + view toggle */}
+      <div className="disc-toolbar-row1">
+        <div className="disc-search-wrap" ref={searchWrapRef}>
+          {/* Magnifier */}
+          <svg
+            className="disc-search-icon"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
           >
-            {label}
+            <circle
+              cx="6.5"
+              cy="6.5"
+              r="4.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M10.5 10.5L14 14"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          <input
+            type="search"
+            className="disc-search-input"
+            placeholder="Search campaigns, merchants, neighborhoods"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoComplete="off"
+            aria-label="Search campaigns"
+          />
+
+          {/* Gear icon — fixed-position filter trigger (bypasses Leaflet z-index) */}
+          <button
+            type="button"
+            ref={gearBtnRef}
+            className={`disc-gear-btn${filterOpen ? " disc-gear-btn--active" : ""}`}
+            aria-expanded={filterOpen}
+            aria-haspopup="dialog"
+            onClick={handleGearClick}
+            aria-label={`Filters${activeFilterCount > 0 ? ` (${activeFilterCount} active)` : ""}`}
+          >
+            {/* Filter slider icon — three horizontal rails with offset knobs (iOS-style) */}
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <line
+                x1="2.5"
+                y1="4"
+                x2="13.5"
+                y2="4"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+              <line
+                x1="2.5"
+                y1="8"
+                x2="13.5"
+                y2="8"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+              <line
+                x1="2.5"
+                y1="12"
+                x2="13.5"
+                y2="12"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+              <circle
+                cx="10"
+                cy="4"
+                r="1.7"
+                fill="var(--bg-fill, #fff)"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+              <circle
+                cx="5"
+                cy="8"
+                r="1.7"
+                fill="var(--bg-fill, #fff)"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+              <circle
+                cx="11"
+                cy="12"
+                r="1.7"
+                fill="var(--bg-fill, #fff)"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+            </svg>
+            {activeFilterCount > 0 && (
+              <span
+                className="disc-filter-count"
+                aria-label={`${activeFilterCount} active`}
+              >
+                {activeFilterCount}
+              </span>
+            )}
           </button>
-        ))}
+        </div>
+
+        {/* View toggle — icon-only glass capsule */}
+        <div className="disc-view-toggle" role="group" aria-label="View mode">
+          <button
+            type="button"
+            className={`disc-view-btn${viewMode === "grid" ? " disc-view-btn--active" : ""}`}
+            aria-pressed={viewMode === "grid"}
+            onClick={() => setViewMode("grid")}
+            aria-label="Grid view"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 13 13"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="0.5"
+                y="0.5"
+                width="5"
+                height="5"
+                rx="1"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+              <rect
+                x="7.5"
+                y="0.5"
+                width="5"
+                height="5"
+                rx="1"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+              <rect
+                x="0.5"
+                y="7.5"
+                width="5"
+                height="5"
+                rx="1"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+              <rect
+                x="7.5"
+                y="7.5"
+                width="5"
+                height="5"
+                rx="1"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className={`disc-view-btn${viewMode === "split" ? " disc-view-btn--active" : ""}`}
+            aria-pressed={viewMode === "split"}
+            onClick={() => setViewMode("split")}
+            aria-label="Map view"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinejoin="round"
+              />
+              <circle
+                cx="12"
+                cy="9"
+                r="2.5"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Row 2: Multi-select categories + sort dropdown */}
+      <div className="disc-toolbar-row2">
+        <div
+          className="disc-cat-strip"
+          role="tablist"
+          aria-label="Category filter"
+        >
+          {CATEGORIES.map(({ key, label }) => {
+            const isAll = key === "ALL";
+            const isActive = isAll
+              ? activeCategories.size === 0
+              : activeCategories.has(key);
+            /* Each chip carries its own category theme via inline vars,
+               so multi-select shows Fitness in green next to Beauty in pink
+               (instead of all chips inheriting a single page-wide accent). */
+            const chipTheme = !isAll ? CATEGORY_THEMES[key] : undefined;
+            const chipStyle: React.CSSProperties | undefined =
+              chipTheme && isActive
+                ? {
+                    ["--cat-accent" as string]: chipTheme.accent,
+                    ["--cat-accent-deep" as string]: chipTheme.deep,
+                  }
+                : undefined;
+            return (
+              <button
+                key={key}
+                type="button"
+                role="tab"
+                className={`disc-cat-btn${isActive ? " disc-cat-btn--active" : ""}`}
+                aria-selected={isActive}
+                style={chipStyle}
+                onClick={() => {
+                  toggleCategory(key);
+                  scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="disc-sort-meta">
+          <span className="disc-sort-count">
+            <strong>{filteredCampaigns.length}</strong>{" "}
+            {activeFilterCount > 0 || query.trim() ? "matching" : "open"}
+          </span>
+          <span className="disc-sort-sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="disc-sort-label-text">Sort:</span>
+          <div className="disc-sort-dropdown">
+            <button
+              ref={sortTriggerRef}
+              type="button"
+              className={`disc-sort-trigger${sortDropOpen ? " disc-sort-trigger--open" : ""}`}
+              onClick={() => {
+                if (sortDropOpen) {
+                  setSortDropOpen(false);
+                  setSortAnchor(null);
+                } else if (sortTriggerRef.current) {
+                  const r = sortTriggerRef.current.getBoundingClientRect();
+                  setSortAnchor({
+                    top: r.bottom + 8,
+                    right: window.innerWidth - r.right,
+                  });
+                  setSortDropOpen(true);
+                }
+              }}
+              aria-expanded={sortDropOpen}
+              aria-haspopup="listbox"
+            >
+              {currentSortLabel}
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2.5 4.5l3.5 3.5 3.5-3.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            {/* Dropdown is portaled to <body> — see SortDropPortal at end of component render */}
+          </div>
+        </div>
       </div>
     </div>
   );
 
-  /* ── Category strip — pill row inheriting .btn-pill ─────── */
-  const CATEGORIES = [
-    { key: "ALL", label: "All" },
-    { key: "FOOD & DRINK", label: "Food & Drink" },
-    { key: "RETAIL", label: "Retail" },
-    { key: "WELLNESS", label: "Wellness" },
-    { key: "BEAUTY", label: "Beauty" },
-    { key: "FITNESS", label: "Fitness" },
-    { key: "LIFESTYLE", label: "Lifestyle" },
-  ];
+  /* ── Split view ───────────────────────────────────────────── */
 
-  const catStrip = (
-    <div className="disc-cat-strip" role="tablist" aria-label="Category filter">
-      {CATEGORIES.map(({ key, label }) => (
-        <button
-          key={key}
-          type="button"
-          role="tab"
-          className="btn-pill disc-cat-btn"
-          aria-pressed={activeCategory === key}
-          aria-selected={activeCategory === key}
-          onClick={() => setActiveCategory(key)}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
+  const themeStyle = getThemeStyle(activeCategory);
 
-  /* ── Grid view ────────────────────────────────────────────── */
-  if (viewMode === "grid") {
+  if (viewMode === "split") {
     return (
-      <div className="cw-page disc">
-        {filterOpen && (
-          <FilterModal
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            activeType={activeType}
-            setActiveType={setActiveType}
-            budgetMin={budgetMin}
-            setBudgetMin={setBudgetMin}
-            budgetMax={budgetMax}
-            setBudgetMax={setBudgetMax}
-            radiusMi={radiusMi}
-            setRadiusMi={setRadiusMi}
+      <div
+        className={`disc disc--split-mode${mapFullscreen ? " disc--map-fullscreen" : ""}`}
+        data-cat={activeCategory}
+        style={themeStyle}
+      >
+        {toolbar}
+
+        <div className="disc-split">
+          {/* Left: scrollable card list */}
+          <div className="disc-split-list" data-lenis-prevent>
+            <div className="disc-split-scroll" ref={scrollRef}>
+              {filteredCampaigns.length === 0 ? (
+                <div className="disc-split-empty">
+                  <EmptyState
+                    onClear={clearFilters}
+                    variant={isAllLockedEmpty ? "all-locked" : "no-match"}
+                    onTurnOffTier={() => setTierOnly(false)}
+                  />
+                </div>
+              ) : (
+                <div className="disc-split-grid">
+                  {filteredCampaigns.map((c, i) => (
+                    <CampaignCard
+                      key={c.id}
+                      c={c}
+                      idx={i}
+                      isActive={activeId === c.id}
+                      appStatus={applications[c.id] ?? "none"}
+                      saved={savedIds.has(c.id)}
+                      locked={!tierOnly && c.minimumTier > CREATOR_TIER}
+                      onHover={handleCardHover}
+                      onLeave={handleCardLeave}
+                      onSave={toggleSave}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: map panel */}
+          <div className="disc-split-map">
+            <div className="disc-map-panel">
+              <button
+                type="button"
+                className="disc-map-expand-btn"
+                onClick={() => setMapFullscreen((v) => !v)}
+                aria-label={
+                  mapFullscreen ? "Exit fullscreen" : "Fullscreen map"
+                }
+              >
+                {mapFullscreen ? (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="4 14 10 14 10 20" />
+                    <polyline points="20 10 14 10 14 4" />
+                    <line x1="10" y1="14" x2="3" y2="21" />
+                    <line x1="21" y1="3" x2="14" y2="10" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="15 3 21 3 21 9" />
+                    <polyline points="9 21 3 21 3 15" />
+                    <line x1="21" y1="3" x2="14" y2="10" />
+                    <line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                )}
+              </button>
+              <MapView
+                campaigns={mapPins}
+                applications={legacyApps}
+                onApply={handleApply}
+                activeId={activeId}
+                accent={CATEGORY_THEMES[activeCategory]?.accent}
+                lockedIds={lockedIds}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Filter popover — rendered at disc container level so position:fixed escapes Leaflet stacking context */}
+        {filterOpen && filterAnchor && (
+          <FilterPopover
+            ref={popoverRef}
+            anchor={filterAnchor}
+            themeStyle={themeStyle}
+            quickIntents={quickIntents}
+            toggleQuickIntent={toggleQuickIntent}
+            payRanges={payRanges}
+            setPayRanges={setPayRanges}
+            tierOnly={tierOnly}
+            setTierOnly={setTierOnly}
+            formats={formats}
+            setFormats={setFormats}
+            distanceMi={distanceMi}
+            setDistanceMi={setDistanceMi}
             deadlineDays={deadlineDays}
             setDeadlineDays={setDeadlineDays}
             filteredCount={filteredCampaigns.length}
-            onClose={() => setFilterOpen(false)}
+            onClose={() => {
+              setFilterOpen(false);
+              setFilterAnchor(null);
+            }}
             onClear={clearFilters}
           />
         )}
-        <header className="cw-header">
-          <div className="cw-header__left">
-            <p className="cw-eyebrow cw-eyebrow--live">
-              DISCOVER · {filteredCampaigns.length} OPEN · NYC
-            </p>
-            <h1 className="cw-title">Find your next campaign</h1>
-          </div>
-        </header>
 
-        {toolbar}
-        {catStrip}
-
-        <div className="disc-grid-meta">{sortRow}</div>
-
-        <div className="disc-grid">
-          {filteredCampaigns.length === 0 ? (
-            <EmptyState onClear={clearFilters} />
-          ) : (
-            filteredCampaigns.map((c, i) => (
-              <CampaignCard
-                key={c.id}
-                c={c}
-                idx={i}
-                appStatus={applications[c.id] || "none"}
-                saved={savedIds.has(c.id)}
-                onApply={handleApply}
-                onSave={toggleSave}
-              />
-            ))
-          )}
-        </div>
+        {sortDropOpen && sortAnchor && (
+          <SortDropPortal
+            ref={sortDropRef}
+            anchor={sortAnchor}
+            themeStyle={themeStyle}
+            sortKey={sortKey}
+            onSelect={(k) => {
+              setSortKey(k);
+              setSortDropOpen(false);
+              setSortAnchor(null);
+            }}
+          />
+        )}
       </div>
     );
   }
 
-  /* ── Split / Map view ─────────────────────────────────────── */
+  /* ── Grid view ────────────────────────────────────────────── */
+
   return (
-    <div
-      className={`disc disc--split-mode${mapFullscreen ? " disc--map-fullscreen" : ""}`}
-    >
-      {filterOpen && (
-        <FilterModal
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-          activeType={activeType}
-          setActiveType={setActiveType}
-          budgetMin={budgetMin}
-          setBudgetMin={setBudgetMin}
-          budgetMax={budgetMax}
-          setBudgetMax={setBudgetMax}
-          radiusMi={radiusMi}
-          setRadiusMi={setRadiusMi}
-          deadlineDays={deadlineDays}
-          setDeadlineDays={setDeadlineDays}
-          filteredCount={filteredCampaigns.length}
-          onClose={() => setFilterOpen(false)}
-          onClear={clearFilters}
-        />
-      )}
+    <div className="cw-page disc" data-cat={activeCategory} style={themeStyle}>
+      <header className="cw-header">
+        <div className="cw-header__left">
+          <p className="cw-eyebrow">
+            Discover · {filteredCampaigns.length} open · NYC
+          </p>
+          <h1 className="cw-title">Find your next campaign</h1>
+        </div>
+      </header>
+
       {toolbar}
-      {catStrip}
-      <div className="disc-split">
-        {/* Left: scrollable 2-col card grid — same CampaignCard as GRID view */}
-        <div className="disc-split-list" ref={listRef}>
-          <div className="disc-split-meta">{sortRow}</div>
-          <div className="disc-split-scroll" ref={scrollRef}>
-            {filteredCampaigns.length === 0 ? (
-              <div className="disc-split-empty">
-                <EmptyState onClear={clearFilters} />
-              </div>
-            ) : (
-              <div className="disc-split-grid">
-                {filteredCampaigns.map((c, i) => (
+
+      {isLoading ? (
+        <div className="disc-grid">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      ) : filteredCampaigns.length === 0 ? (
+        <EmptyState
+          onClear={clearFilters}
+          variant={isAllLockedEmpty ? "all-locked" : "no-match"}
+          onTurnOffTier={() => setTierOnly(false)}
+        />
+      ) : activeCategories.size === 0 && !query.trim() ? (
+        /* All-mode (no filter, no search) → Airbnb-style sections grouped by
+           theme. Each section has its own colored eyebrow + horizontal row.
+           Selecting a category collapses to flat grid below. */
+        <div className="disc-sections">
+          {sectionGroups.map((g) => (
+            <section
+              key={g.key}
+              className="disc-section"
+              style={{ ["--section-accent" as string]: g.accent }}
+            >
+              <header className="disc-section-head">
+                <div className="disc-section-headline">
+                  <h2 className="disc-section-title">{g.label}</h2>
+                  <p className="disc-section-sublabel">{g.sublabel}</p>
+                </div>
+                <button
+                  type="button"
+                  className="disc-section-more"
+                  onClick={() => handleSectionSeeAll(g.key)}
+                >
+                  See all
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2.5 6h7M6.5 3l3 3-3 3"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </header>
+              <div className="disc-section-row">
+                {g.campaigns.map((c, i) => (
                   <CampaignCard
                     key={c.id}
                     c={c}
                     idx={i}
-                    appStatus={applications[c.id] || "none"}
+                    appStatus={applications[c.id] ?? "none"}
                     saved={savedIds.has(c.id)}
-                    onApply={handleApply}
+                    locked={!tierOnly && c.minimumTier > CREATOR_TIER}
                     onSave={toggleSave}
-                    onHover={setActiveId}
-                    onLeave={() => setActiveId(null)}
-                    isActive={activeId === c.id}
                   />
                 ))}
               </div>
-            )}
-          </div>
-          {/* disc-split-scroll */}
+            </section>
+          ))}
         </div>
-
-        {/* Right: sticky map panel with expand/collapse toggle */}
-        <div className="disc-split-map">
-          <div className="disc-map-panel">
-            <button
-              type="button"
-              className="disc-map-expand-btn"
-              onClick={() => setMapFullscreen((v) => !v)}
-              aria-label={mapFullscreen ? "Exit fullscreen" : "Fullscreen map"}
-            >
-              {mapFullscreen ? (
-                /* Collapse icon */
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <polyline points="4 14 10 14 10 20" />
-                  <polyline points="20 10 14 10 14 4" />
-                  <line x1="10" y1="14" x2="3" y2="21" />
-                  <line x1="21" y1="3" x2="14" y2="10" />
-                </svg>
-              ) : (
-                /* Expand icon */
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <polyline points="15 3 21 3 21 9" />
-                  <polyline points="9 21 3 21 3 15" />
-                  <line x1="21" y1="3" x2="14" y2="10" />
-                  <line x1="3" y1="21" x2="10" y2="14" />
-                </svg>
-              )}
-            </button>
-            <MapView
-              campaigns={filteredCampaigns.map(toCampaignPin)}
-              center={mapCenter}
-              activeId={activeId ?? undefined}
-              showPricePills
-              showPopups
-              mono
-              onPinClick={setActiveId}
-              onPopupClose={() => setActiveId(null)}
+      ) : (
+        /* Filtered mode (one category selected OR a search query) →
+           dense flat grid, 6 across at desktop. */
+        <div className="disc-grid disc-grid--compact">
+          {filteredCampaigns.map((c, i) => (
+            <CampaignCard
+              key={c.id}
+              c={c}
+              idx={i}
+              appStatus={applications[c.id] ?? "none"}
+              saved={savedIds.has(c.id)}
+              locked={!tierOnly && c.minimumTier > CREATOR_TIER}
+              onSave={toggleSave}
             />
-          </div>
+          ))}
         </div>
-      </div>
+      )}
+
+      {filterOpen && filterAnchor && (
+        <FilterPopover
+          ref={popoverRef}
+          anchor={filterAnchor}
+          themeStyle={themeStyle}
+          quickIntents={quickIntents}
+          toggleQuickIntent={toggleQuickIntent}
+          payRanges={payRanges}
+          setPayRanges={setPayRanges}
+          tierOnly={tierOnly}
+          setTierOnly={setTierOnly}
+          formats={formats}
+          setFormats={setFormats}
+          distanceMi={distanceMi}
+          setDistanceMi={setDistanceMi}
+          deadlineDays={deadlineDays}
+          setDeadlineDays={setDeadlineDays}
+          filteredCount={filteredCampaigns.length}
+          onClose={() => {
+            setFilterOpen(false);
+            setFilterAnchor(null);
+          }}
+          onClear={clearFilters}
+        />
+      )}
+
+      {sortDropOpen && sortAnchor && (
+        <SortDropPortal
+          ref={sortDropRef}
+          anchor={sortAnchor}
+          sortKey={sortKey}
+          onSelect={(k) => {
+            setSortKey(k);
+            setSortDropOpen(false);
+            setSortAnchor(null);
+          }}
+        />
+      )}
     </div>
   );
 }
 
-/* ── Campaign Card (full grid view) — Airbnb-style ────────── */
+/* ── Campaign Card ────────────────────────────────────────── */
 
-function CampaignCard({
+const CampaignCard = memo(function CampaignCard({
   c,
   idx,
   appStatus,
   saved,
-  onApply,
   onSave,
   onHover,
   onLeave,
   isActive,
+  locked,
 }: {
   c: Campaign;
   idx: number;
   appStatus: ApplicationStatus;
   saved: boolean;
-  onApply: (id: string) => void;
   onSave: (id: string) => void;
   onHover?: (id: string) => void;
   onLeave?: () => void;
   isActive?: boolean;
+  locked?: boolean;
 }) {
-  const router = useRouter();
-  const earnAmount = formatEarn(c.payout);
-  const slotsUrgent = c.slotsRemaining < 3;
-  const dl = daysLeft(c.deadlineIso);
   const [imgIdx, setImgIdx] = useState(0);
   const total = c.images.length;
+  const dl = daysLeft(c.deadlineIso);
 
-  const applyLabel =
-    appStatus === "applied"
-      ? "Applied"
-      : appStatus === "pending"
-        ? "Pending review"
-        : "Apply";
+  /* Hover preload — when creator's pointer enters the card we know they
+     might click the carousel arrow next. Warm the browser cache so the swap
+     is instant instead of waiting on the network. */
+  const handleCardEnter = useCallback(() => {
+    onHover?.(c.id);
+    if (typeof window === "undefined" || total <= 1) return;
+    const nextSrc = c.images[(imgIdx + 1) % total];
+    const preload = new window.Image();
+    preload.src = nextSrc;
+  }, [onHover, c.id, c.images, imgIdx, total]);
+  const urgentBadge = showSpotsBadge(c.slotsRemaining, c.slotsTotal);
+  const { headline, estimate } = normalizePay(
+    c.cashPay,
+    c.payUnit,
+    c.deliverables,
+  );
+  const hourlyRate = effectiveHourlyRate(c.cashPay, c.deliverables);
+  const isRejected = appStatus === "rejected";
 
-  return (
-    <article
-      className={`disc-card${isActive ? " disc-card--active" : ""}`}
-      style={{ animationDelay: `${Math.min(idx, 8) * 40}ms` }}
-      data-campaign-id={c.id}
-      onClick={() => router.push(`/creator/campaigns/${c.id}`)}
-      onMouseEnter={() => onHover?.(c.id)}
-      onMouseLeave={() => onLeave?.()}
-    >
-      {/* Photo Card with Bottom Gradient Overlay (§ 8.7) */}
+  // Whole card is the click target → detail page. Save heart and carousel
+  // arrows stop propagation so they don't trigger navigation.
+  const detailHref = `/creator/discover/${c.id}`;
+
+  const cardClassName = [
+    "disc-card",
+    isActive ? "disc-card--active" : "",
+    isRejected ? "disc-card--rejected" : "",
+    locked ? "disc-card--locked" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const articleBody = (
+    <>
+      {/* Photo area */}
       <div className="disc-card-img-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <NextImage
           className="disc-card-img"
           src={c.images[imgIdx]}
           alt=""
-          loading="lazy"
+          fill
+          sizes="(min-width: 1100px) 20vw, (min-width: 768px) 33vw, 50vw"
+          priority={idx < 4}
+          loading={idx < 4 ? "eager" : "lazy"}
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjZDhkNGM4Ii8+PC9zdmc+"
+          style={{ objectFit: "cover" }}
         />
 
-        {/* Carousel arrows — appear on hover, do not navigate the card */}
+        {/* Tier chip — liquid glass, top-left */}
+        <div className="disc-card-tier-chip">
+          <span
+            className="disc-card-tier-dot"
+            style={{ background: tierDotColor(c.minimumTier) }}
+            aria-hidden="true"
+          />
+          {tierChipLabel(c.minimumTier)}
+        </div>
+
+        {/* Save button — top-right, glass circle */}
+        <button
+          type="button"
+          className={`disc-card-save${saved ? " disc-card-save--saved" : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onSave(c.id);
+          }}
+          aria-label={saved ? "Remove from saved" : "Save campaign"}
+          aria-pressed={saved}
+        >
+          {saved ? "♥" : "♡"}
+        </button>
+
+        {/* Carousel arrows */}
         {total > 1 && (
           <>
             <button
               type="button"
-              className="disc-card-arrow disc-card-arrow--prev lg-surface lg-surface--badge"
+              className="disc-card-arrow disc-card-arrow--prev"
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setImgIdx((i) => (i - 1 + total) % total);
               }}
@@ -855,8 +1663,9 @@ function CampaignCard({
             </button>
             <button
               type="button"
-              className="disc-card-arrow disc-card-arrow--next lg-surface lg-surface--badge"
+              className="disc-card-arrow disc-card-arrow--next"
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setImgIdx((i) => (i + 1) % total);
               }}
@@ -881,28 +1690,7 @@ function CampaignCard({
           </>
         )}
 
-        {/* Scarcity badge — liquid-glass pill (§ 8.9.6) */}
-        {slotsUrgent && (
-          <span className="disc-card-badge lg-surface lg-surface--badge">
-            {c.slotsRemaining} spot{c.slotsRemaining !== 1 ? "s" : ""} left
-          </span>
-        )}
-
-        {/* Save — liquid-glass circle */}
-        <button
-          type="button"
-          className={`disc-card-save lg-surface lg-surface--badge${saved ? " disc-card-save--saved" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSave(c.id);
-          }}
-          aria-label={saved ? "Remove from saved" : "Save campaign"}
-          aria-pressed={saved}
-        >
-          {saved ? "♥" : "♡"}
-        </button>
-
-        {/* Carousel dots — reflect actual image count, click to jump */}
+        {/* Dots */}
         {total > 1 && (
           <div className="disc-card-dots">
             {c.images.map((_, i) => (
@@ -911,561 +1699,577 @@ function CampaignCard({
                 type="button"
                 className={`disc-card-dot${i === imgIdx ? " disc-card-dot--active" : ""}`}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   setImgIdx(i);
                 }}
-                aria-label={`Go to photo ${i + 1}`}
+                aria-label={`Photo ${i + 1}`}
               />
             ))}
           </div>
         )}
 
-        {/* Title overlay (Photo Card title + metadata) */}
+        {/* Rejected overlay */}
+        {isRejected && (
+          <span
+            className="disc-card-not-selected"
+            aria-label="Application not selected"
+          >
+            Not selected
+          </span>
+        )}
+
+        {/* Title overlay — bottom-left. Tagline reveals on hover, lifting the title. */}
         <div className="disc-card-overlay">
           <h3 className="disc-card-overlay-title">{c.title}</h3>
+          {c.tagline && (
+            <p className="disc-card-overlay-tagline">
+              <span>{c.tagline}</span>
+            </p>
+          )}
           <span className="disc-card-overlay-meta">
             {c.neighborhood} · {c.distanceMi}mi
           </span>
         </div>
       </div>
 
-      {/* Below-image content — Product register: merchant + payout + CTA */}
+      {/* Below-photo content */}
       <div className="disc-card-content">
-        <div className="disc-card-merchant">{c.merchantName}</div>
-
-        <div className="disc-card-earn-row">
-          <span className="disc-card-earn">{earnAmount}</span>
-          <span className="disc-card-pay-label">/ {c.payoutLabel}</span>
+        <div className="disc-card-merchant-row">
+          <span className="disc-card-merchant">{c.merchantName}</span>
           {dl !== null && dl > 0 && dl <= 7 && (
             <span className="disc-card-deadline">{dl}d left</span>
           )}
         </div>
 
-        <div className="disc-card-specs">
-          {c.slotsRemaining} slots · {c.isRemoteOk ? "Remote OK" : "In-person"}
-        </div>
-
-        <button
-          type="button"
-          className={`disc-card-apply${
-            appStatus === "applied"
-              ? " disc-card-apply--applied"
-              : appStatus === "pending"
-                ? " disc-card-apply--pending"
-                : ""
-          }`}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (appStatus === "none") onApply(c.id);
-          }}
-          disabled={appStatus !== "none"}
-          aria-label={`${applyLabel} — ${c.title}`}
-        >
-          {applyLabel}
-        </button>
-      </div>
-    </article>
-  );
-}
-
-/* ── Split Card (map left-panel, compact) ─────────────────── */
-
-function SplitCard({
-  c,
-  isActive,
-  appStatus,
-  saved,
-  onHover,
-  onLeave,
-  onApply,
-  onSave,
-}: {
-  c: Campaign;
-  isActive: boolean;
-  appStatus: ApplicationStatus;
-  saved: boolean;
-  onHover: (id: string) => void;
-  onLeave: () => void;
-  onApply: (id: string) => void;
-  onSave: (id: string) => void;
-}) {
-  const earnAmount = formatEarn(c.payout);
-  const dl = daysLeft(c.deadlineIso);
-  const slotsUrgent = c.slotsRemaining < 3;
-  const [imgIdx, setImgIdx] = useState(0);
-  const total = c.images.length;
-
-  const applyLabel =
-    appStatus === "applied"
-      ? "Applied"
-      : appStatus === "pending"
-        ? "Pending"
-        : "Apply";
-
-  return (
-    <article
-      className={`disc-split-card${isActive ? " disc-split-card--active" : ""}`}
-      data-campaign-id={c.id}
-      onMouseEnter={() => onHover(c.id)}
-      onMouseLeave={onLeave}
-      onFocus={() => onHover(c.id)}
-      onBlur={onLeave}
-      tabIndex={0}
-    >
-      <div className="disc-split-card-img-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="disc-split-card-img"
-          src={c.images[imgIdx]}
-          alt=""
-          loading="lazy"
-        />
-        {total > 1 && (
-          <>
-            <button
-              type="button"
-              className="disc-card-arrow disc-card-arrow--prev disc-card-arrow--sm lg-surface lg-surface--badge"
-              onClick={(e) => {
-                e.stopPropagation();
-                setImgIdx((i) => (i - 1 + total) % total);
-              }}
-              aria-label="Previous photo"
-            >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M9 2L4 7L9 12"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className="disc-card-arrow disc-card-arrow--next disc-card-arrow--sm lg-surface lg-surface--badge"
-              onClick={(e) => {
-                e.stopPropagation();
-                setImgIdx((i) => (i + 1) % total);
-              }}
-              aria-label="Next photo"
-            >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M5 2L10 7L5 12"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <div className="disc-card-dots disc-card-dots--sm">
-              {c.images.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`disc-card-dot${i === imgIdx ? " disc-card-dot--active" : ""}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setImgIdx(i);
-                  }}
-                  aria-label={`Go to photo ${i + 1}`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        <button
-          type="button"
-          className={`disc-split-card-save lg-surface lg-surface--badge${saved ? " disc-split-card-save--saved" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSave(c.id);
-          }}
-          aria-label={saved ? "Remove from saved" : "Save campaign"}
-          aria-pressed={saved}
-        >
-          {saved ? "♥" : "♡"}
-        </button>
-        {slotsUrgent && (
-          <span className="disc-split-card-badge lg-surface lg-surface--badge">
-            {c.slotsRemaining} left
+        <div className="disc-card-pay-row">
+          <span className="disc-card-pay-headline">
+            {headline}
+            {hourlyRate > 0 && (
+              <span className="disc-card-pay-rate">~${hourlyRate}/hr</span>
+            )}
           </span>
-        )}
-      </div>
-
-      <div className="disc-split-card-body">
-        <div className="disc-split-card-merchant">{c.merchantName}</div>
-        <div className="disc-split-card-location">
-          {c.neighborhood} · {c.distanceMi}mi
-        </div>
-
-        <div className="disc-split-card-earn-row">
-          <span className="disc-split-card-earn">{earnAmount}</span>
-          <span className="disc-split-card-pay">/ {c.payoutLabel}</span>
-          {dl !== null && dl > 0 && dl <= 7 && (
-            <span className="disc-split-card-dl">{dl}d left</span>
+          {estimate && (
+            <span className="disc-card-pay-estimate">{estimate}</span>
           )}
         </div>
 
-        <div className="disc-split-card-title">{c.title}</div>
-
-        <div className="disc-split-card-foot">
-          <div className="disc-split-card-meta">
-            {c.slotsRemaining} slots ·{" "}
-            {c.isRemoteOk ? "Remote OK" : "In-person"}
-          </div>
-          <button
-            type="button"
-            className={`disc-split-card-apply${appStatus !== "none" ? " disc-split-card-apply--done" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (appStatus === "none") onApply(c.id);
-            }}
-            disabled={appStatus !== "none"}
-            aria-label={`${applyLabel} — ${c.title}`}
-          >
-            {applyLabel}
-          </button>
+        <div className="disc-card-specs">
+          {pluralize(c.slotsRemaining, "slot")} ·{" "}
+          {c.format === "in-person"
+            ? "In-person"
+            : c.format === "remote"
+              ? "Remote"
+              : "Hybrid"}
         </div>
+
+        {urgentBadge && (
+          <span className="disc-card-urgency">
+            {c.slotsRemaining} {c.slotsRemaining === 1 ? "spot" : "spots"} left
+          </span>
+        )}
+
+        {/* Locked badge — small inline tier-required pill, only on locked cards.
+            Unlocked cards have no extra hint; cursor:pointer is enough. */}
+        {locked && (
+          <div className="disc-card-foot-hint disc-card-foot-hint--locked">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="3"
+                y="6.5"
+                width="8"
+                height="6"
+                rx="1.2"
+                stroke="currentColor"
+                strokeWidth="1.4"
+              />
+              <path
+                d="M4.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </svg>
+            {tierChipLabel(c.minimumTier)} required
+          </div>
+        )}
+
+        {/* Application status pill (in-review / accepted) — replaces the old
+            Apply button. Sits below the specs, subtle and informational. */}
+        {!isRejected && !locked && appStatus !== "none" && (
+          <span
+            className={`disc-card-status-pill disc-card-status-pill--${appStatus}`}
+          >
+            {appStatus === "in_review" ? "In review" : "Accepted"}
+          </span>
+        )}
       </div>
-    </article>
+    </>
   );
-}
 
-/* ── Empty State ──────────────────────────────────────────── */
+  // Locked cards aren't clickable — the rest are wrapped in <a> for navigation.
+  if (locked) {
+    return (
+      <article
+        className={cardClassName}
+        style={
+          idx < 12 ? { animationDelay: `${idx * 30}ms` } : { animation: "none" }
+        }
+        data-campaign-id={c.id}
+        onMouseEnter={handleCardEnter}
+        onMouseLeave={() => onLeave?.()}
+      >
+        {articleBody}
+      </article>
+    );
+  }
 
-function EmptyState({ onClear }: { onClear: () => void }) {
   return (
-    <div className="disc-empty" role="status">
-      <h2 className="disc-empty-title">Nothing matches yet</h2>
-      <p className="disc-empty-sub">
-        Try widening your filters or clearing the search. New campaigns post
-        every day.
-      </p>
-      <div className="disc-empty-actions">
-        <button type="button" className="btn-primary" onClick={onClear}>
-          Clear filters
-        </button>
-        <Link href="/creator/dashboard" className="btn-ghost">
-          Back to dashboard
-        </Link>
+    <Link
+      href={detailHref}
+      prefetch={false}
+      className="disc-card-link"
+      onMouseEnter={handleCardEnter}
+      onMouseLeave={() => onLeave?.()}
+      aria-label={`View ${c.title}`}
+    >
+      <article
+        className={cardClassName}
+        style={
+          idx < 12 ? { animationDelay: `${idx * 30}ms` } : { animation: "none" }
+        }
+        data-campaign-id={c.id}
+      >
+        {articleBody}
+      </article>
+    </Link>
+  );
+});
+
+/* ── Skeleton Card ───────────────────────────────────────── */
+
+function SkeletonCard() {
+  return (
+    <div className="disc-skeleton" aria-hidden="true">
+      <div className="disc-skeleton-img" />
+      <div className="disc-skeleton-body">
+        <div className="disc-skeleton-line disc-skeleton-line--sm" />
+        <div className="disc-skeleton-line disc-skeleton-line--lg" />
+        <div className="disc-skeleton-line disc-skeleton-line--md" />
+        <div className="disc-skeleton-btn" />
       </div>
     </div>
   );
 }
 
-/* ── Filter Modal — Airbnb-style full-screen overlay ────── */
+/* ── Empty State ─────────────────────────────────────────── */
 
-function FilterModal({
-  activeCategory,
-  setActiveCategory,
-  activeType,
-  setActiveType,
-  budgetMin,
-  setBudgetMin,
-  budgetMax,
-  setBudgetMax,
-  radiusMi,
-  setRadiusMi,
-  deadlineDays,
-  setDeadlineDays,
-  filteredCount,
-  onClose,
+function EmptyState({
   onClear,
+  variant = "no-match",
+  onTurnOffTier,
 }: {
-  activeCategory: string;
-  setActiveCategory: (v: string) => void;
-  activeType: TypeFilter;
-  setActiveType: (v: TypeFilter) => void;
-  budgetMin: number;
-  setBudgetMin: (v: number) => void;
-  budgetMax: number;
-  setBudgetMax: (v: number) => void;
-  radiusMi: number;
-  setRadiusMi: (v: number) => void;
+  onClear: () => void;
+  /** "all-locked" — every available campaign is above creator's tier.
+   *  "no-match" — generic filter-too-tight case. */
+  variant?: "no-match" | "all-locked";
+  onTurnOffTier?: () => void;
+}) {
+  const isAllLocked = variant === "all-locked";
+  return (
+    <div className="disc-empty" role="status">
+      <div className="disc-empty-icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          {isAllLocked ? (
+            <>
+              <rect
+                x="14"
+                y="22"
+                width="20"
+                height="16"
+                rx="2"
+                stroke="var(--mist)"
+                strokeWidth="2"
+              />
+              <path
+                d="M18 22v-4a6 6 0 0 1 12 0v4"
+                stroke="var(--mist)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </>
+          ) : (
+            <>
+              <circle
+                cx="24"
+                cy="24"
+                r="22"
+                stroke="var(--mist)"
+                strokeWidth="2"
+              />
+              <path
+                d="M16 24h16M24 16v16"
+                stroke="var(--mist)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </>
+          )}
+        </svg>
+      </div>
+      <h2 className="disc-empty-title">
+        {isAllLocked ? "No campaigns at your tier yet" : "No campaigns match"}
+      </h2>
+      <p className="disc-empty-sub">
+        {isAllLocked
+          ? "Turn off Only what I qualify for to browse the full universe — applying to a stretch tier is sometimes how brands discover you."
+          : "Try widening your filters. New campaigns post every day."}
+      </p>
+      {isAllLocked && onTurnOffTier ? (
+        <button type="button" className="btn-ghost" onClick={onTurnOffTier}>
+          Browse all campaigns
+        </button>
+      ) : (
+        <button type="button" className="btn-ghost" onClick={onClear}>
+          Reset filters
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ── Filter Popover (anchored, no backdrop) ──────────────── */
+
+type FilterPopoverProps = {
+  anchor: { top: number; right: number };
+  themeStyle?: React.CSSProperties;
+  quickIntents: Set<QuickIntent>;
+  toggleQuickIntent: (k: QuickIntent) => void;
+  payRanges: PayRangeKey[];
+  setPayRanges: (v: PayRangeKey[]) => void;
+  tierOnly: boolean;
+  setTierOnly: (v: boolean) => void;
+  formats: FormatFilter[];
+  setFormats: (v: FormatFilter[]) => void;
+  distanceMi: number;
+  setDistanceMi: (v: number) => void;
   deadlineDays: number | null;
   setDeadlineDays: (v: number | null) => void;
   filteredCount: number;
   onClose: () => void;
   onClear: () => void;
-}) {
-  // Decorative histogram heights (simulate payout distribution)
-  const HISTOGRAM = [
-    12, 20, 36, 52, 64, 58, 44, 38, 30, 24, 18, 14, 10, 8, 6, 5, 4, 4, 3, 3,
-  ];
+};
 
-  return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="disc-filter-backdrop"
-        aria-hidden="true"
-        onClick={onClose}
-      />
+const FilterPopover = forwardRef<HTMLDivElement, FilterPopoverProps>(
+  function FilterPopover(
+    {
+      anchor,
+      themeStyle,
+      quickIntents,
+      toggleQuickIntent,
+      payRanges,
+      setPayRanges,
+      tierOnly,
+      setTierOnly,
+      formats,
+      setFormats,
+      distanceMi,
+      setDistanceMi,
+      deadlineDays,
+      setDeadlineDays,
+      filteredCount,
+      onClose,
+      onClear,
+    }: FilterPopoverProps,
+    ref,
+  ) {
+    useEffect(() => {
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      document.addEventListener("keydown", onKey);
+      return () => document.removeEventListener("keydown", onKey);
+    }, [onClose]);
 
-      {/* Modal panel */}
+    function togglePayRange(r: PayRangeKey) {
+      setPayRanges(
+        payRanges.includes(r)
+          ? payRanges.filter((x) => x !== r)
+          : [...payRanges, r],
+      );
+    }
+    function toggleFormat(f: FormatFilter) {
+      setFormats(
+        formats.includes(f) ? formats.filter((x) => x !== f) : [...formats, f],
+      );
+    }
+
+    const DISTANCES: { label: string; value: number }[] = [
+      { label: "1 mi", value: 1 },
+      { label: "5 mi", value: 5 },
+      { label: "10 mi", value: 10 },
+      { label: "NYC", value: 99 },
+    ];
+
+    if (typeof document === "undefined") return null;
+
+    return createPortal(
       <div
-        className="disc-filter-modal"
+        ref={ref}
+        className="disc-filter-popover-anchor"
         role="dialog"
         aria-modal="true"
         aria-label="Filter campaigns"
+        style={{
+          position: "fixed",
+          top: anchor.top,
+          right: anchor.right,
+          zIndex: 9999,
+          ...themeStyle,
+        }}
       >
-        {/* Header */}
-        <div className="disc-filter-modal-header">
-          <button
-            type="button"
-            className="disc-filter-modal-close"
-            onClick={onClose}
-            aria-label="Close filters"
-          >
-            ✕
-          </button>
-          <h2 className="disc-filter-modal-title">Filters</h2>
-        </div>
+        <div className="disc-filter-popover-arrow" aria-hidden="true" />
+        <div className="disc-filter-popover">
+          {/* Header */}
+          <div className="disc-filter-popover-header">
+            <h2 className="disc-filter-popover-title">Filters</h2>
+            <button
+              type="button"
+              className="disc-filter-clear-btn"
+              onClick={onClear}
+            >
+              Clear all
+            </button>
+          </div>
 
-        {/* Scrollable body */}
-        <div className="disc-filter-modal-body">
-          {/* Category */}
-          <div className="disc-filter-group">
-            <span className="disc-filter-group-label">Category</span>
-            <div className="disc-filter-options">
-              {(
-                [
-                  "ALL",
-                  "FOOD & DRINK",
-                  "RETAIL",
-                  "WELLNESS",
-                  "BEAUTY",
-                  "FITNESS",
-                  "LIFESTYLE",
-                ] as const
-              ).map((cat) => (
+          {/* Scrollable body */}
+          <div className="disc-filter-popover-body">
+            {/* Quick filters — 1-tap creator-meaningful pre-built combos.
+                Lives at the top of the popover so it's the first thing
+                creators see when refining. */}
+            <div className="disc-filter-group">
+              <span className="disc-filter-label">Quick filters</span>
+              <div className="disc-filter-chips">
+                {QUICK_INTENTS.map(({ key, label, hint }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`disc-chip${quickIntents.has(key) ? " disc-chip--active" : ""}`}
+                    aria-pressed={quickIntents.has(key)}
+                    onClick={() => toggleQuickIntent(key)}
+                    title={hint}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Pay range */}
+            <div className="disc-filter-group">
+              <span className="disc-filter-label">Pay range</span>
+              <div className="disc-filter-chips">
+                {(["0-50", "50-150", "150+"] as PayRangeKey[]).map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    className={`disc-chip${payRanges.includes(r) ? " disc-chip--active" : ""}`}
+                    aria-pressed={payRanges.includes(r)}
+                    onClick={() => togglePayRange(r)}
+                  >
+                    {r === "0-50"
+                      ? "$1–50"
+                      : r === "50-150"
+                        ? "$50–150"
+                        : "$150+"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tier eligibility */}
+            <div className="disc-filter-group">
+              <div className="disc-filter-toggle-row">
+                <div>
+                  <span className="disc-filter-label">
+                    Only what I qualify for
+                  </span>
+                  <p className="disc-filter-hint">
+                    Bronze (T2){" "}
+                    <abbr
+                      title="Campaigns at your tier level or below"
+                      className="disc-filter-info"
+                    >
+                      ⓘ
+                    </abbr>
+                  </p>
+                </div>
                 <button
-                  key={cat}
                   type="button"
-                  className="btn-pill"
-                  aria-pressed={activeCategory === cat}
-                  onClick={() => setActiveCategory(cat)}
+                  role="switch"
+                  aria-checked={tierOnly}
+                  className={`disc-toggle${tierOnly ? " disc-toggle--on" : ""}`}
+                  onClick={() => setTierOnly(!tierOnly)}
+                  aria-label="Show only eligible campaigns"
                 >
-                  {cat === "ALL" ? "Any" : cat}
+                  <span className="disc-toggle-thumb" />
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Budget range */}
-          <div className="disc-filter-group">
-            <div className="disc-filter-group-header">
-              <span className="disc-filter-group-label">Budget Range</span>
-              <span className="disc-filter-group-value">
-                {budgetMin === 0 && budgetMax === 100
-                  ? "Any"
-                  : `$${budgetMin} – ${budgetMax === 100 ? "$100+" : `$${budgetMax}`}`}
-              </span>
-            </div>
-
-            {/* Histogram bars */}
-            <div className="disc-histogram" aria-hidden="true">
-              {HISTOGRAM.map((h, i) => {
-                const pct = (i / HISTOGRAM.length) * 100;
-                const inRange = pct >= budgetMin && pct <= budgetMax;
-                return (
-                  <div
-                    key={i}
-                    className={`disc-histogram-bar${inRange ? " disc-histogram-bar--in-range" : ""}`}
-                    style={{ height: `${h}px` }}
-                  />
-                );
-              })}
-            </div>
-
-            {/* Dual slider */}
-            <div className="disc-slider-wrap disc-slider-wrap--dual">
-              <input
-                type="range"
-                className="disc-slider disc-slider--min"
-                min={0}
-                max={100}
-                step={5}
-                value={budgetMin}
-                onChange={(e) => {
-                  const v = Number(e.target.value);
-                  if (v <= budgetMax) setBudgetMin(v);
-                }}
-                aria-label="Minimum budget"
-              />
-              <input
-                type="range"
-                className="disc-slider disc-slider--max"
-                min={0}
-                max={100}
-                step={5}
-                value={budgetMax}
-                onChange={(e) => {
-                  const v = Number(e.target.value);
-                  if (v >= budgetMin) setBudgetMax(v);
-                }}
-                aria-label="Maximum budget"
-              />
-              <div
-                className="disc-slider-track-fill"
-                style={{
-                  left: `${budgetMin}%`,
-                  width: `${budgetMax - budgetMin}%`,
-                }}
-              />
-            </div>
-
-            {/* Min/Max price inputs */}
-            <div className="disc-price-inputs">
-              <div className="disc-price-input-wrap">
-                <span className="disc-price-input-label">Minimum</span>
-                <div className="disc-price-input-field">
-                  <span className="disc-price-input-sym">$</span>
-                  <input
-                    type="number"
-                    className="disc-price-input"
-                    value={budgetMin}
-                    min={0}
-                    max={budgetMax}
-                    step={5}
-                    onChange={(e) => {
-                      const v = Math.min(Number(e.target.value), budgetMax);
-                      setBudgetMin(v);
-                    }}
-                    aria-label="Minimum budget"
-                  />
-                </div>
-              </div>
-              <div className="disc-price-input-divider" aria-hidden="true">
-                –
-              </div>
-              <div className="disc-price-input-wrap">
-                <span className="disc-price-input-label">Maximum</span>
-                <div className="disc-price-input-field">
-                  <span className="disc-price-input-sym">$</span>
-                  <input
-                    type="number"
-                    className="disc-price-input"
-                    value={budgetMax}
-                    min={budgetMin}
-                    max={100}
-                    step={5}
-                    onChange={(e) => {
-                      const v = Math.max(Number(e.target.value), budgetMin);
-                      setBudgetMax(v);
-                    }}
-                    aria-label="Maximum budget"
-                  />
-                </div>
               </div>
             </div>
-          </div>
 
-          {/* Distance */}
-          <div className="disc-filter-group">
-            <div className="disc-filter-group-header">
-              <span className="disc-filter-group-label">Distance</span>
-              <span className="disc-filter-group-value">
-                {radiusMi >= 5 ? "Any" : `≤ ${radiusMi} mi`}
-              </span>
+            {/* Format */}
+            <div className="disc-filter-group">
+              <span className="disc-filter-label">Format</span>
+              <div className="disc-filter-chips">
+                {(["in-person", "remote", "hybrid"] as FormatFilter[]).map(
+                  (f) => (
+                    <button
+                      key={f}
+                      type="button"
+                      className={`disc-chip${formats.includes(f) ? " disc-chip--active" : ""}`}
+                      aria-pressed={formats.includes(f)}
+                      onClick={() => toggleFormat(f)}
+                    >
+                      {f === "in-person"
+                        ? "In-person"
+                        : f === "remote"
+                          ? "Remote"
+                          : "Hybrid"}
+                    </button>
+                  ),
+                )}
+              </div>
             </div>
-            <div className="disc-slider-wrap">
-              <input
-                type="range"
-                className="disc-slider"
-                min={0.5}
-                max={5}
-                step={0.5}
-                value={radiusMi}
-                onChange={(e) => setRadiusMi(Number(e.target.value))}
-                aria-label="Maximum distance in miles"
-              />
-              <div
-                className="disc-slider-track-fill"
-                style={{
-                  left: "0%",
-                  width: `${((radiusMi - 0.5) / 4.5) * 100}%`,
-                }}
-              />
-            </div>
-            <div className="disc-slider-labels">
-              <span>0.5 mi</span>
-              <span>5 mi+</span>
-            </div>
-          </div>
 
-          {/* Closing within */}
-          <div className="disc-filter-group">
-            <span className="disc-filter-group-label">Closing Within</span>
-            <div className="disc-filter-options">
-              {([null, 3, 7, 14, 30] as (number | null)[]).map((d) => (
-                <button
-                  key={d ?? "any"}
-                  type="button"
-                  className="btn-pill"
-                  aria-pressed={deadlineDays === d}
-                  onClick={() => setDeadlineDays(d)}
-                >
-                  {d === null
-                    ? "Any"
-                    : d === 3
-                      ? "3 days"
+            {/* Distance */}
+            <div className="disc-filter-group">
+              <span className="disc-filter-label">Distance</span>
+              <div className="disc-filter-chips">
+                {DISTANCES.map(({ label, value }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={`disc-chip${distanceMi === value ? " disc-chip--active" : ""}`}
+                    aria-pressed={distanceMi === value}
+                    onClick={() => setDistanceMi(value)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Deadline */}
+            <div className="disc-filter-group">
+              <span className="disc-filter-label">Deadline</span>
+              <div className="disc-filter-chips">
+                {([null, 7, 14, 30] as (number | null)[]).map((d) => {
+                  const label =
+                    d === null
+                      ? "Any"
                       : d === 7
-                        ? "1 week"
+                        ? "This week"
                         : d === 14
                           ? "2 weeks"
-                          : "1 month"}
-                </button>
-              ))}
+                          : "Month";
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      className={`disc-chip${deadlineDays === d ? " disc-chip--active" : ""}`}
+                      aria-pressed={deadlineDays === d}
+                      onClick={() => setDeadlineDays(d)}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Type */}
-          <div className="disc-filter-group">
-            <span className="disc-filter-group-label">Type</span>
-            <div className="disc-filter-options">
-              {(["ALL", "IN-PERSON", "REMOTE OK"] as TypeFilter[]).map(
-                (type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    className="btn-pill"
-                    aria-pressed={activeType === type}
-                    onClick={() => setActiveType(type)}
-                  >
-                    {type === "ALL" ? "Any" : type}
-                  </button>
-                ),
-              )}
-            </div>
+          {/* Footer CTA */}
+          <div className="disc-filter-popover-footer">
+            <button
+              type="button"
+              className="disc-filter-show-btn"
+              onClick={onClose}
+            >
+              Show {pluralize(filteredCount, "campaign")}
+            </button>
           </div>
         </div>
+      </div>,
+      document.body,
+    );
+  },
+);
 
-        {/* Footer */}
-        <div className="disc-filter-modal-footer">
-          <button type="button" className="btn-ghost" onClick={onClear}>
-            Clear all
+/* ── Sort Dropdown Portal (anchored, escapes Leaflet stacking) ──── */
+
+type SortDropPortalProps = {
+  anchor: { top: number; right: number };
+  themeStyle?: React.CSSProperties;
+  sortKey: SortKey;
+  onSelect: (k: SortKey) => void;
+};
+
+const SortDropPortal = forwardRef<HTMLDivElement, SortDropPortalProps>(
+  function SortDropPortal({ anchor, themeStyle, sortKey, onSelect }, ref) {
+    if (typeof document === "undefined") return null;
+
+    return createPortal(
+      <div
+        ref={ref}
+        className="disc-sort-drop"
+        role="listbox"
+        aria-label="Sort options"
+        style={{
+          position: "fixed",
+          top: anchor.top,
+          right: anchor.right,
+          zIndex: 9999,
+          ...themeStyle,
+        }}
+      >
+        {SORT_OPTIONS.map(({ key, label, tooltip }) => (
+          <button
+            key={key}
+            type="button"
+            role="option"
+            aria-selected={sortKey === key}
+            className={`disc-sort-drop-item${sortKey === key ? " disc-sort-drop-item--active" : ""}`}
+            data-tooltip={tooltip}
+            onClick={() => onSelect(key)}
+          >
+            {sortKey === key && (
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 6l3 3 5-5"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+            {label}
           </button>
-          <button type="button" className="btn-primary" onClick={onClose}>
-            Show {filteredCount} campaign{filteredCount !== 1 ? "s" : ""}
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
+        ))}
+      </div>,
+      document.body,
+    );
+  },
+);

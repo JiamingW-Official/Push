@@ -253,7 +253,7 @@ export function CreatorCampaignCard({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontFamily: '"CS Genio Mono", monospace',
+              fontFamily: "var(--font-display)",
               fontSize: "11px",
               letterSpacing: "0.10em",
               textTransform: "uppercase",
@@ -290,7 +290,7 @@ export function CreatorCampaignCard({
                 padding: "2px 6px",
                 backgroundColor: "var(--accent)",
                 color: "var(--surface)",
-                fontFamily: '"CS Genio Mono", monospace',
+                fontFamily: "var(--font-display)",
                 fontSize: "9px",
                 fontWeight: 700,
                 letterSpacing: "0.08em",
@@ -313,7 +313,7 @@ export function CreatorCampaignCard({
             padding: "4px 10px",
             backgroundColor: "var(--ink)",
             color: "var(--surface)",
-            fontFamily: '"CS Genio Mono", monospace',
+            fontFamily: "var(--font-display)",
             fontSize: campaign.payout === 0 ? "11px" : "13px",
             fontWeight: 700,
             letterSpacing: "0.04em",
@@ -387,7 +387,7 @@ export function CreatorCampaignCard({
         >
           <span
             style={{
-              fontFamily: '"CS Genio Mono", monospace',
+              fontFamily: "var(--font-display)",
               fontSize: "10px",
               letterSpacing: "0.10em",
               textTransform: "uppercase",
@@ -406,7 +406,7 @@ export function CreatorCampaignCard({
                 backgroundColor:
                   CATEGORY_BG[campaign.category] ?? "rgba(10,10,10,0.07)",
                 color: CATEGORY_COLOR[campaign.category] ?? "var(--ink)",
-                fontFamily: '"CS Genio Mono", monospace',
+                fontFamily: "var(--font-display)",
                 fontSize: "9px",
                 fontWeight: 700,
                 letterSpacing: "0.10em",
@@ -461,7 +461,7 @@ export function CreatorCampaignCard({
               />
               <span
                 style={{
-                  fontFamily: '"CS Genio Mono", monospace',
+                  fontFamily: "var(--font-display)",
                   fontSize: "11px",
                   color: "var(--success)",
                   letterSpacing: "0.04em",
@@ -498,7 +498,7 @@ export function CreatorCampaignCard({
               </svg>
               <span
                 style={{
-                  fontFamily: '"CS Genio Mono", monospace',
+                  fontFamily: "var(--font-display)",
                   fontSize: "11px",
                   color: "var(--brand-red)",
                   letterSpacing: "0.04em",
@@ -532,7 +532,7 @@ export function CreatorCampaignCard({
           </div>
           <span
             style={{
-              fontFamily: '"CS Genio Mono", monospace',
+              fontFamily: "var(--font-display)",
               fontSize: "10px",
               color: barColor,
               letterSpacing: "0.04em",
@@ -556,7 +556,7 @@ export function CreatorCampaignCard({
           {/* Deadline */}
           <span
             style={{
-              fontFamily: '"CS Genio Mono", monospace',
+              fontFamily: "var(--font-display)",
               fontSize: "11px",
               color: "rgba(10,10,10,0.50)",
               letterSpacing: "0.04em",
@@ -580,7 +580,7 @@ export function CreatorCampaignCard({
               color: applyColor,
               border: "none",
               borderRadius: 0,
-              fontFamily: '"CS Genio Mono", monospace',
+              fontFamily: "var(--font-display)",
               fontSize: "11px",
               fontWeight: 700,
               letterSpacing: "0.08em",

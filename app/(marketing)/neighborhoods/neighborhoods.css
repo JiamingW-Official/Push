@@ -1,6 +1,6 @@
 /* ============================================================
    Neighborhoods Pages — list + detail
-   Design system: direct angles, 6-brand colors, Darky + CS Genio Mono
+   Design system: direct angles, 6-brand colors, Darky + Open Sans
    ============================================================ */
 
 /* ── Shared layout ─────────────────────────────────────────── */
@@ -64,7 +64,7 @@
 }
 
 .nh-hero-stat-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(40px, 4.4vw, 64px);
   font-weight: 200;
   letter-spacing: -0.05em;
@@ -74,7 +74,7 @@
 
 .nh-hero-stat-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -168,7 +168,7 @@
 }
 
 .nh-pilot-card-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(28px, 2.6vw, 40px);
   font-weight: 200;
   letter-spacing: -0.04em;
@@ -178,7 +178,7 @@
 
 .nh-pilot-card-num-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -189,7 +189,7 @@
 
 .nh-pilot-card-cta {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -259,7 +259,7 @@
 
 .nh-tab {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -314,7 +314,7 @@
 
 .nh-section-count {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--graphite);
@@ -413,7 +413,7 @@
   top: var(--space-2);
   left: var(--space-2);
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -432,7 +432,7 @@
 }
 
 .nh-card-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -454,7 +454,7 @@
 }
 
 .nh-card-meta-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -464,7 +464,7 @@
 
 .nh-card-meta-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -473,7 +473,7 @@
 
 .nh-card-category {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -484,7 +484,7 @@
 .nh-card-cta {
   margin-top: auto;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -527,7 +527,7 @@
 
 .nhd-breadcrumb {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(245, 242, 236, 0.5);
@@ -553,7 +553,7 @@
 
 .nhd-hero-borough {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -633,7 +633,7 @@
 
 .nhd-stat-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -649,7 +649,7 @@
 
 .nhd-section-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -706,7 +706,7 @@
 
 .nhd-merchant-category {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -714,7 +714,7 @@
 }
 
 .nhd-merchant-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -724,7 +724,7 @@
 
 .nhd-merchant-address {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--graphite);
   line-height: 1.4;
 }
@@ -744,7 +744,7 @@
 }
 
 .nhd-merchant-meta-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -753,7 +753,7 @@
 
 .nhd-merchant-meta-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -806,7 +806,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 900;
   color: rgba(255, 255, 255, 0.6);
@@ -820,7 +820,7 @@
 }
 
 .nhd-creator-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -830,7 +830,7 @@
 
 .nhd-creator-handle {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
   margin-bottom: var(--space-2);
 }
@@ -846,7 +846,7 @@
 
 .nhd-creator-score-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -856,7 +856,7 @@
 /* Tier badge */
 .nhd-tier-badge {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -929,14 +929,14 @@
 
 .nhd-timeline-handle {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .nhd-timeline-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
   white-space: nowrap;
   overflow: hidden;
@@ -949,7 +949,7 @@
 }
 
 .nhd-timeline-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -962,7 +962,7 @@
 
 .nhd-timeline-time {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.4);
 }
 
@@ -997,7 +997,7 @@
 }
 
 .nhd-leaderboard-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 200;
   letter-spacing: -0.04em;
@@ -1021,7 +1021,7 @@
 
 .nhd-leaderboard-handle {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--graphite);
 }
 
@@ -1092,7 +1092,7 @@
 }
 
 .nhd-nearby-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -1101,7 +1101,7 @@
 
 .nhd-nearby-borough {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1110,7 +1110,7 @@
 
 .nhd-nearby-campaigns {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--accent-blue);
   margin-top: auto;
   padding-top: var(--space-2);

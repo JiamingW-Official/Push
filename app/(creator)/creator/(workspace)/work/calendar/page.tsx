@@ -1076,11 +1076,6 @@ export default function CreatorCalendarPage() {
                     >
                       <div className="cal-cell__num-row">
                         <span className="cal-cell__num">{date.getDate()}</span>
-                        {dayEvents.length > 0 && (
-                          <span className="cal-cell__count" aria-hidden>
-                            {dayEvents.length}
-                          </span>
-                        )}
                       </div>
 
                       {/* P0-3: Campaign-accented event pills */}
@@ -1099,10 +1094,7 @@ export default function CreatorCalendarPage() {
                                 aria-hidden
                               />
                               <span className="cal-pill-text">
-                                {truncate(
-                                  `${EVENT_TYPE_LABELS[ev.type]} · ${ev.merchantName}`,
-                                  20,
-                                )}
+                                {truncate(ev.merchantName, 20)}
                               </span>
                             </span>
                             {/* Hover card */}
@@ -1143,6 +1135,16 @@ export default function CreatorCalendarPage() {
                     </div>
                   );
                 })}
+
+                {/* P1-8: Ghost row when month ends before Saturday */}
+                {monthGrid[monthGrid.length - 1] === null && (
+                  <div className="cal-ghost-row" aria-hidden>
+                    Nothing scheduled&nbsp;·&nbsp;
+                    <a href="/creator/discover" className="cal-ghost-row__link">
+                      browse Discover →
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           )}

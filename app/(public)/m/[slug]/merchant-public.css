@@ -44,7 +44,7 @@
 
 .mp-section-num {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -63,7 +63,7 @@
 /* ── Eyebrow / small text ──────────────────────────────────── */
 .mp-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -74,7 +74,7 @@
 /* ── Category badge ────────────────────────────────────────── */
 .mp-category-badge {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -178,7 +178,7 @@
 
 .mp-visit-badge-eyebrow {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -197,7 +197,7 @@
 
 .mp-visit-badge-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.55);
 }
 
@@ -215,7 +215,7 @@
 
 .mp-scroll-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -329,7 +329,7 @@
 }
 
 .mp-campaign-img-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--snow);
@@ -353,7 +353,7 @@
 
 .mp-spots {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -403,7 +403,7 @@
 
 .mp-payout-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -420,7 +420,7 @@
 
 .mp-deadline {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
 }
 
@@ -488,7 +488,7 @@
 
 .mp-creator-handle {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
@@ -498,7 +498,7 @@
 }
 
 .mp-creator-tier {
-  font-size: 10px;
+  font-size: 14px;
 }
 
 /* ── 05 STATS ──────────────────────────────────────────────── */
@@ -562,7 +562,7 @@
 
 .mp-stat-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -663,7 +663,7 @@
 
 .mp-review-campaign {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -711,7 +711,7 @@
 
 .mp-visit-block-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -835,7 +835,7 @@
 
 .mp-related-neighborhood {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.65);
   text-transform: uppercase;
   letter-spacing: 0.08em;

@@ -48,10 +48,10 @@
 }
 
 .adm-topbar__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -63,8 +63,8 @@
 }
 
 .adm-topbar__title {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--snow);
@@ -84,10 +84,10 @@
   height: 32px;
   padding: 0 16px;
   border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--snow);
   background: rgba(255, 255, 255, 0.10);
@@ -191,10 +191,10 @@
 }
 
 .adm-page-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-bottom: 8px;
@@ -235,10 +235,10 @@
 }
 
 .adm-kpi-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-bottom: 12px;
@@ -260,7 +260,7 @@
 
 .adm-kpi-card__sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   line-height: 1.4;
 }
@@ -277,12 +277,12 @@
   align-items: center;
   gap: 12px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .adm-alert-bar__label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -296,10 +296,10 @@
    Section heading
    ------------------------------------------------------------ */
 .adm-section-head {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-bottom: 16px;
@@ -321,7 +321,7 @@
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   min-width: 800px;
 }
 
@@ -332,10 +332,10 @@
 
 .adm-table th {
   padding: 10px 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   text-align: left;
@@ -376,8 +376,8 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -400,10 +400,10 @@
   height: 40px;
   padding: 0 24px;
   border-radius: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   text-decoration: none;
@@ -475,10 +475,10 @@
   align-items: center;
   padding: 4px 10px;
   border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.12s, box-shadow 0.12s;
@@ -526,7 +526,7 @@
 .adm-filter-bar input,
 .adm-filter-bar select {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   background: var(--snow);
   border: 1px solid var(--hairline);
@@ -585,10 +585,10 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   border: 1px solid var(--hairline);
@@ -616,7 +616,7 @@
 }
 
 .adm-tab__count {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   background: var(--surface-3);
   color: var(--ink-5);
@@ -640,7 +640,7 @@
   gap: 16px;
   margin-top: 16px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-5);
 }
 
@@ -657,8 +657,8 @@
   height: 32px;
   padding: 0 8px;
   border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   background: var(--surface-2);
   color: var(--ink-3);
@@ -696,15 +696,15 @@
   color: var(--snow);
   margin-bottom: 12px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .adm-bulk-btn {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.12);
   color: var(--snow);
@@ -742,16 +742,16 @@
 }
 
 .adm-chart-eyebrow span:first-child {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
 }
 
 .adm-chart-eyebrow span:last-child {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 900;
   color: var(--graphite);
@@ -775,26 +775,26 @@
 }
 
 .adm-feed-title {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
 }
 
 .adm-feed-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
 }
 
 .adm-event-pill {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 2px 6px;
   border-radius: 4px;
@@ -826,10 +826,10 @@
 }
 
 .adm-danger-zone__title {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brand-red);
 }
@@ -864,7 +864,7 @@
 
 .adm-danger-action__desc-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
 }
 
@@ -924,17 +924,17 @@
 /* Two-stage destructive confirm — type-to-confirm input */
 .adm-confirm-prompt {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin-bottom: 8px;
   line-height: 1.5;
 }
 
 .adm-confirm-prompt strong {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--brand-red);
   background: rgba(193, 18, 31, 0.08);
@@ -946,7 +946,7 @@
   width: 100%;
   height: 40px;
   padding: 8px 12px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
   background: var(--surface-2);
@@ -978,7 +978,7 @@
   gap: 12px;
   padding: 14px 40px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   z-index: 9999;
   border-top: 1px solid rgba(255, 255, 255, 0.10);
@@ -1008,7 +1008,7 @@
   padding: 12px 24px;
   border-radius: 8px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   z-index: 9999;
   box-shadow: var(--shadow-2);
@@ -1047,10 +1047,10 @@
 }
 
 .adm-stat-item__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-5);
   margin-bottom: 8px;

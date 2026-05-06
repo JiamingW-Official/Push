@@ -260,7 +260,7 @@ function DeltaRow({
     >
       <span
         style={{
-          fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 10,
           color: "rgba(255,255,255,0.4)",
           width: 80,
@@ -273,7 +273,7 @@ function DeltaRow({
       </span>
       <span
         style={{
-          fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 12,
           color: "rgba(255,255,255,0.35)",
           textDecoration: "line-through",
@@ -283,7 +283,7 @@ function DeltaRow({
       </span>
       <span
         style={{
-          fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 11,
           color: "rgba(255,255,255,0.45)",
         }}
@@ -292,7 +292,7 @@ function DeltaRow({
       </span>
       <span
         style={{
-          fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 12,
           color: "var(--surface)",
           fontWeight: 700,
@@ -560,7 +560,7 @@ export function TierUpgradeReveal({
             position: "absolute",
             top: 24,
             left: 24,
-            fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+            fontFamily: "var(--font-display)",
             fontSize: "11px",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
@@ -587,7 +587,7 @@ export function TierUpgradeReveal({
           {newScore !== undefined && (
             <span
               style={{
-                fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+                fontFamily: "var(--font-display)",
                 fontSize: "10px",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
@@ -679,7 +679,7 @@ export function TierUpgradeReveal({
           {/* Tagline */}
           <div
             style={{
-              fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: "14px",
               color: "rgba(255,255,255,0.55)",
               textAlign: "center",
@@ -709,7 +709,7 @@ export function TierUpgradeReveal({
           <div
             style={{
               width: "100%",
-              fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: "10px",
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -759,7 +759,7 @@ export function TierUpgradeReveal({
                 />
                 <span
                   style={{
-                    fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+                    fontFamily: "var(--font-display)",
                     fontSize: "13px",
                     color: "rgba(255,255,255,0.82)",
                     letterSpacing: "0.01em",
@@ -777,7 +777,7 @@ export function TierUpgradeReveal({
               <div
                 style={{
                   width: "100%",
-                  fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+                  fontFamily: "var(--font-display)",
                   fontSize: "10px",
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
@@ -850,7 +850,7 @@ export function TierUpgradeReveal({
           {/* Dismiss hint */}
           <p
             style={{
-              fontFamily: "'CS Genio Mono', 'Courier New', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: "10px",
               color: "rgba(255,255,255,0.2)",
               marginTop: 12,

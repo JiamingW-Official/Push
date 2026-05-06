@@ -165,8 +165,8 @@
 }
 
 .mn-peek-live-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -183,8 +183,8 @@
 }
 
 .mn-peek-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -218,7 +218,7 @@
 }
 
 .mn-hero-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
@@ -284,7 +284,7 @@
 }
 
 .mn-value-row-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.45;
   letter-spacing: -0.08em;
@@ -372,7 +372,7 @@
 }
 
 .mn-roi-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -381,16 +381,16 @@
 }
 
 .mn-roi-caption {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.40);
   margin: 0;
 }
 
 .mn-roi-fine {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.5;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.55);
@@ -416,8 +416,8 @@
 }
 
 .mn-roi-tile-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -436,7 +436,7 @@
 }
 
 .mn-roi-tile-body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.5;
   letter-spacing: -0.02em;
@@ -477,8 +477,8 @@
 }
 
 .mn-how-tile-cap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -523,8 +523,8 @@
 }
 
 .mn-how-text {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.50;
   letter-spacing: -0.06em;
   color: var(--ink-3);
@@ -569,7 +569,7 @@
 }
 
 .mn-table-lede {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
   line-height: 1.40;
@@ -589,12 +589,12 @@
   width: 100%;
   min-width: 640px;
   border-collapse: collapse;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 .mn-compare-table thead th {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -620,14 +620,14 @@
 .mn-compare-table tbody td {
   padding: 24px 16px 24px 0;
   border-bottom: 1px dotted rgba(10, 10, 10, 0.18);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.40;
   letter-spacing: -0.08em;
   vertical-align: top;
 }
 
 .mn-compare-table .mn-td-feature {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.01em;
@@ -713,7 +713,7 @@
 }
 
 .mn-quote-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -768,8 +768,8 @@
 }
 
 .mn-ticket-fine {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.72);

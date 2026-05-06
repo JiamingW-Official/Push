@@ -84,7 +84,7 @@
   z-index: 200;
   background: var(--surface);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -135,7 +135,7 @@
 
 .dash-view-btn {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 8px 16px;
@@ -175,7 +175,7 @@
 
 .dash-tier-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -183,7 +183,7 @@
 }
 
 .dash-score-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 900;
   color: var(--dark);
@@ -381,7 +381,7 @@
   cursor: pointer;
   z-index: 51;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 14px;
   transition: background 0.2s;
 }
 
@@ -424,7 +424,7 @@
 
 .dash-filter-chip {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -466,7 +466,7 @@
 
 .dash-sort-btn {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   padding: 4px 10px;
@@ -498,7 +498,7 @@
 
 .dash-recs-title {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -618,7 +618,7 @@
 
 .dash-card-business {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -629,7 +629,7 @@
 }
 
 .dash-card-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--dark);
@@ -643,7 +643,7 @@
 
 .dash-card-meta {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--text-muted);
   display: flex;
   gap: 8px;
@@ -652,7 +652,7 @@
 
 /* Payout column */
 .dash-card-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--champagne);
@@ -671,7 +671,7 @@
   border: 1px solid rgba(0, 48, 73, 0.18);
   padding: 2px 7px;
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -782,12 +782,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.04em;
 }
 
 .dash-status-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -795,7 +795,7 @@
 
 .dash-status-label {
   opacity: 0.6;
-  font-size: 10px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -821,7 +821,7 @@
 
 .dash-detail-business {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -838,7 +838,7 @@
 
 .dash-detail-badge {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -850,7 +850,7 @@
 
 .dash-detail-section-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -876,7 +876,7 @@
   padding: 8px 12px;
   border-left: 2px solid var(--tertiary);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   background: rgba(0, 48, 73, 0.03);
   color: var(--dark);
@@ -897,7 +897,7 @@
   width: 100%;
   padding: 12px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -950,7 +950,7 @@
 }
 
 .dash-earn-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -960,7 +960,7 @@
 
 .dash-earn-label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1001,7 +1001,7 @@
 }
 
 .dash-payout-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--dark);
@@ -1013,7 +1013,7 @@
 
 .dash-payout-date {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--text-muted);
 }
 
@@ -1026,7 +1026,7 @@
 }
 
 .dash-payout-amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--dark);
@@ -1036,7 +1036,7 @@
 .dash-payout-status {
   padding: 2px 8px;
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1106,7 +1106,7 @@
 }
 
 .dash-app-card-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--dark);
@@ -1115,7 +1115,7 @@
 }
 
 .dash-app-card-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--champagne);
@@ -1126,7 +1126,7 @@
 
 .dash-app-card-biz {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1168,7 +1168,7 @@
 
 .dash-milestone-label {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1178,7 +1178,7 @@
 
 .dash-app-status-badge {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1233,7 +1233,7 @@
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--dark);
   cursor: pointer;
@@ -1296,7 +1296,7 @@
 
 .dash-map .map-popup-biz {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1305,7 +1305,7 @@
 }
 
 .dash-map .map-popup-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1315,7 +1315,7 @@
 }
 
 .dash-map .map-popup-payout {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 900;
   color: var(--champagne);
@@ -1324,7 +1324,7 @@
 }
 
 .dash-map .map-popup-spots {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-muted);
 }
@@ -1341,7 +1341,7 @@
   background: var(--dark);
   color: #fff;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1378,7 +1378,7 @@
 }
 
 .dash-empty-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--dark);
@@ -1388,7 +1388,7 @@
 
 .dash-empty-msg {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(0, 48, 73, 0.5);
   line-height: 1.6;
   max-width: 280px;
@@ -1436,7 +1436,7 @@
 /* Recommendation reason tag — appears below card title in rec strip */
 .dash-card-rec-reason {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1449,7 +1449,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--text-muted);
   padding: 2px 4px;
   line-height: 1;
@@ -1679,7 +1679,7 @@
   }
 
   .dash-view-btn {
-    font-size: 10px;
+    font-size: 14px;
     padding: 5px 10px;
     letter-spacing: 0.04em;
   }

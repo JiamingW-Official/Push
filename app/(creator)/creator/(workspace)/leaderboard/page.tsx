@@ -58,9 +58,9 @@ function generateBadgeSVG(rank: number, name: string, score: number): string {
   <rect width="300" height="300" fill="var(--ink)"/>
   <rect x="0" y="0" width="6" height="300" fill="#c1121f"/>
   <text x="24" y="120" font-family="sans-serif" font-size="96" font-weight="900" fill="#c9a96e" letter-spacing="-4">#${rank}</text>
-  <text x="24" y="160" font-family="monospace" font-size="14" fill="rgba(245,242,236,0.55)" letter-spacing="2">PUSH SCORE</text>
+  <text x="24" y="160" font-family="system-ui, sans-serif" font-size="14" fill="rgba(245,242,236,0.55)" letter-spacing="2">PUSH SCORE</text>
   <text x="24" y="190" font-family="sans-serif" font-size="32" font-weight="900" fill="#f5f2ec" letter-spacing="-1">${score}</text>
-  <text x="24" y="240" font-family="monospace" font-size="12" fill="rgba(245,242,236,0.4)">${name}</text>
+  <text x="24" y="240" font-family="system-ui, sans-serif" font-size="12" fill="rgba(245,242,236,0.4)">${name}</text>
   <text x="24" y="275" font-family="sans-serif" font-size="18" font-weight="900" font-style="italic" fill="#c1121f" letter-spacing="-1">Push</text>
 </svg>`;
   return svg;
@@ -154,7 +154,7 @@ function PodiumCard({ entry, position }: PodiumCardProps) {
           style={{
             marginLeft: 6,
             fontSize: 12,
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-body)",
             color: "var(--ink-4)",
           }}
         >

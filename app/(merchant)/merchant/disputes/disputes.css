@@ -62,8 +62,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
   color: var(--ink);
   flex-shrink: 0;
@@ -111,7 +111,7 @@
 
 .mdisp-card__meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   display: flex;
   gap: 12px;
@@ -121,7 +121,7 @@
 
 .mdisp-card__id {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -129,7 +129,7 @@
 }
 
 .mdisp-card__amount {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   color: var(--ink);
@@ -149,7 +149,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;

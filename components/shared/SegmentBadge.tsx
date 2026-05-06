@@ -28,7 +28,7 @@ export function SegmentBadge({ segment, tier, className }: Props) {
         display: "inline-flex",
         alignItems: "center",
         padding: "3px 10px",
-        fontFamily: "var(--font-body, 'CS Genio Mono', monospace)",
+        fontFamily: "var(--font-display)",
         fontSize: 10,
         fontWeight: 700,
         letterSpacing: "0.06em",

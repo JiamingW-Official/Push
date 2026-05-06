@@ -1,42 +1,38 @@
-# Push — Design System v11
+# Push — Design System v12
 
-> **Authority**: Single source of truth for every UI surface in the Push project. Layout, color, typography, component shape, motion, spacing — all of it conforms to the tokens below.
+> **Authority**: Single source of truth for every UI surface in Push. Color, typography, shape, grid, spacing, components, motion — all conform to the tokens below.
 >
-> **v11 Status (2026-04-25, Editorial Calibration · Grid + Negative Space + Unified Button refinement · Liquid-Glass Expansion + Image-First + 3-Tier Rule Classification, late evening)**: v10's N2W warm-candy foundation is preserved verbatim. v11 layers on a Grain-Archive editorial register so marketing surfaces gain a magazine voice without breaking dashboard / form / product UI. Three fonts unchanged. Page bg, body color, body size, hover-shift signature — unchanged. **Refined across two evening passes:**
+> **Status (2026-05-05, consolidated)**: v11 editorial register + v12 typography (Open Sans body, Open Sans removed). Three fonts (Magvix / Darky / Open Sans), 11-stop warm-gray ladder, light mode only, 8px grid, 12-column desktop grid, 5 unified buttons, bottom-right hover shift, GA Tri-Color nav chrome. § 0's three-tier rule classification (🔒 STRICT / 📐 STRUCTURED / 🎨 OPEN) governs every rule below.
 >
-> **Evening pass 1:** strict 8px grid system with explicit column / gutter / margin tokens; negative-space tokens locked per container type (text-to-edge, text-to-line, text-to-vector); corner-anchored title rules; max-title sizes pushed up (Magvix Hero to clamp(64,9vw,160), Footer Wordmark to clamp(140,18vw,320)); unified button system (5 variants, no exceptions); 3 NEW warm-neutral tokens (`--graphite` `--mist` `--char`) extending the 11-stop warm-gray ladder; closed Allowed-Color List rule (only tokens in this file may appear in production, photos and visual effects exempt); selective `border-radius: 0` allowed for 3 specific editorial moments only.
->
-> **Evening pass 2 (this pass):** § 0 **Three-Tier Rule Classification** added (🔒 STRICT / 📐 STRUCTURED / 🎨 OPEN — read first; every rule in this doc carries one of these tags); § 8.9 **Liquid Glass System** expanded from 2 use cases to 6 (Footer Tile Pair / Candy Panel Stat Tile / Hero Photo Stat Peek / Sticky Filter Rail / Photo Card Floating Badge / Scroll Progress Pill); § 8.10 **Image-First Layout Patterns** added (4 patterns: Full-Bleed Hero Photograph / Photo Card with Bottom Gradient Overlay grid / Framed Photo Tile in Candy Panel / Decorative Photo Collage); audit pass — removed v10 leftovers from non-historical sections, confirmed no internal contradictions, all rules now carry tier classification.
->
-> **What changed v10 → v11 (changelog at a glance):**
->
-> | Surface | v10 | v11 | Reason |
-> |---------|-----|-----|--------|
-> | Nav buttons | Single Ink-on-Surface pill row | **GA Tri-Color pill row** — Home `#ff5e2b` / Active `#4ade80` / Last `#93c5fd` | Magazine masthead voice |
-> | Subscription / waitlist / single-page CTA | Brand Red Pill on Candy Panel | **Ticket Panel** — orange perforated container with grommets + dashed edge | Analog-physical signature beats slick-gradient SaaS |
-> | Footer wordmark | Magvix Italic "Push" inside Editorial Blue panel | **Darky 800 giant `clamp(140px, 18vw, 320px)` "PUSH" pressed-bottom** | Magazine-flag scale; brand stamp grows with viewport |
-> | Section eyebrow | `LINKS` plain | **Parenthetical** — `(LINKS)` `(WHY THIS EXISTS)` | Zine register |
-> | Section divider | Hairline OR whitespace | **Magvix Italic short-phrase** — `End of campaign · Fin ·` style | Literary breath between sections |
-> | Pricing / KPI table | Card grid OR plain HTML table | **Editorial Table** — Cinema-Selects style | Published-table credibility for "look at the numbers" surfaces |
-> | Marketing photo card | Candy Panel + tile beside | **Photo Card with Bottom Gradient Overlay** — image fills, overlay text | Magazine photo treatment |
-> | Spacing system | "8px base grid" mentioned, not enforced | **Strict 8px grid + 12-column desktop grid + explicit negative-space tokens per container type** | No more eyeball spacing; every element snaps to grid |
-> | Button system | 6 variants, color/style varied per page | **5 variants only — strict spec, identical on every page** | Unified interaction language across product |
-> | Color palette | Open list, drift over time | **Closed Allowed-Color List rule** — only tokens here may render in production CSS | Discipline against AI-slop accumulation |
-> | Title placement | Centered by default | **Corner-anchored** for editorial moments (top-left of panel, bottom-left of footer); centered allowed only inside Ticket Panel + Editorial Table title | Editorial composition vs SaaS-billboard composition |
-> | Max title size | `clamp(56,8vw,96)px` Magvix / `clamp(40,5vw,64)px` Darky H1 | **Magvix Hero pushed to `clamp(64,9vw,160)px`** for landing hero / **Darky Display pushed to `clamp(56,8vw,128)px`** for non-Magvix hero / Footer Wordmark `clamp(140,18vw,320)px` | "Very large with rhythm" — the references treat hero typography as architecture |
-> | `border-radius: 0` rule | Forbidden everywhere | **Selectively allowed in 3 places**: full-bleed Photo Card hero (cinematic frame), Editorial Hero Tile (OFFTRAIL pattern), Image collage card | Some editorial moments need the hard rectangle to read "documentary" |
-> | Neutral palette | 7 ink stops + Snow + Obsidian + 3 surface stops | **+3 new warm neutrals (`--graphite` `--mist` `--char`) → 11-stop warm-gray ladder** | Higher-grade gray sophistication, more black-and-white anchoring |
->
-> **What did NOT change (v10 N2W foundation preserved verbatim):**
->
-> - Three fonts (Magvix Regular + Italic / Darky / CS Genio Mono), role-locked
-> - Page background `#ffffff` Snow (v11.1 update — was Ivory Cream), body text `#61605c` warm gray
-> - Body 18px / line-height 1.55
-> - Bottom-right hover shift `translate(1px, 1px)` (subtle) → `translate(2px, 2px) scale(0.98)` (active press) on every clickable element
-> - 4 Candy Panel fills + 6 Category colors + Brand Red CTA + N2W Blue secondary + Champagne ceremonial + Editorial Blue footer + Editorial Pink stamp
-> - 12px minimum font floor
-> - GSAP ScrollTrigger + Lenis, iOS 26 spring `cubic-bezier(0.34, 1.56, 0.64, 1)`
-> - Light mode only
+> **Last calibrated**: 2026-05-01 (consolidation pass — historical migration notes pruned, GA Tri-Color hex aligned to Figma, sticky/floating navbar specs merged, Build Checklist folded into § 1 Quick Reference).
+> **Next planned review**: After Williamsburg Tier 0 pilot launches (2026-05-23).
+
+---
+
+## Contents
+
+| § | Section | Tier |
+|---|---------|------|
+| 0 | Three-Tier Rule Classification — read first | — |
+| 1 | Core Principles — the 12 non-negotiables | 🔒 |
+| 2 | Color Palette — Closed Allowed-Color List | 🔒 |
+| 3 | Typography — Figma-synced type scale | 🔒 |
+| 4 | Shape & Radii — iOS 26 continuous corner | 🔒 |
+| 5 | Grid System — 8px atomic + 12 / 8 / 4 column | 🔒 |
+| 6 | Negative-Space Tokens — locked per container | 🔒 |
+| 7 | Corner-Anchored Title Rules | 📐 |
+| 8 | Component Specifications | 🔒 / 📐 |
+| 9 | Unified Button System — 5 variants | 🔒 |
+| 10 | Layout & Spacing Tokens | 🔒 |
+| 11 | Elevation & Depth | 🔒 |
+| 12 | Motion | 🔒 |
+| 13 | Icon System | 🔒 |
+| 14 | Responsive Breakpoints | 📐 |
+| 15 | Modular Panel Discipline | 📐 |
+| 16 | Hover Behavior — bottom-right shift signature | 🔒 |
+| 17 | Build Checklist | — |
+| 18 | Authority & Conflict Resolution | — |
+| 19 | Component Library — Figma Audit (GA Dark Register) | 🔒 / 📐 |
 
 ---
 
@@ -71,20 +67,22 @@ Designer can improvise. The bounds are still set by STRICT and STRUCTURED rules 
 
 ---
 
-## 1. Core Principles (Non-Negotiable)
+## 1. Core Principles 🔒 STRICT
 
-1. **Closed Allowed-Color List.** Production CSS may only use color values present as tokens in § 2 of this document. Photos and SVG visual effects (illustrations, decorative gradients on background-image only) are exempt. Any new color requires a documented update to this file before being introduced.
-2. **8px grid system, enforced.** Every element snaps to 8px increments — width, height, padding, margin, gap, top, left. Half-grid (4px) allowed only for hairlines and small chip gaps. § 5 defines the full grid + column system.
-3. **Negative-space tokens are locked per container type.** § 6 lists every container's exact text-to-edge / text-to-line / text-to-vector / text-to-text spacing. Eyeball spacing is forbidden.
-4. **Three fonts, role-locked.** Magvix (Regular + Italic) hero / wordmark / signature divider — max 1 hero block per page. Darky display / heading / numerals / **giant footer wordmark**. CS Genio Mono body / UI / labels / parenthetical eyebrows. Magvix never below 28px.
-5. **Corner-anchored titles for editorial moments.** Hero title hugs top-left of hero panel (not centered). Footer giant wordmark hugs bottom-left of footer panel (not centered). Section title inside Editorial Table sits top-left of table panel. Centered titles allowed only inside Ticket Panel and inside Photo Card overlay (where center reads as caption-on-image).
-6. **iOS 26 continuous corner — selective use.** Standard radii scale `4 / 8 / 10 / 12 / 16 / 20 / 28 / 40 / pill / circle`. **Selective `border-radius: 0` permitted** for: (a) full-bleed Photo Card Hero (cinematic frame), (b) Editorial Hero Tile billboard, (c) Image-collage card inside a panel. All other surfaces (cards, buttons, inputs, panels, modals) use the radii scale.
-7. **Unified button system, 5 variants only.** § 9 spec is the single source. Every button on every page renders identically. No per-page custom buttons.
-8. **Bottom-right hover shift** is the Push interaction signature — every clickable element does `translate(1px, 1px)` on hover, `translate(2px, 2px) scale(0.98)` on active press. Forms, static badges, GA nav pills, Ticket Panel grommets, Footer giant wordmark do NOT shift.
-9. **Marketing vs Product registers must NOT mix in the same viewport.** Marketing surfaces (Home / Landing / Creator showcase / Merchant case study / About / Pricing / Blog) use v11 editorial layer (Ticket Panel, Magvix Italic Divider, Photo Card with Gradient, Editorial Table, Parenthetical Eyebrow, Corner-anchored title). Product surfaces (Dashboard / Settings / Forms / Onboarding / In-app messaging) keep v10 Candy-Panel + clean component voice.
-10. **Light mode only.** Page background `--snow` `#ffffff` (v11.1 update — was `--surface #f8f4e8` Ivory Cream). All product UI shells, page bodies, main content areas, and card surfaces render on `#ffffff`. Cream tokens (`--surface` / `--surface-2` / `--surface-3`) stay in the system but are reserved for Marketing register only (Candy Panels, Editorial moments, Photo Card overlays). Body text `--ink-3` `#61605c` warm gray. Headings `--ink` `#0a0a0a`.
-11. **12px minimum font floor**, with two documented exceptions: Footer Giant Wordmark up to 320px, Hero Magvix up to 160px.
-12. **Responsive is naturally adaptive, not redrawn per breakpoint.** Same composition / same hierarchy across mobile / iPad / desktop — only spacing scale + column count adjust. § 14 lists exact breakpoint behavior per container.
+The 12 non-negotiables. Every other section is the implementation detail of one of these:
+
+1. **Closed Allowed-Color List.** Production CSS may only use color tokens listed in § 2. Photos and SVG visual effects exempt. New colors require a documented PR.
+2. **8px grid, enforced.** Every width / height / padding / margin / gap / top / left snaps to 8px. Half-grid (4px) only for hairlines and chip gaps. § 5 has the full system.
+3. **Negative-space tokens are locked per container.** § 6 lists every container's text-to-edge / text-to-line / text-to-vector / text-to-text spacing. Eyeballing is forbidden.
+4. **Three fonts, role-locked.** Magvix (Regular + Italic) for hero / wordmark / signature divider / Ticket Panel headline (max 1 hero block per page); Darky 500-900 for ALL display, headings, numerals, UI labels, buttons, navs, breadcrumbs, eyebrows, badges, chips, pills, table headers, footer giant wordmark; Open Sans 400-700 (+ italic) for body, paragraph, message content, form inputs, card descriptions, table data cells (tabular-nums for numeric columns). Magvix never below 28px. Open Sans REMOVED in v12.
+5. **Corner-anchored titles for editorial moments.** Hero title hugs panel **bottom-left**, section titles hug **top-left**, footer Giant Wordmark hugs **bottom-left**. Centered titles only inside Ticket Panel + Photo Card overlay + Modal.
+6. **iOS 26 continuous corner — selective use.** Radii scale `4 / 8 / 10 / 12 / 16 / 20 / 28 / 40 / pill / circle`. `border-radius: 0` permitted in 3 places only: full-bleed Photo Card Hero, Editorial Hero Tile billboard, image-collage card. Everything else uses the scale.
+7. **Unified button system, 5 variants only.** § 9 is the single source. Every button on every page renders identically.
+8. **Bottom-right hover shift** is the Push interaction signature — `translate(1px, 1px)` on hover, `translate(2px, 2px) scale(0.98)` on active. Static badges, GA nav pills, Ticket Panel grommets, Footer Giant Wordmark do NOT shift.
+9. **Marketing vs Product registers must NOT mix in the same viewport.** Marketing (Home / Landing / Showcase / About / Pricing / Blog) uses Ticket Panel + Magvix Italic Divider + Photo Card with gradient + Editorial Table + Parenthetical Eyebrow + corner-anchored Magvix hero. Product (Dashboard / Settings / Forms / Onboarding / In-app) uses Candy-Panel + canonical Eyebrow + clean component voice.
+10. **Light mode only.** Page bg `--snow #ffffff`. All product UI shells, pages, main content, and card surfaces render on `#ffffff` — cards defined by `--shadow-1/2/3` alone, no border. Cream tokens (`--surface` / `--surface-2` / `--surface-3`) reserved for Marketing register. Body text `--ink-3 #61605c`; headings `--ink #0a0a0a`.
+11. **12px minimum font floor**, with two exceptions: Footer Giant Wordmark up to 320px, Hero Magvix up to 200px (Caption is a third documented exception at 10px).
+12. **Responsive is naturally adaptive, not redrawn per breakpoint.** Same composition / same hierarchy across mobile / iPad / desktop — only spacing scale + column count adjust. § 14 has the breakpoint table.
 
 ---
 
@@ -94,21 +92,21 @@ These are the only color tokens that may appear in production CSS. Any new color
 
 ### 2.1 The 11-stop Warm-Gray Ladder (foundation — text, surfaces, dividers, dark UI)
 
-The Push warm-gray ladder runs from pure snow to absolute obsidian, all warm-leaning, all derived from the same hue family. v11 adds 3 new stops (`--graphite`, `--mist`, `--char`) to fill historical gaps in the ladder.
+The Push warm-gray ladder runs from pure snow to absolute obsidian, all warm-leaning, all derived from the same hue family. Three of the eleven stops (`--graphite`, `--mist`, `--char`) are warm-neutral tokens introduced to fill historical gaps; use them when the existing ink stops feel too cool or too contrasty.
 
 | # | Token | Name | Hex | Role |
 |---|-------|------|-----|------|
-| 1 | `--snow` | Snow | `#ffffff` | **Default page background** (v11.1) — page chrome, main shells, all product UI cards. Also: text on dark surfaces (Editorial Blue, Ink, Char, Obsidian, GA Orange Ticket). |
+| 1 | `--snow` | Snow | `#ffffff` | **Default page background** — page chrome, main shells, all product UI cards. Also: text on dark surfaces (Editorial Blue, Ink, Char, Obsidian, GA Orange Ticket). |
 | 2 | `--surface` | Ivory Cream | `#f8f4e8` | Marketing register only — Candy Panel fill, Editorial section bg. **NOT** for product UI page or card backgrounds. |
 | 3 | `--surface-2` | Pearl Stone | `#f5f3ee` | Marketing register — alternate Candy Panel, Photo Card frame inset, Ticket Panel inner. |
 | 4 | `--surface-3` | Bone | `#ece9e0` | Button hover, Pill button fill, muted block, inactive tab background. |
-| 5 | **`--mist` (NEW v11)** | Mist | `#d8d4c8` | Card frame border, divider band, hover state on light surface, image card backdrop |
+| 5 | **`--mist`** | Mist | `#d8d4c8` | Card frame border, divider band, hover state on light surface, image card backdrop |
 | 6 | `--ink-6` | Ink 6 | `#cfcfcf` | Placeholder text, disabled state, lightest chip fill |
 | 7 | `--ink-5` | Ink 5 | `#9a9a9a` | Tertiary metadata, icon-secondary |
 | 8 | `--ink-4` | Ink 4 | `#6a6a6a` | Secondary label, metadata |
 | 9 | `--ink-3` | Warm Body | `#61605c` | **Body copy** (locked — every paragraph, every caption descender) |
-| 10 | **`--char` (NEW v11)** | Char | `#3a3835` | Dark panel alternative to `--ink` (softer, warmer); editorial dark-card background; hover state on Ink panel |
-| 11 | **`--graphite` (NEW v11)** | Graphite | `#2c2a26` | Mid-strong heading color (between `--ink` H1 and `--ink-3` body); secondary CTA text on light surface; nav text |
+| 10 | **`--char`** | Char | `#3a3835` | Dark panel alternative to `--ink` (softer, warmer); editorial dark-card background; hover state on Ink panel |
+| 11 | **`--graphite`** | Graphite | `#2c2a26` | Mid-strong heading color (between `--ink` H1 and `--ink-3` body); secondary CTA text on light surface; nav text |
 | 12 | `--ink-2` | Ink 2 | `#1f1f1f` | Secondary heading, emphasized body, dark panel surface |
 | 13 | `--ink` | Ink | `#0a0a0a` | **Primary text, all headings, icon strokes, default UI ink** |
 | 14 | `--obsidian` | Obsidian | `#000000` | Reserved — Darky giant wordmark surface only (footer interior contrast); not a body / heading color |
@@ -149,14 +147,14 @@ Brand-Red and Champagne in the same module require a neutral anchor between them
 |-------|-----|------|
 | `--editorial-blue` | `#1e5fad` | **Footer panel** (only allowed instance per page). Optional: 1 hero billboard per landing page max. Snow text only. |
 | `--editorial-pink` | `#e8447d` | Single editorial CTA pill OR share-card stamp per page. Snow text only. |
-| `--ga-orange` | `#ff5e2b` | **Ticket Panel fill** + Nav Home pill fill. Snow text on Nav pill, Ink text inside Ticket Panel. |
+| `--ga-orange` | `#ff5700` | **Ticket Panel fill** + Nav Home pill fill. Snow text on Nav pill, Ink text inside Ticket Panel. (Figma source of truth: node 1:42) |
 
 Derivative tokens (OK to use):
 
 ```css
 --editorial-blue-deep: #144a8a;   --editorial-blue-tint: rgba(30,95,173,0.10);
 --editorial-pink-deep: #c8336a;   --editorial-pink-tint: rgba(232,68,125,0.10);
---ga-orange-deep:      #d94215;   --ga-orange-tint:      rgba(255,94,43,0.12);
+--ga-orange-deep:      #cc4500;   --ga-orange-tint:      rgba(255,87,0,0.12);
 ```
 
 **Editorial Moment Rules**
@@ -165,13 +163,15 @@ Derivative tokens (OK to use):
 - GA Tri-Color nav (Orange / Green / Sky) appears in nav chrome on every page and does NOT count as a "moment" because it is global chrome — it lives in a separate visual register from page content.
 - Forbidden as section background colors outside their assigned container.
 
-### 2.4 GA Tri-Color Nav (3 tokens, NEW v11 — global chrome ONLY)
+### 2.4 GA Tri-Color Nav (3 tokens — global chrome ONLY)
 
 | Token | Hex | Pill Position | Pairs With |
 |-------|-----|---------------|-----------|
-| `--ga-orange` | `#ff5e2b` | Home pill (leftmost) | `--snow` text |
-| `--ga-green` | `#4ade80` | Active page pill | `--ink` text |
-| `--ga-sky` | `#93c5fd` | Last pill (About / Sign in) | `--ink` text |
+| `--ga-orange` | `#ff5700` | Home pill (leftmost) | `--snow` text |
+| `--ga-green` | `#32ce57` | Active page pill | `--ink` text |
+| `--ga-sky` | `#a3caff` | Last pill (About / Sign in) | `--ink` text |
+
+> Hex values are Figma source of truth (node 1:42). Older Design.md versions used `#ff5e2b / #4ade80 / #93c5fd` — these are deprecated; use the Figma-exact hex above.
 
 **These three are nav-only. Forbidden as section bg, button fill, card fill, or any other surface.** They live exclusively inside `<nav>` chrome at the top of every page. CTA buttons elsewhere on the page still use Brand Red / N2W Blue / Editorial Pink — the nav and the CTA system speak different languages on purpose.
 
@@ -207,55 +207,71 @@ Status colors communicate the outcome of a system event (transaction settled, fo
 
 ---
 
-## 3. Typography
+## 3. Typography (v12 · 2026-05-05 · Open Sans body adoption · Open Sans removed)
 
-### 3.1 Type Scale (v12 — synced with Figma source of truth 2026-04-26)
+**Three fonts. No mono. No Roboto. No system-ui as terminal fallback.**
 
-Vertical rhythm: every type size uses a line-height that lands on the 8px grid. Display sizes lock to `0.85 / 0.90 / 0.95` line-height; body locks to `1.40`. No arbitrary line-heights.
+### 3.0 Font allocation (the proportional rule)
 
-> **v12 sync notes (Figma → Design.md):** Hero max raised 160→200px · Display line-height 0.9→0.85 · Header 3 (110px Darky 800) added as new intermediate display level · Magvix Italic H4 locked at 80px · Body raised 18→20px · Body line-height 1.55→1.40 · Body letter-spacing 0→-0.1em · Caption lowered 12→10px (documented exception, min floor revised) · All letter-spacing values grounded in Figma px values.
+| Font | Share | Role |
+|------|-------|------|
+| Magvix Regular + Italic | ≈ 3% | editorial signature only |
+| Darky 500-900 | ≈ 35% | structural spine — every heading, numeral, UI label, button, nav, eyebrow, badge, chip |
+| Open Sans 400-700 + italic | ≈ 62% | reading body — long-form prose, message content, form inputs, descriptions |
+
+### 3.1 Type Scale (Figma source of truth)
+
+Vertical rhythm: every type size uses a line-height that lands on the 8px grid. Display sizes lock to `0.85 / 0.90 / 0.95` line-height; body locks to `1.55`. No arbitrary line-heights.
 
 | Element | Font | Size | Weight | Line-Height | Letter-Spacing |
 |---------|------|------|--------|-------------|---------------|
-| **Header 1 / Magvix Hero** — landing only, 1 per page max | Magvix Regular | `clamp(64px, 9vw, 200px)` | 400 | `0.85` | `-0.02em` (-4px @ 200px) |
-| **Magvix Italic / Header 4** — wordmark, italic hero | Magvix Italic | `80px` | 400 italic | `0.90` | `-0.025em` (-2px @ 80px) |
+| **Magvix Hero** — landing only, 1 per page max | Magvix Regular | `clamp(64px, 9vw, 200px)` | 400 | `0.85` | `-0.02em` |
+| **Magvix Italic / Wordmark** | Magvix Italic | `80px` | 400 italic | `0.90` | `-0.025em` |
 | **Magvix Italic Signature Divider** | Magvix Italic | `clamp(28px, 3vw, 40px)` | 400 italic | `1.15` | `-0.005em` |
-| **Darky Giant Footer Wordmark** | Darky | `clamp(140px, 18vw, 320px)` | 800 | `0.85` | `-0.045em` |
-| **Header 2 / Darky Display** — non-Magvix hero pages | Darky | `clamp(56px, 8vw, 128px)` | 900 | `0.85` | `-0.03em` (-4px @ 128px) |
-| **Header 3 / Darky Large** — intermediate display (NEW v12) | Darky | `110px` | 800 | `0.95` | `-0.036em` (-4px @ 110px) |
+| **Magvix Italic Ticket Panel headline** | Magvix Italic | `clamp(40px, 5vw, 56px)` | 400 italic | `1.1` | `-0.005em` |
+| **Footer Giant Wordmark** | Darky | `clamp(140px, 18vw, 320px)` | 800 | `0.85` | `-0.045em` |
+| **Darky Display** — non-Magvix hero pages | Darky | `clamp(56px, 8vw, 128px)` | 900 | `0.85` | `-0.03em` |
+| **Darky Large** — intermediate display | Darky | `110px` | 800 | `0.95` | `-0.036em` |
 | H1 (page title) | Darky | `clamp(40px, 5vw, 72px)` | 800 | `1.0` | `-0.025em` |
 | H2 (section title) | Darky | `40px` | 800 | `1.05` | `-0.02em` |
 | H3 (sub-section / card title) | Darky | `28px` | 700 | `1.15` | `-0.015em` |
-| **Header 5 / H4** (card body title) | Darky | `24px` | 700 | `1.40` | `-0.083em` (-2px @ 24px) |
+| H4 (card body title) | Darky | `24px` | 700 | `1.40` | `-0.01em` |
 | H5 (small block title) | Darky | `20px` | 600 | `1.3` | `-0.005em` |
-| **Body / Paragraph 1 (default)** | CS Genio Mono | `20px` | 400 | `1.40` | `-0.1em` (-2px @ 20px) |
-| Body small / Paragraph 2 | CS Genio Mono | `16px` | 400 | `1.40` | `-0.125em` (-2px @ 16px) |
-| Small / Label | CS Genio Mono | `14px` | 500 | `1.45` | `0.01em` |
-| **Caption** (documented min-floor exception) | CS Genio Mono | `10px` | 400 | `1.40` | `0.4em` (+4px @ 10px) UPPERCASE |
-| **Eyebrow Canonical** (Product UI) | CS Genio Mono | `12px` | 700 | `1.3` | `0.12em` UPPERCASE |
-| **Eyebrow Parenthetical** (Marketing) — `(LINKS)` `(WHY THIS EXISTS)` | CS Genio Mono | `12px` | 700 | `1.3` | `0.12em` UPPERCASE — parens literal |
-| **Editorial Table Header** | CS Genio Mono | `12px` | 700 | `1.3` | `0.12em` UPPERCASE |
-| **Editorial Table First Cell** | Darky | `18px` (mobile) / `20px` (desktop) | 700 | `1.4` | `-0.01em` |
-| **Editorial Table Body Cell** | CS Genio Mono | `16px` | 400 | `1.40` | `-0.125em` |
-| **Photo Card Title Overlay** (marketing only) | Darky | `20px` (desktop) / `18px` (mobile) | 700 | `1.25` | `-0.005em` color `--snow` |
-| **Photo Card Metadata Overlay** | CS Genio Mono | `12px` | 500 | `1.3` | `0.04em` UPPERCASE color `rgba(255,255,255,0.85)` |
-| Numbered Section marker | CS Genio Mono | `14px` | 600 | `1.3` | `0.04em` |
-| Stat numeral (large KPI) | Darky | `clamp(40px, 5vw, 72px)` | 700 | `1.0` | `-0.02em` |
-| Stat caption | CS Genio Mono | `14px` | 500 | `1.4` | `0.02em` |
-| **Forbidden** | — | `< 10px` OR `> 200px` (Footer Wordmark exempt to 320px; Caption 10px is sole documented exception below 12px) | — | — | — |
+| **Stat numeral (KPI)** | Darky | `clamp(40px, 5vw, 72px)` | 700 | `1.0` | `-0.02em` + `tabular-nums` |
+| **Stat caption** (was mono) | Darky | `14px` | 600 | `1.4` | `0.04em` UPPERCASE |
+| **Eyebrow Canonical** (Product UI, was mono) | Darky | `12px` | 700 | `1.3` | `0.14em` UPPERCASE |
+| **Eyebrow Parenthetical** (Marketing, was mono) | Darky | `12px` | 700 | `1.3` | `0.16em` UPPERCASE — parens literal |
+| **Button label** (was mono) | Darky | `16px` (mobile `14px`) | 600 | `1.0` | `0.06em` UPPERCASE |
+| **Nav label / breadcrumb** (was mono) | Darky | `14px` | 600 | `1.3` | `0.04em` UPPERCASE |
+| **Tag / chip / pill** (was mono) | Darky | `12px` | 600 | `1.3` | `0.06em` UPPERCASE |
+| **Status badge** (was mono) | Darky | `12px` | 700 | `1.3` | `0.06em` UPPERCASE |
+| **Editorial Table Header** (was mono) | Darky | `12px` | 700 | `1.3` | `0.16em` UPPERCASE — parenthetical form |
+| **Editorial Table First Cell** | Darky | `18px` mobile / `20px` desktop | 700 | `1.4` | `-0.01em` |
+| **Editorial Table Body Cell** (was mono) | Open Sans | `16px` | 400 | `1.4` | `0` + `tabular-nums` on numeric columns |
+| **Photo Card Title Overlay** (marketing only) | Darky | `20px` desktop / `18px` mobile | 700 | `1.25` | `-0.005em` color `--snow` |
+| **Photo Card Metadata Overlay** (was mono) | Darky | `12px` | 600 | `1.3` | `0.06em` UPPERCASE color `rgba(255,255,255,0.85)` |
+| **Numbered Section marker** (was mono) | Darky | `14px` | 600 | `1.3` | `0.04em` |
+| **Body / Paragraph 1 (default)** | Open Sans | `18px` | 400 | `1.55` | `0` |
+| Body small / Paragraph 2 | Open Sans | `16px` | 400 | `1.55` | `0` |
+| **Caption** (documented min-floor exception) | Open Sans | `10px` | 400 | `1.40` | `0.4em` UPPERCASE |
+| Form input value / textarea | Open Sans | `16px` | 400 | `1.5` | `0` |
+| Form input placeholder | Open Sans | `16px` | 400 italic | `1.5` | `0` color `--ink-5` |
+| Message bubble content | Open Sans | `16px` | 400 | `1.5` | `0` |
+| Card body description | Open Sans | `16px` | 400 | `1.5` | `0` |
+| Long-form quote / testimonial | Open Sans | `18px` | 400 italic | `1.6` | `0` |
+| **Forbidden** | — | `< 10px` OR `> 200px` (Footer Wordmark exempt to 320px) | — | — | — |
 
 > **Ink color note:** Figma source uses `#0f0e0e` (warmer near-black). CSS token `--ink` remains `#0a0a0a`; treat as equivalent for production — do not introduce `#0f0e0e` as a new token.
 
 ### 3.2 Vertical Rhythm Module
 
-**Baseline = 8px.** All vertical spacing snaps to 8px increments. The closest size-to-rhythm anchors:
+**Baseline = 8px.** All vertical spacing snaps to 8px increments.
 
 | Type | Used line-height in px | Rounds to grid (multiple of 8) |
 |------|------------------------|-------------------------------|
-| Body 20px × 1.40 | 28px | 32px (1 row) |
-| Body small 16px × 1.40 | 22.4px | round to 24px |
-| Small 14px × 1.45 | 20.3px | round to 24px |
-| H4 24px × 1.40 | 33.6px | round to 32px |
+| Body 18px × 1.55 | 27.9px | 32px (1 row) |
+| Body small 16px × 1.55 | 24.8px | 24px |
+| H4 24px × 1.40 | 33.6px | 32px |
 | H3 28px × 1.15 | 32.2px | 32px |
 | H2 40px × 1.05 | 42px | 48px |
 | H1 desktop 72px × 1.0 | 72px | 72px (9 rows) |
@@ -264,15 +280,17 @@ Vertical rhythm: every type size uses a line-height that lands on the 8px grid. 
 
 Use `margin-bottom` in 8 / 16 / 24 / 32 / 48 / 64 / 80 / 96px steps to seat each block on the rhythm grid. Avoid arbitrary `margin-bottom: 22px`.
 
-### 3.3 Font Faces
+### 3.3 Font Faces (v12)
 
 | Token | Family | Role |
 |-------|--------|------|
-| `var(--font-hero)` | Magvix (Regular + Italic) | Hero block, wordmark, signature divider, inline accent |
-| `var(--font-display)` | Darky (100-900 weight) | All headings, numerals, **footer giant wordmark** |
-| `var(--font-mono)` | CS Genio Mono | Body, UI, labels, captions, parenthetical eyebrow |
+| `var(--font-hero)` | Magvix (Regular + Italic) | Hero block, wordmark, signature divider, Ticket Panel headline, inline accent |
+| `var(--font-display)` | Darky (100-900 weight) | ALL headings, numerals, UI labels, buttons, navs, eyebrows, badges, chips, pills, table headers, footer giant wordmark |
+| `var(--font-body)` | Open Sans (variable, 300-800) | Body, paragraph, message content, form inputs, card descriptions, table data cells, timestamps, captions |
+| `--font-mono` | **REMOVED in v12** | Open Sans abolished. Any `var(--font-mono)` reference is a bug. |
 
 ```css
+/* Magvix — unchanged */
 @font-face {
   font-family: 'Magvix';
   src: url('/fonts/Magvix-Regular.ttf') format('truetype');
@@ -283,23 +301,89 @@ Use `margin-bottom` in 8 / 16 / 24 / 32 / 48 / 64 / 80 / 96px steps to seat each
   src: url('/fonts/Magvix-Italic.ttf') format('truetype');
   font-weight: normal; font-style: italic; font-display: swap;
 }
-/* Darky 100-900 individual weight files + CS Genio Mono — declared in globals.css */
+/* Darky 100-900 individual weight files — declared in globals.css */
+
+/* Open Sans — variable font, replaces Open Sans */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype-variations'),
+       url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype-variations'),
+       url('/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+}
+/* Open Sans — DELETED in v12. */
 ```
 
-### 3.4 Typography Rules
+### 3.4 CSS Variables (canonical)
 
-1. **Type sizes are the scale above, period.** Never random Tailwind `text-*` mix. Build a custom Tailwind theme exposing only these tokens.
-2. **Line-heights match the scale.** Display `0.85–0.95`; headings `1.0–1.3`; body + body small `1.40`. Never `1.5+` on display sizes, never `1.7` / `2.0` anywhere.
-3. **One H1 per page. One H2 per panel.** H3/H4 only inside cards or table cells.
-4. **Eyebrow always CS Genio Mono 12px 700 uppercase 0.12em.** Parenthetical variant on Marketing surfaces; canonical (no parens) on Product UI. The two registers do not mix in the same viewport.
-5. **Magvix is hero-only OR signature-divider-only.** Below 28px Magvix becomes illegible. Allowed surfaces: solid color (Ink / Obsidian / Surface / Snow / Brand Red / Candy Panel / GA Orange Ticket / Editorial Blue). Never on gradient or photo.
-6. **Magvix Italic = brand wordmark + signature divider + inline accent.** Magvix Regular = hero block headline. Hero block max 1 per page.
-7. **Darky giant footer wordmark = 1 instance per page**, footer-only, ≤320px.
-8. **Body paragraph = CS Genio Mono.** Never Darky body.
-9. **Display tracking is negative** — Darky -0.025 to -0.045em, Magvix -0.02 to -0.025em. Body and small stay at 0.
-10. **Hero title hugs panel top-left**, not centered. (See § 7.1 Corner-Anchored Title Rules.)
+```css
+:root {
+  --font-hero:    'Magvix', Georgia, serif;
+  --font-display: 'Darky', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* --font-mono REMOVED in v12. Banned in production CSS. */
+}
 
-### 3.5 Magvix Inline Accent Pattern
+body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  font-feature-settings: "kern", "liga", "calt";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numeric surfaces — recovers ledger feel mono used to provide */
+.tabular,
+.tabular *,
+[data-numeric],
+[data-numeric] * {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+```
+
+### 3.5 Typography Rules
+
+1. **🔒 STRICT — Three fonts only.** Magvix (Regular + Italic) / Darky (500-900) / Open Sans (400-700 + italic). No system-ui, Helvetica, Inter, Roboto, monospace, Courier, Menlo, Consolas, Fira Code, or 'sans-serif' as terminal fallback.
+2. **🔒 STRICT — Body paragraph is Open Sans.** Never Darky body. Never Magvix body. If text is > 8 words and meant to be read, it's Open Sans.
+3. **🔒 STRICT — Every heading, label, button, nav, eyebrow, badge, chip, pill, table header is Darky.** Darky is the structural spine.
+4. **🔒 STRICT — Magvix is hero / divider / accent / Ticket Panel headline only.** Below 28px Magvix becomes illegible. Allowed surfaces: solid color (Ink / Obsidian / Surface / Snow / Brand Red / Candy Panel / GA Orange Ticket / Editorial Blue). Never on gradient or photo.
+5. **🔒 STRICT — Numeric data uses `font-variant-numeric: tabular-nums`.** Mandatory on KPI numerals, timestamps, money amounts, counts, percentages, table cells with numbers, attribution payouts.
+6. **🔒 STRICT — Sans-serif uppercase tracking is wider than mono-era.** Eyebrow canonical `0.14em` (was `0.12em`), eyebrow parenthetical `0.16em` (was `0.12em`), button label `0.06em` (was `0.04em`).
+7. **One H1 per page. One H2 per panel.** H3/H4 only inside cards or table cells.
+8. **Darky giant footer wordmark = 1 instance per page**, footer-only, ≤320px.
+9. **Display tracking is negative** — Darky -0.025 to -0.045em, Magvix -0.02 to -0.025em. Open Sans body stays at 0.
+10. **Hero title hugs panel bottom-left**, not centered. (See § 7.1 Corner-Anchored Title Rules.)
+
+### 3.6 Migration grep checks (run before merging any PR)
+
+```bash
+# Must all return zero results in production CSS / TSX:
+rg -i "cs genio|font-mono|monospace|courier|menlo|consolas|fira code" app/ lib/ components/ public/styles/
+rg "'Roboto'|\"Roboto\"|font-family:[^;]*Roboto" app/ lib/ components/
+rg "font-family:\s*system-ui\s*;" app/ lib/ components/  # terminal system-ui banned
+```
+
+### 3.7 Rationale (why mono is gone)
+
+Open Sans served four jobs in v11: editorial marginalia, ledger feel, small-text legibility, register split. v12 replaces them:
+- **Editorial marginalia** → recovered via Darky 700 uppercase 0.16em on parenthetical eyebrows.
+- **Ledger feel** → recovered via `font-variant-numeric: tabular-nums` on every numeric surface.
+- **Small-text legibility** → Open Sans is purpose-built for legibility at 12-14px; Darky 600 also reads well.
+- **Register split** → now lives in Magvix usage frequency and Marketing-only pattern constraints.
+
+### 3.8 Magvix Inline Accent Pattern
 
 A single Magvix Italic word may appear inside a Darky 900 hero headline as `<em>` at `font-size: 1.08em`. Max 1 accent word per headline. Max 1 such headline per panel. Max 3 panels using this pattern per page. Accent word must carry semantic weight.
 
@@ -333,8 +417,7 @@ A single Magvix Italic word may appear inside a Darky 900 hero headline as `<em>
 | `--r-pill` | `50vh` | Pill buttons, **GA Tri-Color nav pills**, filter chips |
 | `--r-full` | `50%` | Avatars, circular icon buttons, **Ticket Panel grommet circles** |
 
-### 4.2 Selective `border-radius: 0` (NEW v11)
-
+### 4.2 Selective `border-radius: 0`
 `border-radius: 0` is permitted in exactly 3 editorial contexts:
 
 1. **Full-bleed Photo Card Hero** — when a Photo Card spans the entire viewport width as the hero of a landing page (cinematic frame). Subordinate Photo Cards in a grid still use `--r-md` (10px).
@@ -372,7 +455,7 @@ A single Magvix Italic word may appear inside a Darky 900 hero headline as `<em>
 
 ---
 
-## 5. Grid System (NEW v11 — strict)
+## 5. Grid System 🔒 STRICT
 
 ### 5.1 The 8px Atomic Grid
 
@@ -466,7 +549,7 @@ A panel spans 12 / 8 / 4 columns (full bleed) on desktop / iPad / mobile respect
 
 ---
 
-## 6. Negative Space Tokens (NEW v11 — locked per container)
+## 6. Negative Space Tokens 🔒 STRICT — locked per container
 
 Every container type has explicit text-to-edge / text-to-line / text-to-vector / text-to-text spacing. Eyeball spacing is forbidden.
 
@@ -556,9 +639,8 @@ The vertical distance between successive text blocks.
 
 ---
 
-## 7. Corner-Anchored Title Rules (NEW v11)
-
-Editorial composition treats the panel as a stage; the title hugs a corner rather than centering. SaaS billboard composition centers everything — Push v11 is editorial, not SaaS-billboard.
+## 7. Corner-Anchored Title Rules
+Editorial composition treats the panel as a stage; the title hugs a corner rather than centering. SaaS billboard composition centers everything — Push is editorial, not SaaS-billboard.
 
 ### 7.1 Where titles anchor by container type
 
@@ -572,7 +654,7 @@ Editorial composition treats the panel as a stage; the title hugs a corner rathe
 | Editorial Table | **Top-left** of table panel, above the table |
 | Photo Card with Bottom Gradient Overlay | **Bottom-left** of overlay (24px from bottom + left) |
 | Modal / drawer | **Top-left** of dialog interior |
-| Editorial Hero Tile billboard | Title placement defined by the chosen Pattern 05 variant — see Design.md history v9-v10 patterns |
+| Editorial Hero Tile billboard | Title placement defined by the chosen variant — anchor matches the surrounding composition (see § 8.10) |
 
 ### 7.2 Anchor offset spec
 
@@ -609,29 +691,100 @@ Everywhere else, default is corner-anchored. If a designer wants centered, they 
 
 ## 8. Component Specifications
 
-### 8.1 GA Tri-Color Nav (global chrome — every page)
+### 8.1 GA Tri-Color Nav 🔒 STRICT — global chrome, every page
 
-Sticky top, 32×32 Ink monogram circle (left), 3 pills center, optional CTA right.
+The pill structure (Home / Active / Last in GA Tri-Color) is invariant. The **container** has two interchangeable modes — pick one per project, then keep it consistent across every page in that project.
+
+**Common to both modes (🔒 STRICT):**
 
 | Element | Value |
 |---------|-------|
-| Container | `position: sticky; top: 0; background: rgba(248,244,232,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--hairline); padding: 16px 32px; z-index: 100;` |
-| Layout | `display: flex; align-items: center; justify-content: space-between; max-width: 1140px; margin: 0 auto;` |
 | Monogram (left) | 32×32px circle, `background: var(--ink); color: var(--snow);` Magvix Italic 14px centered glyph (e.g. "P" or "•P•"). `border-radius: var(--r-full);` |
 | Pill row (center) | `display: flex; gap: 8px;` |
-| Each pill | `padding: 8px 18px; border-radius: var(--r-pill);` CS Genio Mono 14px 600 uppercase 0.04em |
+| Each pill | `padding: 8px 18px; border-radius: var(--r-pill);` Darky 14px 600 uppercase 0.04em |
 | Home pill | `background: var(--ga-orange); color: var(--snow);` |
 | Active page pill | `background: var(--ga-green); color: var(--ink);` |
 | Last pill | `background: var(--ga-sky); color: var(--ink);` |
-| Optional right CTA | Brand Red filled button (see § 9.1 Filled Primary spec). |
-| Hover on pills | Pills do NOT shift (preserves flat-chrome reading). Hover applies `filter: brightness(1.08)` ONLY — subtle LIGHTEN signaling "interactive." **Hover never darkens** (see § 9.0 Hover-vs-Press Direction Rule). |
-| Active/press on pills | `filter: brightness(0.92)` — subtle DARKEN, the press-in moment. Still no transform shift. |
+| Optional right CTA | Brand Red Filled Primary (§ 9.1) |
+| Hover on pills | NO transform shift. `filter: brightness(1.08)` only — subtle LIGHTEN. Hover never darkens (§ 9.0). |
+| Active/press on pills | `filter: brightness(0.92)` — DARKEN, the press-in moment. Still no transform. |
 | Hover on right CTA | Bottom-right shift `translate(1px, 1px)` (Filled Primary spec). |
-| Mobile (<768px) | Collapses to monogram + hamburger. Hamburger opens full-screen overlay with the same three pills stacked vertically, full-width. Padding `12px 16px`. |
+| Mobile (<768px) | Collapses to monogram + hamburger; full-screen overlay stacks the 3 pills vertically. |
+
+**Mode A — Sticky bar 📐 STRUCTURED** (full-width chrome at top, the default for dashboards and product surfaces):
+
+```css
+.nav-sticky {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 16px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1140px; margin: 0 auto;
+}
+```
+
+**Mode B — Floating Liquid-Glass capsule 📐 STRUCTURED** (centered floating pill, fades in on scroll, the marketing-page default):
+
+```css
+.nav-float {
+  position: fixed; top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(-140%);
+  opacity: 0; pointer-events: none;
+  /* iOS 26 Liquid Glass — Light Variant from § 8.9.1 */
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.22);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255,255,255,0.40);
+  border-radius: 20px;        /* --r-2xl floating capsule, not pill */
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 16px;
+  width: max-content;
+  max-width: min(840px, calc(100vw - 32px));
+  z-index: 1000;
+  box-shadow:
+    0 8px 24px rgba(10,10,10,0.08),
+    0 2px 6px rgba(10,10,10,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(10,10,10,0.05);
+  transition:
+    opacity 280ms ease,
+    transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-float.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+/* Scroll script: add .is-visible once user scrolls past hero (≥80px). */
+
+@media (max-width: 768px) {
+  .nav-float { max-width: calc(100vw - 24px); top: 8px; border-radius: 16px; padding: 10px 12px; gap: 8px; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav-float { background: rgba(255,255,255,0.95); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-float { transition: opacity 150ms ease; transform: translateX(-50%) translateY(0); }
+  .nav-float:not(.is-visible) { opacity: 0; }
+}
+```
+
+**Push-specific nav content (🎨 OPEN — pick labels per page):**
+
+| Slot | Content | Notes |
+|------|---------|-------|
+| Monogram | "P" Magvix Italic, 32×32 Ink circle | Always present |
+| Home pill | "HOME" — GA Orange | Always GA Orange |
+| Page pill 2 | "CREATORS" — GA Green when on /creators, `--surface-3` otherwise | |
+| Page pill 3 | "MERCHANTS" — GA Sky when on /merchants, `--surface-3` otherwise | |
+| Page pill 4 (optional) | "PRICING" — `--surface-3` always (no dedicated GA color) | |
+| Right CTA | "GET ACCESS" — Brand Red Filled Primary | Links to waitlist / sign-up |
 
 ### 8.2 Ticket Panel
 
-Push v11 signature container — orange perforated ticket with grommets + Magvix Italic headline + Ink CTA. Marketing only. Max 1 per page.
+Push signature container — orange perforated ticket with grommets + Magvix Italic headline + Ink CTA. Marketing only. Max 1 per page.
 
 | Property | Desktop | iPad | Mobile |
 |----------|---------|------|--------|
@@ -644,7 +797,7 @@ Push v11 signature container — orange perforated ticket with grommets + Magvix
 | Grommets (×4) | 16px ink-solid circles, 24px inset from each corner | 16px, 20px inset | 12px, 16px inset |
 | Headline | Magvix Italic `clamp(40px, 5vw, 56px)` color `--ink`, centered | same scale | scales down via clamp |
 | Headline → subhead spacing | 16px | 16px | 12px |
-| Subhead | CS Genio Mono 16px 400 color `--ink`, centered, max-width 480px, mx-auto | same | scales |
+| Subhead | Open Sans 16px 400 color `--ink`, centered, max-width 480px, mx-auto | same | scales |
 | Subhead → CTA spacing | 32px | 32px | 24px |
 | CTA button | Filled Ink variant (see § 9.3) | same | same |
 | Box shadow | none (flat) | same | same |
@@ -653,7 +806,7 @@ Push v11 signature container — orange perforated ticket with grommets + Magvix
 
 ### 8.3 Darky Giant Footer Wordmark
 
-Footer = Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peeking above + Darky 800 giant "PUSH" pressed-bottom-left. Replaces v10 Magvix Italic footer wordmark.
+Footer = Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peeking above + Darky 800 giant "PUSH" pressed-bottom-left.
 
 | Element | Value |
 |---------|-------|
@@ -662,8 +815,8 @@ Footer = Editorial Blue rounded-top panel + 2 floating liquid-glass tiles peekin
 | Floating glass tiles (Newsletter + Socials) | Peek above top edge by 40-60px. `position: absolute; top: -40px;` `background: rgba(255,255,255,0.12); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.18); border-radius: var(--r-xl);` (16px) |
 | Footer content grid | 3-column desktop (LINKS / CONNECT / Copyright), 2-column iPad (LINKS-CONNECT row + Copyright row), 1-column mobile (stacked) |
 | Column header | Parenthetical Eyebrow — `(LINKS)` `(CONNECT)` color `rgba(255,255,255,0.65)` |
-| Column links | CS Genio Mono 16px 400 color `--snow` line-height 1.6, hover underline 4px offset |
-| Copyright + tagline | CS Genio Mono 12px 500 color `rgba(255,255,255,0.65)` |
+| Column links | Open Sans 16px 400 color `--snow` line-height 1.6, hover underline 4px offset |
+| Copyright + tagline | Open Sans 12px 500 color `rgba(255,255,255,0.65)` |
 | **Giant Wordmark** | Darky `clamp(140px, 18vw, 320px)` weight 800 uppercase color `--snow` line-height 0.85 letter-spacing -0.045em |
 | Wordmark position | **Bottom-left of footer**, full-bleed left-anchored, `margin-top: 96px` (creates breathing space between content grid and brand stamp) |
 | Wordmark behavior | Static. No hover, no animation. |
@@ -674,7 +827,7 @@ Marketing surfaces use `(LINKS)` `(CONNECT)` `(WHY THIS EXISTS)` form. Product U
 
 ```css
 .eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -720,17 +873,17 @@ Between sections — a typographic breath. Replaces "leave whitespace gap".
 
 ### 8.6 Editorial Table
 
-Cinema-Selects style for Pricing / Compare / KPI / Stats on Marketing surfaces. Dashboard tables stay on v10 card-grid.
+Cinema-Selects style for Pricing / Compare / KPI / Stats on Marketing surfaces. Dashboard (Product UI) tables stay on the card-grid pattern.
 
 | Element | Value |
 |---------|-------|
 | Title | Darky `clamp(40px, 5vw, 64px)` weight 800 color `--ink` margin-bottom 56px, **top-left of table panel** (not centered) |
 | Container | `background: var(--surface-2); border-radius: var(--r-md);` `padding: 48px 56px` desktop / `40px 40px` iPad / `32px 24px` mobile. May also live unboxed on `--surface` Ivory. |
-| Header row | CS Genio Mono 12px 700 uppercase 0.12em color `--ink-3` parenthetical form `(FILM)` |
+| Header row | Darky 12px 700 uppercase 0.16em color `--ink-3` parenthetical form `(FILM)` |
 | Header → divider spacing | 24px |
 | Header divider | `border-bottom: 1px dotted rgba(10,10,10,0.30);` |
 | First column cell | Darky 18px (mobile) / 20px (desktop) weight 700 color `--ink` |
-| Other column cells | CS Genio Mono 16px 400 color `--ink-3` |
+| Other column cells | Open Sans 16px 400 color `--ink-3` |
 | Last column ("Why" / "Outcome") | Right-aligned |
 | Row divider | `border-bottom: 1px dotted rgba(10,10,10,0.18);` lighter than header divider |
 | Row vertical padding | 20px desktop / 16px mobile |
@@ -750,12 +903,12 @@ Marketing-only card pattern. Image fills card, bottom 35% black gradient, Darky 
 | Text overlay padding | 24px from each edge (left + right + bottom) | 20px | 16px |
 | Title | Darky 20px (desktop) / 18px (mobile) weight 700 color `--snow` | 20px | 18px |
 | Title → metadata gap | 8px | 8px | 8px |
-| Metadata | CS Genio Mono 12px 500 uppercase 0.04em color `rgba(255,255,255,0.85)` | same | same |
+| Metadata | Darky 12px 600 uppercase 0.06em color `rgba(255,255,255,0.85)` | same | same |
 | Hover | bottom-right shift `translate(1px, 1px)` (subtle), NO image zoom, NO gradient lift | same | same |
 
 ### 8.8 Candy Panel
 
-The Push workhorse panel — full-bleed bento cell with warm tonal saturation, Ink text on top, often hosting a floating liquid-glass tile or inner card grid. **Re-fitted to v11's grid + negative-space + corner-anchored title + Marketing/Product register split + 8px vertical rhythm.** Used heavily in Adventure / Proof / Resources panel slots and as the primary Dashboard card surface.
+The Push workhorse panel — full-bleed bento cell with warm tonal saturation, Ink text on top, often hosting a floating liquid-glass tile or inner card grid. Snaps to the 8px grid + negative-space tokens, corner-anchors its title, and respects the Marketing / Product register split. Used heavily in Adventure / Proof / Resources panel slots and as the primary Dashboard card surface.
 
 #### 8.8.1 Container Spec
 
@@ -778,7 +931,7 @@ Stack order from top to bottom (omit slots not used; spacing only applies betwee
    ↓ 16px (locked, all breakpoints)
 [ Title ]                         ← Darky 36-72px corner-anchored top-left
    ↓ 24px desktop / 24px iPad / 16px mobile
-[ Body paragraph(s) ]             ← CS Genio Mono 18px line-height 1.55
+[ Body paragraph(s) ]             ← Open Sans 18px line-height 1.55
    ↓ 32px desktop / 24px iPad / 24px mobile
 [ CTA cluster ]                   ← 1-2 buttons from § 9 unified system, gap 16px / 12px mobile
    ↓ 56px desktop / 40px iPad / 32px mobile (only if inner-content slot follows)
@@ -787,7 +940,7 @@ Stack order from top to bottom (omit slots not used; spacing only applies betwee
 
 All values come directly from § 6 negative-space tokens. No eyeball spacing.
 
-#### 8.8.3 Title Placement (v11 — corner-anchored)
+#### 8.8.3 Title Placement (corner-anchored)
 
 | Panel role | Title placement | Justification |
 |------------|-----------------|---------------|
@@ -822,7 +975,7 @@ Common pattern: Adventure router shows 3-4 cards inside a Candy Panel.
 | Inner card padding | 24px (all sides) | 24px | 20px |
 | Grid gap between cards | 24px | 20px | 16px |
 | Card title | Darky 24px H4 weight 700 color `--ink` | same | Darky 20px |
-| Card body | CS Genio Mono 16px line-height 1.5 | same | same |
+| Card body | Open Sans 16px line-height 1.5 | same | same |
 | Card hover | bottom-right shift (Push interaction signature) | same | same |
 
 #### 8.8.6 Floating Liquid-Glass Tile Inside Candy Panel
@@ -837,7 +990,7 @@ Max 1 floating liquid-glass tile per Candy Panel.
 | Box shadow | `--shadow-glass` | same | same |
 | Padding | 32px | 24px | 20px |
 | Position (typical) | `position: absolute; top: 32px; right: 32px;` (peeks from upper-right corner of the panel) OR docked bottom-right | same | inline-flow on mobile, no float |
-| Content | Stat numeral (Darky `clamp(40,5vw,72)px` weight 700) + caption (CS Genio Mono 14px 500) OR small badge / status | same | same |
+| Content | Stat numeral (Darky `clamp(40,5vw,72)px` weight 700) + caption (Open Sans 14px 500) OR small badge / status | same | same |
 | Numeral → caption gap | 16px | 16px | 16px |
 | Hover | bottom-right shift | same | same |
 
@@ -856,7 +1009,7 @@ Photography on a Candy Panel sits inside its own framed tile — never bleeds to
 
 #### 8.8.8 What's Forbidden Inside a Candy Panel
 
-These v11 elements do NOT live inside a Candy Panel — they are page-level or chrome-level:
+These elements do NOT live inside a Candy Panel — they are page-level or chrome-level:
 
 - **Ticket Panel** (page-level editorial moment, max 1 per page; lives as its own panel slot, not inside)
 - **GA Tri-Color nav pills** (global chrome only)
@@ -868,9 +1021,9 @@ These v11 elements do NOT live inside a Candy Panel — they are page-level or c
 - **Category colors as background fill of inner card** (categories are content-context only; inner cards use semi-translucent white or `--surface-2` Pearl Stone)
 - **Magvix > 96px inside the panel** (Magvix Hero is page-level hero only; inside a Candy Panel, max Magvix size is the Section Title scale `clamp(40,5vw,72)px`)
 
-#### 8.8.9 Adjacent-Panel Tone Alternation (v11 expanded)
+#### 8.8.9 Adjacent-Panel Tone Alternation
 
-The adjacent warm/cool alternation rule applies to all panels in a page stack, including v11's new editorial panels:
+The adjacent warm/cool alternation rule applies to every panel in a page stack:
 
 | Panel | Tone | Pairs well next to |
 |-------|------|--------------------|
@@ -907,7 +1060,7 @@ Two warm Candy Panels stacked = orange-tinted page. Two Sky Candy Panels stacked
 }
 
 .candy-panel__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -931,7 +1084,7 @@ Two warm Candy Panels stacked = orange-tinted page. Two Sky Candy Panels stacked
 }
 
 .candy-panel__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.55;
   color: var(--ink-3);
@@ -978,24 +1131,9 @@ Two warm Candy Panels stacked = orange-tinted page. Two Sky Candy Panels stacked
 }
 ```
 
-#### 8.8.11 Migration from v10 → v11 (Candy Panel-specific)
+### 8.9 Liquid Glass System 📐 STRUCTURED
 
-For existing Candy Panels in the codebase:
-
-1. **Audit title placement** — re-anchor centered titles to top-left (section panel) or bottom-left (hero panel). Update the inner grid template.
-2. **Audit eyebrow form** — Marketing pages: wrap eyebrows in parens `(LINKS)`. Product pages: keep canonical `LINKS`.
-3. **Audit padding** — confirm 96px / 64px / 48px desktop / iPad / mobile interior padding (snap to 8px grid).
-4. **Audit vertical rhythm** — check eyebrow→title 16px / title→body 24px / body→CTA 32px spacing matches § 6.2.
-5. **Audit CTA cluster** — replace any per-page custom buttons with Filled Primary / Filled Secondary / Ghost from § 9.
-6. **Audit inner card radius** — inner cards step DOWN to `--r-xl` 16px (not v10's 20px).
-7. **Audit liquid-glass tile** — confirm `--r-xl` 16px / `--shadow-glass` / 32-24-20px responsive padding.
-8. **Audit adjacent-panel tone** — confirm warm/cool alternation across the page stack with v11's expanded panel types.
-9. **Audit image card insets** — confirm photo sits inside `--r-2xl` 20px tile, 32px inset from panel interior padding (not bleeding to edge).
-10. **Audit forbidden content** — remove any Ticket Panel / Editorial Pink CTA / Magvix Italic Divider / GA Tri-Color from inside Candy Panels.
-
-### 8.9 Liquid Glass System (📐 STRUCTURED — expanded v11)
-
-Push's "floating glass" surface — semi-translucent white with backdrop blur — is one of the system's most recognizable signatures. v10 used it in 2 places (footer + Candy Panel stat tile). **v11 expands to 6 documented use cases.** Always pair the glass effect with the same shadow + radius + border tokens; pick the use case from the list below.
+Push's "floating glass" surface — semi-translucent white with backdrop blur — is one of the system's most recognizable signatures. **6 documented use cases.** Always pair the glass effect with the same shadow + radius + border tokens; pick the use case from the list below.
 
 #### 8.9.1 Universal Liquid-Glass Token Set (🔒 STRICT — modeled on iOS 26 Liquid Glass)
 
@@ -1016,7 +1154,7 @@ Every liquid-glass surface across all 6 use cases uses these exact properties �
     radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
     /* Counter-specular at bottom-right — subtle for fall-off */
     radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 60%),
-    /* Base glass tint — much more transparent than v10's 0.55 (which read milky plastic) */
+    /* Base glass tint — restrained at 0.22; heavier values read milky plastic, not glass */
     rgba(255, 255, 255, 0.22);
   -webkit-backdrop-filter: blur(32px) saturate(180%);
   backdrop-filter: blur(32px) saturate(180%);
@@ -1114,7 +1252,7 @@ Every liquid-glass surface across all 6 use cases uses these exact properties �
 
 **Anti-patterns (forbidden):**
 
-- ❌ `background: rgba(255,255,255,0.55)` flat solid (the old v10 pattern) — reads as milky frosted plastic, not glass
+- ❌ `background: rgba(255,255,255,0.55)` flat solid — reads as milky frosted plastic, not glass
 - ❌ Single drop shadow only (no inset highlight/shadow) — flat, no perceived thickness
 - ❌ `border: 1px solid` — too heavy; the bezel is visualized via inset shadow, not via border
 - ❌ `backdrop-filter: blur(8px)` or less — too crisp; iOS 26 Liquid Glass uses heavy blur (28-36px)
@@ -1142,12 +1280,11 @@ One liquid-glass stat tile per Candy Panel, anchored upper-right or lower-right 
 |----------|-------|
 | Position | `position: absolute; top: 32px; right: 32px;` (default upper-right) OR `bottom: 32px; right: 32px;` |
 | Padding | 32px desktop / 24px iPad / 20px mobile |
-| Content | Stat numeral (Darky `clamp(40,5vw,72)px` 700) + caption (CS Genio Mono 14px 500) |
+| Content | Stat numeral (Darky `clamp(40,5vw,72)px` 700) + caption (Open Sans 14px 500) |
 | Mobile (<768px) | Drops out of `position: absolute`, flows inline below body, full-width |
 | Surface variant | `.lg-surface` (Candy Panel fills are light) |
 
-#### 8.9.4 Use Case 3 — Hero Photo Stat Peek (NEW v11)
-
+#### 8.9.4 Use Case 3 — Hero Photo Stat Peek
 When a Hero panel uses a full-bleed photograph as its background and Magvix Italic title is bottom-left anchored, a liquid-glass tile peeks from the **opposite corner** (typically upper-right) carrying a single key stat or merchant name — adds depth without crowding the corner-anchored title.
 
 | Property | Desktop | iPad | Mobile |
@@ -1162,9 +1299,8 @@ When a Hero panel uses a full-bleed photograph as its background and Magvix Ital
 
 **Concept**: The peek tile is the editorial "second voice" on a Hero panel. The Magvix Italic title makes the page-level statement; the peek tile gives a single sharp data point that grounds it.
 
-#### 8.9.5 Use Case 4 — Sticky Filter / Sort Rail (NEW v11)
-
-On Photo Grid pages (Archive, Showcase, Search), a horizontal liquid-glass pill rail sticks below the GA Tri-Color nav, carrying filter chips and sort controls. Replaces the v10 "filter bar with solid background" pattern.
+#### 8.9.5 Use Case 4 — Sticky Filter / Sort Rail
+On Photo Grid pages (Archive, Showcase, Search), a horizontal liquid-glass pill rail sticks below the GA Tri-Color nav, carrying filter chips and sort controls — replaces a solid-background filter bar.
 
 | Property | Desktop | iPad | Mobile |
 |----------|---------|------|--------|
@@ -1179,8 +1315,7 @@ On Photo Grid pages (Archive, Showcase, Search), a horizontal liquid-glass pill 
 
 **Concept**: The filter rail floats — it doesn't pin to surface, doesn't have full-width chrome. The Photo Grid behind it remains visually primary.
 
-#### 8.9.6 Use Case 5 — Photo Card Floating Badge (NEW v11)
-
+#### 8.9.6 Use Case 5 — Photo Card Floating Badge
 A small liquid-glass badge anchored to a Photo Card (with Bottom Gradient Overlay) carrying tier / category / status / date. Adds metadata without competing with the card's own title overlay.
 
 | Property | Value |
@@ -1188,7 +1323,7 @@ A small liquid-glass badge anchored to a Photo Card (with Bottom Gradient Overla
 | Position | `position: absolute; top: 16px; right: 16px;` (within Photo Card frame) |
 | Padding | 8px 14px |
 | Border radius | `--r-pill` (50vh) — pill shape |
-| Font | CS Genio Mono 12px 600 uppercase 0.04em |
+| Font | Open Sans 12px 600 uppercase 0.04em |
 | Content | Single token — tier name (`Bronze`) OR status (`Sold out`) OR date stamp (`Aug 21`) OR category (`Film`). Max 1 token. |
 | Mobile (<768px) | Same — stays inside card frame top-right |
 | Surface variant | `.lg-surface--dark` (Photo Card image is photographic, behaves as dark surface — text reads white) |
@@ -1196,8 +1331,7 @@ A small liquid-glass badge anchored to a Photo Card (with Bottom Gradient Overla
 
 **Concept**: The badge is editorial garnish. It tells you ONE thing about the card — never two. If you need two pieces of metadata, put both in the bottom-overlay metadata strip and skip the floating badge.
 
-#### 8.9.7 Use Case 6 — Scroll Progress Pill / Anchored Action Pop (NEW v11)
-
+#### 8.9.7 Use Case 6 — Scroll Progress Pill / Anchored Action Pop
 For long-form Marketing pages (article, case study, About): a small liquid-glass pill anchored bottom-right of the viewport that either ① shows scroll progress as a percentage OR ② carries a sticky CTA ("Subscribe" / "Apply now") that pops into view after the user scrolls past the hero.
 
 | Property | Desktop | iPad | Mobile |
@@ -1207,7 +1341,7 @@ For long-form Marketing pages (article, case study, About): a small liquid-glass
 | Min-width | 120px | 120px | 100px |
 | Padding | 12px 20px | 12px 18px | 10px 16px |
 | Border radius | `--r-pill` (50vh) | same | same |
-| Font | CS Genio Mono 14px 600 uppercase 0.04em | same | 12px |
+| Font | Darky 14px 600 uppercase 0.04em | same | 12px |
 | Content | EITHER scroll progress (`23% read`) OR sticky CTA (`Subscribe` / `Apply now`) — choose ONE, not both | same | same |
 | Z-index | 90 | same | same |
 | Show / hide | Hidden until user scrolls past hero (offset 600px); fades in over 240ms | same | same |
@@ -1243,9 +1377,9 @@ For long-form Marketing pages (article, case study, About): a small liquid-glass
 | Settings / Forms | Footer pair (2) only |
 | Modal / Drawer (transient) | None (modals are themselves elevated surfaces; double-elevation reads cluttered) |
 
-### 8.10 Image-First Layout Patterns (📐 STRUCTURED — NEW v11)
+### 8.10 Image-First Layout Patterns (📐 STRUCTURED)
 
-GA's pages are image-led — a Push Marketing surface should match that density. v11 documents 4 image patterns; pick ONE per panel based on the panel's role.
+GA's pages are image-led — a Push Marketing surface should match that density. 4 image patterns are documented below; pick ONE per panel based on the panel's role.
 
 #### 8.10.1 Pattern A — Full-Bleed Hero Photograph
 
@@ -1285,7 +1419,7 @@ Photograph sits inside its own `--r-2xl` (20px) frame, inset 32px from the Candy
 
 **When to use**: Proof / Resources panels where the photograph supports a longer text block (testimonial + photo, case study + photo). The text is primary; photo is supportive evidence.
 
-#### 8.10.4 Pattern D — Decorative Photo Collage (NEW v11 — GA About-page reference)
+#### 8.10.4 Pattern D — Decorative Photo Collage (GA About-page reference)
 
 Multiple small photographs (3-7) scattered horizontally near the top of an Anchor / About / Story panel, each `border-radius: 0` (one of the 3 documented exceptions in § 4.2), positioned with deliberate negative space between them. Reads as "found objects on a tabletop" — vintage media reference (record / VHS / cassette / telegram / book).
 
@@ -1323,7 +1457,7 @@ Multiple small photographs (3-7) scattered horizontally near the top of an Ancho
 3. **Photo content is exempt from the Allowed-Color List** (§ 2.7) — photographic images can carry any color. But CSS-applied colors (overlays, gradients, borders) must come from the token list.
 4. **Maximum 1 Pattern A or Pattern D per page.** Pattern B and Pattern C can repeat freely within their grid / panel context.
 
-### 8.11 Custom Scrollbar System (🔒 STRICT — NEW v11)
+### 8.11 Custom Scrollbar System (🔒 STRICT)
 
 System default scrollbars (Chromium gray slabs / native macOS overlay) clash with Push's editorial register. Every page replaces them with a refined warm-neutral scrollbar that matches the 11-stop ladder + the bottom-right hover-shift interaction signature.
 
@@ -1337,7 +1471,7 @@ The scrollbar is **almost invisible at rest** — `--mist` (`#d8d4c8`) thumb on 
 
 ```css
 /* ───────────────────────────────────────────────────────────────
-   Push v11 Custom Scrollbar — Light Variant (default, all surfaces)
+   Push Custom Scrollbar — Light Variant (default, all surfaces)
    Refined warm-neutral; barely visible at rest; matches button hover hierarchy.
    ─────────────────────────────────────────────────────────────── */
 
@@ -1460,435 +1594,305 @@ The scrollbar is **almost invisible at rest** — `--mist` (`#d8d4c8`) thumb on 
 8. **macOS native overlay scrollbars** (the ones that auto-hide when not scrolling) are overridden by `::-webkit-scrollbar` styling. This is intentional — Push's scrollbar is a deliberate brand element, not a system afterthought.
 9. **No scrollbar inside Liquid Glass tiles** — use `.scrollbar--hidden`. A chrome scrollbar appearing inside a glass tile breaks the iOS 26 glass illusion (real glass doesn't have a scrollbar engraved in it).
 10. **Mobile (<768px)**: Most mobile browsers don't render explicit scrollbars (touch-scroll). The CSS still applies for the rare mobile browser that does (Firefox Mobile). No special mobile spec needed.
-5. **Image alt text is mandatory** — every `<img>` requires meaningful `alt` attribute. Decorative collage images use `alt=""` (decorative role).
-6. **Images respect the 8px grid** — width and height snap to 8px multiples (or natural cover of a grid-aligned container).
 
 ---
 
-### 8.12 Floating Liquid Glass Navbar (📐 STRUCTURED — NEW)
+### 8.12 Unified Sidebar — Narrow Rail Nav 🔒 STRICT — Product UI register
 
-> **Supersedes the basic sticky bar spec in § 8.1.** The GA Tri-Color pill structure (three colored pills: Home / Active / Last) remains 🔒 STRICT. What changes is the **container**: the full-width sticky bar is replaced by a **floating pill capsule** using the iOS 26 Liquid Glass token set (§ 8.9.1 Light Variant). The navbar fades in on scroll and fades out when the user returns to the page top.
+> **Source of truth**: `components/shell/UnifiedSidebar.tsx` + `unified-sidebar.css`. One component, three role configs (creator / merchant / admin), rendered at every authenticated layout shell — `app/(creator)/creator/(workspace)/layout.tsx`, `app/(merchant)/layout.tsx`, `app/(admin)/admin/layout.tsx`.
+>
+> Product UI register: no parenthetical eyebrows, no Magvix Italic body, no Ticket Panel, no GA Orange. The Marketing-register Floating Liquid-Glass capsule (§ 8.1 Mode B) is for marketing surfaces only — never on a workspace shell.
 
-#### 8.12.1 Typography & Font Confirmation (🔒 STRICT)
-
-Push uses **exactly three fonts**. No additional typefaces may be introduced.
-
-| Role | Font | Sizes | Notes |
-|------|------|-------|-------|
-| Hero / Wordmark / Signature Divider | **Magvix** (Regular + Italic) | ≥ 28px always | Hero: `clamp(64,9vw,160)px` · Italic-only for dividers and accent words |
-| Display / Heading / Numerals / Footer Wordmark | **Darky** | 20px–320px | Bold 700–800 for headings; Giant Footer clamp(140,18vw,320px) |
-| Body / UI / Labels / Eyebrow | **CS Genio Mono** | 12px–18px body | 12px min floor (§ 4.1); mono register for ALL UI text |
-
-All nav labels, pill text, sidebar items, dashboard captions, Q&A answers — **CS Genio Mono only**. Nav section titles and KPI display numerals — **Darky**. Brand wordmark in the nav monogram — **Magvix Italic**.
-
-#### 8.12.2 Container Anatomy
+#### 8.12.1 Sidebar Anatomy
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│  ┌─────┐   [ Home ]  [ Creators ]  [ Merchants ]  [ Pricing ] ·  [ Get Access ▶ ]  │
-│  │ •P• │                                                          │
-│  └─────┘                                                          │
-└──────────────────────────────────────────────────────────────┘
-     ↑ 32×32px Ink circle monogram         ↑ Brand Red Filled Primary CTA
-     Magvix Italic "P" centered                 (§ 9.1)
+┌──────────┐
+│    P     │  ← logo strip 48px (Darky 26px 900 italic, no caption)
+│          │     12px gap below
+├──────────┤
+│   ⌂      │
+│  TODAY   │  ← active pill — white gradient + red 4px dot below caption
+│          │     border 0.5px ink, multi-layer inset+outer shadow
+├──────────┤
+│   ⌫      │
+│  GIGS    │  ← idle row — icon at 0.78 opacity, transparent bg
+├──────────┤
+│   ✦      │
+│  FIND    │
+├──────────┤
+│   ↗      │
+│  PAY     │
+├──────────┤
+│   ▭      │
+│  STATS   │
+├──────────┤
+│   ✉      │
+│  INBOX   │
+├──────────┤
+│   ▽      │
+│  RANKS   │
+│          │
+│   ⋯      │  ← .us-foot — 0.5px hairline divider above (margin 8px 12px)
+│          │
+├──────────┤
+│   🔔     │
+│  ALERTS  │  ← bell with red badge dot when unread
+├──────────┤
+│   ⚙      │
+│ SETTINGS │
+├──────────┤
+│   (A)    │  ← 28px avatar circle, gradient ink fill + initial
+│   ME     │
+└──────────┘
+   96px
 ```
 
-| Property | Desktop | iPad | Mobile |
-|----------|---------|------|--------|
-| Position | `fixed; top: 16px; left: 50%; transform: translateX(-50%);` | same | `top: 8px` |
-| Width | `width: max-content; max-width: min(840px, calc(100vw − 32px))` | `min(720px, calc(100vw − 32px))` | `calc(100vw − 24px)` |
-| Border-radius | `20px` (--r-2xl — floating capsule, not pill) | `20px` | `16px` |
-| Padding | `10px 16px` (8px grid ✓) | `10px 16px` | `10px 12px` |
-| Internal gap | `16px` between monogram / pill row / CTA | `12px` | `8px` |
-| Background | **iOS 26 Liquid Glass Light Variant** (§ 8.9.1 — copy the full `.lg-surface` ruleset) | same | same |
-| z-index | `1000` | same | same |
-| Default (at top) | `opacity: 0; transform: translateX(-50%) translateY(-140%);` — invisible, above viewport | same | same |
-| Scrolled-in | `opacity: 1; transform: translateX(-50%) translateY(0);` — floats at top 16px | same | same |
+#### 8.12.2 Token Set 🔒 STRICT (CSS custom properties — match exactly)
 
-#### 8.12.3 Scroll Animation
+Set these on the `.unified-sidebar` root; every other rule reads from them:
 
-```javascript
-// Threshold: navbar appears once user scrolls past the hero section (≥80px)
-const NAV_THRESHOLD = 80;
+| Token | Value | Role |
+|-------|-------|------|
+| `--us-w` | `96px` | Rail width (desktop). Mobile collapses to 56px bottom dock. |
+| `--us-pad-x` | `12px` | Outer rail padding (left, right, top, bottom) |
+| `--us-item-inset` | `10px` | Pill horizontal inset from rail edges |
+| `--us-item-gap` | `6px` | Vertical gap between adjacent pills |
+| `--us-tile` | `40px` | Icon tile (square) |
+| `--us-icon` | `22px` | Icon glyph size inside tile |
+| `--us-cap-size` | `11px` | Caption font-size (Open Sans) |
+| `--us-radius` | `14px` | Pill border-radius |
+| `--us-trans` | `260ms cubic-bezier(0.4, 0, 0.2, 1)` | Background / shadow / border transition |
 
-const nav  = document.querySelector('.nav-float');
-let   prev = 0;
-
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  if (y > NAV_THRESHOLD) {
-    nav.classList.add('is-visible');
-  } else {
-    nav.classList.remove('is-visible');
-  }
-  prev = y;
-}, { passive: true });
-```
-
-```css
-.nav-float {
-  position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-140%);
-  opacity: 0;
-  pointer-events: none;
-  /* iOS 26 Liquid Glass (§ 8.9.1 Light Variant) */
-  background:
-    radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
-    radial-gradient(ellipse at 90% 100%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
-    rgba(255,255,255,0.22);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  backdrop-filter: blur(32px) saturate(180%);
-  border: 0.5px solid rgba(255,255,255,0.40);
-  border-radius: 20px;
-  box-shadow:
-    0 8px 24px rgba(10,10,10,0.08),
-    0 2px 6px rgba(10,10,10,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.50),
-    inset 0 -1px 0 rgba(10,10,10,0.05);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: max-content;
-  max-width: min(840px, calc(100vw - 32px));
-  z-index: 1000;
-  /* Entry/exit transition — iOS 26 spring for entry, ease for exit */
-  transition:
-    opacity 280ms ease,
-    transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.nav-float.is-visible {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Monogram */
-.nav-float__monogram {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--snow);
-  font-family: var(--font-brand);
-  font-style: italic;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-/* Pill row (GA Tri-Color — § 8.1 STRICT) */
-.nav-float__pills {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-/* Individual pills inherit from § 9.5 .btn-pill but with nav override (no hover shift) */
-.nav-float__pill {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 6px 14px;
-  border: none;
-  border-radius: var(--r-pill);
-  cursor: pointer;
-  transition: filter 180ms ease; /* brightness only — no shift (nav chrome rule) */
-  text-decoration: none;
-}
-.nav-float__pill:hover  { filter: brightness(1.08); }
-.nav-float__pill:active { filter: brightness(0.92); }
-
-/* GA Tri-Color states */
-.nav-float__pill--home    { background: var(--ga-orange); color: var(--snow); }
-.nav-float__pill--active  { background: var(--ga-green);  color: var(--ink);  }
-.nav-float__pill--last    { background: var(--ga-sky);    color: var(--ink);  }
-.nav-float__pill--plain   { background: var(--surface-3); color: var(--ink);  }
-
-/* Right CTA — §9.1 Filled Primary with bottom-right shift */
-.nav-float__cta {
-  /* Inherits .btn-primary — see § 9.1 */
-  padding: 8px 20px; /* slightly smaller inside nav */
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
-/* Mobile: collapse to monogram + hamburger */
-@media (max-width: 768px) {
-  .nav-float { max-width: calc(100vw - 24px); top: 8px; border-radius: 16px; padding: 10px 12px; gap: 8px; }
-  .nav-float__pills, .nav-float__cta { display: none; }
-  .nav-float.is-open .nav-float__pills { display: flex; flex-direction: column; gap: 8px; }
-}
-
-/* Reduced-transparency fallback */
-@media (prefers-reduced-transparency: reduce) {
-  .nav-float { background: rgba(248,244,232,0.95); backdrop-filter: none; -webkit-backdrop-filter: none; }
-}
-
-/* Reduced-motion fallback */
-@media (prefers-reduced-motion: reduce) {
-  .nav-float { transition: opacity 150ms ease; transform: translateX(-50%) translateY(0); }
-  .nav-float:not(.is-visible) { opacity: 0; }
-}
-```
-
-#### 8.12.4 Push-specific Nav Content
-
-| Slot | Content | Notes |
-|------|---------|-------|
-| Monogram | "P" Magvix Italic, 32×32 Ink circle | Always present |
-| Home pill | "HOME" — GA Orange fill | Active on landing page |
-| Page pill 2 | "CREATORS" — GA Green when on /creators, --surface-3 otherwise | |
-| Page pill 3 | "MERCHANTS" — GA Sky when on /merchants, --surface-3 otherwise | |
-| Page pill 4 | "PRICING" — --surface-3 always (no dedicated color) | |
-| Right CTA | "GET ACCESS" — Brand Red Filled Primary | Links to waitlist / sign-up |
-
-**Rule**: The Pricing pill carries no GA color — it is always `--surface-3` Pill variant. Only the three page-role pills (Home / Creators / Merchants) get GA colors.
-
----
-
-### 8.13 Sidebar Standard (Product UI register — 📐 STRUCTURED)
-
-> **v11.1 update (2026-04-26):** Sidebar background upgraded to full **Liquid Glass panel** (same iOS 26 token set as §8.9.1). Active and hover states use **8px rounded-corner card** inside the glass — no left border accent. A **search bar** sits between the logo strip and the first nav section. Section labels match four canonical groups: CORE / OPERATIONS / BUSINESS / ACCOUNT.
-
-> Applies to **creator dashboard**, **merchant dashboard**, and **admin panel**. Product UI register: no parenthetical eyebrows, no Magvix Italic, no Ticket Panel, no GA Orange.
-
-#### 8.13.1 Sidebar Anatomy (v11.1)
-
-```
-┌─────────────────────────────┐
-│  ┌──┐  PUSH                 │  ← Logo strip 64px, no bottom border
-│  └──┘                       │
-├─────────────────────────────┤  ← search bar row 48px (below logo, above nav)
-│  🔍  Search...              │
-├─────────────────────────────┤
-│  CORE                       │  ← Section eyebrow: CS Genio Mono 10px 700 uppercase 0.16em --ink-4
-│  ▣  Dashboard               │  ← Idle row: transparent fill, Mono 14px 500 --ink-3
-│  □  Campaigns               │
-│  ◎  Applicants              │
-│  △  Analytics               │
-├─────────────────────────────┤
-│  OPERATIONS                 │
-│  ⊞  QR Codes                │
-│  ⊕  Locations               │  ╔══════════════════════════╗
-│  ◇  Disputes                │  ║  8px rounded card active ║ ← rgba(255,255,255,0.80) + shadow-1
-│  ✉  Messages                │  ╚══════════════════════════╝
-├─────────────────────────────┤
-│  BUSINESS                   │
-│  —  Payments                │
-│  ☰  Billing                 │
-│  ∞  Integrations            │
-├─────────────────────────────┤
-│  ACCOUNT                    │
-│  ◉  Notifications           │
-│  ✶  Settings                │
-└─────────────────────────────┘
-```
-
-#### 8.13.2 Property Table (v11.1)
+#### 8.12.3 Property Table
 
 | Property | Value |
 |----------|-------|
-| Width | 248px fixed (8px grid ✓) |
-| Position | `fixed; left:0; top:0; height:100vh;` |
-| **Background** | **Full Liquid Glass** — `radial-gradient` specular overlays + `rgba(255,255,255,0.60)` base + `backdrop-filter: blur(32px) saturate(180%)` |
-| Right border | `0.5px solid rgba(255,255,255,0.40)` |
-| Logo strip | 64px height, no hairline border below — glass is continuous |
-| Logo monogram | 32×32 `--r-lg` (12px) Ink fill, Darky 700 "P" or brand icon, left: 16px |
-| Logo wordmark | Darky 16px 700 "PUSH" uppercase, gap 12px from monogram |
-| **Search bar** | 48px row below logo. Input: `rgba(255,255,255,0.55)` fill + `8px radius` + `1px solid rgba(255,255,255,0.40)` + 16px H pad. Placeholder: CS Genio Mono 13px `--ink-4`. Icon: 16px search glyph `--ink-4`, left 12px. |
-| Section eyebrow | CS Genio Mono 10px 700 uppercase 0.16em `--ink-4`, `padding: 16px 16px 6px` |
-| **Row idle** | `padding: 9px 12px; border-radius: 8px; margin: 1px 8px;` background: transparent |
-| **Row hover** | `background: rgba(255,255,255,0.55); border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.60);` — no translate shift |
-| **Row active** | `background: rgba(255,255,255,0.82); border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.70);` font-weight 600, `--ink` text — **no left border** |
-| Row label | CS Genio Mono 14px 500 (idle: `--ink-3`) / 600 (active: `--ink`) |
-| Row icon | 20×20px inline svg or icon-family glyph, `--ink-3` idle / `--ink` active, gap 10px to text |
-| Transition | `background 180ms ease, box-shadow 180ms ease` |
-| Mobile | `transform: translateX(-100%)` hidden; `.is-open` slides in; backdrop scrim `rgba(0,0,0,0.24)` |
+| Width | `--us-w` (`96px` desktop) |
+| Position | `fixed; left: 0; top: 0; height: 100vh; z-index: 200;` |
+| Background | Page surface inherits — the rail sits over `--snow #ffffff`. **Not Liquid Glass** (the rail is opaque chrome, not floating glass). |
+| Right edge | `0.5px solid rgba(40,36,32,0.06)` hairline (warm-ink low alpha) |
+| Padding | `12px` all sides |
+| Layout | `display: flex; flex-direction: column;` |
+| `.us-nav` (top group) | `flex: 1` (expands), `padding-top: 8px`, `gap: 6px`, `overflow-y: auto`, scrollbar hidden |
+| `.us-foot` (bottom group) | `padding-top: 12px`, `margin-top: 8px`, `gap: 6px` |
+| `.us-foot ::before` (divider) | `0.5px solid rgba(40,36,32,0.10)`, margin `8px 12px` (separates top group from foot) |
+| Logo strip | 48px height, Darky 26px 900 italic "P", color `var(--ink)`, no caption, no hover bg, no active dot. `margin-bottom: 12px;` |
+| **Pill (item)** — idle | `width: calc(100% - 20px)` (= rail − 2×inset), `min-height: 56px` (icon + caption + padding), `border-radius: 14px`, transparent fill, no border, no shadow. Caption visible below icon. |
+| **Pill — hover** (non-active) | Background `linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(248,244,232,0.55) 100%)` + `backdrop-filter: blur(20px)`. Icon opacity → 1.0. Caption color → `--ink`. No transform shift (the rail is chrome, follows § 8.1 nav rule). |
+| **Pill — active** | Background `linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(248,244,232,0.78) 50%, rgba(245,243,238,0.72) 100%)` + `border: 0.5px solid rgba(40,36,32,0.10)` + multi-layer shadow (inset top + inset bottom + 1px outer tight + 4–12px outer diffused). Icon opacity 1.0. Caption color `--ink`, weight stays 600. |
+| **Active red dot** | 4×4 circle, `bottom: -3px; left: 50%; transform: translateX(-50%); background: var(--brand-red) #c1121f; box-shadow: 0 0 0 1.5px var(--snow);` (snow ring isolates the dot from the pill edge) |
+| Pill internal layout | `display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px;` |
+| Icon tile | 40×40 (`--us-tile`), centered. Icon glyph 22px (`--us-icon`), color matches caption. Default opacity 0.78 → hover/active 1.0. |
+| Caption | Open Sans `--us-cap-size` (11px) 600 uppercase 0.02em. `max-width: 68px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;` |
+| Caption color | Idle `--ink-4` `#6a6a6a` · Hover/Active `--ink` `#0a0a0a` |
+| Transition | `background var(--us-trans), border-color var(--us-trans), box-shadow var(--us-trans), color 180ms ease, opacity 180ms ease` |
+| Bell badge (Alerts) | Same pill structure; small red `--brand-red` 6×6 dot at top-right of icon tile (top: -2px; right: -2px; box-shadow ring) when `data-unread="true"` |
+| Avatar pill (Me) | 28px circle, background `linear-gradient(135deg, rgba(40,36,32,0.18), rgba(40,36,32,0.06))` + `border: 0.5px solid rgba(40,36,32,0.20)` + inset highlight. Initial: Darky 12px 800 `#1c1814`. If photo: `<img object-fit: cover>` clips to circle. Caption "ME" below. Hover deepens border + bg gradient. |
 
-#### 8.13.3 Liquid Glass Token (same as §8.9.1)
+#### 8.12.4 Role Configs 🔒 STRICT — order is invariant
+
+The component takes a `role` prop and renders one of three nav configs. Items map to routes; order does not change.
+
+| Role | Top group (.us-nav) | Bottom group (.us-foot) |
+|------|---------------------|-------------------------|
+| **creator** | Today · Gigs · Find · Pay · Stats · Inbox · Ranks | Alerts · Settings · Me |
+| **merchant** | Today · Campaigns · Creators · Pay · Stats · Inbox · QR | Alerts · Settings · Me |
+| **admin** | Today · Operations · Disputes · Pay · Stats · Audit · Health | Alerts · Settings · Me |
+
+> Adding a new top-level page = adding an item to one of these arrays in `UnifiedSidebar.tsx`. New items must carry an icon at the same 22px size. Inserting between groups requires updating this table.
+
+#### 8.12.5 Mobile (≤768px) — Bottom Dock
+
+The vertical rail collapses to a horizontal bottom dock at mobile width. Same component, breakpoint-driven layout swap.
+
+| Property | Value |
+|----------|-------|
+| Position | `fixed; bottom: 0; left: 0; right: 0; top: auto;` |
+| Height | 56px |
+| Layout | `flex-direction: row; gap: 0;` items distributed `space-around` |
+| Item | Same icon (22px) + caption (9px Mono uppercase 0.02em — shrunk from 11px). No pill widening on active; active state shows the red dot below caption only. |
+| `.us-foot` | Inline with `.us-nav` — divider hidden on mobile (the bottom group merges visually with primary group; padding/spacing reads them as a 10-icon row) |
+| Page padding | `padding-bottom: 56px;` on `<body>` to clear the dock |
+
+#### 8.12.6 Implementation Reference (canonical CSS, abbreviated)
 
 ```css
-.sidebar {
-  position: fixed;
-  left: 0; top: 0;
-  width: 248px; height: 100vh;
+.unified-sidebar {
+  --us-w: 96px;
+  --us-pad-x: 12px;
+  --us-item-inset: 10px;
+  --us-item-gap: 6px;
+  --us-tile: 40px;
+  --us-icon: 22px;
+  --us-cap-size: 11px;
+  --us-radius: 14px;
+  --us-trans: 260ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Liquid Glass — full sidebar panel */
-  background:
-    radial-gradient(ellipse at 20% 0%,  rgba(255,255,255,0.60) 0%, rgba(255,255,255,0) 55%),
-    radial-gradient(ellipse at 95% 100%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 60%),
-    rgba(255,255,255,0.60);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  backdrop-filter: blur(32px) saturate(180%);
-  border-right: 0.5px solid rgba(255,255,255,0.40);
-  box-shadow:
-    1px 0 0 rgba(10,10,10,0.06),          /* subtle right shadow line */
-    inset -1px 0 0 rgba(255,255,255,0.50); /* inner right bezel */
-
-  display: flex;
-  flex-direction: column;
+  position: fixed; left: 0; top: 0;
+  width: var(--us-w); height: 100vh;
+  padding: var(--us-pad-x);
+  display: flex; flex-direction: column;
+  border-right: 0.5px solid rgba(40, 36, 32, 0.06);
   z-index: 200;
-  overflow-y: auto;
-  scrollbar-width: none; /* hide scrollbar — content scrolls naturally */
 }
 
-/* Logo strip */
-.sidebar__logo {
-  height: 64px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 16px;
-  flex-shrink: 0;
-}
-
-.sidebar__monogram {
-  width: 32px; height: 32px;
-  border-radius: 12px; /* --r-lg */
-  background: var(--ink);
-  color: var(--snow);
-  font-family: var(--font-display);
-  font-weight: 700; font-size: 14px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-
-.sidebar__wordmark {
-  font-family: var(--font-display);
-  font-size: 16px; font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-}
-
-/* Search bar */
-.sidebar__search {
+.us-logo {
   height: 48px;
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.sidebar__search-input {
-  flex: 1;
-  height: 32px;
-  background: rgba(255,255,255,0.55);
-  border: 1px solid rgba(255,255,255,0.40);
-  border-radius: 8px;
-  padding: 0 10px 0 30px; /* left pad for icon */
-  font-family: var(--font-mono);
-  font-size: 13px;
+  display: grid; place-items: center;
+  font-family: var(--font-hero); font-style: italic;
+  font-weight: 900; font-size: 26px;
   color: var(--ink);
-  outline: none;
+  margin-bottom: 12px;
 }
 
-.sidebar__search-input::placeholder {
-  color: var(--ink-4);
+.us-nav  { flex: 1; display: flex; flex-direction: column; gap: var(--us-item-gap);
+           padding-top: 8px; overflow-y: auto; scrollbar-width: none; }
+.us-foot { display: flex; flex-direction: column; gap: var(--us-item-gap);
+           padding-top: 12px; margin-top: 8px; position: relative; }
+.us-foot::before {
+  content: ""; position: absolute; top: 0; left: 12px; right: 12px;
+  border-top: 0.5px solid rgba(40, 36, 32, 0.10);
 }
 
-.sidebar__search-input:focus {
-  background: rgba(255,255,255,0.75);
-  border-color: rgba(255,255,255,0.60);
-  box-shadow: 0 0 0 3px rgba(193,18,31,0.08);
+.us-item {
+  position: relative;
+  width: calc(100% - 2 * var(--us-item-inset)); margin: 0 auto;
+  min-height: 56px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; padding: 8px 6px;
+  border-radius: var(--us-radius);
+  border: 0.5px solid transparent;
+  text-decoration: none; cursor: pointer;
+  transition: background var(--us-trans), border-color var(--us-trans),
+              box-shadow var(--us-trans), color 180ms ease;
 }
+.us-item__icon { width: var(--us-tile); height: var(--us-tile);
+                 display: grid; place-items: center;
+                 opacity: 0.78; transition: opacity 180ms ease; }
+.us-item__icon svg { width: var(--us-icon); height: var(--us-icon); }
+.us-item__cap { font-family: var(--font-body); font-size: var(--us-cap-size);
+                font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;
+                color: var(--ink-4); max-width: 68px;
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* Nav section structure */
-.sidebar__section { padding: 0; }
-
-.sidebar__section-label {
-  font-family: var(--font-mono);
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-4);
-  padding: 16px 16px 6px;
+.us-item:hover {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(248,244,232,0.55) 100%);
+  backdrop-filter: blur(20px);
 }
+.us-item:hover .us-item__icon { opacity: 1; }
+.us-item:hover .us-item__cap  { color: var(--ink); }
 
-.sidebar__nav { display: flex; flex-direction: column; }
-
-/* Nav row */
-.sidebar__item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  margin: 1px 8px;
-  font-family: var(--font-mono);
-  font-size: 14px; font-weight: 500;
-  color: var(--ink-3);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 180ms ease, box-shadow 180ms ease, color 180ms ease;
-}
-
-/* Hover — translucent white card */
-.sidebar__item:hover {
-  background: rgba(255,255,255,0.55);
+.us-item.is-active {
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.95) 0%,
+      rgba(248,244,232,0.78) 50%,
+      rgba(245,243,238,0.72) 100%);
+  border-color: rgba(40, 36, 32, 0.10);
   box-shadow:
-    0 1px 2px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.60);
-  color: var(--ink);
+    inset 0 1px 0 rgba(255,255,255,0.80),
+    inset 0 -1px 0 rgba(40,36,32,0.04),
+    0 1px 2px rgba(40,36,32,0.06),
+    0 4px 12px rgba(40,36,32,0.04);
+}
+.us-item.is-active .us-item__icon { opacity: 1; }
+.us-item.is-active .us-item__cap  { color: var(--ink); }
+
+/* Red active dot — sits 3px below the pill, centered horizontally */
+.us-item.is-active::after {
+  content: ""; position: absolute;
+  bottom: -3px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%; background: var(--brand-red);
+  box-shadow: 0 0 0 1.5px var(--snow);
 }
 
-/* Active — solid white card, no left border */
-.sidebar__item.is-active {
-  background: rgba(255,255,255,0.82);
-  box-shadow:
-    0 1px 4px rgba(0,0,0,0.10),
-    0 0px 1px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.70);
-  color: var(--ink);
-  font-weight: 600;
-}
+/* Logo: no hover, no active dot */
+.us-logo:hover, .us-logo.is-active { background: transparent; box-shadow: none; }
+.us-logo.is-active::after { display: none; }
 
-/* Icon within row */
-.sidebar__item-icon {
-  width: 20px; height: 20px;
-  flex-shrink: 0;
-  opacity: 0.50;
-  transition: opacity 180ms ease;
-}
-.sidebar__item:hover .sidebar__item-icon,
-.sidebar__item.is-active .sidebar__item-icon { opacity: 0.85; }
-
-/* Main content offset */
-.main-with-sidebar { margin-left: 248px; }
-
-/* Mobile overlay */
-@media (max-width: 1024px) {
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Mobile bottom dock (≤768px) */
+@media (max-width: 768px) {
+  .unified-sidebar {
+    top: auto; bottom: 0; right: 0; width: 100%; height: 56px;
+    padding: 0 8px;
+    flex-direction: row; align-items: center; justify-content: space-around;
+    border-right: none;
+    border-top: 0.5px solid rgba(40, 36, 32, 0.06);
   }
-  .sidebar.is-open { transform: translateX(0); }
-  .main-with-sidebar { margin-left: 0; }
+  .us-logo { display: none; }
+  .us-nav, .us-foot { flex: 1; flex-direction: row; gap: 0;
+                      padding-top: 0; margin-top: 0; }
+  .us-foot::before { display: none; }
+  .us-item { min-height: 48px; flex: 1; padding: 4px; }
+  .us-item__cap { font-size: 9px; }
+  body { padding-bottom: 56px; }
 }
 ```
 
-#### 8.13.4 Canonical Navigation Structure (🔒 STRICT — Product UI)
+#### 8.12.7 Discipline 🔒 STRICT
 
-Four section groups, used across merchant and creator dashboards. Order and labels do not change.
+1. **Single source of truth = `UnifiedSidebar.tsx`.** Do not fork the component per role; pass `role` prop instead. Per-role nav lists live in the same file, in the table at § 8.12.4.
+2. **Width is `96px` desktop, `56px` mobile.** No `120px`, no `64px`. The icon (22px) + caption (11px) + padding stack is calibrated for 96px exactly.
+3. **Pills do NOT shift on hover** — this is global chrome (same rule as § 8.1 GA nav). Hover lightens via gradient + blur; active darkens slightly via the white-cream stops + adds the red dot.
+4. **The active red dot is `--brand-red` 4px** with a 1.5px snow ring. Never use Editorial Pink, never use GA Orange — this is the system's "you are here" signal and it stays Brand Red.
+5. **Caption `text-transform: uppercase` + `letter-spacing: 0.02em`** is locked. Title-case captions read as Marketing eyebrow voice and break the Product register.
+6. **No search bar in the rail** — search lives in the page header where each page needs it (Find page, Inbox page, etc.), not in the chrome.
+7. **The `.us-foot` divider is `0.5px` warm-ink at 0.10 alpha.** This is the only hairline visible inside the rail; the right edge of the rail itself is at 0.06 alpha (subtler).
+8. **Logo "P" is Darky 26px 900 italic** — not Magvix, not lighter weight. Italic + 900 reads as a stamped brand mark; lighter weights look weak at 26px in the rail.
+9. **Avatar pill ("Me") is the only circular shape in the rail.** The 28px circle establishes "this represents a person, not a feature." Don't replace with a square avatar.
 
-| Section | Items |
-|---------|-------|
-| CORE | Dashboard · Campaigns · Applicants · Analytics |
-| OPERATIONS | QR Codes · Locations · Disputes · Messages |
-| BUSINESS | Payments · Billing · Integrations |
-| ACCOUNT | Notifications · Settings |
+---
 
-#### 8.13.5 Search Bar (📐 STRUCTURED — required)
+### 8.13 Agent Status Bar 📐 STRUCTURED — Product UI register
 
-The search bar is always present between the logo strip and the first CORE section. It is not optional. On focus, the input brightens slightly and gets a faint Brand Red ring (3px, 8% opacity). Pressing `/` from anywhere in the dashboard should focus it (keyboard shortcut, `data-shortcut="/"`).
+> **Source of truth**: `app/(creator)/creator/dashboard/page.tsx` (`.cd-agent-bar` block) + `grid.css`. Lives at the top of the workspace content area (Today / Dashboard pages) — NOT inside the layout shell, so each page that needs it renders it inline. Communicates the agent's run state, count of items needing user input, pending payout total, and last activity timestamp.
+
+#### 8.13.1 Anatomy
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  ●  Push is active   ·   1 NEEDS YOU   ·   $50 pending           last action 2m ago  │
+│  ↑                       ↑                  ↑                    ↑                   │
+│  green pulse 7×7         brand-red button   ink-2 mono           ink-4 mono right    │
+└──────────────────────────────────────────────────────────────────────────────┘
+   ↑ liquid-glass surface, 14px radius, min-height 48px
+```
+
+#### 8.13.2 Property Table
+
+| Property | Value |
+|----------|-------|
+| Container | `display: flex; align-items: center; flex-wrap: wrap; gap: 12px;` `min-height: 48px; padding: 13px 20px;` `border-radius: 14px;` |
+| Background | iOS 26 Liquid Glass — Light Variant (`.lg-surface` token from § 8.9.1: white-alpha base + radial specular highlight + multi-layer inset shadow + `backdrop-filter: blur(32px) saturate(180%)`) |
+| Border | `0.5px solid rgba(255, 255, 255, 0.40)` |
+| Pulse dot (`.cd-agent-pulse`) | 7×7 circle, `background: var(--status-done) #16a34a`, `border-radius: 50%`. Animation: 2.8s scale + opacity loop (`@keyframes cd-pulse: 0%/100% scale(1) opacity(1) → 50% scale(1.6) opacity(0.45)`). |
+| Label (`.cd-agent-label`) | "Push is active" — Open Sans 13px 600, color `var(--ink-2)`, letter-spacing 0.01em |
+| Separator (`.cd-agent-sep`) | Middle-dot `·` — color `var(--ink-5)`, 13px |
+| Needs-you button (`.cd-agent-needs-you`) | "{N} NEEDS YOU" — Open Sans 12px 700 uppercase 0.04em, color `var(--brand-red)`. Renders as `<button>` (clickable — opens the action queue). Hover: bottom-right shift `translate(1px, 1px)` (this one IS interactive, so it gets the standard button hover). Hidden when `actionsNeeded === 0`. |
+| Detail (`.cd-agent-detail`) | "${pendingTotal} pending" — Open Sans 12px 500, color `var(--ink-4)` |
+| Last action (`.cd-agent-last`) | "last action 2m ago" — Open Sans 12px 500, color `var(--ink-5)`, `margin-left: auto` (right-aligned). Mobile: wraps to next line. |
+| Spacing | 12px gap between every inline element. Right-side last-action pushes via `margin-left: auto`. |
+| Mobile (<768px) | Container becomes 2-row stack: row 1 = pulse + label + needs-you button; row 2 = detail + last action. `padding: 12px 16px`. |
+
+#### 8.13.3 Data Sources
+
+| Field | Source |
+|-------|--------|
+| Pulse + "Push is active" | Hardcoded — present whenever the workspace is loaded (the agent is "active" iff the user is signed in and not paused) |
+| `actionsNeeded` count | Derived from page state — for creator: `TIMELINE.filter(t => t.status === "OVERDUE").length`. For merchant: count of disputes / unverified scans. |
+| `pendingTotal` | Derived sum of OVERDUE + ON_GOING slot payouts |
+| Last action timestamp | Updated on every server mutation event subscribed to via WebSocket. Formats as relative time (`Xs / Xm / Xh / Xd ago`). Refreshes client-side every 30s. |
+
+#### 8.13.4 Discipline 🔒 STRICT
+
+1. **Lives at the top of the workspace content area** — the Today / Dashboard / Operations page mounts it as the first child. It is **not** part of the `UnifiedSidebar` shell layout (because it carries page-level state, not chrome-level navigation).
+2. **The Needs-You button uses `--brand-red`** — never Editorial Pink, never GA Orange. Same reason as the active rail dot: this is "you must act."
+3. **The pulse is `--status-done` green** — same token as the success state in § 2.5. Other statuses (warning / error) DO NOT replace the dot color; if the agent is in an error state, render an error banner ABOVE this bar (separate component), not by recoloring the pulse.
+4. **The bar collapses from view at `actionsNeeded === 0 && pendingTotal === 0`** only on optional surfaces — on the Today page it is always visible (renders an "all clear" state with just the pulse + label).
+5. **Liquid-glass surface follows § 8.9.1 tokens exactly** — do not invent a new transparent value or blur radius.
+6. **Mobile wraps to 2 rows.** Do not horizontally scroll on narrow screens; the right-side timestamp drops below.
 
 ---
 
@@ -1900,11 +1904,11 @@ The search bar is always present between the logo strip and the first CORE secti
 
 ```
 ┌─────────────────────────────┐
-│  (EYEBROW)  TOTAL SCANS     │  ← CS Genio Mono 11px 700 uppercase --ink-3
+│  (EYEBROW)  TOTAL SCANS     │  ← Open Sans 11px 700 uppercase --ink-3
 │                             │
 │  2,847                      │  ← Darky Bold clamp(40,5vw,64)px --ink
 │                             │
-│  ▲ +12.4% vs last week     │  ← CS Genio Mono 12px delta: green/red
+│  ▲ +12.4% vs last week     │  ← Open Sans 12px delta: green/red
 └─────────────────────────────┘
 ```
 
@@ -1914,11 +1918,11 @@ The search bar is always present between the logo strip and the first CORE secti
 | Border radius | `var(--r-xl)` (16px) |
 | Box shadow | `var(--shadow-1)` |
 | Padding | `24px` all sides (desktop) / `20px` (mobile) |
-| Eyebrow | CS Genio Mono 11px 700 uppercase letter-spacing 0.12em `--ink-3` |
+| Eyebrow | Open Sans 11px 700 uppercase letter-spacing 0.12em `--ink-3` |
 | Eyebrow → numeral gap | 8px |
 | KPI numeral | Darky Bold `clamp(40px, 5vw, 64px)` `--ink` (Brand Red for primary metric only) |
 | Numeral → delta gap | 16px |
-| Delta text | CS Genio Mono 12px 500 · `▲` positive `color: #22c55e` · `▼` negative `color: var(--brand-red)` · neutral `--ink-3` |
+| Delta text | Open Sans 12px 500 · `▲` positive `color: #22c55e` · `▼` negative `color: var(--brand-red)` · neutral `--ink-3` |
 | Hover | Bottom-right shift `translate(1px,1px)` if card is clickable; no shift if display-only |
 | Grid desktop | 3-up (4+4+4 col span) gap 24px |
 | Grid iPad | 2-up (4+4 col span) gap 20px |
@@ -1955,7 +1959,7 @@ Each secondary section is a separate white / `--surface-2` panel with `--r-xl` r
 .kpi-card:active { transform: translate(2px, 2px) scale(0.98); }
 
 .kpi-card__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--ink-3);
@@ -1974,7 +1978,7 @@ Each secondary section is a separate white / `--surface-2` panel with `--r-xl` r
 .kpi-card__numeral--primary { color: var(--brand-red); }
 
 .kpi-card__delta {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px; font-weight: 500;
   display: flex; align-items: center; gap: 4px;
 }
@@ -1995,7 +1999,7 @@ Each secondary section is a separate white / `--surface-2` panel with `--r-xl` r
 
 ### 8.15 Cinema Selects Text Pattern — Q&A / Data / Prose (📐 STRUCTURED)
 
-> The Editorial Table (§ 8.6) establishes the visual grammar: **dotted hairline row separators** + **Darky first column** + **CS Genio Mono remaining columns**. This § extends that grammar to **prose contexts** — Q&A sections, feature comparisons, founder bios, attribution event logs, FAQ blocks. The layout is not a table element; it's a series of `<dl>`, `<div>` rows, or flex rows following the same visual rhythm.
+> The Editorial Table (§ 8.6) establishes the visual grammar: **dotted hairline row separators** + **Darky first column** + **Open Sans remaining columns**. This § extends that grammar to **prose contexts** — Q&A sections, feature comparisons, founder bios, attribution event logs, FAQ blocks. The layout is not a table element; it's a series of `<dl>`, `<div>` rows, or flex rows following the same visual rhythm.
 
 #### 8.15.1 Row Structure
 
@@ -2004,7 +2008,7 @@ Each "row" in the Cinema Selects pattern has exactly two zones:
 | Zone | Role | Typography |
 |------|------|------------|
 | **Label / Question** | Left zone, ~30% width | Darky 18-20px 700 `--ink`, top-aligned, no wrap preferred |
-| **Value / Answer** | Right zone, ~70% width | CS Genio Mono 16px 400 `--ink-3`, line-height 1.6, wraps normally |
+| **Value / Answer** | Right zone, ~70% width | Open Sans 16px 400 `--ink-3`, line-height 1.6, wraps normally |
 
 Between every row: `border-top: 1px dotted rgba(10,10,10,0.20)` (the `--hairline-dotted` token).
 
@@ -2043,7 +2047,7 @@ Then all subsequent rows use `dotted` separators.
 }
 
 .cs-block__eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--ink-3);
@@ -2087,7 +2091,7 @@ Then all subsequent rows use `dotted` separators.
 }
 
 .cs-row__value {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px; font-weight: 400;
   color: var(--ink-3);
   line-height: 1.65;
@@ -2101,7 +2105,7 @@ Then all subsequent rows use `dotted` separators.
   align-items: center;
 }
 .cs-row--log .cs-row__label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px; font-weight: 500;
   color: var(--ink-4);
 }
@@ -2113,7 +2117,7 @@ Then all subsequent rows use `dotted` separators.
 
 /* Status pill inside data log rows */
 .cs-status {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.08em;
   padding: 3px 10px;
@@ -2141,7 +2145,7 @@ Then all subsequent rows use `dotted` separators.
 
 ---
 
-## 9. Unified Button System (NEW v11 — strict)
+## 9. Unified Button System 🔒 STRICT
 
 **5 button variants. Every button on every page renders identically. No per-page custom buttons. No exceptions without a documented PR justification.**
 
@@ -2172,7 +2176,7 @@ The committed-action button — Apply, Launch, Reserve, Submit, Buy.
 .btn-primary {
   background: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2243,7 +2247,7 @@ Outlined, no fill. Lower-stakes pair to Filled Primary in dialog actions.
   background: transparent;
   color: var(--ink);
   border: 1px solid var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2268,7 +2272,7 @@ Pill-radius, smaller padding, used for non-primary repeated chips.
 .btn-pill {
   background: var(--surface-3);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2412,7 +2416,7 @@ Section dividers (Magvix Italic) take 64px above + 64px below desktop / 48px eac
 
 ---
 
-## 14. Responsive Breakpoints (NEW v11 — natural adaptive)
+## 14. Responsive Breakpoints — natural adaptive
 
 Same composition / same hierarchy across mobile / iPad / desktop — only spacing scale + column count adjust. No alternate layouts per breakpoint.
 
@@ -2441,7 +2445,7 @@ Same composition / same hierarchy across mobile / iPad / desktop — only spacin
 
 Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 
-### 15.1 Panel inventory (v11)
+### 15.1 Panel inventory
 
 | Panel Type | Surface | Use |
 |------------|---------|-----|
@@ -2509,7 +2513,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 
 ---
 
-## 17. v11 Build Checklist (before opening a PR)
+## 17. Build Checklist (before opening a PR)
 
 ### Marketing surfaces (Home / Landing / About / Pricing / Blog / Showcase)
 
@@ -2542,7 +2546,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 - [ ] Color values come from the Allowed-Color List in § 2 only — photos / SVG visual effects exempt
 - [ ] Body text = `--ink-3` warm gray, headings = `--ink` (or `--graphite` for mid-strong, `--char` on dark surface)
 - [ ] No body text < 12px, no display text > 160px (Hero Magvix), > 320px (Footer Wordmark only exception)
-- [ ] Three fonts loaded via `@font-face` — Magvix-Regular, Magvix-Italic, Darky-*, CS Genio Mono
+- [ ] Three fonts loaded via `@font-face` — Magvix-Regular, Magvix-Italic, Darky-*, Open Sans
 - [ ] Tailwind theme exposes only the 12 type-scale sizes + radii scale + 8px spacing scale + Allowed-Color List
 - [ ] All colors come from CSS custom properties — no hardcoded hex outside `:root`
 - [ ] Mobile (<768px) tap targets ≥ 44×44
@@ -2552,92 +2556,37 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 
 ---
 
-## 18. Migration Notes (v10 → v11)
-
-### Files to update on existing pages
-
-1. **All page templates** — Add GA Tri-Color nav at top.
-2. **Footer component** — Replace Magvix Italic "Push" wordmark with Darky 800 giant "PUSH" bottom-left.
-3. **Newsletter signup / waitlist sections** — Convert to Ticket Panel.
-4. **Marketing eyebrows** — Add parens: `WHY THIS EXISTS` → `(WHY THIS EXISTS)`.
-5. **Pricing / Compare pages** — Convert card-grid to Editorial Table.
-6. **Creator / Merchant showcase grids** — Convert to Photo Card with Bottom Gradient Overlay.
-7. **Hero panels on Marketing pages** — Re-anchor title to bottom-left, push Magvix Hero size to clamp(64,9vw,160).
-8. **Section titles on Marketing pages** — Re-anchor to top-left.
-9. **Insert Magvix Italic Signature Dividers** at 1-2 section breaks per Marketing page.
-10. **Replace all per-page custom buttons** with the 5 unified variants from § 9.
-11. **Audit every dimension to snap to 8px grid**. Replace `padding: 22px` with `padding: 24px`, etc.
-
-### Files to leave alone (Product surfaces)
-
-1. Dashboard pages, Settings, Billing, Onboarding flow — keep v10 Candy Panel + canonical eyebrow.
-2. Forms (login, signup, edit profile, create campaign) — keep v10.
-3. In-app messaging, toasts, modals, drawers — keep v10.
-
-### Token migration
-
-```css
-:root {
-  /* NEW v11 — three warm-neutral additions */
-  --graphite: #2c2a26;
-  --mist:     #d8d4c8;
-  --char:     #3a3835;
-
-  /* NEW v11 — GA Tri-Color (nav-only) + supporting */
-  --ga-orange:      #ff5e2b;
-  --ga-orange-deep: #d94215;
-  --ga-orange-tint: rgba(255,94,43,0.12);
-  --ga-green: #4ade80;
-  --ga-sky:   #93c5fd;
-
-  /* Codified explicitly in v11 (existed in v10 implicitly) */
-  --obsidian: #000000;
-  --snow:     #ffffff;
-
-  /* NEW v11 — dotted hairline */
-  --hairline-dotted: rgba(10,10,10,0.20);
-  /* applied via background-image: repeating-linear-gradient(...) */
-}
-```
-
----
-
-## 19. Authority & Conflict Resolution
+## 18. Authority & Conflict Resolution
 
 - This document supersedes Design.md v10 and earlier as the styling authority.
-- v10 N2W-calibrated tokens are preserved verbatim where unchanged — listed in "What did NOT change" at top.
-- v11 additions (Grid + Negative Space + Unified Button + 3 neutrals + Closed Allowed-Color List + Corner-Anchored Title + Selective `border-radius:0`) are clearly marked `(NEW v11)`.
-- Conflicts between v10 history (preserved if archived) and v11 resolve to v11.
-- Deviations from v11 require user sign-off (Jiaming) AND a doc update in the same PR introducing the deviation.
-
-> **Last calibrated**: 2026-04-26 (Component Library § 20 added — Figma visual audit of 9 Grain Archive components from Page 1 + 2 new page-section patterns from Page 2 /archive Body content container: Archive Hero Section § 20.10, Featured Album Section § 20.11; GA Tri-Color exact hex confirmed from Figma node 1:42)
-> **Next planned review**: After Williamsburg Tier 0 pilot launches (2026-05-23) — usability data from real merchants and creators may surface tightening or relaxation needs.
+- v11 introduced: 12-column Grid, Negative-Space tokens, Unified Button system, 3 new warm neutrals (`--graphite` `--mist` `--char`), the Closed Allowed-Color List rule, Corner-Anchored Title rules, the 3 selective `border-radius:0` exceptions, GA Tri-Color nav, Ticket Panel, Editorial Table, Photo Card with gradient overlay, Magvix Italic Signature Divider, Darky Giant Footer Wordmark, and the 6-use-case Liquid Glass System.
+- v12 layered Figma-synced typography (Hero raised to 200px max, body 18→20px, 110px Header 3, Caption lowered to 10px) and the GA Dark-Register components in § 19.
+- v11.1 (2026-04-26): page bg unified to `#ffffff` Snow (was Ivory Cream); product UI cards have no border (defined by shadow alone); cream tokens reserved for Marketing register only.
+- Conflicts between historical Design.md and the current text resolve to the current text.
+- Deviations from this doc require user sign-off (Jiaming) AND a doc update in the same PR.
 
 ---
 
-## 20. Component Library — Figma Audit (2026-04-26)
+## 19. Component Library — Figma Audit (2026-04-26)
 
-> **Source**: Visual audit of Figma file `vjlMQtghdV76EIAUt20r3h` (push), Pages 1 & 2. § 20.1–20.9 = Page 1 component library. § 20.10–20.11 = Page 2 /archive page Body content container (new section-level patterns not present on Page 1). Note: Page 2 ("untitled") contains only the /archive page design; /article and /about frames do not exist in this Figma file as of 2026-04-26.
+> **Source**: Visual audit of Figma file `vjlMQtghdV76EIAUt20r3h` (push), Pages 1 & 2. § 19.1–19.9 = Page 1 component library. § 19.10–19.11 = Page 2 /archive page Body content container. Note: Page 2 ("untitled") contains only the /archive page design; /article and /about frames do not exist in this Figma file as of 2026-04-26.
 > All 9 components are dark-register (Grain Archive editorial surface). Background `#0F0E0E` / `#1F1F1F`.
 > These components operate in the **Grain Archive dark register** — a sister register to Push's light marketing surface. GA = dark canvas; Push marketing = light canvas. Both share the same three fonts, the same button mechanics (hover shift), and the same GA Tri-Color nav chrome.
 
-### 20.0 Figma-Accurate GA Tri-Color Tokens
+### 19.0 GA Dark-Register Token Set
 
-> ⚠️ **Correction from Figma node 1:42**: The design system GA colors differ slightly from older Design.md values. Use these exact hex codes everywhere:
+> GA Tri-Color is defined in § 2.4 (Figma source of truth: node 1:42 — `--ga-orange #ff5700` / `--ga-green #32ce57` / `--ga-sky #a3caff`). The dark-canvas neutrals below are exclusive to GA components and live alongside the warm-gray ladder (§ 2.1):
 
-| Token | Figma-exact hex | Design.md token to use |
-|-------|----------------|------------------------|
-| GA Orange (Home pill) | `#FF5700` | `--ga-orange: #FF5700` |
-| GA Green (Archive pill) | `#32CE57` | `--ga-green: #32CE57` |
-| GA Sky (About pill) | `#A3CAFF` | `--ga-sky: #A3CAFF` |
-| Near-black bg | `#0F0E0E` | `--fig-bg1` |
+| Role | Hex | Token |
+|------|-----|-------|
+| Near-black bg (canvas) | `#0F0E0E` | `--fig-bg1` |
 | Dark panel | `#1F1F1F` | `--fig-bg2` |
 | Mid gray | `#555659` | `--fig-mid` |
 | Light gray | `#8C8D92` | `--fig-light` |
 | Mist | `#D1D2D8` | `--fig-mist` |
 | Near-white | `#F6F8FB` | `--fig-pale` |
 
-### 20.1 Nav item (Figma node 1:55)
+### 19.1 Nav item (Figma node 1:55)
 
 **📐 STRUCTURED** — 6 variants across 3 pages × 2 states (pill / text-only).
 
@@ -2652,7 +2601,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Pill radius | `--r-pill` (50vh) |
 | Pill padding | `8px 18px` |
 | Text-only variant | No fill; label text only, same font |
-| Font | CS Genio Mono 14px 600 uppercase 0.04em |
+| Font | Darky 14px 600 uppercase 0.04em |
 
 ```css
 .nav-item--pill {
@@ -2660,7 +2609,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   align-items: center;
   padding: 8px 18px;
   border-radius: 50vh;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -2672,7 +2621,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 .nav-item--about   { background: #A3CAFF; color: #0F0E0E; }
 ```
 
-### 20.2 Navigation (Figma node 1:68)
+### 19.2 Navigation (Figma node 1:68)
 
 **🔒 STRICT** — global chrome on every Grain Archive page.
 
@@ -2713,7 +2662,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 .ga-nav__pills { display: flex; gap: 8px; }
 ```
 
-### 20.3 Article - large (Figma node 1:81)
+### 19.3 Article - large (Figma node 1:81)
 
 **📐 STRUCTURED** — primary editorial article display, 2-column layout.
 
@@ -2725,13 +2674,13 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Background | `#0F0E0E` |
 | Layout | 2-column: left col ~4:5 photo card + caption, right col hero text |
 | Left: image | 4:5 portrait photo, `border-radius: 8px` (Figma uses 8px panel radius) |
-| Left: caption | CS Genio Mono 12px, color `#555659`, below image |
+| Left: caption | Open Sans 12px, color `#555659`, below image |
 | Right: headline | Darky `clamp(40px, 5vw, 72px)` weight 700, color `#F6F8FB` |
-| Right: body | CS Genio Mono 16px line-height 1.55, color `#8C8D92` |
-| Right: metadata | CS Genio Mono 12px uppercase, color `#555659` |
+| Right: body | Open Sans 16px line-height 1.55, color `#8C8D92` |
+| Right: metadata | Open Sans 12px uppercase, color `#555659` |
 | Hover | Bottom-right shift on entire article card |
 
-### 20.4 Article - small (Figma node 1:100)
+### 19.4 Article - small (Figma node 1:100)
 
 **📐 STRUCTURED** — compact article grid tile, 6 variants.
 
@@ -2744,7 +2693,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Grid | 2-column, 4:5 portrait photos |
 | Caption placement | **BELOW the image** (not overlaid) |
 | Image radius | `8px` |
-| Caption font | CS Genio Mono 12px, color `#555659` |
+| Caption font | Open Sans 12px, color `#555659` |
 | Title | Darky 20px weight 700, color `#F6F8FB`, below caption |
 | Gap between image and caption | 8px |
 | Gap between caption and title | 12px |
@@ -2752,7 +2701,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 
 > **Key rule**: Article - small captions appear BELOW the image frame. This contrasts with Photo Card with Bottom Gradient Overlay (§ 8.7) where text overlays the image. In GA's editorial register, image and text are separate — never overlaid.
 
-### 20.5 Button - large (Figma node 1:149)
+### 19.5 Button - large (Figma node 1:149)
 
 **🔒 STRICT** — section-level CTA spanning full container width. 2 variants.
 
@@ -2789,7 +2738,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 }
 ```
 
-### 20.6 Button - small (Figma node 1:154)
+### 19.6 Button - small (Figma node 1:154)
 
 **🔒 STRICT** — inline action button. 2 variants.
 
@@ -2803,7 +2752,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Label color | `#F6F8FB` near-white |
 | Radius | `8px` |
 | Padding | `14px 28px` |
-| Font | CS Genio Mono 16px 600 uppercase 0.04em |
+| Font | Open Sans 16px 600 uppercase 0.04em |
 | Hover | Bottom-right shift `translate(2px, 2px)` |
 
 ```css
@@ -2812,7 +2761,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   background: #1F1F1F;
   color: #F6F8FB;
   border-radius: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px; font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -2823,7 +2772,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 .btn-small:active { transform: translate(3px, 3px) scale(0.98); }
 ```
 
-### 20.7 Table row (Figma node 1:159)
+### 19.7 Table row (Figma node 1:159)
 
 **📐 STRUCTURED** — editorial film/music/article table. 2 variants.
 
@@ -2835,9 +2784,9 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Background | `#0F0E0E` |
 | Column structure | 4 cols: Title / Year / Mood / Description |
 | Col 1 (Title) | Darky 20px weight 700 color `#F6F8FB` |
-| Col 2 (Year) | CS Genio Mono 16px color `#8C8D92` |
-| Col 3 (Mood/Tag) | CS Genio Mono 16px color `#8C8D92` |
-| Col 4 (Description) | CS Genio Mono 16px color `#555659`, right-aligned |
+| Col 2 (Year) | Open Sans 16px color `#8C8D92` |
+| Col 3 (Mood/Tag) | Open Sans 16px color `#8C8D92` |
+| Col 4 (Description) | Open Sans 16px color `#555659`, right-aligned |
 | Row divider | `border-bottom: 1px dotted rgba(255,255,255,0.15)` |
 | Row vertical padding | `20px 0` |
 | Mobile | Collapses — title full-width top, year/mood inline below, description drops |
@@ -2857,11 +2806,11 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 }
 .table-row:hover { transform: translate(2px, 2px); }
 .table-row__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: #F6F8FB; }
-.table-row__meta  { font-family: var(--font-mono); font-size: 16px; color: #8C8D92; }
-.table-row__desc  { font-family: var(--font-mono); font-size: 16px; color: #555659; text-align: right; }
+.table-row__meta  { font-family: var(--font-body); font-size: 16px; color: #8C8D92; }
+.table-row__desc  { font-family: var(--font-body); font-size: 16px; color: #555659; text-align: right; }
 ```
 
-### 20.8 Subscribe container (Figma node 1:168)
+### 19.8 Subscribe container (Figma node 1:168)
 
 **📐 STRUCTURED** — GA Orange newsletter CTA. Ticket Panel variant in GA dark register. 3 breakpoints.
 
@@ -2876,7 +2825,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Perforation | Dashed 2px lines running left + right sides (inset ~14px from edge) |
 | Headline | Magvix Italic `clamp(56px, 8vw, 96px)` color `#0F0E0E`, **centered** |
 | Headline text | "Tune into the signal" |
-| Body | CS Genio Mono 16px-18px, color `#1F1F1F` centered, max-width 480px |
+| Body | Open Sans 16px-18px, color `#1F1F1F` centered, max-width 480px |
 | Body text | "No noise—just deep cuts on music, film, and culture" |
 | CTA button | Dark fill `#0F0E0E` + snow text, `border-radius: 8px` (Filled Ink variant) |
 | CTA label | "Subscribe" |
@@ -2904,7 +2853,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   line-height: 1.0;
 }
 .subscribe-container__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 18px;
   color: #1F1F1F;
   text-align: center;
@@ -2912,7 +2861,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 }
 ```
 
-### 20.9 Photo row (Figma node 1:306)
+### 19.9 Photo row (Figma node 1:306)
 
 **📐 STRUCTURED** — 5-up horizontal editorial photo strip. 4 labeled rows on Page 1 (Photo row 1–4).
 
@@ -2925,7 +2874,7 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
 | Number of photos | 5 per row |
 | Each photo | ~256×256px square (approx: (1360 − 4×20) / 5 = 256px per cell) |
 | Image radius | None (or minimal — editorial square crop) |
-| Caption | "Link" text below each photo in CS Genio Mono 12px `#555659` |
+| Caption | "Link" text below each photo in Open Sans 12px `#555659` |
 | Caption gap | 8px below image |
 | Background | Transparent / page bg (#0F0E0E) |
 | Hover | Bottom-right shift on individual photo card |
@@ -2952,17 +2901,17 @@ Marketing pages compose as 3-5 stacked panels, alternating warm/cool tone.
   width: 100%;
 }
 .photo-row__caption {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   color: #555659;
 }
 ```
 
-### 20.10 Archive Page — Hero Section (📐 STRUCTURED · Figma Page 2)
+### 19.10 Archive Page — Hero Section (📐 STRUCTURED · Figma Page 2)
 
 > **Source**: Figma Page 2 ("untitled"), Body content container › Hero section. GA dark-register application of Image-First Layout Pattern A (§ 8.10).
 
-Full-bleed editorial photograph on a `#0F0E0E` canvas. The masthead title ("Grain Archive") is the only text — no eyebrow, no body, no CTA inside the hero panel. The section-level "View all" Button-large (§ 20.5) immediately follows as a visual separator before the article grid.
+Full-bleed editorial photograph on a `#0F0E0E` canvas. The masthead title ("Grain Archive") is the only text — no eyebrow, no body, no CTA inside the hero panel. The section-level "View all" Button-large (§ 19.5) immediately follows as a visual separator before the article grid.
 
 | Property | Value |
 |----------|-------|
@@ -2974,7 +2923,7 @@ Full-bleed editorial photograph on a `#0F0E0E` canvas. The masthead title ("Grai
 | Section height | Minimum 560px desktop; auto on mobile |
 | Image overlay | Optional: `#0F0E0E` at 20–35% opacity for legibility |
 | Hover | No shift — hero is not a click target |
-| What follows | Button-large (§ 20.5) full-width separator → Articles list |
+| What follows | Button-large (§ 19.5) full-width separator → Articles list |
 
 **Rule**: No Candy Panel wrapper — this is direct canvas, `#0F0E0E` background. Do not round the corners.
 
@@ -3017,7 +2966,7 @@ Full-bleed editorial photograph on a `#0F0E0E` canvas. The masthead title ("Grai
 
 ---
 
-### 20.11 Archive Page — Featured Album Section (📐 STRUCTURED · Figma Page 2, node 2:3688)
+### 19.11 Archive Page — Featured Album Section (📐 STRUCTURED · Figma Page 2, node 2:3688)
 
 > **Source**: Figma Page 2 ("untitled"), Body content container › Featured album section. NEW — not present in Page 1 component library.
 
@@ -3057,19 +3006,19 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 |----------|-------|
 | Shape | Square (1:1 aspect ratio) |
 | Album cover | Full-bleed photograph / artwork |
-| Badge — left | `"ARTIFACT"` — rectangular pill, white 1px border, white CS Genio Mono 12px 700 uppercase |
-| Badge — right | `"GA-03"` — oval outline pill, white 1px border, white CS Genio Mono 12px |
+| Badge — left | `"ARTIFACT"` — rectangular pill, white 1px border, white Open Sans 12px 700 uppercase |
+| Badge — right | `"GA-03"` — oval outline pill, white 1px border, white Open Sans 12px |
 | Badge position | Absolute, bottom of the album card, inset 16px from left/right edges |
 
 **Metadata row** (below album art card):
 
 | Property | Value |
 |----------|-------|
-| Artist line | `"False Memory by Artifact"` — CS Genio Mono 16px, white `#F6F8FB` |
+| Artist line | `"False Memory by Artifact"` — Open Sans 16px, white `#F6F8FB` |
 | CTA link | `"▶ Listen now"` — Magvix Italic ~24px, white |
 | Gap | 8px between artist line and CTA |
 
-**Tone discipline**: This panel lives in the **GA dark register** (§ 20). Background is always dark (`#141414` + photo). Text is always white/near-white (`#F6F8FB`). No Candy Panel wrapper. No Brand Red / N2W Blue CTA — the "Listen now" link uses Magvix Italic as the only interactive affordance.
+**Tone discipline**: This panel lives in the **GA dark register** (§ 19). Background is always dark (`#141414` + photo). Text is always white/near-white (`#F6F8FB`). No Candy Panel wrapper. No Brand Red / N2W Blue CTA — the "Listen now" link uses Magvix Italic as the only interactive affordance.
 
 ```css
 .ga-featured-album {
@@ -3134,7 +3083,7 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 }
 
 .ga-album-badge {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -3156,7 +3105,7 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 }
 
 .ga-album-meta__artist {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   color: #F6F8FB;
 }
@@ -3187,9 +3136,9 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 
 ---
 
-### 20.12 Component Discipline
+### 19.12 Component Discipline
 
-1. **🔒 STRICT — GA register = dark canvas.** All components in § 20 use `#0F0E0E`, `#141414`, or `#1F1F1F` backgrounds. Do not mix with the light Push marketing surface (`#f8f4e8`) in the same viewport.
+1. **🔒 STRICT — GA register = dark canvas.** All components in § 19 use `#0F0E0E`, `#141414`, or `#1F1F1F` backgrounds. Do not mix with the light Push marketing surface (`#f8f4e8`) in the same viewport.
 2. **🔒 STRICT — Caption placement**: In GA editorial components, captions always appear BELOW the image (never overlaid). Push Photo Card (§ 8.7) uses overlay. Two different visual registers, two different rules.
 3. **📐 STRUCTURED — Button - large** spans full container width and uses Magvix Italic. This is the GA "section footer" pattern — it concludes an article section with a large typographic CTA. Max 1 per section.
 4. **📐 STRUCTURED — Photo row** always runs 5-up on desktop. Do not reduce the count inside a row; instead wrap to a new row.
@@ -3198,5 +3147,290 @@ A full-viewport-width editorial spotlight panel for a single album, film, or rel
 7. **📐 STRUCTURED — Navigation dark bg**: GA nav uses `#1F1F1F`, not the light `rgba(248,244,232,0.85)` from Push marketing nav (§ 8.1). Two separate nav specs for two registers.
 8. **📐 STRUCTURED — Featured Album Section**: background is always `#141414` + BW photo at 60%. No Brand Red / Blue CTA — use Magvix Italic "Listen now" link only. Section title top-left (Darky Bold). Album display is a content column, not a card — no border, no shadow, no Candy Panel.
 9. **📐 STRUCTURED — Archive Hero Section**: no panel wrapper, no border-radius. Title anchored bottom-left directly on the photo. No interactive affordance on the hero frame — the Button-large that follows is the CTA.
+
+---
+
+### Hero Greeting Block (📐 STRUCTURED · Product UI register only)
+
+A page-top welcome composition used on `/creator/today` and reserved for any workspace surface where the day's brief is the primary content. NEVER use on Marketing pages — Marketing pages use Magvix Hero instead.
+
+**Composition (locked):**
+- Eyebrow: Open Sans 12px 700, color `var(--ink-4)`, `text-transform: uppercase`, `letter-spacing: 0.04em`. Content = date line (e.g. "Tuesday, May 5").
+- 8px gap.
+- Greeting: Darky 800 `clamp(32px, 4vw, 40px)`, color `var(--ink)`, `line-height: 1.1`, single line, ellipsize on overflow.
+- 16px gap.
+- Hero line: Darky 500 `clamp(18px, 1.6vw, 22px)`, color `var(--ink-3)`, max-width `56ch`, `line-height: 1.4`, max 2 lines.
+- 24px gap.
+- Optional CTA: one Filled Primary button. Never two CTAs. Never Editorial Pink stamp here (this is Product UI).
+- Bottom: 1px `var(--ink-6)` hairline as the section divider, full page-content width.
+
+**Spacing:**
+- Block top padding: `64px` desktop, `48px` iPad, `32px` mobile.
+- Block bottom padding: `0` (the hairline serves as bottom edge).
+- Side padding: workspace standard (8px-grid token, e.g. 64px → 48px → 24px).
+
+**Constraints:**
+- One Hero Greeting Block per page. Never two.
+- Greeting and hero text both wrapped in `suppressHydrationWarning` if either is computed from `Date.now()` or relative-time logic.
+- Date line uses `toLocaleDateString` — risk SSR/CSR drift across timezones, so always pair with `useNow()` null-guard rendering empty.
+- Hero text max 25 words. If the source string exceeds, truncate upstream — don't let CSS do it.
+
+---
+
+## 20. Product UI Tier System (v12.2 addendum)
+
+> **Source**: extracted from canonical `workspace-complete.html` + `creator-gigs.html` + `creator-earnings.html` + `creator-gigs-active.html` (v12.2 build).
+> **Status**: 🟢 Active. Applies to all `/creator/*` and `/brand/*` Product UI surfaces. Does NOT apply to Marketing register (push-six-flax.vercel.app, Push Portal) — Marketing uses 2-tier system (see § 21, planned).
+> **Authority**: Supersedes any per-page tier improvisation. Read alongside § 0 (rule classification) and § 15 (modular panel discipline).
+
+### 20.1 Three Visual Tiers 🔒 STRICT
+
+Every section in every Product UI page is assigned exactly one tier. Tier governs **visual weight only** — not feature presence, not information density.
+
+| Tier | Symbol | Surface | Padding | Shadow | Use for |
+|---|---|---|---|---|---|
+| **Primary** | ★★★ | `--snow` | 28-36px | `--shadow-2` or `--shadow-3` | Sections demanding action / deep work — NOW card, Today's Tasks, list-detail panels, big chart panels |
+| **Secondary** | ★★ | `--snow` | 18-24px | `--shadow-1` | Supporting work — Active campaigns, Open invites, mode tabs, stat 4-up grids |
+| **Tertiary** | ☆ | no shadow OR `--surface-2` bg | 12-16px | none | Ambient context — Pulse Strip, breadcrumb, toolbar, kbd footer, footer recap |
+
+**Page-level rule:** No page has more than **2 primary sections** in a single viewport. If you have a third primary candidate, demote one to secondary.
+
+**Reference page tiers:**
+
+| Page | ★★★ Primary | ★★ Secondary | ☆ Tertiary |
+|---|---|---|---|
+| `/creator/today` (workspace) | NOW · Today's Tasks | Active · Invites | Pulse Strip · Looking Ahead |
+| `/creator/gigs` | List column · Detail panel | Hero+Goal · Mode tabs | Pulse Strip · Toolbar · Kbd footer |
+| `/creator/gigs?mode=active` | List column · Detail panel | Hero+Pipeline · Mode tabs | Pulse Strip · Toolbar · Kbd footer |
+| `/creator/earnings` | Big chart panel · Payout list | Hero · Tier breakdown | Pulse Strip · Tax info · Footer |
+
+### 20.2 Functional Color Roles 🔒 STRICT
+
+Each color in the closed palette (§ 2) is locked to exactly one semantic role. Seeing a color = knowing what it means.
+
+| Token | Role | When | When NOT |
+|---|---|---|---|
+| `--brand-red` `#c1121f` | "Act now" | Primary CTA · urgency countdown · Receive-today stat accent | Status text · success states |
+| `--n2w-blue` `#0085ff` | "Stretch / aspiration / ceiling" | Stretch payout chip · Pending-money stat accent · secondary CTA | Errors · imminent alerts |
+| `--champagne` `#bfa170` | "Target hit / milestone / paid" | Target payout chip · paid status · star rating · weekly progress ring | Primary CTA |
+| `--editorial-pink` `#e8447d` | "You are personally needed" — **≤1 anchor / viewport** | RECOMMENDED stamp · Need-Revise badge · single-page attention magnet | Repeating list items · status systems |
+| `--ga-orange` `#ff5e2b` | "Imminent / live / shooting now" — **≤1 anchor / viewport** | Now-card chip · "Starts in" countdown · live indicator | Permanent badges · decoration |
+| `--ga-green` `#4ade80`, `--ga-sky` `#93c5fd` | Nav chrome only | GA Tri-Color top nav pills | ANY use outside `<nav>` |
+| 11-stop ink scale | Time / status / neutral / dividers | Status timeline · body · dividers · completion checkmarks (filled ink, NOT green) | Brand identity · urgency |
+
+### 20.3 Merchant Identity Palette 📐 STRUCTURED
+
+Push is a multi-brand marketplace. Each merchant gets one identity color from a curated 8-color set so creators recognize brands across pages.
+
+```css
+--mc-aubergine: #5b3a4f;   /* deep purple — specialty coffee, high-end (e.g. Devoción) */
+--mc-terracotta: #b8775a;  /* warm brick — brunch, casual (e.g. Sunday in Brooklyn) */
+--mc-sage: #7a8a6e;        /* muted green — matcha, tea, wellness (e.g. Cha Cha Matcha) */
+--mc-clay: #b8a99a;        /* warm clay — diners, casual food (e.g. Superiority Burger) */
+--mc-cobalt: #2d4a6b;      /* deep navy — fine casual, pizza (e.g. Roberta's) */
+--mc-rose: #c98a8a;        /* dusty rose — lifestyle, beauty (e.g. Flamingo Estate) */
+--mc-mustard: #c19a3a;     /* mustard — bakery, breakfast (e.g. Saint Bagel) */
+--mc-charcoal: #3a3835;    /* warm dark — minimal / luxury default */
+```
+
+**Allowed placements:**
+1. 4px brand accent bar at top (or 4px left-side) of any card representing that merchant
+2. Monogram avatar background (`.mono--{color}`)
+3. Brand brief page hero background fill (low-opacity tint only)
+4. Top-brands list line markers (week-pulse style)
+
+**Forbidden placements:**
+- CTA buttons (CTAs lock to `--brand-red` / `--n2w-blue` / `--ink`)
+- Status indicators (status uses ink scale + role-locked colors)
+- Charts and data viz when they could conflict with role-locked semantics
+
+**Allocation rule:** Each merchant locks one identity color permanently at registration. Creators see the same color across Today / Gigs / Earnings — `Devoción always purple, Sunday always terracotta`. This is the brand-recognition foundation.
+
+### 20.4 Color Budget per Viewport 🔒 STRICT
+
+Each viewport must respect these limits. **Repeating list components count as 1 unique use.**
+
+| Color | Limit / viewport |
+|---|---|
+| `--brand-red` | ≤ 4 unique placements |
+| `--n2w-blue` | ≤ 5 unique placements |
+| `--champagne` | ≤ 4 unique placements |
+| `--editorial-pink` | **= 1 anchor** |
+| `--ga-orange` | **= 1 anchor** |
+| Merchant Identity colors | 1 per merchant card · repeatable |
+| Nav tri-color trio | Inside `<nav>` only · counts as chrome |
+
+**Repeating-list exemption:** an Outcome Ladder rendered on 6 invite cards = 1 use of `--n2w-blue` (Stretch chip), not 6. Same for Target chips on `--champagne`.
+
+**Audit requirement:** every page mockup ships with a visible Color Budget audit footer (dev-only) showing current count vs limit.
+
+### 20.5 Outcome Ladder Component 📐 STRUCTURED
+
+The signature Push pricing component — three-rung horizontal grid representing outcome-based payout (Guaranteed → Target → Stretch).
+
+#### Anatomy
+
+```
+[ Guaranteed ][   Target   ][  Stretch  ]
+  ink-fill      champagne-tint  blue-tint
+   locked       at scan target  at extra signal
+```
+
+#### CSS contract
+
+```css
+.ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ladder__rung { border-radius: 10px; padding: 14px 14px 16px; border: 1px solid transparent; }
+.ladder__rung--gtd { background: var(--ink); color: var(--snow); border-color: var(--ink); }
+.ladder__rung--tgt { background: rgba(191,161,112,0.10); border-color: rgba(191,161,112,0.32); }
+.ladder__rung--str { background: rgba(0,133,255,0.07); border-color: rgba(0,133,255,0.32); }
+.ladder__amount { font: 800 24px var(--font-display); font-variant-numeric: tabular-nums; }
+.ladder__rung--gtd .ladder__amount { color: var(--snow); }
+.ladder__rung--tgt .ladder__amount { color: var(--champagne); }
+.ladder__rung--str .ladder__amount { color: var(--n2w-blue); }
+```
+
+#### Variants
+
+| Variant | Padding | Amount font-size | Hint visible | Use in |
+|---|---|---|---|---|
+| `.ladder` (default) | 14px | 24px | yes (12px) | Today task card · Active card |
+| `.ladder--mini` | 10px | 18px | no | Invite list card (compact) |
+| `.ladder--lg` | 16px | 28px | yes (13px) | Detail panel large variant |
+
+#### Companion: progress bar
+
+3-segment horizontal bar showing which rung is currently unlocked. Sits below the ladder in detail panel context.
+
+```css
+.ladder-progress__bar { display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: var(--surface-3); }
+.ladder-progress__seg { flex: 1; }
+.ladder-progress__seg--filled { background: var(--ink); }
+```
+
+### 20.6 Pulse Strip Component 📐 STRUCTURED
+
+Replaces 6-card stat grids with a single thin status bar. Tier ☆ Tertiary.
+
+#### Anatomy
+
+```
+┌─ Pulse strip — single row · ~52px tall ─────────────────────────────┐
+│ [● Title] │ ● Stat label  $48 ↑$12 │ ● Stat label  $72 4br │ ● ... │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+- Pill-shape title block on left with intent label
+- N stat cells separated by 1px dashed `--hairline`
+- Each cell: color dot · uppercase label · tabular-nums value · delta caption
+- Horizontal scroll allowed on overflow
+
+#### CSS contract
+
+```css
+.pulse-strip {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 14px 8px;
+  display: flex; align-items: stretch;
+  overflow-x: auto;
+}
+.pulse-stat { padding: 0 20px; border-right: 1px dashed var(--hairline); }
+.pulse-stat__dot { width: 6px; height: 6px; border-radius: 50%; }
+.pulse-stat__label { font: 700 11px var(--font-display); text-transform: uppercase; }
+.pulse-stat__value { font: 800 18px var(--font-display); font-variant-numeric: tabular-nums; }
+.pulse-stat__delta { font: 600 11px var(--font-body); }
+```
+
+#### Use cases
+
+| Page | Stats |
+|---|---|
+| `/creator/today` | Received · Pending · Missed · Remaining · Future · Revise |
+| `/creator/gigs` | Open invites · In progress · Month earned · Completion · Avg match |
+| `/creator/earnings` | This month · Lifetime · Avg per gig · Days to milestone |
+
+**Anti-pattern:** Pulse Strip is for ambient awareness. If a stat needs immediate action (e.g. "1 needs revise"), it gets `--editorial-pink` dot + alert delta but stays in the strip — the strip's tertiary role is preserved.
+
+### 20.7 Liquid-Glass in Product UI 📐 STRUCTURED
+
+§ 8.9 documented Liquid-Glass for the Marketing register (6 use cases). v12.2 extends the same token set into Product UI in 5 specific positions:
+
+| # | Use case | Where | Why |
+|---|---|---|---|
+| 1 | Sticky chrome | All pages — top nav + anchor rail | Lets content scroll under chrome with depth, premium feel |
+| 2 | Sticky CTA in detail panels | Right-side detail panel bottom (`/creator/gigs`, `/creator/earnings`) | Floats above scrolling content; commits feel "elevated" |
+| 3 | Floating filter rail | Anchored sticky toolbar above long lists (Active campaigns, History, Payouts) | Lets list scroll under without losing filter context |
+| 4 | Anchored CTA pop | "Submit reupload" / "Pick up QR poster" / "Add to calendar" — fixed bottom-right when scrolled past hero | Push power-user pattern — actionable reminder always visible |
+| 5 | Hero stat tile peek | Hero panel right edge — "$3,240 lifetime" or "94% completion" tile that peeks above the panel boundary | Adds a single editorial moment to otherwise utilitarian Product UI |
+
+#### Token (shared with Marketing)
+
+```css
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-glass);
+}
+```
+
+#### Discipline
+
+- **≤ 3 liquid-glass surfaces per viewport** (chrome counts as 1)
+- Always over a content surface — never on plain `--snow` background (no contrast, defeats purpose)
+- Glass + Brand Red Primary CTA together is forbidden — pick one to be the focal anchor; glass elements should hold secondary or contextual actions
+- Mobile: glass surfaces remain glass (do not flatten to solid) — backdrop-filter is well-supported on iOS 17+
+
+### 20.8 Tertiary Section Treatment 📐 STRUCTURED
+
+For sections at the bottom of a page that summarize / reflect / look-ahead.
+
+#### Visual contract
+
+- Section background: `--surface-2` (warm cream) with cards inside on `--snow` OR no bg with shadow removed entirely
+- Inner panels (if any): `--surface-2` bg, no shadow, 1px `--hairline` border
+- Hover-reveal contrast: panel children on hover return to `--snow` to indicate interactivity
+
+#### CSS pattern
+
+```css
+#week .panel,
+.tertiary-section .panel {
+  background: var(--surface-2);
+  box-shadow: none;
+  border: 1px solid var(--hairline);
+}
+#week .step:hover { background: var(--snow); }
+```
+
+#### Use in
+
+- `/creator/today` — § Looking Ahead (Next Steps + Week Pulse)
+- `/creator/earnings` — Tax info / next payment footer
+- `/creator/profile` — Settings recap footer (when built)
+
+#### Don't use for
+
+- Empty states (those need their own treatment with illustration + CTA)
+- Sections that need urgent attention (those are PRIMARY)
+- Marketing pages (Marketing has different conventions in § 15 / planned § 21)
+
+---
+
+### 20.9 Migration checklist for existing pages
+
+When adopting v12.2 on a page:
+
+- [ ] Replace 6-card stat grids with Pulse Strip (§ 20.6)
+- [ ] Audit every Outcome Ladder placement — confirm uses 3-rung component (§ 20.5)
+- [ ] Verify each viewport against Color Budget (§ 20.4)
+- [ ] Tag each section with explicit tier — confirm ≤2 primary per viewport (§ 20.1)
+- [ ] Confirm merchant identity color allocation per merchant (§ 20.3)
+- [ ] Apply Tertiary Section Treatment to footer panels (§ 20.8)
+- [ ] Add ≥1 liquid-glass moment per page (chrome counts) (§ 20.7)
+- [ ] Page mockup ships with Color Budget audit footer (dev-only)
 
 ---

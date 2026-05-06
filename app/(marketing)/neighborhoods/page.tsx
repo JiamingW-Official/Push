@@ -195,7 +195,7 @@ export default function NeighborhoodsPage() {
           >
             <span
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
@@ -224,7 +224,7 @@ export default function NeighborhoodsPage() {
               </div>
               <div
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -258,7 +258,7 @@ export default function NeighborhoodsPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 18,
               color: "rgba(255,255,255,0.5)",
               maxWidth: 560,
@@ -323,7 +323,7 @@ export default function NeighborhoodsPage() {
               </div>
               <div
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 14,
                   fontWeight: 500,
                   color: "var(--ink-4)",
@@ -350,7 +350,7 @@ export default function NeighborhoodsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -442,7 +442,7 @@ export default function NeighborhoodsPage() {
                     {/* metadata overlay — mono 12px */}
                     <div
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         fontWeight: 500,
                         color: "rgba(255,255,255,0.85)",
@@ -469,7 +469,7 @@ export default function NeighborhoodsPage() {
                     <div>
                       <div
                         style={{
-                          fontFamily: "var(--font-mono)",
+                          fontFamily: "var(--font-display)",
                           fontSize: 12,
                           color: "var(--ink-4)",
                           letterSpacing: "0.02em",
@@ -480,7 +480,7 @@ export default function NeighborhoodsPage() {
                       </div>
                       <div
                         style={{
-                          fontFamily: "var(--font-mono)",
+                          fontFamily: "var(--font-display)",
                           fontSize: 12,
                           color: "var(--ink-4)",
                           letterSpacing: "0.02em",
@@ -491,7 +491,7 @@ export default function NeighborhoodsPage() {
                     </div>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         fontWeight: 600,
                         color: "var(--brand-red)",
@@ -521,7 +521,7 @@ export default function NeighborhoodsPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -549,7 +549,7 @@ export default function NeighborhoodsPage() {
           </h2>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 18,
               color: "rgba(255,255,255,0.45)",
               maxWidth: 560,
@@ -590,7 +590,7 @@ export default function NeighborhoodsPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       color: "rgba(255,255,255,0.2)",
                       letterSpacing: "0.08em",
@@ -615,7 +615,7 @@ export default function NeighborhoodsPage() {
                 <span
                   style={{
                     display: "inline-block",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 11,
                     fontWeight: 700,
                     letterSpacing: "0.08em",

@@ -1,7 +1,7 @@
 "use client";
 
 // Push — Global Cmd-K Search Overlay
-// Design.md: border-radius 0, 6 colors, Darky + CSGenioMono, 8px grid.
+// Design.md: border-radius 0, 6 colors, Darky + Open Sans, 8px grid.
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";

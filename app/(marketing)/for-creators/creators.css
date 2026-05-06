@@ -121,8 +121,8 @@
 }
 
 .fc-peek-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -156,7 +156,7 @@
 }
 
 .fc-hero-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 1.40;
   letter-spacing: -0.1em;
@@ -220,7 +220,7 @@
 }
 
 .fc-table-lede {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
   line-height: 1.40;
@@ -240,13 +240,13 @@
   width: 100%;
   min-width: 640px;
   border-collapse: collapse;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 }
 
 /* Header row — parenthetical mono labels */
 .fc-compare-table thead th {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -278,14 +278,14 @@
 .fc-compare-table tbody td {
   padding: 20px 16px 20px 0;
   border-bottom: 1px dotted rgba(10, 10, 10, 0.18);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.40;
-  letter-spacing: -0.125em;
+  letter-spacing: -0.111em;  /* v12.1 — was -0.125em at 16px */
   vertical-align: top;
 }
 
 .fc-compare-table .fc-td-feature {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.01em;
@@ -318,8 +318,8 @@
 }
 
 .fc-table-fine {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--ink-4);
@@ -369,8 +369,8 @@
 }
 
 .fc-kpi-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -403,8 +403,8 @@
 }
 
 .fc-kpi-cap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -421,8 +421,8 @@
 }
 
 .fc-kpi-fine {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
@@ -447,8 +447,8 @@
 }
 
 .fc-kpi-tile-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -467,10 +467,10 @@
 }
 
 .fc-kpi-tile-body {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.40;
-  letter-spacing: -0.125em;
+  letter-spacing: -0.111em;  /* v12.1 — was -0.125em at 16px */
   color: rgba(255, 255, 255, 0.56);
   margin: 0 0 8px;
 }
@@ -509,8 +509,8 @@
 }
 
 .fc-how-tile-cap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -575,8 +575,8 @@
 }
 
 .fc-how-num {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -590,10 +590,10 @@
 }
 
 .fc-how-text {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.40;
-  letter-spacing: -0.125em;
+  letter-spacing: -0.111em;  /* v12.1 — was -0.125em at 16px */
   color: var(--ink-3);
   margin: 0;
 }
@@ -658,8 +658,8 @@
 }
 
 .fc-tier-row-num {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -695,8 +695,8 @@
 }
 
 .fc-tier-row-range {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.32);
@@ -704,18 +704,18 @@
 }
 
 .fc-tier-row-detail {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.40;
-  letter-spacing: -0.125em;
+  letter-spacing: -0.111em;  /* v12.1 — was -0.125em at 16px */
   color: rgba(255, 255, 255, 0.52);
   margin: 0;
   max-width: 72ch;
 }
 
 .fc-tier-row-unlock {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -724,7 +724,7 @@
 }
 
 .fc-tier-row-earn {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -742,8 +742,8 @@
 }
 
 .fc-tiers-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.28);
@@ -782,8 +782,8 @@
 }
 
 .fc-calc-tile-cap {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -813,7 +813,7 @@
 }
 
 .calc-result-prefix {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(22px, 2.8vw, 36px);
   font-weight: 300;
   color: var(--ink-4);
@@ -832,7 +832,7 @@
 }
 
 .calc-result-dash {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(40px, 5vw, 64px);
   font-weight: 100;
   color: var(--ink-5);
@@ -841,8 +841,8 @@
 }
 
 .calc-result-unit {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -868,8 +868,8 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -877,7 +877,7 @@
 }
 
 .calc-slider-val {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -885,8 +885,8 @@
 }
 
 .calc-fine {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-5);
   line-height: 1.6;
   letter-spacing: 0.02em;
@@ -939,8 +939,8 @@
 .calc-slider-ticks {
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-5);
   letter-spacing: 0.04em;
 }
@@ -980,8 +980,8 @@
 }
 
 .fc-quote-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1020,7 +1020,7 @@
 }
 
 .fc-quote-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1029,15 +1029,15 @@
 }
 
 .fc-quote-sep {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 100;
   color: rgba(255, 255, 255, 0.40);
 }
 
 .fc-quote-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1088,8 +1088,8 @@
   top: 16px;
   right: 16px;
   padding: 8px 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1116,7 +1116,7 @@
 }
 
 .fc-photo-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.005em;
@@ -1125,8 +1125,8 @@
 }
 
 .fc-photo-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1165,8 +1165,8 @@
 }
 
 .fc-ticket-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1188,10 +1188,10 @@
 }
 
 .fc-ticket-body {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.40;
-  letter-spacing: -0.125em;
+  letter-spacing: -0.111em;  /* v12.1 — was -0.125em at 16px */
   color: var(--ink);
   max-width: 480px;
   margin: 0 0 16px;
@@ -1316,7 +1316,7 @@
   }
 
   .fc-table-lede {
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 32px;
   }
 
@@ -1363,8 +1363,8 @@
 
   .fc-compare-table tbody td.fc-td-push::before {
     content: "Push";
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -1374,8 +1374,8 @@
 
   .fc-compare-table tbody td.fc-td-other::before {
     content: "Traditional";
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -1385,8 +1385,8 @@
 
   .fc-compare-table tbody td.fc-td-outcome::before {
     content: "Outcome";
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;

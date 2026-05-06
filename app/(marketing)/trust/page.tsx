@@ -80,7 +80,7 @@ export default function TrustPage() {
           >
             <span
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
@@ -109,7 +109,7 @@ export default function TrustPage() {
               </div>
               <div
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -143,7 +143,7 @@ export default function TrustPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 18,
               color: "rgba(255,255,255,0.5)",
               maxWidth: 560,
@@ -175,7 +175,7 @@ export default function TrustPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -248,7 +248,7 @@ export default function TrustPage() {
                 </h3>
                 <p
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 18,
                     color: "var(--ink-3)",
                     lineHeight: 1.55,
@@ -275,7 +275,7 @@ export default function TrustPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <span
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -334,7 +334,7 @@ export default function TrustPage() {
                 </div>
                 <div
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: "0.12em",
@@ -372,7 +372,7 @@ export default function TrustPage() {
             <div>
               <span
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.12em",
@@ -400,7 +400,7 @@ export default function TrustPage() {
               </h2>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 18,
                   color: "rgba(255,255,255,0.55)",
                   lineHeight: 1.55,
@@ -414,7 +414,7 @@ export default function TrustPage() {
               </p>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 18,
                   color: "rgba(255,255,255,0.4)",
                   lineHeight: 1.55,
@@ -440,7 +440,7 @@ export default function TrustPage() {
                 >
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: "0.12em",
@@ -467,7 +467,7 @@ export default function TrustPage() {
                   </h3>
                   <p
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: 16,
                       color: "rgba(255,255,255,0.4)",
                       lineHeight: 1.55,

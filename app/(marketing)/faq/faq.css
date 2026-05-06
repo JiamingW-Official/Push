@@ -148,7 +148,7 @@
 }
 
 .faq-item-question {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;

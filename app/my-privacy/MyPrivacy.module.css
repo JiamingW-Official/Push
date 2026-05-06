@@ -2,7 +2,7 @@
    MyPrivacy — Design.md v11 · Product register
    Consumer self-serve privacy surface
    Surface-elevated panels on Ivory Cream backdrop
-   Brand Red accents; Darky display; CS Genio Mono body
+   Brand Red accents; Darky display; Open Sans body
    ============================================================ */
 
 .page {
@@ -32,7 +32,7 @@
 
 .topBarTag {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--ink-4);
@@ -54,7 +54,7 @@
 
 .eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -111,7 +111,7 @@
 
 .sectionEyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -151,7 +151,7 @@
 
 .choicePanelLabel {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -199,7 +199,7 @@
   height: 48px;
   padding: 0 24px;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -278,7 +278,7 @@
 
 .label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -287,7 +287,7 @@
 
 .labelHint {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: none;
@@ -367,7 +367,7 @@
 }
 
 .bannerTitle {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -401,7 +401,7 @@
 
 .footerText {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   margin: 0;
 }

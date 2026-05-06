@@ -7,7 +7,7 @@
 /* ── Panel shell ─────────────────────────────────────────── */
 .tbp-panel {
   width: 100%;
-  font-family: "CS Genio Mono", monospace;
+  font-family: var(--font-body);
 }
 
 /* ── Full variant: 2-column grid ─────────────────────────── */
@@ -62,7 +62,7 @@
 /* ── Card header ─────────────────────────────────────────── */
 .tbp-card-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -85,7 +85,7 @@
 }
 
 .tbp-tier-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
@@ -112,7 +112,7 @@
 }
 
 .tbp-stat-label {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -120,14 +120,14 @@
 }
 
 .tbp-stat-value {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   text-align: right;
 }
 
 .tbp-stat-value--locked {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--ink-4);
   font-style: italic;
@@ -135,7 +135,7 @@
 
 /* ── Benefit list ─────────────────────────────────────────── */
 .tbp-benefits-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -156,7 +156,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.02em;
   line-height: 1.5;
   /* Animation: staggered fade-in via JS-set --i variable */
@@ -182,7 +182,7 @@
 }
 
 .tbp-benefit-marker {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   flex-shrink: 0;
   width: 14px;
@@ -205,7 +205,7 @@
 }
 
 .tbp-cta-points {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--tbp-next-accent, var(--accent-blue));
   margin-bottom: 8px;
@@ -213,7 +213,7 @@
 }
 
 .tbp-cta-sub {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
 }
@@ -226,7 +226,7 @@
 }
 
 .tbp-top-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
@@ -236,7 +236,7 @@
 }
 
 .tbp-top-sub {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.02em;
   line-height: 1.5;
@@ -286,7 +286,7 @@
   background: var(--tbp-color, var(--ink));
   color: var(--surface);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -296,7 +296,7 @@
 
 .tbp-compact-score {
   flex-shrink: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 20px;
   letter-spacing: -0.02em;
@@ -316,7 +316,7 @@
 }
 
 .tbp-compact-progress-label {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -328,7 +328,7 @@
 }
 
 .tbp-compact-next-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 600;
   font-size: 14px;
   letter-spacing: -0.01em;
@@ -338,7 +338,7 @@
 }
 
 .tbp-compact-next-pts {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--ink-4);
   letter-spacing: 0.04em;
   margin-top: 2px;

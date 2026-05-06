@@ -53,7 +53,7 @@
 
 .mob-glass-tile__step {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -62,7 +62,7 @@
 }
 
 .mob-glass-tile__pct {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 800;
   color: var(--brand-red);
@@ -106,7 +106,7 @@
 
 .mob-save-exit {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -159,7 +159,7 @@
 .mob-label {
   display: block;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -175,7 +175,7 @@
 
 .mob-field-hint {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 6px;
 }
@@ -247,7 +247,7 @@
 }
 
 .mob-plan-card__name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 800;
   color: var(--ink);
@@ -265,7 +265,7 @@
 
 .mob-plan-card__price-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-top: 2px;
 }
@@ -273,7 +273,7 @@
 .mob-plan-card__tag {
   display: inline-block;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -296,7 +296,7 @@
 
 .mob-plan-card__feature {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   display: flex;
   align-items: flex-start;
@@ -308,7 +308,7 @@
   content: "—";
   color: var(--ink-4);
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 1px;
 }
 
@@ -337,14 +337,14 @@
 
 .mob-payment-zone__label {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-3);
 }
 
 .mob-payment-zone__sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   max-width: 280px;
   line-height: 1.5;

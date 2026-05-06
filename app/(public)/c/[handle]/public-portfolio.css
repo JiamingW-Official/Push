@@ -87,7 +87,7 @@
 
 .pub-hero-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -113,7 +113,7 @@
 
 .pub-handle-chip {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 4px;
@@ -155,7 +155,7 @@
 
 .pub-badge-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -180,14 +180,14 @@
 
 .pub-badge-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.45);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .pub-badge-tier {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   color: var(--champagne);
@@ -218,7 +218,7 @@
 
 .pub-progress-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -273,7 +273,7 @@
 
 .pub-tier-pip-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.3);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -320,7 +320,7 @@
 
 .pub-stat-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -398,7 +398,7 @@
 
 .pub-section-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -454,7 +454,7 @@
 
 .pub-tier-desc {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -558,7 +558,7 @@
 }
 
 .pub-campaign-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
@@ -567,7 +567,7 @@
 
 .pub-campaign-location {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -591,7 +591,7 @@
 }
 
 .pub-campaign-metric-val {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -600,7 +600,7 @@
 
 .pub-campaign-metric-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -609,7 +609,7 @@
 
 .pub-campaign-date {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
 }
 
@@ -661,7 +661,7 @@
 
 .pub-testimonial-role {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -705,7 +705,7 @@
 
 .pub-cta-eyebrow {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -761,7 +761,7 @@
 
 .pub-cta-stat-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -796,7 +796,7 @@
 
 .pub-cta-sub {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   text-align: center;
   margin: 0;
@@ -815,7 +815,7 @@
 
 .pub-sidebar-card-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -832,7 +832,7 @@
 }
 
 .pub-sidebar-tier-badge {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   color: var(--ink);
@@ -854,7 +854,7 @@
 
 .pub-sidebar-detail-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-5);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -924,7 +924,7 @@
 }
 
 .pub-footer-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 900;
   color: var(--snow);
@@ -933,7 +933,7 @@
 
 .pub-footer-tagline {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.35);
   flex: 1;
   letter-spacing: 0.04em;
@@ -941,7 +941,7 @@
 
 .pub-footer-link {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--champagne);
   text-decoration: none;
   letter-spacing: 0.04em;
@@ -1011,7 +1011,7 @@
 }
 
 .pub-gallery-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--snow);
@@ -1020,7 +1020,7 @@
 
 .pub-gallery-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.72);
 }
 

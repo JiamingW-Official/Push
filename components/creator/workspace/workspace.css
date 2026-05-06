@@ -22,9 +22,9 @@
   /* Body: default readable content */
   --ws-text-body:     15px;
   /* Label: tags, metadata, small UI text */
-  --ws-text-label:    13px;
+  --ws-text-label:    14px;
   /* Caption: timestamps, auxiliary muted info */
-  --ws-text-caption:  11px;
+  --ws-text-caption:  14px;
 
   /* ─── Spacing Scale ────────────────────────────────────────── */
   --ws-space-xs:  8px;
@@ -128,7 +128,7 @@
   background: var(--ink);
   color: var(--snow);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -270,8 +270,8 @@
 .ws-layout__main .cal-hero-eyebrow,
 .ws-layout__main .drafts-hero-eyebrow,
 .ws-layout__main .disc-hero-eyebrow {
-  font-family: var(--font-mono) !important;
-  font-size: 11px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: 0.10em !important;
   text-transform: uppercase !important;
@@ -283,8 +283,8 @@
 .ws-layout__main .wt-hero-summary,
 .ws-layout__main .pl-hero-sub,
 .ws-layout__main .disc-hero-sub {
-  font-family: var(--font-mono) !important;
-  font-size: 13px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 400 !important;
   letter-spacing: 0 !important;
   color: var(--ink-3) !important;
@@ -382,8 +382,8 @@
 /* KPI label ABOVE numeral (Linear pattern: label-then-value) */
 .ws-layout__main .wt-stat-lbl,
 .ws-layout__main .ws-stats-strip__caption {
-  font-family: var(--font-mono) !important;
-  font-size: 11px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
@@ -432,14 +432,14 @@
   width: 100% !important;
   border-collapse: collapse !important;
   background: transparent !important;
-  font-family: var(--font-mono) !important;
+  font-family: var(--font-body) !important;
 }
 
 /* Header row — mono 12px 700 uppercase parenthetical-ready */
 .ws-layout__main table:not(.ws-no-style) thead th,
 .ws-layout__main .ws-editorial-table thead th {
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
@@ -462,7 +462,7 @@
 /* First column = Darky display — magazine "lead" column */
 .ws-layout__main table:not(.ws-no-style) tbody td:first-child,
 .ws-layout__main .ws-editorial-table tbody td:first-child {
-  font-family: var(--font-display) !important;
+  font-family: var(--font-body) !important;
   font-size: 20px !important;
   font-weight: 700 !important;
   letter-spacing: -0.025em !important;
@@ -472,8 +472,8 @@
 /* Other columns = mono body */
 .ws-layout__main table:not(.ws-no-style) tbody td:not(:first-child),
 .ws-layout__main .ws-editorial-table tbody td:not(:first-child) {
-  font-family: var(--font-mono) !important;
-  font-size: 16px !important;
+  font-family: var(--font-body) !important;
+  font-size: 18px !important;
   font-weight: 400 !important;
   color: var(--ink-3) !important;
 }
@@ -511,8 +511,8 @@
 }
 
 .ws-layout__main .earn-txn-head-cell {
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
@@ -552,8 +552,8 @@
 }
 
 .ws-layout__main .an-table-head-cell {
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
@@ -600,7 +600,7 @@
 .ws-divider-magvix::before,
 .ws-divider-magvix::after {
   content: "·";
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-style: normal;
   font-size: 32px;
   color: var(--champagne);
@@ -646,8 +646,8 @@
 }
 
 .ws-hero-peek__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -664,8 +664,8 @@
 }
 
 .ws-hero-peek__caption {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.55);
   letter-spacing: 0.04em;
@@ -719,8 +719,8 @@
 }
 
 .ws-feature-tile__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -748,8 +748,8 @@
 }
 
 .ws-feature-tile__body {
-  font-family: var(--font-mono);
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 18px;
   line-height: 1.55;
   color: var(--ink-3);
   margin: 0 0 32px;
@@ -840,8 +840,8 @@
 
 .ws-stats-strip__eyebrow {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -865,8 +865,8 @@
 
 .ws-stats-strip__caption {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -892,7 +892,7 @@
 .ws-divider-signature::before,
 .ws-divider-signature::after {
   content: "·";
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-style: normal;
   font-size: 24px;
   color: var(--champagne);
@@ -919,10 +919,10 @@
 }
 
 .ws-section-header__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
@@ -1103,7 +1103,7 @@
 /* Breadcrumb separator */
 .ws-topnav__sep {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--mist);
   font-weight: 400;
   user-select: none;
@@ -1114,7 +1114,7 @@
 /* Current page label */
 .ws-topnav__page {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1135,10 +1135,10 @@
   min-width: 0;
 }
 
-/* Section name — CS Genio Mono 12px, graphite, uppercase */
+/* Section name — Open Sans 12px, graphite, uppercase */
 .ws-topnav__bc-section {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -1170,7 +1170,7 @@
 /* Breadcrumb separator */
 .ws-topnav__bc-sep {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--hairline);
   font-weight: 400;
   user-select: none;
@@ -1181,7 +1181,7 @@
 /* Page name — 13px, dark, bolder */
 .ws-topnav__bc-page {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -1241,7 +1241,7 @@
 .ws-topnav__search-placeholder {
   flex: 1;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-4);
   text-align: left;
   letter-spacing: 0.02em;
@@ -1256,7 +1256,7 @@
 
 .ws-topnav__search-kbd kbd {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   background: var(--surface-2);
@@ -1285,7 +1285,7 @@
   height: 24px;
   padding: 0 8px;
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1390,8 +1390,8 @@
 }
 
 .ws-topnav__avatar-initial {
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   line-height: 1;
@@ -1446,7 +1446,7 @@
 /* Section eyebrow header — static (non-collapsible) */
 .ws-sidenav__section-header {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1472,7 +1472,7 @@
   cursor: pointer;
   padding: 18px 16px 6px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1493,7 +1493,7 @@
 
 /* Chevron rotate */
 .ws-sidenav__section-chevron {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   display: inline-block;
   transition: transform var(--anim-base), color var(--anim-base);
@@ -1541,7 +1541,7 @@
   color: rgba(255,255,255,0.58);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.015em;
   border-left: 3px solid transparent;
@@ -1581,7 +1581,7 @@
 
 /* Item icon */
 .ws-sidenav__item-icon {
-  font-size: 13px;
+  font-size: 14px;
   width: 16px;
   text-align: center;
   flex-shrink: 0;
@@ -1618,7 +1618,7 @@
   background: rgba(255,255,255,0.14);
   color: rgba(255,255,255,0.70);
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   border-radius: var(--r-sm);
@@ -1638,7 +1638,7 @@
 .ws-sidenav__section-label {
   display: block;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1660,7 +1660,7 @@
   color: rgba(255,255,255,0.38);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.03em;
   border-left: 3px solid transparent;
@@ -1711,7 +1711,7 @@
   color: rgba(255,255,255,0.40);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.03em;
   border-left: 3px solid transparent;
@@ -1760,7 +1760,7 @@
   height: 36px;
   padding: 0 8px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1854,8 +1854,8 @@
 }
 
 .ws-sidenav__user-initial {
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   user-select: none;
@@ -1871,7 +1871,7 @@
 
 .ws-sidenav__user-name {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--snow);
   white-space: nowrap;
@@ -1882,7 +1882,7 @@
 
 .ws-sidenav__user-tier {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1952,10 +1952,10 @@
 }
 
 .ws-context__title {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   user-select: none;
@@ -2007,10 +2007,10 @@
 
 .ws-context__section-label {
   position: relative;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin: 0 0 14px;
@@ -2055,8 +2055,8 @@
 }
 
 .ws-context__earnings-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -2065,7 +2065,7 @@
 
 .ws-context__earnings-value {
   position: relative;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 32px;
   font-weight: 700;
   font-style: normal;
@@ -2079,8 +2079,8 @@
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.04em;
@@ -2148,7 +2148,7 @@
 .ws-context__stat-value {
   grid-column: 1;
   grid-row: 2;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 22px;
   font-weight: 700;
   font-style: normal;
@@ -2160,8 +2160,8 @@
 .ws-context__stat-label {
   grid-column: 1;
   grid-row: 1;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -2173,8 +2173,8 @@
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   letter-spacing: 0.04em;
@@ -2279,8 +2279,8 @@
 }
 
 .ws-context__deadline-label {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   flex: 1;
@@ -2292,11 +2292,11 @@
 }
 
 .ws-context__deadline-date {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   flex-shrink: 0;
 }
@@ -2335,7 +2335,7 @@
   width: 100%;
   padding: 8px 14px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
@@ -2496,7 +2496,7 @@
   border: 0.5px solid rgba(255,255,255,0.16);
   cursor: pointer;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255,255,255,0.55);
   border-radius: var(--r-lg);
   transition: background var(--anim-base), border-color var(--anim-base), color var(--anim-base);
@@ -2603,7 +2603,7 @@
 
 .ws-mobile-nav__label {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

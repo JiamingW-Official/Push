@@ -27,7 +27,7 @@
 
 .ref-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -211,7 +211,7 @@
 }
 
 .ref-reward-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 120px;
   font-weight: 200;
   letter-spacing: -0.06em;
@@ -226,7 +226,7 @@
 
 .ref-reward-scenario {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -335,7 +335,7 @@
 }
 
 .ref-step-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(64px, 8vw, 100px);
   font-weight: 200;
   letter-spacing: -0.05em;
@@ -345,7 +345,7 @@
 
 .ref-step-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -419,7 +419,7 @@
 
 .ref-calc-scenario-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -457,7 +457,7 @@
 }
 
 .ref-calc-line-value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -691,7 +691,7 @@
 }
 
 .ref-lb-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -704,7 +704,7 @@
 
 .ref-lb-col-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -724,7 +724,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   color: #fff;
@@ -750,7 +750,7 @@
 }
 
 .ref-lb-invites {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -758,7 +758,7 @@
 }
 
 .ref-lb-earned {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 900;
   letter-spacing: -0.02em;

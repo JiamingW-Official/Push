@@ -1,6 +1,6 @@
 /**
  * Global loading fallback — rendered during server-side render kickoff.
- * Editorial, minimal — echoes Design.md Darky display + CS Genio Mono labels.
+ * Editorial, minimal — echoes Design.md Darky display + Darky labels.
  */
 export default function RootLoading() {
   return (

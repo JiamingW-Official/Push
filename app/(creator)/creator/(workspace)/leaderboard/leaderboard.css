@@ -142,7 +142,7 @@
   right: -0.1em;
   top: 50%;
   transform: translateY(-50%);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 200;
   font-size: clamp(200px, 25vw, 380px);
   letter-spacing: -0.06em;
@@ -158,7 +158,7 @@
 }
 
 .lb-hero-eyebrow {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -167,7 +167,7 @@
 }
 
 .lb-hero-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(56px, 10vw, 120px);
   font-weight: 900;
   letter-spacing: -0.06em;
@@ -184,7 +184,7 @@
 }
 
 .lb-hero-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(48px, 6vw, 72px);
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -193,7 +193,7 @@
 }
 
 .lb-hero-rank-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.55);
   letter-spacing: 0.02em;
@@ -206,7 +206,7 @@
 }
 
 .lb-hero-total {
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.55);
 }
 
@@ -229,7 +229,7 @@
 
 .lb-tab {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -302,7 +302,7 @@
 
 /* Rank number — v11 spec */
 .lb-podium-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 800;
   font-size: 64px;
   line-height: 1;
@@ -318,7 +318,7 @@
 
 /* Creator name — v11 spec */
 .lb-podium-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -330,7 +330,7 @@
 }
 
 .lb-podium-handle {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   margin-bottom: var(--space-2);
 }
@@ -340,7 +340,7 @@
   height: 48px;
   background: var(--ink);
   color: var(--snow);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 900;
   display: flex;
@@ -357,7 +357,7 @@
 }
 
 .lb-podium-score {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -369,7 +369,7 @@
 }
 
 .lb-podium-score-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -391,7 +391,7 @@
 }
 
 .lb-podium-stat-val {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -399,7 +399,7 @@
 }
 
 .lb-podium-stat-lbl {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -417,7 +417,7 @@
 }
 
 .lb-tier-filter-label {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -428,7 +428,7 @@
 /* btn-pill style per § 9 unified button system */
 .lb-tier-chip {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -491,7 +491,7 @@
 }
 
 .lb-table-head-cell {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -561,7 +561,7 @@
 
 /* v11: rank number — Darky display, 24px, 800, ink-3, min-width 40px */
 .lb-rank-num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 800;
   font-size: 24px;
   letter-spacing: -0.04em;
@@ -596,8 +596,8 @@
   flex-shrink: 0;
   background: var(--ink);
   color: var(--snow);
-  font-family: var(--font-display);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 900;
   display: flex;
   align-items: center;
@@ -622,7 +622,7 @@
 }
 
 .lb-creator-handle {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-4);
   white-space: nowrap;
   overflow: hidden;
@@ -633,7 +633,7 @@
 .lb-tier-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -661,7 +661,7 @@
 }
 
 .lb-score-val {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -671,7 +671,7 @@
 }
 
 .lb-score-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -682,7 +682,7 @@
 .lb-row-visits {
   padding: 0 8px;
   text-align: right;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -692,7 +692,7 @@
 .lb-row-earnings {
   padding: 0 8px;
   text-align: right;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -706,8 +706,8 @@
 
 /* v11: delta — 12px mono */
 .lb-delta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -737,7 +737,7 @@
 }
 
 .lb-sticky-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 40px;
   font-weight: 900;
   letter-spacing: -0.05em;
@@ -765,7 +765,7 @@
 }
 
 .lb-sticky-catchup {
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
   margin-top: 2px;
 }
@@ -775,7 +775,7 @@
 }
 
 .lb-sticky-score-val {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -785,7 +785,7 @@
 }
 
 .lb-sticky-score-lbl {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -820,7 +820,7 @@
 }
 
 .lb-share-badge-rank {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.05em;
@@ -829,23 +829,23 @@
 }
 
 .lb-share-badge-label {
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.5);
 }
 
 .lb-share-badge-score {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 900;
   color: var(--snow);
 }
 
 .lb-share-badge-logo {
-  font-family: var(--font-display);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 900;
   font-style: italic;
   color: var(--brand-red);
@@ -858,7 +858,7 @@
 }
 
 .lb-share-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -867,7 +867,7 @@
 }
 
 .lb-share-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-3);
   margin-bottom: 16px;
   line-height: 1.5;
@@ -882,7 +882,7 @@
 }
 
 .lb-empty-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 700;
   color: var(--graphite);
@@ -948,7 +948,7 @@
 
   .lb-tab {
     padding: 10px 12px;
-    font-size: 11px;
+    font-size: 14px;
   }
 }
 

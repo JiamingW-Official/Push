@@ -183,7 +183,7 @@ function StatusBadge({ status }: { status: StepStatus }) {
     return (
       <span
         style={{
-          fontFamily: "'CS Genio Mono', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 9,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
@@ -201,7 +201,7 @@ function StatusBadge({ status }: { status: StepStatus }) {
     return (
       <span
         style={{
-          fontFamily: "'CS Genio Mono', monospace",
+          fontFamily: "var(--font-display)",
           fontSize: 9,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
@@ -289,7 +289,7 @@ function ChecklistCard({
           {/* Step number */}
           <span
             style={{
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 10,
               color: isDone
                 ? "rgba(10,10,10,0.35)"
@@ -312,7 +312,7 @@ function ChecklistCard({
           <span
             style={{
               flex: 1,
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 13,
               fontWeight: 600,
               color: isDone ? "rgba(10,10,10,0.35)" : "var(--ink)",
@@ -347,7 +347,7 @@ function ChecklistCard({
           <div
             style={{
               marginLeft: 28,
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 11,
               color: isDone ? "rgba(10,10,10,0.28)" : "rgba(10,10,10,0.55)",
               lineHeight: 1.5,
@@ -376,7 +376,7 @@ function ChecklistCard({
               border: "none",
               padding: "8px 0",
               cursor: "pointer",
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 10,
               color: "var(--accent-blue)",
               letterSpacing: "0.06em",
@@ -395,7 +395,7 @@ function ChecklistCard({
               style={{
                 paddingBottom: 10,
                 fontSize: 11,
-                fontFamily: "'CS Genio Mono', monospace",
+                fontFamily: "var(--font-display)",
                 color: "rgba(10,10,10,0.65)",
                 background: "rgba(102,155,188,0.06)",
                 padding: "8px 12px 10px",
@@ -439,7 +439,7 @@ function ProgressIndicator({
       >
         <span
           style={{
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
             fontSize: 12,
             color: "var(--ink)",
             fontWeight: 700,
@@ -451,7 +451,7 @@ function ProgressIndicator({
         {allRequiredDone && checked < total && (
           <span
             style={{
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontSize: 10,
               color: "var(--ink)",
               letterSpacing: "0.06em",
@@ -544,7 +544,7 @@ export function CampaignChecklist({
         border: "1px solid rgba(10,10,10,0.1)",
         maxWidth: 500,
         width: "100%",
-        fontFamily: "'CS Genio Mono', monospace",
+        fontFamily: "var(--font-display)",
         position: "relative",
       }}
     >
@@ -562,7 +562,7 @@ export function CampaignChecklist({
             letterSpacing: "0.08em",
             textTransform: "uppercase",
             color: "rgba(10,10,10,0.45)",
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
           }}
         >
           Demo
@@ -584,7 +584,7 @@ export function CampaignChecklist({
             letterSpacing: "0.08em",
             textTransform: "uppercase",
             color: "var(--accent-blue)",
-            fontFamily: "'CS Genio Mono', monospace",
+            fontFamily: "var(--font-display)",
             display: "flex",
             alignItems: "center",
             gap: 6,
@@ -616,7 +616,7 @@ export function CampaignChecklist({
                 key={i}
                 style={{
                   fontSize: 10,
-                  fontFamily: "'CS Genio Mono', monospace",
+                  fontFamily: "var(--font-display)",
                   letterSpacing: "0.04em",
                   textTransform: "uppercase",
                   color: "var(--brand-red)",
@@ -678,7 +678,7 @@ export function CampaignChecklist({
             style={{
               margin: "0 0 12px",
               fontSize: 11,
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               color: "rgba(10,10,10,0.5)",
               textAlign: "center",
               letterSpacing: "0.02em",
@@ -696,7 +696,7 @@ export function CampaignChecklist({
               border: "none",
               borderRadius: 0,
               cursor: "pointer",
-              fontFamily: "'CS Genio Mono', monospace",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: 13,
               letterSpacing: "0.08em",

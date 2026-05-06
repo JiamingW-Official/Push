@@ -42,7 +42,7 @@ export default function StatusPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto", position: "relative" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -77,7 +77,7 @@ export default function StatusPage() {
             />
             <span
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: 14,
                 fontWeight: 700,
                 letterSpacing: "0.08em",
@@ -108,7 +108,7 @@ export default function StatusPage() {
 
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 14,
               color: "rgba(255,255,255,0.4)",
               margin: 0,
@@ -188,7 +188,7 @@ export default function StatusPage() {
               </div>
               <div
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 12,
                   color: "var(--ink-4)",
                   letterSpacing: "0.06em",
@@ -213,7 +213,7 @@ export default function StatusPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -268,7 +268,7 @@ export default function StatusPage() {
                     gap: 6,
                     background: "var(--accent-blue-tint)",
                     color: "var(--accent-blue)",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 11,
                     fontWeight: 700,
                     letterSpacing: "0.08em",
@@ -318,7 +318,7 @@ export default function StatusPage() {
                   >
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         color: "var(--ink-4)",
                         letterSpacing: "0.04em",
@@ -328,7 +328,7 @@ export default function StatusPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-display)",
                         fontSize: 12,
                         fontWeight: 700,
                         color: "var(--ink)",
@@ -382,7 +382,7 @@ export default function StatusPage() {
                 <span
                   key={h}
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: "0.12em",
@@ -430,7 +430,7 @@ export default function StatusPage() {
                     gap: 8,
                     background: "var(--accent-blue-tint)",
                     color: "var(--accent-blue)",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 11,
                     fontWeight: 700,
                     letterSpacing: "0.08em",
@@ -455,7 +455,7 @@ export default function StatusPage() {
                 {/* Uptime — mono 16px */}
                 <span
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: 16,
                     fontWeight: 700,
                     color: "var(--ink)",
@@ -485,7 +485,7 @@ export default function StatusPage() {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -556,7 +556,7 @@ export default function StatusPage() {
               </div>
               <p
                 style={{
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-display)",
                   fontSize: 16,
                   color: "var(--ink-4)",
                   lineHeight: 1.55,

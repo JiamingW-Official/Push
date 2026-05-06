@@ -1,506 +1,388 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Push · Creator Analytics — Overview (v2 Bento)
+ *
+ * 8 agentic modules, each a clickable Link to its own detail page.
+ * Asymmetric bento grid — no two adjacent modules same size.
+ * Every interaction follows Design.md v11 + v11.1.
+ *
+ * Drill-downs:
+ *   /analytics/tier         · Tier ladder, score dimensions
+ *   /analytics/earnings     · Decomposition, per-campaign, trajectory
+ *   /analytics/milestone    · Milestone history, projection
+ *   /analytics/attribution  · 5 verification layers, decay curve, last-click
+ *   /analytics/fans         · Fan list, decay buckets, expiring soon
+ *   /analytics/geography    · Neighborhoods, opportunity, peer benchmarks
+ *   /analytics/campaigns    · All campaigns, filters, drill rows
+ *   /analytics/moves        · Suggested moves queue, dismissed history
+ * ───────────────────────────────────────────────────────────────────── */
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import "./analytics.css";
+import {
+  SUMMARY,
+  MILESTONE,
+  TIME_SERIES,
+  CAMPAIGNS,
+  FANS,
+  DECAY_DIST,
+  DECAY_LABEL,
+  DECAY_COLOR,
+  NEIGHBORHOODS,
+  MOVES,
+  TIER_LADDER,
+  tierMeta,
+  nextTier,
+  pctDelta,
+  formatDelta,
+  fmtNum,
+  fmtUsd,
+} from "./_data/mock";
 
-/* ── Mock data ─────────────────────────────────────────────────── */
-
-const REACH_DATA = [
-  { month: "Nov", value: 6200 },
-  { month: "Dec", value: 7800 },
-  { month: "Jan", value: 9100 },
-  { month: "Feb", value: 8400 },
-  { month: "Mar", value: 11200 },
-  { month: "Apr", value: 12847 },
-];
-
-const NEIGHBORHOOD_DATA = [
-  { name: "Williamsburg", value: 3240 },
-  { name: "Lower East Side", value: 2810 },
-  { name: "Fort Greene", value: 2190 },
-  { name: "Park Slope", value: 1870 },
-  { name: "Bed-Stuy", value: 1540 },
-  { name: "Greenpoint", value: 1197 },
-];
-
-const TIER_CONFIG = {
-  current: "Operator",
-  score: 71,
-  nextTier: "Proven",
-  nextScore: 75,
-  prevScore: 60,
-};
-
-const INSIGHTS = [
-  {
-    id: 1,
-    headline: "Food campaigns convert harder",
-    stat: "2.4x",
-    context: "vs lifestyle category",
-    body: "Your food content consistently outperforms every other category. The audience trusts your taste.",
-    cta: "Find food campaigns",
-    ctaHref: "/creator/dashboard",
-    statClass: "an-insight-stat",
-  },
-  {
-    id: 2,
-    headline: "Williamsburg is hot",
-    stat: "+31%",
-    context: "reach vs last month",
-    body: "Three of your top-five posts this month came out of Williamsburg. Lean in.",
-    cta: "Browse nearby",
-    ctaHref: "/creator/dashboard",
-    statClass: "an-insight-stat an-insight-stat--blue",
-  },
-  {
-    id: 3,
-    headline: "One push from Proven tier",
-    stat: "4 pts",
-    context: "to unlock higher-paying spots",
-    body: "One strong campaign away from exclusive merchant partnerships and a higher base rate.",
-    cta: "See what unlocks",
-    ctaHref: "/creator/profile",
-    statClass: "an-insight-stat an-insight-stat--ink",
-  },
-];
-
-type Period = "7d" | "30d" | "90d" | "all";
-
-const PERIOD_OPTIONS: { key: Period; label: string }[] = [
-  { key: "7d", label: "7D" },
+const PERIODS = [
+  { key: "7d",  label: "7D" },
   { key: "30d", label: "30D" },
   { key: "90d", label: "90D" },
   { key: "all", label: "All" },
-];
-
-/* ── KPI ───────────────────────────────────────────────────────── */
-
-type DeltaDir = "up" | "down" | "neutral";
-
-const KPI_CARDS: {
-  label: string;
-  value: string;
-  unit?: string;
-  delta: string;
-  dir: DeltaDir;
-}[] = [
-  {
-    label: "Total scans",
-    value: "12,847",
-    delta: "18% vs last month",
-    dir: "up",
-  },
-  {
-    label: "Total earnings",
-    value: "$432",
-    delta: "12% vs last month",
-    dir: "up",
-  },
-  {
-    label: "Active campaigns",
-    value: "5",
-    delta: "2 ending this week",
-    dir: "neutral",
-  },
-  {
-    label: "Push score",
-    value: "71",
-    delta: "3 pts vs last month",
-    dir: "up",
-  },
-];
-
-const DELTA_GLYPH: Record<DeltaDir, string> = {
-  up: "↑",
-  down: "↓",
-  neutral: "·",
-};
-
-/* ── CSS bar chart ─────────────────────────────────────────────── */
-
-function BarChartCSS({ data }: { data: { month: string; value: number }[] }) {
-  const max = Math.max(...data.map((d) => d.value));
-  return (
-    <div
-      className="an-bar-chart"
-      role="img"
-      aria-label="Verified scans, last 6 months"
-    >
-      {data.map((d, i) => {
-        const pct = (d.value / max) * 100;
-        const isLast = i === data.length - 1;
-        return (
-          <div key={d.month} className="an-bar-col">
-            <div className="an-bar-track">
-              <div
-                className={
-                  "an-bar-fill" + (isLast ? " an-bar-fill--current" : "")
-                }
-                style={{ height: `${pct}%` }}
-                title={`${d.month}: ${d.value.toLocaleString()} scans`}
-              />
-            </div>
-            <span className="an-bar-label">{d.month}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ── Horizontal bar (top locations) ────────────────────────────── */
-
-function HorizontalBar({ data }: { data: { name: string; value: number }[] }) {
-  const max = Math.max(...data.map((d) => d.value));
-  return (
-    <div className="an-hbar-list">
-      {data.map((d, i) => (
-        <div key={d.name} className="an-hbar-row">
-          <span className="an-hbar-label">{d.name}</span>
-          <div className="an-hbar-track">
-            <div
-              className={
-                "an-hbar-fill" + (i === 0 ? " an-hbar-fill--lead" : "")
-              }
-              style={{ width: `${(d.value / max) * 100}%` }}
-            />
-          </div>
-          <span className="an-hbar-value">
-            {d.value >= 1000 ? `${(d.value / 1000).toFixed(1)}k` : d.value}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ── Tier progress ─────────────────────────────────────────────── */
-
-function TierProgress() {
-  const { score, prevScore, nextScore, current, nextTier } = TIER_CONFIG;
-  const pct = Math.round(((score - prevScore) / (nextScore - prevScore)) * 100);
-  return (
-    <div className="an-tier-wrap">
-      <div className="an-tier-labels">
-        <span className="an-tier-current">{current}</span>
-        <span className="an-tier-next">{nextTier} →</span>
-      </div>
-      <div
-        className="an-tier-track"
-        role="progressbar"
-        aria-valuenow={pct}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Tier progress to ${nextTier}`}
-      >
-        <div className="an-tier-fill" style={{ width: `${pct}%` }} />
-      </div>
-      <div className="an-tier-meta">
-        <span className="an-tier-score">
-          Score <strong>{score}</strong>
-        </span>
-        <span className="an-tier-gap">
-          {nextScore - score} pts to {nextTier}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ── Status chip ───────────────────────────────────────────────── */
-
-type CampaignStatus = "Active" | "Ended" | "Pending";
-
-const STATUS_STYLES: Record<
-  CampaignStatus,
-  { background: string; color: string }
-> = {
-  Active: {
-    background: "var(--accent-blue-tint)",
-    color: "var(--accent-blue)",
-  },
-  Ended: { background: "var(--surface-3)", color: "var(--ink-3)" },
-  Pending: {
-    background: "var(--champagne-tint)",
-    color: "var(--champagne-deep)",
-  },
-};
-
-function StatusChip({ status }: { status: CampaignStatus }) {
-  const s = STATUS_STYLES[status] ?? STATUS_STYLES.Pending;
-  return (
-    <span
-      className="an-status-chip"
-      style={{ background: s.background, color: s.color }}
-    >
-      {status}
-    </span>
-  );
-}
-
-/* ── Campaign table data ───────────────────────────────────────── */
-
-const CAMPAIGN_TABLE: {
-  name: string;
-  visits: number;
-  status: CampaignStatus;
-  earnings: string;
-  period: string;
-}[] = [
-  {
-    name: "Blank Street Coffee",
-    visits: 1840,
-    status: "Active",
-    earnings: "$92",
-    period: "Apr 2026",
-  },
-  {
-    name: "Superiority Burger",
-    visits: 2960,
-    status: "Ended",
-    earnings: "$148",
-    period: "Mar 2026",
-  },
-  {
-    name: "Flamingo Estate",
-    visits: 1120,
-    status: "Ended",
-    earnings: "$56",
-    period: "Mar 2026",
-  },
-  {
-    name: "Brow Theory",
-    visits: 1740,
-    status: "Active",
-    earnings: "$87",
-    period: "Apr 2026",
-  },
-  {
-    name: "Cha Cha Matcha",
-    visits: 980,
-    status: "Pending",
-    earnings: "$49",
-    period: "Apr 2026",
-  },
-];
-
-const TOP_CAMPAIGNS = [
-  { name: "Superiority Burger", value: "2,960 scans" },
-  { name: "Blank Street Coffee", value: "1,840 scans" },
-  { name: "Brow Theory", value: "1,740 scans" },
-  { name: "Flamingo Estate", value: "1,120 scans" },
-  { name: "Cha Cha Matcha", value: "980 scans" },
-];
-
-/* ── Page ──────────────────────────────────────────────────────── */
+] as const;
+type Period = typeof PERIODS[number]["key"];
 
 export default function CreatorAnalyticsPage() {
   const [period, setPeriod] = useState<Period>("30d");
+  const [moveIdx, setMoveIdx] = useState(0);
+
+  const tier = tierMeta(SUMMARY.currentTier);
+  const next = nextTier(SUMMARY.currentTier)!;
+  const tierPct = Math.round(
+    ((SUMMARY.currentScore - tier.scoreFloor) / (next.scoreFloor - tier.scoreFloor)) * 100
+  );
+  const verifiedDelta  = pctDelta(SUMMARY.scansVerified, SUMMARY.scansVerifiedPrior);
+  const earningsDelta  = pctDelta(SUMMARY.earnings.total, SUMMARY.earningsPrior);
+  const repeatDelta    = pctDelta(SUMMARY.repeatCustomers, SUMMARY.repeatCustomersPrior);
+
+  const earnTotal = SUMMARY.earnings.total;
+  const move = MOVES[moveIdx];
 
   return (
-    <div className="cw-page an-page">
-      <header className="cw-header">
-        <div className="cw-header__left">
-          <p className="cw-eyebrow cw-eyebrow--live">ANALYTICS</p>
-          <h1 className="cw-title">Analytics</h1>
+    <div className="an2">
+      {/* ─── Header ─── */}
+      <header className="an2-header">
+        <div className="an2-header__left">
+          <p className="an2-eyebrow"><span className="pulse" aria-hidden /> Analytics · last 30 days</p>
+          <h1 className="an2-title">Analytics</h1>
+          <p className="an2-meta">
+            {SUMMARY.windowFrom} → {SUMMARY.windowTo} · refreshed 2 min ago
+          </p>
         </div>
-        <div className="cw-header__right">
-          <Link
-            href="#"
-            className="cw-pill"
-            aria-label="Export analytics report"
-          >
-            Export
-          </Link>
-          <div className="cw-chip-row" role="tablist" aria-label="Time range">
-            {PERIOD_OPTIONS.map((p) => (
+        <div className="an2-header__right">
+          <div className="an2-chips" role="tablist" aria-label="Time range">
+            {PERIODS.map(p => (
               <button
                 key={p.key}
-                type="button"
                 role="tab"
                 aria-selected={period === p.key}
+                className={"an2-chip" + (period === p.key ? " is-active" : "")}
                 onClick={() => setPeriod(p.key)}
-                className={"cw-chip" + (period === p.key ? " is-active" : "")}
-              >
-                {p.label}
-              </button>
+              >{p.label}</button>
             ))}
           </div>
+          <Link href="/creator/analytics/moves" className="an2-export" aria-label="Export & share">
+            Export ▾
+          </Link>
         </div>
       </header>
 
-      {/* ── KPI Strip ────────────────────────────────────────────── */}
-      <div className="an-section">
-        <div className="an-kpi-grid">
-          {KPI_CARDS.map((kpi) => (
-            <div
-              key={kpi.label}
-              className="an-kpi-card"
-              tabIndex={0}
-              role="group"
-              aria-label={`${kpi.label}: ${kpi.value}, ${kpi.delta}`}
-            >
-              <p className="an-kpi-eyebrow">{kpi.label}</p>
-              <p className="an-kpi-value">
-                {kpi.value}
-                {kpi.unit ? (
-                  <span className="an-kpi-unit">{kpi.unit}</span>
-                ) : null}
-              </p>
-              <p className={"an-kpi-delta an-kpi-delta--" + kpi.dir}>
-                <span className="an-kpi-delta__arrow" aria-hidden="true">
-                  {DELTA_GLYPH[kpi.dir]}
-                </span>
-                {kpi.delta}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* ─── Bento ─── */}
+      <div className="an2-bento">
 
-      {/* ── Visits Over Time Chart ───────────────────────────────── */}
-      <div className="an-section">
-        <div className="an-chart-card">
-          <div className="an-chart-header">
+        {/* ════════════════ TIER (hero) ════════════════ */}
+        <Link href="/creator/analytics/tier" className="an2-mod an2-mod--tier" aria-label="View tier detail">
+          <div className="an2-tier">
             <div>
-              <p className="an-section-eyebrow">VERIFIED SCANS</p>
-              <h2 className="an-section-title an-section-title--tight">
-                Scans over time
+              <p className="an2-mod__eyebrow">Tier · progression</p>
+              <div className="an2-tier__top">
+                <h2 className="an2-tier__name">{SUMMARY.currentTier}</h2>
+                <span className="an2-tier__material">
+                  <span className="an2-tier__swatch" style={{ background: tier.swatch }} />
+                  {tier.material}
+                </span>
+              </div>
+              <div className="an2-tier__score-row">
+                <span className="an2-tier__score-num">{SUMMARY.currentScore}</span>
+                <span className="an2-tier__score-lbl">push score</span>
+              </div>
+            </div>
+
+            <div className="an2-tier__progress">
+              <div className="an2-tier__sparkline" aria-hidden>
+                {SUMMARY.scoreHistory.map((v, i) => {
+                  const max = Math.max(...SUMMARY.scoreHistory);
+                  const h = (v / max) * 100;
+                  const isLast = i === SUMMARY.scoreHistory.length - 1;
+                  return (
+                    <div
+                      key={i}
+                      className={"an2-tier__spark-bar" + (isLast ? " current" : "")}
+                      style={{ height: `${h}%` }}
+                    />
+                  );
+                })}
+              </div>
+              <div className="an2-tier__progress-meta">
+                <span>To <strong>{next.tier}</strong> · score <strong>{next.scoreFloor}</strong></span>
+                <span><strong>{next.scoreFloor - SUMMARY.currentScore} pts</strong> away</span>
+              </div>
+              <div className="an2-tier__track">
+                <div className="an2-tier__fill" style={{ width: `${Math.max(2, tierPct)}%` }} />
+              </div>
+            </div>
+
+            <div className="an2-tier__unlocks">
+              <div className="an2-unlock"><strong>{next.commission} commission</strong>up from {tier.commission}</div>
+              <div className="an2-unlock"><strong>{next.basePay}</strong>up from {tier.basePay}</div>
+              <div className="an2-unlock"><strong>{next.concurrent} concurrent</strong>up from {tier.concurrent}</div>
+              <div className="an2-unlock"><strong>{next.payoutSpeed} payouts</strong>up from {tier.payoutSpeed}</div>
+            </div>
+          </div>
+          <span className="an2-drill">Tier detail</span>
+        </Link>
+
+        {/* ════════════════ EARNINGS ════════════════ */}
+        <Link href="/creator/analytics/earnings" className="an2-mod an2-mod--earnings" aria-label="View earnings detail">
+          <p className="an2-mod__eyebrow">Earnings · last 30d</p>
+          <div className="an2-earn">
+            <div>
+              <p className="an2-earn__big">{fmtUsd(earnTotal)}</p>
+              <p className="an2-earn__delta">
+                <span className="arrow">↑</span>{formatDelta(earningsDelta)}
+              </p>
+            </div>
+            <div className="an2-earn__split">
+              {(["base", "commission", "milestone"] as const).map(k => {
+                const v = SUMMARY.earnings[k];
+                const pct = (v / earnTotal) * 100;
+                return (
+                  <div key={k} className="an2-earn__split-row">
+                    <span className="an2-earn__split-lbl">{k}</span>
+                    <div className="an2-earn__split-bar">
+                      <div className={`an2-earn__split-fill ${k}`} style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="an2-earn__split-val">${v}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <span className="an2-drill">Earnings detail</span>
+        </Link>
+
+        {/* ════════════════ MILESTONE (Liquid Glass) ════════════════ */}
+        <Link href="/creator/analytics/milestone" className="an2-mod an2-mod--milestone" aria-label="View milestone detail">
+          <div className="an2-ms">
+            <div>
+              <p className="an2-mod__eyebrow">
+                Referral milestone · {MILESTONE.hit ? "hit" : "in progress"}
+              </p>
+              <h3 className="an2-ms__title">
+                {MILESTONE.current} <span style={{ color: "var(--ink-4)" }}>/</span> {MILESTONE.threshold}
+                <span style={{ color: "var(--ink-4)", fontWeight: 600, fontSize: "0.6em", marginLeft: 8 }}>referrals</span>
+              </h3>
+            </div>
+            <div>
+              <div className="an2-ms__track">
+                <div
+                  className="an2-ms__fill"
+                  style={{ width: `${Math.min(100, (MILESTONE.current / MILESTONE.threshold) * 100)}%` }}
+                />
+              </div>
+              <p className="an2-ms__meta" style={{ marginTop: 12 }}>
+                {MILESTONE.hit
+                  ? <>Hit on {MILESTONE.hitDate} · <strong style={{ color: "var(--ink)" }}>+${MILESTONE.bonus} unlocked</strong></>
+                  : <>{MILESTONE.threshold - MILESTONE.current} to go · resets {MILESTONE.windowResetsAt}</>}
+              </p>
+            </div>
+          </div>
+          <span className="an2-drill">Milestone detail</span>
+        </Link>
+
+        {/* ════════════════ ATTRIBUTION RAIL ════════════════ */}
+        <Link href="/creator/analytics/attribution" className="an2-mod an2-mod--attribution" aria-label="View attribution rail detail">
+          <div className="an2-attr">
+            <div>
+              <p className="an2-mod__eyebrow">Attribution rail · 6 months</p>
+              <div className="an2-attr__numerals">
+                <div className="an2-attr__num-block">
+                  <div className="an2-attr__num">{fmtNum(SUMMARY.scansVerified)}</div>
+                  <div className="an2-attr__num-lbl">Verified visits</div>
+                </div>
+                <div className="an2-attr__num-block">
+                  <div className="an2-attr__num muted">{fmtNum(SUMMARY.scansRaw)}</div>
+                  <div className="an2-attr__num-lbl">Raw scans · {Math.round(SUMMARY.verificationRate * 100)}% verified</div>
+                </div>
+                <div className="an2-attr__num-block">
+                  <div className="an2-attr__num">{fmtNum(SUMMARY.repeatCustomers)}</div>
+                  <div className="an2-attr__num-lbl">Repeat · {Math.round(SUMMARY.repeatRevenueShare * 100)}% of commission</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="an2-attr__chart" aria-hidden>
+              {(() => {
+                const max = Math.max(...TIME_SERIES.map(d => d.raw));
+                return TIME_SERIES.map((d, i) => {
+                  const isCurrent = i === TIME_SERIES.length - 1;
+                  const verifiedH = (d.verified / max) * 100;
+                  const rawExtraH = ((d.raw - d.verified) / max) * 100;
+                  return (
+                    <div key={d.m} className={"an2-bar-col" + (isCurrent ? " current" : "")}>
+                      <div className="an2-bar-stack">
+                        <div className="an2-bar-verified" style={{ height: `${verifiedH}%` }} />
+                        <div className="an2-bar-raw-extra" style={{ height: `${rawExtraH}%` }} />
+                      </div>
+                      <span className="an2-bar-lbl">{d.m}</span>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+
+            <div>
+              <div className="an2-decay-strip" aria-label="Decay distribution">
+                {DECAY_DIST.map(seg => (
+                  <div
+                    key={seg.tier}
+                    className="an2-decay-seg"
+                    style={{ flex: `${seg.share * 100} 1 0`, background: DECAY_COLOR[seg.tier] }}
+                    title={`${DECAY_LABEL[seg.tier]} · ${Math.round(seg.share * 100)}% · ${seg.count} fans`}
+                  />
+                ))}
+              </div>
+              <div className="an2-attr__legend" style={{ marginTop: 10 }}>
+                <span><span className="an2-legend-sw" style={{ background: "var(--ink)" }} /> Verified</span>
+                <span><span className="an2-legend-sw" style={{ background: "var(--mist)" }} /> Raw</span>
+                <span><span className="an2-legend-sw" style={{ background: "var(--brand-red)" }} /> Current period</span>
+                <span style={{ marginLeft: "auto", color: "var(--ink-4)" }}>
+                  ↑ {formatDelta(verifiedDelta)} verified
+                </span>
+              </div>
+            </div>
+          </div>
+          <span className="an2-drill">Rail detail</span>
+        </Link>
+
+        {/* ════════════════ FANS ════════════════ */}
+        <Link href="/creator/analytics/fans" className="an2-mod an2-mod--fans" aria-label="View fans detail">
+          <div className="an2-fans">
+            <div>
+              <p className="an2-mod__eyebrow">Top fans · push signature</p>
+              <h2 className="an2-mod__title" style={{ fontSize: 22, marginBottom: 4 }}>
+                {fmtNum(SUMMARY.repeatCustomers)} repeat
               </h2>
-              <p className="an-chart-meta">Last 6 months</p>
+              <p className="an2-fans__summary">
+                of <strong>{fmtNum(SUMMARY.scansVerified)}</strong> verified · drives <strong>{Math.round(SUMMARY.repeatRevenueShare * 100)}%</strong> of commission
+              </p>
             </div>
-            <span className="an-chart-total" aria-label="Total scans">
-              12,847
-            </span>
-          </div>
-          <BarChartCSS data={REACH_DATA} />
-        </div>
-      </div>
 
-      {/* ── Campaign Breakdown Table ─────────────────────────────── */}
-      <div className="an-section">
-        <p className="an-section-eyebrow">CAMPAIGN BREAKDOWN</p>
-        <h2 className="an-section-title an-section-title--tight">
-          All campaigns
-        </h2>
-        <div className="an-table-card">
-          <div className="an-table-head" role="row">
-            {["CAMPAIGN", "SCANS", "STATUS", "EARNINGS", "PERIOD"].map((h) => (
-              <span key={h} className="an-table-head-cell" role="columnheader">
-                {h}
-              </span>
-            ))}
-          </div>
-          {CAMPAIGN_TABLE.map((row) => (
-            <div key={row.name} className="an-table-row" role="row">
-              <span className="an-table-campaign">{row.name}</span>
-              <span className="an-table-visits">
-                {row.visits.toLocaleString()}
-              </span>
-              <span>
-                <StatusChip status={row.status} />
-              </span>
-              <span className="an-table-earnings">{row.earnings}</span>
-              <span className="an-table-period">{row.period}</span>
+            <div className="an2-fans__list">
+              {FANS.slice(0, 5).map(f => (
+                <div key={f.id} className="an2-fans__row">
+                  <span className="an2-fans__id">{f.id.slice(0, 7)}</span>
+                  <span className="an2-fans__visits">
+                    {f.visits}<span className="an2-fans__visits-unit">visits</span>
+                  </span>
+                  <span className={`an2-decay-pill ${f.decay}`}>{DECAY_LABEL[f.decay].split(" ")[0]}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* ── Bottom Stats Row ─────────────────────────────────────── */}
-      <div className="an-section">
-        <div className="an-bottom-grid">
-          {/* Best campaign — single liquid-glass spotlight */}
-          <div
-            className="an-stat-card an-stat-card--spotlight"
-            tabIndex={0}
-            role="group"
-            aria-label="Best performing campaign"
-          >
-            <p className="an-kpi-eyebrow">BEST CAMPAIGN</p>
-            <p className="an-stat-best-name">Superiority Burger</p>
-            <p className="an-stat-best-meta">2,960 scans · $148 earned</p>
-            <div className="an-stat-best-grid">
-              <div className="an-stat-best-grid__cell">
-                <span className="an-stat-best-grid__label">Category</span>
-                <span className="an-stat-best-grid__value">Food</span>
-              </div>
-              <div className="an-stat-best-grid__cell">
-                <span className="an-stat-best-grid__label">Conv. rate</span>
-                <span className="an-stat-best-grid__value">4.8%</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Streak — editorial moment (champagne, ≤1 / page) */}
-          <div
-            className="an-stat-card"
-            tabIndex={0}
-            role="group"
-            aria-label="Active streak"
-          >
-            <p className="an-kpi-eyebrow">STREAK</p>
-            <p className="an-streak-numeral">
-              14<span className="an-streak-unit">days</span>
+            <p className="an2-fans__summary" style={{ fontSize: 12, color: "var(--ink-4)" }}>
+              {DECAY_DIST.find(d => d.tier === "fresh")!.count} fresh ·{" "}
+              {DECAY_DIST.find(d => d.tier === "expired")!.count} expired
             </p>
-            <p className="an-streak-meta">Active streak — keep it going</p>
           </div>
+          <span className="an2-drill">Fan detail</span>
+        </Link>
 
-          {/* Tier progress */}
-          <div className="an-stat-card an-stat-card--column">
-            <p className="an-kpi-eyebrow">TIER PROGRESS</p>
-            <TierProgress />
+        {/* ════════════════ GEOGRAPHY ════════════════ */}
+        <Link href="/creator/analytics/geography" className="an2-mod an2-mod--geography" aria-label="View geography detail">
+          <div className="an2-geo">
+            <p className="an2-mod__eyebrow">By neighborhood</p>
+            <div className="an2-geo__list">
+              {NEIGHBORHOODS.slice(0, 4).map(n => {
+                const max = Math.max(...NEIGHBORHOODS.map(x => x.visits));
+                const pct = (n.visits / max) * 100;
+                return (
+                  <div key={n.name} className="an2-geo__row">
+                    <span className={"an2-geo__name" + (n.isHome ? " home" : "")}>{n.name}</span>
+                    <div className="an2-geo__track">
+                      <div className="an2-geo__fill" style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="an2-geo__rate">{fmtUsd(n.perScan, { cents: true })}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="an2-geo__opp">
+              <strong>Opportunity ·</strong> LES creators at your tier earn{" "}
+              <strong>$0.12/scan</strong> vs your Williamsburg <strong>$0.06</strong>. 4 open campaigns this week.
+            </p>
           </div>
-        </div>
-      </div>
+          <span className="an2-drill">Geography detail</span>
+        </Link>
 
-      {/* ── Top Performers ───────────────────────────────────────── */}
-      <div className="an-section">
-        <div className="an-top-grid">
-          <div className="an-top-card">
-            <p className="an-kpi-eyebrow">TOP CAMPAIGNS</p>
-            <div className="an-top-list">
-              {TOP_CAMPAIGNS.map((item, i) => (
-                <div key={item.name} className="an-top-row">
-                  <span className="an-top-rank">{i + 1}</span>
-                  <span className="an-top-name">{item.name}</span>
-                  <span className="an-top-value">{item.value}</span>
+        {/* ════════════════ CAMPAIGNS ════════════════ */}
+        <Link href="/creator/analytics/campaigns" className="an2-mod an2-mod--campaigns" aria-label="View campaigns detail">
+          <div className="an2-cmp">
+            <p className="an2-mod__eyebrow">Active &amp; recent campaigns</p>
+            <div className="an2-cmp__list">
+              {CAMPAIGNS.slice(0, 5).map(c => (
+                <div key={c.id} className="an2-cmp__row">
+                  <span className="an2-cmp__name">{c.name}</span>
+                  <span className="an2-cmp__num">{c.verified}</span>
+                  <span className="an2-cmp__num soft">{Math.round(c.repeatPct * 100)}%</span>
+                  <span className={`an2-status ${c.status}`}>{c.status}</span>
+                  <span className="an2-cmp__money">${c.earnings}</span>
                 </div>
               ))}
             </div>
           </div>
+          <span className="an2-drill">All campaigns</span>
+        </Link>
 
-          <div className="an-top-card">
-            <p className="an-kpi-eyebrow">TOP LOCATIONS</p>
-            <HorizontalBar data={NEIGHBORHOOD_DATA} />
-          </div>
-        </div>
-      </div>
-
-      {/* ── Insights ─────────────────────────────────────────────── */}
-      <div className="an-insights-section">
-        <div className="an-insights-header">
-          <p className="an-insights-eyebrow">GENERATED FROM YOUR DATA</p>
-          <h2 className="an-insights-title">Insights</h2>
-        </div>
-        <div className="an-insights-grid">
-          {INSIGHTS.map((ins) => (
-            <div key={ins.id} className="an-insight-card">
-              <div className="an-insight-accent-bar" />
-              <div className="an-insight-stat-row">
-                <span className={ins.statClass}>{ins.stat}</span>
-                <span className="an-insight-context">{ins.context}</span>
-              </div>
-              <h3 className="an-insight-headline">{ins.headline}</h3>
-              <p className="an-insight-body">{ins.body}</p>
-              <Link href={ins.ctaHref} className="an-insight-cta">
-                {ins.cta} →
-              </Link>
+        {/* ════════════════ MOVES (full-width single-narrative) ════════════════ */}
+        <Link href={move.ctaHref} className="an2-mod an2-mod--moves" aria-label={move.cta}>
+          <div className="an2-moves">
+            <div className="an2-moves__main">
+              <p className="an2-mod__eyebrow">Suggested move · {moveIdx + 1} of {MOVES.length}</p>
+              <span className={`an2-moves__sev ${move.severity}`}>{move.severity}</span>
+              <h2 className="an2-moves__headline">
+                <span className="an2-moves__numeral">{move.numeral}</span>
+                {move.headline}
+              </h2>
+              <p className="an2-moves__body">{move.body}</p>
+              <p className="an2-fans__summary" style={{ marginTop: 14, fontSize: 12, color: "var(--ink-4)", letterSpacing: "0.04em", textTransform: "uppercase", fontWeight: 700 }}>
+                {move.cta} →
+              </p>
             </div>
-          ))}
-        </div>
+            <div className="an2-moves__nav">
+              <button
+                className="an2-moves__nav-arrow"
+                onClick={(e) => { e.preventDefault(); setMoveIdx((moveIdx + 1) % MOVES.length); }}
+                aria-label="Next move"
+                type="button"
+              >→</button>
+              <div className="an2-moves__dots">
+                {MOVES.map((_, i) => <span key={i} className={"an2-moves__dot" + (i === moveIdx ? " active" : "")} />)}
+              </div>
+            </div>
+          </div>
+        </Link>
+
       </div>
+
+      <p className="an2-div"><span>visited · scanned · verified.</span></p>
     </div>
   );
 }

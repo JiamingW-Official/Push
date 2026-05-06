@@ -24,10 +24,10 @@
 
 /* v11 product eyebrow — parenthetical mono uppercase */
 .pr-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-4);
   margin-bottom: 8px;
@@ -52,8 +52,8 @@
 }
 
 .pr-desc code {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   background: var(--surface-3);
   padding: 1px 6px;
   border-radius: 4px;
@@ -76,7 +76,7 @@
   border: 1px solid rgba(193, 18, 31, 0.2);
   border-radius: 8px;
   color: var(--brand-red);
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-body);
   margin-bottom: 20px;
 }
@@ -121,8 +121,8 @@
 }
 
 .pr-table-head__cell {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -149,8 +149,8 @@
 
 /* ---- Ticket ID ---- */
 .pr-ticket-id {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface-3);
   padding: 2px 6px;
@@ -162,8 +162,8 @@
 /* ---- Request type badge (CCPA / GDPR / deletion / access) ---- */
 .pr-type-badge {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -177,8 +177,8 @@
 
 /* ---- Received date ---- */
 .pr-date {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   white-space: nowrap;
 }
@@ -200,7 +200,7 @@
 
 /* Darky numeral 32px for days remaining */
 .pr-sla-chip__days {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 800;
   line-height: 1;
@@ -209,8 +209,8 @@
 }
 
 .pr-sla-chip__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -245,8 +245,8 @@
 /* ---- Status chip ---- */
 .pr-status-chip {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: capitalize;
@@ -307,8 +307,8 @@
   border-radius: 8px;
   background: var(--brand-red);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -335,8 +335,8 @@
   border-radius: 8px;
   background: var(--accent-blue, #0085ff);
   color: var(--snow);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -362,8 +362,8 @@
   border-radius: 8px;
   background: transparent;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -382,7 +382,7 @@
 
 /* Placeholder dash when no actions available */
 .pr-actions__none {
-  font-size: 12px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: var(--ink-4);
 }
@@ -408,8 +408,8 @@
 }
 
 .pr-info-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -424,8 +424,8 @@
 }
 
 .pr-info-stat__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink-4);
   text-transform: uppercase;
@@ -434,7 +434,7 @@
 }
 
 .pr-info-stat__value {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 800;
   color: var(--ink);
@@ -443,7 +443,7 @@
 }
 
 .pr-info-stat__sub {
-  font-size: 11px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: var(--ink-4);
 }

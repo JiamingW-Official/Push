@@ -1,535 +1,592 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+/* ============================================================
+   System — v12 channel-thread layout
+   Left:  4 fixed category channels (Action / Money / Compliance / Updates)
+          — each acts like a contact. Sorted by most recent notification.
+   Right: All notifications in the selected channel as a chronological
+          thread — oldest at top, newest at bottom — mirrors Messages
+          iMessage layout exactly, using the same .msg-* CSS classes.
+   ============================================================ */
+
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  useNotifications,
-  timeAgo,
-  type Notification,
-} from "@/lib/notifications/useNotifications";
+import { timeAgo } from "@/lib/notifications/useNotifications";
+import { type SystemNotif } from "@/lib/inbox/seed";
+import { useWorkspaceState } from "@/lib/workspace/state";
 import "../inbox.css";
+import "../messages/messages.css";
 import "./system.css";
 
-/* ── Category config — product UI canonical labels ────────────── */
+/* ── Channel config ─────────────────────────────────────────── */
 
-type Category = "all" | "payments" | "campaigns" | "platform" | "alerts";
+type CatKey =
+  | "action"
+  | "compliance"
+  | "money"
+  | "updates"
+  | "platform"
+  | "network";
 
-const CATEGORIES: { id: Category; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "payments", label: "Payments" },
-  { id: "campaigns", label: "Campaigns" },
-  { id: "platform", label: "Platform" },
-  { id: "alerts", label: "Alerts" },
+const CAT_BG: Record<CatKey, string> = {
+  action: "var(--brand-red)",
+  money: "#16a34a",
+  compliance: "#ea580c",
+  updates: "var(--ink-4)",
+  platform: "#0085ff",
+  network: "#7c3aed",
+};
+
+const CAT_INITIAL: Record<CatKey, string> = {
+  action: "!",
+  money: "$",
+  compliance: "⚠",
+  updates: "↑",
+  platform: "P",
+  network: "◎",
+};
+
+const CAT_LABEL: Record<CatKey, string> = {
+  action: "Action Required",
+  money: "Money",
+  compliance: "Compliance",
+  updates: "Updates",
+  platform: "Push Platform",
+  network: "Network",
+};
+
+const CAT_META: Record<CatKey, string> = {
+  action: "Requires your attention",
+  money: "Payouts · Wallet",
+  compliance: "FTC · Policy",
+  updates: "Campaign Activity",
+  platform: "Features · Policy · Account",
+  network: "Brand Interest · Discovery",
+};
+
+const CAT_ORDER: CatKey[] = [
+  "action",
+  "compliance",
+  "money",
+  "updates",
+  "platform",
+  "network",
 ];
 
-const EMPTY_MESSAGES: Record<Category, { title: string; body: string }> = {
-  all: {
-    title: "No notifications.",
-    body: "Payouts, campaign updates, and platform notices land here.",
-  },
-  payments: {
-    title: "No payment activity.",
-    body: "Wallet credits and bank transfers will appear here.",
-  },
-  campaigns: {
-    title: "No campaign updates.",
-    body: "Application decisions and deadline reminders will appear here.",
-  },
-  platform: {
-    title: "No platform updates.",
-    body: "Score changes, tier moves, and product news will appear here.",
-  },
-  alerts: {
-    title: "No alerts.",
-    body: "Action-required notices and compliance flags will appear here.",
-  },
-};
+/* ── Time formatting ─────────────────────────────────────────── */
 
-/* ── Extended notification type ─────────────────────────────── */
+function formatThreadTime(iso: string) {
+  const d = new Date(iso);
+  const now = new Date();
+  const sameDay =
+    d.getDate() === now.getDate() &&
+    d.getMonth() === now.getMonth() &&
+    d.getFullYear() === now.getFullYear();
 
-type SystemNotif = Notification & {
-  category: Category;
-  priority?: boolean;
-  role?: string;
-  type?: string;
-};
+  const time = d.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 
-/* ── Seed data ───────────────────────────────────────────────── */
+  if (sameDay) return `Today at ${time}`;
 
-const EXTENDED_NOTIFICATIONS: SystemNotif[] = [
-  {
-    id: "sys-c-001",
-    role: "creator",
-    type: "system",
-    title: "Payment received",
-    body: "$120.00 payout from Brow Theory campaign processed.",
-    href: "/creator/wallet",
-    createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "payments",
-    priority: true,
-  },
-  {
-    id: "sys-c-002",
-    role: "creator",
-    type: "system",
-    title: "Application accepted",
-    body: "Your application to Roberta's Summer campaign was accepted.",
-    href: "/creator/dashboard",
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "campaigns",
-  },
-  {
-    id: "sys-c-003",
-    role: "creator",
-    type: "system",
-    title: "Deadline in 3 days",
-    body: "Flamingo Estate shoot deadline is Friday 5pm.",
-    href: "/creator/campaigns",
-    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "alerts",
-    priority: false,
-  },
-  {
-    id: "sys-c-004",
-    role: "creator",
-    type: "system",
-    title: "Push Score updated",
-    body: "Your Push Score increased by 3 points — now 87.",
-    href: "/creator/profile",
-    createdAt: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    category: "platform",
-  },
-  {
-    id: "sys-c-005",
-    role: "creator",
-    type: "system",
-    title: "New campaign match",
-    body: "Fort Greene Coffee matches your profile — $55 base payout.",
-    href: "/creator/dashboard",
-    createdAt: new Date(Date.now() - 22 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "campaigns",
-  },
-  {
-    id: "sys-c-006",
-    role: "creator",
-    type: "system",
-    title: "Wallet withdrawal processed",
-    body: "$240 transferred to your bank account ending 4521.",
-    href: "/creator/wallet",
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "payments",
-    priority: true,
-  },
-  {
-    id: "sys-c-007",
-    role: "creator",
-    type: "system",
-    title: "Campaign completed",
-    body: "Brow Theory Spring campaign marked complete. Great work!",
-    href: "/creator/campaigns",
-    createdAt: new Date(
-      Date.now() - 2 * 24 * 60 * 60 * 1000 - 3 * 60 * 60 * 1000,
-    ).toISOString(),
-    read: true,
-    category: "campaigns",
-  },
-  {
-    id: "sys-c-008",
-    role: "creator",
-    type: "system",
-    title: "Tier upgrade available",
-    body: "You're 2 campaigns away from Operator tier — higher payouts unlock.",
-    href: "/creator/profile",
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "platform",
-  },
-  {
-    id: "sys-c-009",
-    role: "creator",
-    type: "system",
-    title: "Content flagged for review",
-    body: "Your post for Fort Greene was flagged for minor compliance check.",
-    href: "/creator/campaigns",
-    createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    category: "alerts",
-  },
-];
-
-/* ── Category icon SVGs — single icon family, 18px stroke 1.6 ──
-   Using Lucide-style stroke icons for product UI register.   */
-
-type IconProps = { className?: string };
-
-const PaymentsIcon = ({ className }: IconProps) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-  >
-    <rect x="3" y="6" width="18" height="13" rx="2" />
-    <path d="M3 10h18" />
-    <path d="M7 15h3" />
-  </svg>
-);
-
-const CampaignsIcon = ({ className }: IconProps) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-  >
-    <circle cx="12" cy="12" r="8" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-
-const PlatformIcon = ({ className }: IconProps) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-  >
-    <path d="M12 3l2.4 5.4L20 9.5l-4 4 1 5.5-5-2.8-5 2.8 1-5.5-4-4 5.6-1.1z" />
-  </svg>
-);
-
-const AlertsIcon = ({ className }: IconProps) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-  >
-    <path d="M12 9v4" />
-    <path d="M12 17h.01" />
-    <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-  </svg>
-);
-
-const DefaultIcon = ({ className }: IconProps) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-  >
-    <circle cx="12" cy="12" r="9" />
-    <path d="M12 8v4" />
-    <path d="M12 16h.01" />
-  </svg>
-);
-
-const ChevronIcon = ({ className }: IconProps) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-  >
-    <path d="M9 6l6 6-6 6" />
-  </svg>
-);
-
-const CategoryIcon = ({
-  cat,
-  className,
-}: {
-  cat: Category;
-  className?: string;
-}) => {
-  switch (cat) {
-    case "payments":
-      return <PaymentsIcon className={className} />;
-    case "campaigns":
-      return <CampaignsIcon className={className} />;
-    case "platform":
-      return <PlatformIcon className={className} />;
-    case "alerts":
-      return <AlertsIcon className={className} />;
-    default:
-      return <DefaultIcon className={className} />;
-  }
-};
-
-/* Category badge label — short product UI tag shown next to title */
-const BADGE_LABEL: Record<Category, string> = {
-  all: "Update",
-  payments: "Payment",
-  campaigns: "Campaign",
-  platform: "Platform",
-  alerts: "Alert",
-};
-
-/* ── Date grouping ───────────────────────────────────────────── */
-
-type DateGroup = { label: string; items: SystemNotif[] };
-
-function groupByDate(notifications: SystemNotif[]): DateGroup[] {
-  const now = Date.now();
-  const oneDayMs = 24 * 60 * 60 * 1000;
-
-  const today: SystemNotif[] = [];
-  const yesterday: SystemNotif[] = [];
-  const earlier: SystemNotif[] = [];
-
-  for (const n of notifications) {
-    const age = now - new Date(n.createdAt).getTime();
-    if (age < oneDayMs) today.push(n);
-    else if (age < 2 * oneDayMs) yesterday.push(n);
-    else earlier.push(n);
-  }
-
-  const groups: DateGroup[] = [];
-  if (today.length) groups.push({ label: "TODAY", items: today });
-  if (yesterday.length) groups.push({ label: "YESTERDAY", items: yesterday });
-  if (earlier.length) groups.push({ label: "EARLIER", items: earlier });
-  return groups;
+  const date = d.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  return `${date} · ${time}`;
 }
 
-/* ── Page ─────────────────────────────────────────────────────── */
+/* ── Icons ──────────────────────────────────────────────────── */
 
-export default function SystemPage() {
-  const { markAllRead } = useNotifications("creator");
-
-  const [notifications, setNotifications] = useState<SystemNotif[]>(
-    EXTENDED_NOTIFICATIONS,
+function SearchIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4" />
+      <path
+        d="M10 10L13 13"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
   );
-  const [activeCategory, setActiveCategory] = useState<Category>("all");
+}
 
-  const markRead = useCallback((id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
-  }, []);
+function HamburgerIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M2 4h12M2 8h12M2 12h12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
-  const markAllSystemRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    markAllRead();
-  }, [markAllRead]);
+function BellIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13.73 21a2 2 0 0 1-3.46 0"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-  const filtered = useMemo(() => {
-    if (activeCategory === "all") return notifications;
-    return notifications.filter((n) => n.category === activeCategory);
-  }, [notifications, activeCategory]);
+function ChevronLeft() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path
+        d="M9 3L5 7l4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-  const groups = useMemo(() => {
-    const sorted = [...filtered].sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-    return groupByDate(sorted).map((g) => ({
-      ...g,
-      items: [
-        ...g.items.filter((n) => n.priority && !n.read),
-        ...g.items.filter((n) => !(n.priority && !n.read)),
-      ],
-    }));
-  }, [filtered]);
+function CheckAllIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M2 8l4 4L14 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6 8l4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-  const countFor = useCallback(
-    (cat: Category) => {
-      const src =
-        cat === "all"
-          ? notifications
-          : notifications.filter((n) => n.category === cat);
-      return src.filter((n) => !n.read).length;
+/* ── Shared inbox tab nav ────────────────────────────────────── */
+
+function InboxTabNav() {
+  const pathname = usePathname();
+  const { unreadThreads, unreadNotifications } = useWorkspaceState();
+
+  const tabs = [
+    {
+      href: "/creator/inbox/messages",
+      label: "Messages",
+      count: unreadThreads,
+      match: (p: string) => p.startsWith("/creator/inbox/messages"),
     },
-    [notifications],
-  );
-
-  const totalUnread = countFor("all");
+    {
+      href: "/creator/inbox/system",
+      label: "System",
+      count: unreadNotifications,
+      match: (p: string) => p.startsWith("/creator/inbox/system"),
+    },
+  ];
 
   return (
-    <div className="ib-content">
-      {/* Eyebrow + action bar */}
-      <div className="ib-sys-bar">
-        <span className="ib-sys-eyebrow">
-          LINKS
-          <span className="ib-sys-eyebrow-sep" aria-hidden>
-            ·
-          </span>
-          <span className="ib-sys-eyebrow-state">
-            {totalUnread > 0 ? `${totalUnread} UNREAD` : "ALL CAUGHT UP"}
-          </span>
-        </span>
-        {totalUnread > 0 && (
-          <button
-            type="button"
-            className="ib-mark-all-btn"
-            onClick={markAllSystemRead}
-            aria-label="Mark all notifications as read"
+    <nav className="inbox-pane-nav" aria-label="Inbox" role="tablist">
+      {tabs.map((tab) => {
+        const active = tab.match(pathname ?? "");
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            role="tab"
+            aria-selected={active}
+            className={`inbox-pane-nav-tab${active ? " is-active" : ""}`}
           >
-            Mark all as read
-          </button>
-        )}
-      </div>
+            <span>{tab.label}</span>
+            {tab.count > 0 && (
+              <span
+                className="inbox-pane-nav-badge"
+                aria-label={`${tab.count} unread`}
+              >
+                {tab.count}
+              </span>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
 
-      {/* Category filter chips */}
-      <div
-        className="ib-filter-row"
-        role="group"
-        aria-label="Filter notifications by category"
+/* ── Page ────────────────────────────────────────────────────── */
+
+export default function SystemPage() {
+  const {
+    notifications,
+    markNotifRead: markRead,
+    markAllNotifsRead: markAllRead,
+  } = useWorkspaceState();
+
+  type SysFilter = "all" | "unread" | "priority";
+  const [activeCat, setActiveCat] = useState<CatKey | null>(null);
+  const [sysFilter, setSysFilter] = useState<SysFilter>("all");
+  const [query, setQuery] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const menuWrapRef = useRef<HTMLDivElement>(null);
+
+  /* Group notifications by category, sorted oldest → newest per channel */
+  const byCategory = useMemo(() => {
+    const map: Record<CatKey, SystemNotif[]> = {
+      action: [],
+      money: [],
+      compliance: [],
+      updates: [],
+      platform: [],
+      network: [],
+    };
+    for (const n of notifications) {
+      const cat = n.category as CatKey;
+      if (cat in map) map[cat].push(n);
+    }
+    for (const cat of CAT_ORDER) {
+      map[cat].sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      );
+    }
+    return map;
+  }, [notifications]);
+
+  /* Channel list sorted by most recent notification descending,
+     filtered by search query + sysFilter (all / unread / priority) */
+  const sortedChannels = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return [...CAT_ORDER]
+      .filter((cat) => {
+        if (!byCategory[cat].length) return false;
+        // sysFilter gating
+        if (sysFilter === "unread" && !byCategory[cat].some((n) => !n.read))
+          return false;
+        if (
+          sysFilter === "priority" &&
+          !byCategory[cat].some((n) => !n.read && n.priority)
+        )
+          return false;
+        if (!q) return true;
+        return (
+          CAT_LABEL[cat].toLowerCase().includes(q) ||
+          CAT_META[cat].toLowerCase().includes(q) ||
+          byCategory[cat].some(
+            (n) =>
+              n.title.toLowerCase().includes(q) ||
+              n.body.toLowerCase().includes(q),
+          )
+        );
+      })
+      .sort((a, b) => {
+        const aT = byCategory[a].at(-1)?.createdAt ?? "";
+        const bT = byCategory[b].at(-1)?.createdAt ?? "";
+        return new Date(bT).getTime() - new Date(aT).getTime();
+      });
+  }, [byCategory, query, sysFilter]);
+
+  const activeThread = activeCat ? byCategory[activeCat] : [];
+
+  /* Selecting a channel marks all its notifications read */
+  const handleSelectCat = useCallback(
+    (cat: CatKey) => {
+      setActiveCat(cat);
+      byCategory[cat].forEach((n) => markRead(n.id));
+    },
+    [byCategory, markRead],
+  );
+
+  /* Scroll thread to bottom when channel changes */
+  useEffect(() => {
+    if (bodyRef.current) {
+      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+    }
+  }, [activeCat]);
+
+  /* Close dropdown on outside click */
+  useEffect(() => {
+    if (!showMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (
+        menuWrapRef.current &&
+        !menuWrapRef.current.contains(e.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showMenu]);
+
+  const totalUnread = notifications.filter((n) => !n.read).length;
+  const unreadPriority = notifications.filter(
+    (n) => !n.read && n.priority,
+  ).length;
+
+  const catHasUnread = (cat: CatKey) => byCategory[cat].some((n) => !n.read);
+
+  return (
+    <section
+      className={`ib-content msg-pane-layout sys-pane-layout${activeCat ? " has-active" : ""}`}
+      aria-label="System notifications"
+    >
+      {/* ── Left pane: fixed channel list ─────────────────────── */}
+      <aside className="msg-list-pane" aria-label="Notification channels">
+        <header className="msg-list-pane-header">
+          <div className="msg-list-pane-nav-row">
+            <InboxTabNav />
+            {/* Hamburger → liquid-glass dropdown (matches Messages layout) */}
+            <div className="msg-filter-wrap" ref={menuWrapRef}>
+              <button
+                type="button"
+                className="ib-icon-btn"
+                aria-label="Notification options"
+                title="Options"
+                aria-expanded={showMenu}
+                aria-haspopup="true"
+                onClick={() => setShowMenu((v) => !v)}
+              >
+                <HamburgerIcon />
+              </button>
+              {showMenu && (
+                <div
+                  className="msg-filter-dropdown"
+                  role="menu"
+                  aria-label="Filter channels"
+                >
+                  {/* Show filter — mirrors Messages pattern exactly */}
+                  {(
+                    [
+                      { value: "all", label: "All" },
+                      {
+                        value: "unread",
+                        label: "Unread",
+                        count: totalUnread,
+                      },
+                      {
+                        value: "priority",
+                        label: "Priority",
+                        count: unreadPriority,
+                      },
+                    ] as const
+                  ).map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={sysFilter === opt.value}
+                      className={`msg-filter-item${sysFilter === opt.value ? " is-active" : ""}`}
+                      onClick={() => {
+                        setSysFilter(opt.value);
+                        setShowMenu(false);
+                      }}
+                    >
+                      <span>{opt.label}</span>
+                      {"count" in opt && opt.count > 0 && (
+                        <span className="msg-filter-badge">{opt.count}</span>
+                      )}
+                    </button>
+                  ))}
+                  {totalUnread > 0 && <div className="msg-filter-divider" />}
+                  {totalUnread > 0 && (
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="msg-filter-item"
+                      onClick={() => {
+                        markAllRead();
+                        setShowMenu(false);
+                      }}
+                    >
+                      <span>Mark all read</span>
+                      <span className="msg-filter-badge">{totalUnread}</span>
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Search bar — identical to Messages */}
+          <label className="msg-list-search">
+            <span className="msg-list-search-icon" aria-hidden>
+              <SearchIcon />
+            </span>
+            <input
+              type="search"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Search channels"
+            />
+          </label>
+        </header>
+
+        <div className="msg-list-body" data-lenis-prevent>
+          {sortedChannels.map((cat) => {
+            const latest = byCategory[cat].at(-1);
+            const hasUnread = catHasUnread(cat);
+            const isActive = activeCat === cat;
+
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => handleSelectCat(cat)}
+                aria-pressed={isActive}
+                className={[
+                  "msg-list-row",
+                  isActive ? "is-active" : "",
+                  hasUnread ? "is-unread" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {hasUnread && (
+                  <span className="msg-list-unread-dot" aria-hidden />
+                )}
+                <span
+                  className="msg-list-avatar"
+                  style={{ background: CAT_BG[cat] }}
+                  aria-hidden
+                >
+                  {CAT_INITIAL[cat]}
+                </span>
+                <span className="msg-list-row-body">
+                  <span className="msg-list-row-top">
+                    <span className="msg-list-row-name">{CAT_LABEL[cat]}</span>
+                    <span
+                      className="msg-list-row-time"
+                      suppressHydrationWarning
+                    >
+                      {latest ? timeAgo(latest.createdAt) : ""}
+                    </span>
+                  </span>
+                  <span className="msg-list-row-preview">
+                    {latest ? latest.title : "No notifications"}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* ── Right pane: channel thread ────────────────────────── */}
+      <section
+        className="msg-thread-pane sys-thread-pane"
+        aria-label="Notification thread"
       >
-        {CATEGORIES.map((cat) => {
-          const count = countFor(cat.id);
-          const isActive = activeCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setActiveCategory(cat.id)}
-              aria-pressed={isActive}
-              className={`ib-chip${isActive ? " ib-chip--active" : ""}`}
-            >
-              {cat.label}
-              {count > 0 && <span className="ib-chip-count"> · {count}</span>}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Notification list */}
-      <div className="ib-sys-list">
-        {groups.length === 0 ? (
-          <div className="ib-empty">
-            <p className="ib-empty-title">
-              {EMPTY_MESSAGES[activeCategory].title}
-            </p>
-            <p className="ib-empty-body">
-              {EMPTY_MESSAGES[activeCategory].body}
+        {!activeCat ? (
+          <div className="msg-thread-empty">
+            <span className="msg-thread-empty-icon" aria-hidden>
+              <BellIcon />
+            </span>
+            <h3 className="msg-thread-empty-title">Pick a channel.</h3>
+            <p className="msg-thread-empty-body">
+              Action items, payouts, and campaign updates land here.
             </p>
           </div>
         ) : (
-          groups.map((group) => (
-            <div key={group.label} className="ib-group">
-              <div className="ib-group-label">
-                <span>{group.label}</span>
-                <span className="ib-group-line" aria-hidden />
+          <>
+            {/* Thread header — identical to Messages */}
+            <header className="msg-thread-header">
+              <button
+                type="button"
+                className="msg-thread-back-btn"
+                onClick={() => setActiveCat(null)}
+                aria-label="Back to channels"
+              >
+                <ChevronLeft />
+              </button>
+              <span
+                className="msg-thread-header-avatar"
+                style={{ background: CAT_BG[activeCat] }}
+                aria-hidden
+              >
+                {CAT_INITIAL[activeCat]}
+              </span>
+              <div className="msg-thread-header-info">
+                <p className="msg-thread-header-name">{CAT_LABEL[activeCat]}</p>
+                <p className="msg-thread-header-meta">
+                  PUSH PLATFORM · {CAT_META[activeCat].toUpperCase()}
+                </p>
               </div>
+            </header>
 
-              {group.items.map((notif) => {
-                const cat = notif.category as Category;
-                const rowClass = [
-                  "ib-sys-row",
-                  `ib-sys-row--${cat}`,
-                  !notif.read ? "ib-sys-row--unread" : "",
-                  notif.priority && !notif.read ? "ib-sys-row--priority" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ");
+            {/* Thread body — chronological, oldest at top, newest at bottom */}
+            <div className="msg-thread-body" ref={bodyRef} data-lenis-prevent>
+              {activeThread.map((notif) => (
+                <div key={notif.id} className="sys-notif-entry">
+                  {/* Centered timestamp */}
+                  <p className="msg-bubble-time" suppressHydrationWarning>
+                    {formatThreadTime(notif.createdAt)}
+                  </p>
 
-                const inner = (
-                  <>
-                    {/* Icon tile */}
-                    <span
-                      className={`ib-sys-icon ib-sys-icon--${cat}`}
+                  {/* Notification card — centered, WeChat 服务号 style */}
+                  <div className="sys-notif-card">
+                    {/* Colored header strip with channel icon */}
+                    <div
+                      className="sys-notif-card-header"
+                      style={{ background: CAT_BG[activeCat] }}
                       aria-hidden
                     >
-                      <CategoryIcon cat={cat} className="ib-sys-icon-svg" />
-                    </span>
-
-                    {/* Body */}
-                    <span className="ib-sys-body">
-                      <span className="ib-sys-meta-row">
-                        <span className={`ib-sys-badge ib-sys-badge--${cat}`}>
-                          {BADGE_LABEL[cat]}
-                        </span>
-                        <span className="ib-sys-time">
-                          {timeAgo(notif.createdAt)}
-                        </span>
-                        {notif.priority && !notif.read && (
-                          <span
-                            className="ib-sys-priority-tag"
-                            aria-label="Priority notification"
-                          >
-                            Priority
-                          </span>
-                        )}
+                      <span className="sys-notif-card-icon">
+                        {CAT_INITIAL[activeCat]}
                       </span>
+                    </div>
 
-                      <span
-                        className={`ib-sys-title${
-                          !notif.read ? " ib-sys-title--bold" : ""
-                        }`}
-                      >
-                        {notif.title}
-                      </span>
-                      <span className="ib-sys-text">{notif.body}</span>
-                    </span>
-
-                    {/* Right: unread dot OR chevron when linkable */}
-                    <span className="ib-sys-right">
-                      {!notif.read ? (
+                    {/* Card body: priority + title + body + CTA */}
+                    <div className="sys-notif-card-body">
+                      {notif.priority && (
                         <span
-                          className="ib-sys-dot"
-                          aria-label="Unread notification"
-                        />
-                      ) : notif.href ? (
-                        <ChevronIcon className="ib-sys-chevron" />
-                      ) : null}
-                    </span>
-                  </>
-                );
-
-                return notif.href ? (
-                  <Link
-                    key={notif.id}
-                    href={notif.href}
-                    className={rowClass}
-                    onClick={() => markRead(notif.id)}
-                  >
-                    {inner}
-                  </Link>
-                ) : (
-                  <button
-                    key={notif.id}
-                    type="button"
-                    className={rowClass}
-                    onClick={() => markRead(notif.id)}
-                  >
-                    {inner}
-                  </button>
-                );
-              })}
+                          className="sys-bubble-priority"
+                          aria-label="Priority notification"
+                        >
+                          PRIORITY
+                        </span>
+                      )}
+                      <p className="sys-bubble-title">{notif.title}</p>
+                      <p className="sys-bubble-body">{notif.body}</p>
+                      {notif.nextAction && (
+                        <Link
+                          href={notif.nextAction.href}
+                          className="sys-notif-cta-btn"
+                          onClick={() => markRead(notif.id)}
+                        >
+                          {notif.nextAction.label}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))
+          </>
         )}
-      </div>
-    </div>
+      </section>
+    </section>
   );
 }

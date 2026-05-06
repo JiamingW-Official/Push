@@ -99,7 +99,7 @@ function stepStatus(id: StepId, p: Progress): ChecklistItemStatus {
    ───────────────────────────────────────────────────────────── */
 
 const inputStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-body)",
   fontSize: 16,
   /* 8px-grid: 12px vertical / 16px horizontal */
   padding: "12px 16px",
@@ -114,10 +114,10 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: "block",
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-display)",
   fontSize: 11,
   fontWeight: 700,
-  letterSpacing: "0.08em",
+  letterSpacing: "0.14em",
   textTransform: "uppercase",
   color: "var(--ink-3)",
   marginBottom: 8,

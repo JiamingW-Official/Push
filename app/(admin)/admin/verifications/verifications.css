@@ -46,8 +46,8 @@
 }
 
 .vq-nav-title {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -59,8 +59,8 @@
 }
 
 .vq-nav-badge {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -93,8 +93,8 @@
 }
 
 .vq-kpi-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -121,8 +121,8 @@
   border-radius: 50%;
   background: var(--surface-3);
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -138,8 +138,8 @@
   border: 1px solid var(--ink-4);
   border-radius: var(--r-sm);
   padding: 2px 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -175,8 +175,8 @@
   color: var(--brand-red);
   border-radius: 6px;
   padding: 2px 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;           /* min 12px rule */
+  font-family: var(--font-body);
+  font-size: 14px;           /* min 12px rule */
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -185,8 +185,8 @@
 }
 
 .vq-flag-none {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -223,8 +223,8 @@
 }
 
 .vq-filter-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -241,8 +241,8 @@
 
 /* pill chip — maps to .btn-pill spec */
 .vq-chip {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   padding: 8px 18px;
@@ -288,8 +288,8 @@
 }
 
 .vq-count {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   margin-left: auto;
 }
@@ -312,8 +312,8 @@
 }
 
 .vq-col-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -372,8 +372,8 @@
 }
 
 .vq-applicant-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   white-space: nowrap;
@@ -383,8 +383,8 @@
 }
 
 .vq-applicant-time {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -395,8 +395,8 @@
 
 /* SLA cell */
 .vq-sla {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -415,8 +415,8 @@
 /* Quick-action row buttons use unified btn system classes (btn-primary / btn-ghost)
    with size modifier for compact row context */
 .vq-row-btn {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -460,8 +460,8 @@
 
 /* Status badge shown in reviewed rows */
 .vq-status-badge {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -498,7 +498,7 @@
 }
 
 .vq-empty-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 18px;
   color: var(--ink);
@@ -506,8 +506,8 @@
 }
 
 .vq-empty-body {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -578,7 +578,7 @@
 }
 
 .vq-panel-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
@@ -622,8 +622,8 @@
 
 /* Panel section head */
 .vq-section-head {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -648,8 +648,8 @@
 }
 
 .vq-id-card-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -665,8 +665,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -688,8 +688,8 @@
 }
 
 .vq-social-platform {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -699,22 +699,22 @@
 }
 
 .vq-social-handle {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   font-weight: 600;
   flex: 1;
 }
 
 .vq-social-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
 .vq-social-verified-badge {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -756,15 +756,15 @@
 }
 
 .vq-address-text {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   font-weight: 600;
 }
 
 .vq-address-status {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -779,8 +779,8 @@
 /* Internal note */
 .vq-note-area {
   width: 100%;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--hairline);
@@ -804,8 +804,8 @@
 
 /* SLA text in detail panel */
 .vq-sla-detail {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
 }
 
@@ -829,8 +829,8 @@
 }
 
 .vq-history-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
   display: flex;
   gap: 8px;
@@ -846,16 +846,16 @@
 }
 
 .vq-history-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
   line-height: 1.5;
   margin: 0;
 }
 
 .vq-history-empty {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-4);
 }
 
@@ -880,7 +880,7 @@
   border-radius: 8px;
   background: rgba(193, 18, 31, 0.06);
   color: var(--brand-red);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -909,8 +909,8 @@
 }
 
 .vq-checklist-item {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--ink-3);
 }
 

@@ -102,7 +102,7 @@
 
 .careers-badge-stat {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
@@ -289,7 +289,7 @@
 
 .careers-kpi-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -423,8 +423,8 @@
 
 /* Large editorial number — faint on dark */
 .careers-role-num {
-  font-family: var(--font-display);
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 900;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.25);
@@ -454,7 +454,7 @@
 
 .careers-role-meta {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
@@ -470,7 +470,7 @@
 
 .careers-role-tag {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
