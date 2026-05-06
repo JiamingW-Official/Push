@@ -24,8 +24,8 @@ const ITEMS: { key: ItemKey; label: string; href?: string; icon: string }[] = [
   },
   {
     key: "gigs",
-    label: "Gigs",
-    href: "/creator/gigs",
+    label: "Work",
+    href: "/creator/work",
     icon: "M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2",
   },
   {

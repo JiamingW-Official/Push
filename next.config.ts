@@ -63,11 +63,9 @@ const nextConfig: NextConfig = {
         destination: "/creator/campaigns/:id",
         permanent: true,
       },
-      {
-        source: "/creator/work",
-        destination: "/creator/gigs",
-        permanent: true,
-      },
+      // /creator/work is now the WORK domain hub (audit § 5.2). Sub-paths
+      // /work/today, /work/pipeline, /work/drafts, /work/campaign/* still
+      // redirect to canonical pages above. /work/calendar stays on its own.
       // Standalone duplicate routes — /today is the canonical landing.
       {
         source: "/creator/dashboard",

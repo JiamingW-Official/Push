@@ -73,13 +73,15 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
     primary: [
       // Short captions (≤5 chars): live under each icon, no hover needed.
       // Full route name kept in href so analytics/aria still read clean.
+      // 7-domain canonical IA per architectural audit § 3.1.
+      // Today · Work · Money · Find · Comms · Me · Stats
       { label: "Today", href: "/creator/today", icon: "home", exact: true },
-      { label: "Gigs", href: "/creator/gigs", icon: "work" },
+      { label: "Work", href: "/creator/work", icon: "work" },
       { label: "Find", href: "/creator/discover", icon: "discover" },
       { label: "Pay", href: "/creator/money", icon: "earnings" },
+      { label: "Comms", href: "/creator/comms", icon: "inbox" },
+      { label: "Me", href: "/creator/me", icon: "trophy" },
       { label: "Stats", href: "/creator/analytics", icon: "analytics" },
-      { label: "Inbox", href: "/creator/inbox", icon: "inbox" },
-      { label: "Ranks", href: "/creator/leaderboard", icon: "trophy" },
     ],
     notificationsHref: "/creator/notifications",
     settingsHref: "/creator/settings",
