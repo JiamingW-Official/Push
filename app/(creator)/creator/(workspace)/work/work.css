@@ -106,8 +106,8 @@
 
 .work-timeline-row__text {
   font-family: var(--font-body, "Open Sans");
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1.45;
   color: var(--ink, #111);
   white-space: nowrap;
@@ -147,8 +147,8 @@
 
 .work-list-row__text {
   font-family: var(--font-body, "Open Sans");
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1.45;
   color: var(--ink, #111);
   white-space: nowrap;
