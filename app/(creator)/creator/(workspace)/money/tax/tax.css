@@ -1,0 +1,173 @@
+/* ============================================================
+   /creator/money/tax — state machine UI. v12.2 tokens.
+   ============================================================ */
+
+.tax-state {
+  margin: 32px 0;
+}
+
+.tax-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 640px) {
+  .tax-bento {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tax-row-status {
+  display: inline-flex;
+  margin-top: 4px;
+}
+
+.tax-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+  border: 1px solid var(--ink, #111);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 8px;
+  align-self: flex-start;
+  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tax-cta:hover {
+  transform: translate(2px, 2px);
+}
+
+.tax-cta--ghost {
+  background: transparent;
+  color: var(--ink, #111);
+}
+
+/* ── Monthly chart ────────────────────────────────────────── */
+
+.tax-chart-section {
+  margin-bottom: 48px;
+}
+
+.tax-h2 {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--ink, #111);
+  margin: 0 0 16px;
+}
+
+.tax-chart {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 8px;
+  height: 200px;
+  align-items: end;
+  padding: 16px 20px;
+  background: var(--surface-2, #f5f3ee);
+  border-radius: 14px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.tax-chart__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.tax-chart__bar {
+  width: 100%;
+  max-width: 24px;
+  background: var(--surface-3, #ece9e0);
+  border-radius: 4px 4px 0 0;
+  transition: height 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.tax-chart__bar.is-past {
+  background: linear-gradient(180deg, var(--champagne, #bfa170), var(--champagne-deep, #8a704a));
+}
+
+.tax-chart__month {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+}
+
+/* ── Fineprint legal section ──────────────────────────────── */
+
+.tax-fineprint {
+  background: var(--surface-2, #f5f3ee);
+  border-radius: 14px;
+  padding: 24px 28px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.tax-fineprint h3 {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  margin: 0 0 12px;
+}
+
+.tax-fineprint p {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--graphite, #3a3835);
+  margin: 0 0 16px;
+}
+
+.tax-fineprint ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tax-fineprint li {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--graphite, #3a3835);
+}
+
+.tax-fineprint strong {
+  color: var(--ink, #111);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tax-chart__bar {
+    transition: none;
+  }
+  .tax-cta {
+    transition: none;
+  }
+  .tax-cta:hover {
+    transform: none;
+  }
+}
