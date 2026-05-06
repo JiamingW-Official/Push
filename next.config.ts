@@ -85,6 +85,14 @@ const nextConfig: NextConfig = {
         destination: "/creator/discover",
         permanent: true,
       },
+      // Audit § P1-10 — standalone /creator/notifications becomes a drawer
+      // anchored in topnav. Direct visits land on /today and auto-open the
+      // drawer via ?notifications=open (NotificationsBell consumes the param).
+      {
+        source: "/creator/notifications",
+        destination: "/creator/today?notifications=open",
+        permanent: true,
+      },
       // Inbox/invites was lifted to /gigs/invites (sync PR #29).
       {
         source: "/creator/inbox/invites",

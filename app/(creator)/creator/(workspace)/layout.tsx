@@ -4,11 +4,13 @@
 // The icon rail is the shared UnifiedSidebar; main scrolls independently.
 
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
 import { WorkspaceStateProvider } from "@/lib/workspace/state";
 import { SWRProvider } from "@/lib/data/SWRProvider";
 import { ToastProvider } from "@/components/toast/Toaster";
+import { NotificationsBell } from "@/components/notifications/NotificationsBell";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -35,6 +37,11 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
                 {children}
               </main>
             </div>
+            {/* Suspense wraps useSearchParams in NotificationsBell for static
+                pre-rendering. Always-mounted on every workspace page. */}
+            <Suspense fallback={null}>
+              <NotificationsBell />
+            </Suspense>
           </WorkspaceStateProvider>
         </CommandKProvider>
       </ToastProvider>
