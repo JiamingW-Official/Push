@@ -11,6 +11,7 @@ import { WorkspaceStateProvider } from "@/lib/workspace/state";
 import { SWRProvider } from "@/lib/data/SWRProvider";
 import { ToastProvider } from "@/components/toast/Toaster";
 import { NotificationsBell } from "@/components/notifications/NotificationsBell";
+import { MobileBottomNav } from "@/components/creator/workspace/MobileBottomNav";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -42,6 +43,8 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
             <Suspense fallback={null}>
               <NotificationsBell />
             </Suspense>
+            {/* Mobile bottom nav — display:none on >=768px (CSS handles it). */}
+            <MobileBottomNav />
           </WorkspaceStateProvider>
         </CommandKProvider>
       </ToastProvider>
