@@ -37,3 +37,9 @@ playwright/.cache/
 supabase/.branches/
 supabase/.temp/
 .next 2
+
+# Mac Finder duplicate copies (ad-hoc)
+* 2.*
+* 2/
+.next 2/
+.next 3/
