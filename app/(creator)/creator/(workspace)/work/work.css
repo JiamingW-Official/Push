@@ -3,17 +3,19 @@
    ============================================================ */
 
 .work-hub {
-  padding: 64px 10vw 96px;
-  max-width: 1280px;
+  padding: 80px 10vw 120px;
   margin: 0 auto;
+  background-image: linear-gradient(180deg, var(--surface-2, #f5f3ee) 0%, transparent 360px);
+  background-repeat: no-repeat;
 }
 
 .work-hero {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 32px;
-  max-width: 720px;
+  gap: 16px;
+  margin-bottom: 56px;
+  max-width: 880px;
+  position: relative;
 }
 
 .work-hero__eyebrow {
@@ -24,31 +26,55 @@
   color: var(--ink-4, #61605c);
   text-transform: uppercase;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.work-hero__eyebrow::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--ink, #111);
+  flex-shrink: 0;
 }
 
 .work-hero__title {
   font-family: "Magvix", Georgia, serif;
   font-style: italic;
-  font-size: clamp(48px, 6vw, 80px);
+  font-size: clamp(56px, 7.5vw, 112px);
   font-weight: 400;
-  line-height: 1.0;
-  letter-spacing: -0.022em;
+  line-height: 0.96;
+  letter-spacing: -0.026em;
   color: var(--ink, #111);
   margin: 0;
 }
 
 .work-hero__sub {
   font-family: var(--font-body, "Open Sans");
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: 17px;
+  line-height: 1.65;
   color: var(--graphite, #3a3835);
   margin: 8px 0 0;
+  max-width: 640px;
 }
 
 .work-bento {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 16px;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .work-hub {
+    padding: 56px 6vw 96px;
+  }
+  .work-hero {
+    margin-bottom: 40px;
+  }
+  .work-bento {
+    gap: 16px;
+  }
 }
 
 @media (max-width: 640px) {
