@@ -7,6 +7,7 @@ import {
   type TransactionStatus,
 } from "@/lib/payments/mock-transactions";
 import { aggregateBalances } from "@/lib/payments/calculate";
+import { useEarnings } from "@/lib/data/hooks";
 import "./earnings.css";
 
 /* ── Types ───────────────────────────────────────────────── */
@@ -86,7 +87,7 @@ function fmtDate(iso: string): string {
 /* Merchant Identity Palette (§ 20.3) — deterministic merchant → color
    so Devoción always purple, Sunday always terracotta across the product. */
 const MERCHANT_IDENTITY: Record<string, string> = {
-  "Devoción": "aubergine",
+  Devoción: "aubergine",
   "Sunday in Brooklyn": "terracotta",
   "Cha Cha Matcha": "sage",
   "Superiority Burger": "clay",
@@ -280,8 +281,22 @@ function BigAmount({
 export default function CreatorEarningsPage() {
   const [cashoutOpen, setCashoutOpen] = useState(false);
 
-  const balances = aggregateBalances(MOCK_CREATOR_TRANSACTIONS);
-  const delta = THIS_MONTH_EARNED - LAST_MONTH_EARNED;
+  /* Server data via SWR. While loading (or on cache miss after error),
+     fall back to MOCK_CREATOR_TRANSACTIONS so the page never paints empty
+     in dev demo mode. Once /api/creator/earnings is wired to real Stripe +
+     Supabase rows, the fallback path becomes a true loading skeleton
+     (added in prompt 2). */
+  const { data: earnings } = useEarnings();
+  const transactions = earnings?.transactions ?? MOCK_CREATOR_TRANSACTIONS;
+  const balances =
+    earnings?.balances ?? aggregateBalances(MOCK_CREATOR_TRANSACTIONS);
+  const summary = earnings?.summary ?? {
+    thisMonthEarned: THIS_MONTH_EARNED,
+    lastMonthEarned: LAST_MONTH_EARNED,
+    delta: THIS_MONTH_EARNED - LAST_MONTH_EARNED,
+    pendingNext: PENDING_NEXT,
+  };
+  const delta = summary.delta;
   const deltaPositive = delta >= 0;
   const canCashout = balances.cleared >= MIN_CASHOUT;
 
@@ -317,7 +332,7 @@ export default function CreatorEarningsPage() {
     },
   ];
 
-  const recentTxns = MOCK_CREATOR_TRANSACTIONS.slice(0, 20);
+  const recentTxns = transactions.slice(0, 20);
 
   return (
     <div className="cw-page earn-page">
@@ -325,7 +340,7 @@ export default function CreatorEarningsPage() {
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">
-            EARNINGS · ${fmtInt(THIS_MONTH_EARNED)} THIS MONTH
+            EARNINGS · ${fmtInt(summary.thisMonthEarned)} THIS MONTH
           </p>
           <h1 className="cw-title">Earnings</h1>
         </div>
@@ -360,7 +375,9 @@ export default function CreatorEarningsPage() {
         <div className="earn-pulse-stat earn-pulse-stat--month">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Month</span>
-          <span className="earn-pulse-stat__value">${fmtInt(THIS_MONTH_EARNED)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmtInt(summary.thisMonthEarned)}
+          </span>
           <span
             className={`earn-pulse-stat__delta ${
               deltaPositive ? "earn-pulse-stat__delta--up" : ""
@@ -372,15 +389,19 @@ export default function CreatorEarningsPage() {
         <div className="earn-pulse-stat earn-pulse-stat--lifetime">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Lifetime</span>
-          <span className="earn-pulse-stat__value">${fmtInt(LIFETIME_TOTAL)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmtInt(LIFETIME_TOTAL)}
+          </span>
           <span className="earn-pulse-stat__delta">
-            {MOCK_CREATOR_TRANSACTIONS.length} txns
+            {transactions.length} txns
           </span>
         </div>
         <div className="earn-pulse-stat earn-pulse-stat--cleared">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Available</span>
-          <span className="earn-pulse-stat__value">${fmt(balances.cleared)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmt(balances.cleared)}
+          </span>
           <span className="earn-pulse-stat__delta">
             {canCashout ? "ready" : `min $${fmt(MIN_CASHOUT)}`}
           </span>
@@ -388,13 +409,17 @@ export default function CreatorEarningsPage() {
         <div className="earn-pulse-stat earn-pulse-stat--pending">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Pending</span>
-          <span className="earn-pulse-stat__value">${fmt(balances.pending)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmt(balances.pending)}
+          </span>
           <span className="earn-pulse-stat__delta">in flight</span>
         </div>
         <div className="earn-pulse-stat earn-pulse-stat--milestone">
           <span className="earn-pulse-stat__dot" aria-hidden />
           <span className="earn-pulse-stat__label">Next payout</span>
-          <span className="earn-pulse-stat__value">${fmt(PENDING_NEXT)}</span>
+          <span className="earn-pulse-stat__value">
+            ${fmt(summary.pendingNext)}
+          </span>
           <span className="earn-pulse-stat__delta">May 1</span>
         </div>
       </div>
@@ -427,8 +452,14 @@ export default function CreatorEarningsPage() {
 
           <div className="earn-hero-substats">
             {[
-              { label: "THIS MONTH", value: `$${fmt(THIS_MONTH_EARNED)}` },
-              { label: "LAST MONTH", value: `$${fmt(LAST_MONTH_EARNED)}` },
+              {
+                label: "THIS MONTH",
+                value: `$${fmt(summary.thisMonthEarned)}`,
+              },
+              {
+                label: "LAST MONTH",
+                value: `$${fmt(summary.lastMonthEarned)}`,
+              },
               { label: "AVG / SCAN", value: "$0.05" },
             ].map((s) => (
               <div key={s.label} className="earn-hero-substat">
@@ -485,7 +516,7 @@ export default function CreatorEarningsPage() {
               BALANCE BREAKDOWN
             </span>
             <span className="earn-section-meta">
-              {MOCK_CREATOR_TRANSACTIONS.length} transactions tracked
+              {transactions.length} transactions tracked
             </span>
           </header>
           <div className="earn-balance-grid">
@@ -615,7 +646,7 @@ export default function CreatorEarningsPage() {
               <BigAmount
                 className="earn-upcoming-amount"
                 currencyClass="earn-upcoming-amount__currency"
-                value={fmt(PENDING_NEXT)}
+                value={fmt(summary.pendingNext)}
               />
               <p className="earn-upcoming-meta">
                 Est. May 1, 2026 · Stripe Connect · USD
@@ -648,7 +679,7 @@ export default function CreatorEarningsPage() {
               TRANSACTION HISTORY
             </span>
             <span className="earn-section-meta">
-              Showing {recentTxns.length} of {MOCK_CREATOR_TRANSACTIONS.length}
+              Showing {recentTxns.length} of {transactions.length}
             </span>
           </header>
           <div className="earn-txn-table">

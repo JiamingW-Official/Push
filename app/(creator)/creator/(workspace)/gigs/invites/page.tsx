@@ -21,6 +21,7 @@ import {
 } from "@/lib/inbox/seed";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
+import { useInvites } from "@/lib/data/hooks";
 import { EmptyState } from "@/lib/inbox/components";
 import { Button } from "@/lib/workspace/buttons";
 import "../gigs.css";
@@ -35,7 +36,7 @@ type InviteFilter = "all" | "urgent" | "match";
    recognize brands across Today / Gigs / Earnings. The mapping is
    deterministic — a brand never changes color between pages. */
 const MERCHANT_IDENTITY: Record<string, string> = {
-  "Devoción": "aubergine",
+  Devoción: "aubergine",
   "Sunday in Brooklyn": "terracotta",
   "Cha Cha Matcha": "sage",
   "Superiority Burger": "clay",
@@ -535,7 +536,10 @@ function RichDetailPanel({
         </span>
         <span className="giv-detail__quick__sep" />
         <span className="giv-detail__quick__item">
-          $ <strong>${guaranteed} — ${stretch}</strong>
+          ${" "}
+          <strong>
+            ${guaranteed} — ${stretch}
+          </strong>
         </span>
         <span className="giv-detail__quick__sep" />
         <span className="giv-detail__quick__item">
@@ -809,19 +813,34 @@ function RichDetailPanel({
 /* ── Page ────────────────────────────────────────────────────── */
 
 export default function InvitesPage() {
-  /* All mutations + state come from the shared context now. The
-     side-effects (FTC compliance notification firing on Accept,
-     unread badge updates) propagate to /messages, /system, and
-     the Hub Now view automatically. */
+  /* Data: invites list comes from /api/creator/invites via SWR. Mutations +
+     side-effects (FTC compliance notification firing on Accept, unread badge
+     updates, decline-toast undo window) still go through WorkspaceState —
+     prompt 5 will replace those with optimistic SWR-mutate flows.
+
+     Until prompt 5: a mutation updates the local WorkspaceState invites copy,
+     but the page renders from `invites` below (the SWR cache + local merge).
+     We mirror local mutations into the rendered list via a memo so the UI
+     stays responsive without round-tripping the API. */
+  const ws = useWorkspaceState();
+  const { data: serverInvites } = useInvites({ status: "all" });
   const {
-    invites,
     declineToast,
     acceptInvite,
     declineInvite,
     undoLastDecline,
     toggleAcceptStep,
     acceptTopMatches,
-  } = useWorkspaceState();
+  } = ws;
+  const invites = useMemo(() => {
+    /* Local WorkspaceState is the source of truth for transient mutations
+       (accept just clicked, decline pending undo). Server data hydrates
+       any rows local state hasn't seen yet — typically empty until the
+       state provider seeds from server (prompt 5). */
+    if (!serverInvites) return ws.invites;
+    const localById = new Map(ws.invites.map((i) => [i.id, i]));
+    return serverInvites.map((s) => localById.get(s.id) ?? s);
+  }, [serverInvites, ws.invites]);
 
   const [batchAccepted, setBatchAccepted] = useState(false);
   const [batchConfirming, setBatchConfirming] = useState(false);
@@ -928,8 +947,7 @@ export default function InvitesPage() {
   const totalUpside = invites
     .filter((i) => i.status === "pending")
     .reduce(
-      (sum, i) =>
-        sum + (i.payoutTiers[i.payoutTiers.length - 1]?.amount ?? 0),
+      (sum, i) => sum + (i.payoutTiers[i.payoutTiers.length - 1]?.amount ?? 0),
       0,
     );
 
@@ -954,9 +972,7 @@ export default function InvitesPage() {
       i.matchScore < 90 &&
       (now == null || i.expiresAt - now >= 6 * 60 * 60 * 1000),
   );
-  const groupAccepted = filteredInvites.filter(
-    (i) => i.status === "accepted",
-  );
+  const groupAccepted = filteredInvites.filter((i) => i.status === "accepted");
 
   const renderRow = (invite: Invite) => (
     <InviteRow
