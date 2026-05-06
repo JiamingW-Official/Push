@@ -8,6 +8,7 @@ import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
 import { CommandKProvider } from "@/components/search/CommandKProvider";
 import { WorkspaceStateProvider } from "@/lib/workspace/state";
 import { SWRProvider } from "@/lib/data/SWRProvider";
+import { ToastProvider } from "@/components/toast/Toaster";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -18,23 +19,25 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
 
   return (
     <SWRProvider>
-      <CommandKProvider>
-        <WorkspaceStateProvider>
-          <a href="#cw-main-content" className="dh-skip">
-            Skip to main content
-          </a>
-          <div className="dh-shell">
-            <UnifiedSidebar
-              role="creator"
-              userInitial={initial}
-              userName={DEMO_CREATOR.name}
-            />
-            <main id="cw-main-content" className="dh-main">
-              {children}
-            </main>
-          </div>
-        </WorkspaceStateProvider>
-      </CommandKProvider>
+      <ToastProvider>
+        <CommandKProvider>
+          <WorkspaceStateProvider>
+            <a href="#cw-main-content" className="dh-skip">
+              Skip to main content
+            </a>
+            <div className="dh-shell">
+              <UnifiedSidebar
+                role="creator"
+                userInitial={initial}
+                userName={DEMO_CREATOR.name}
+              />
+              <main id="cw-main-content" className="dh-main">
+                {children}
+              </main>
+            </div>
+          </WorkspaceStateProvider>
+        </CommandKProvider>
+      </ToastProvider>
     </SWRProvider>
   );
 }
