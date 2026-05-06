@@ -6,8 +6,7 @@
 .set-hub {
   padding: 80px 10vw 120px;
   margin: 0 auto;
-  background-image: linear-gradient(180deg, var(--surface-2, #f5f3ee) 0%, transparent 360px);
-  background-repeat: no-repeat;
+  background: var(--snow, #fff);
 }
 
 .set-hero {
