@@ -124,6 +124,45 @@ export function subscribeNotifications(
   return () => unsubscribe(ch);
 }
 
+type MessageEvent = {
+  id: string;
+  thread_id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+};
+
+/**
+ * Subscribe to message inserts on threads where the creator is a
+ * participant. Used by /creator/inbox to bump threads to the top of the
+ * list and animate-in new messages in the active thread.
+ *
+ * Note: Postgres-changes filter can only target a single column. Threads
+ * with multi-participant membership require a server-side filter via a
+ * PostgreSQL function or RLS predicate. For demo we listen to ALL message
+ * inserts and let the client filter — fine at low volume.
+ */
+export function subscribeMessages(
+  creatorId: string,
+  onMessage: (row: MessageEvent) => void,
+): Unsubscribe {
+  if (!creatorId) return () => {};
+  const ch = getClient()
+    .channel(`messages:${creatorId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages",
+      },
+      (payload) => onMessage(payload.new as MessageEvent),
+    )
+    .subscribe();
+
+  return () => unsubscribe(ch);
+}
+
 function unsubscribe(ch: RealtimeChannel) {
   try {
     void ch.unsubscribe();

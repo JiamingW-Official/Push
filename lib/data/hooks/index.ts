@@ -15,3 +15,4 @@ export { useInvitesLive } from "./useInvitesLive";
 export { useNotifications } from "./useNotifications";
 export { useHistory } from "./useHistory";
 export type { HistoryRow } from "./useHistory";
+export { useInbox } from "./useInbox";
