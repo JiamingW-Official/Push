@@ -17,12 +17,37 @@ export type CommandItem = {
 /* The 14 canonical creator routes (audit § P1-6 IA cleanup) plus the
    9 settings sub-cells. cmdk's fuzzy search ranks by character overlap. */
 export const STATIC_PAGES: CommandItem[] = [
+  // ── 7-domain hubs (audit § 3.1) — top of the search index ──
   {
     id: "today",
     group: "Pages",
     label: "Today",
     hint: "Daily briefing",
     href: "/creator/today",
+  },
+  {
+    id: "work",
+    group: "Pages",
+    label: "Work",
+    hint: "Pipeline · timeline · drafts · active gigs",
+    href: "/creator/work",
+    keywords: ["pipeline", "drafts", "active", "kanban"],
+  },
+  {
+    id: "comms",
+    group: "Pages",
+    label: "Comms",
+    hint: "Messages · system · disputes · digest",
+    href: "/creator/comms",
+    keywords: ["messages", "inbox", "notifications", "disputes"],
+  },
+  {
+    id: "me",
+    group: "Pages",
+    label: "Me",
+    hint: "Profile · tier · rank · portfolio · settings",
+    href: "/creator/me",
+    keywords: ["identity", "profile", "tier", "leaderboard", "portfolio"],
   },
   {
     id: "gigs-invites",

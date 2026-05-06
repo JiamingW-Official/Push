@@ -1,0 +1,177 @@
+/* ============================================================
+   /creator/work — WORK hub. v12.2. Bento via shared primitives.
+   ============================================================ */
+
+.work-hub {
+  padding: 64px 10vw 96px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.work-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+  max-width: 720px;
+}
+
+.work-hero__eyebrow {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.work-hero__title {
+  font-family: "Magvix", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.022em;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.work-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--graphite, #3a3835);
+  margin: 8px 0 0;
+}
+
+.work-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .work-bento { grid-template-columns: 1fr; gap: 14px; }
+}
+
+/* ── Pipeline kanban row ──────────────────────────────────── */
+
+.work-pipeline-row {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .work-pipeline-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .work-pipeline-divider { display: none; }
+}
+
+.work-pipeline-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background: var(--surface-2, #f5f3ee);
+  border-radius: 12px;
+}
+
+.work-pipeline-cell__count {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-pipeline-cell__label {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+}
+
+.work-pipeline-divider {
+  text-align: center;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 18px;
+  color: var(--ink-5, #888);
+  font-weight: 400;
+}
+
+/* ── Timeline list ────────────────────────────────────────── */
+
+.work-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.work-timeline-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.work-timeline-row__text {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Generic list rows (calendar, drafts, etc.) ───────────── */
+
+.work-row-status {
+  display: inline-flex;
+  margin-top: 6px;
+}
+
+.work-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.work-list-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.work-list-row__date {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+}
+
+.work-list-row__text {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
