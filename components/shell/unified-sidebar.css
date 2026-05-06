@@ -15,7 +15,7 @@
 
 :root {
   --us-w:           96px;   /* rail width */
-  --us-tile:        40px;   /* icon tile */
+  --us-tile:        32px;   /* icon tile */
   --us-icon:        22px;   /* icon glyph */
   --us-item-inset:  10px;   /* horizontal inset of pill from rail edge */
   --us-item-gap:    6px;    /* between items */
@@ -99,7 +99,7 @@
   position: relative;
   width: calc(100% - 2 * var(--us-item-inset));
   margin: 0 auto;
-  padding: 6px 0 8px;
+  padding: 6px 0 12px;
   border-radius: var(--us-radius);
   text-decoration: none;
   color: var(--ink-3, #61605c);
@@ -166,13 +166,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 0px;
   width: 100%;
 }
 
-/* ICON — 40×40 tile, glyph centered */
+/* ICON — 32×32 tile, glyph centered */
 .us-item__icon {
-  position: relative;
   width: var(--us-tile);
   height: var(--us-tile);
   display: flex;
@@ -192,16 +191,16 @@
   opacity: 1;
 }
 
-/* NAV LABEL — Open Sans uppercase, minimum 12px */
+/* NAV LABEL — Open Sans lowercase, product register */
 .us-item__label {
   font-family: var(--font-body);
   font-size: var(--us-cap-size);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
   color: inherit;
   white-space: nowrap;
-  line-height: 1;
+  line-height: 1.3;
   max-width: 68px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -294,8 +293,8 @@
 
 .us-badge {
   position: absolute;
-  top: -2px;
-  right: 2px;
+  top: 4px;
+  right: 4px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
