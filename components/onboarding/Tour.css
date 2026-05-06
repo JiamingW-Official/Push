@@ -1,0 +1,148 @@
+/* ============================================================
+   Onboarding tour — fullscreen overlay with spotlight cutout.
+   v12.2 tokens, prefers-reduced-motion compliant.
+   ============================================================ */
+
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  pointer-events: none;
+  background: rgba(20, 20, 20, 0.55);
+  animation: tour-fade 240ms ease-out;
+}
+
+@keyframes tour-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tour__spotlight {
+  position: fixed;
+  pointer-events: auto;
+  border-radius: 12px;
+  /* The cutout is achieved by giving the spotlight an opaque "hole"
+     using mix-blend-mode + a transparent fill. Simpler approach: the
+     overlay is dark, the spotlight is a clear rounded rect with a
+     bright outer shadow. Together they outline the target. */
+  background: transparent;
+  box-shadow:
+    0 0 0 9999px rgba(20, 20, 20, 0.55),
+    0 0 0 3px rgba(255, 255, 255, 0.85),
+    0 0 30px rgba(255, 255, 255, 0.40);
+  transition: all 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tour__tooltip {
+  position: fixed;
+  pointer-events: auto;
+  width: 320px;
+  background: rgba(255, 255, 255, 0.98);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(0, 0, 0, 0.10);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.20),
+    0 24px 48px rgba(0, 0, 0, 0.20);
+  animation: tour-tip-in 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tour-tip-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tour__step {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--ink-4, #61605c);
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.tour__title {
+  font-family: "Magvix", Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  line-height: 1.1;
+  color: var(--ink, #111);
+  margin: 0 0 8px;
+}
+
+.tour__body {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--graphite, #3a3835);
+  margin: 0 0 16px;
+}
+
+.tour__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.tour__btn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tour__btn--skip {
+  background: transparent;
+  border: 1px solid var(--ink, #111);
+  color: var(--ink, #111);
+}
+
+.tour__btn--skip:hover {
+  transform: translate(2px, 2px);
+}
+
+.tour__btn--next {
+  background: var(--brand-red, #c1121f);
+  border: 1px solid var(--brand-red, #c1121f);
+  color: var(--snow, #fff);
+}
+
+.tour__btn--next:hover {
+  transform: translate(2px, 2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour {
+    animation: none;
+  }
+  .tour__spotlight {
+    transition: none;
+  }
+  .tour__tooltip {
+    animation: none;
+  }
+  .tour__btn {
+    transition: none;
+  }
+  .tour__btn:hover {
+    transform: none;
+  }
+}
