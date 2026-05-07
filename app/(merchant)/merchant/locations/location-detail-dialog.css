@@ -1,0 +1,497 @@
+/* Location detail dialog — Push v12 Product UI register
+ * Apple-style sheet. Mirrors applicant-detail-dialog patterns.
+ */
+
+.ldd-backdrop {
+  align-items: center;
+  animation: ldd-backdrop-in 240ms var(--spring) both;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: var(--scrim);
+  display: grid;
+  inset: 0;
+  justify-items: center;
+  padding: var(--space-3);
+  place-items: center;
+  position: fixed;
+  z-index: 200;
+}
+
+.ldd-dialog {
+  animation: ldd-dialog-in 280ms var(--spring) both;
+  background: var(--snow);
+  border-radius: var(--r-3xl);
+  box-shadow: var(--shadow-3);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  max-height: calc(100svh - var(--space-6));
+  overflow: hidden;
+  position: relative;
+  width: min(100%, 720px);
+  --ldd-accent-color: var(--success);
+}
+
+.ldd-dialog--open {
+  --ldd-accent-color: var(--success);
+}
+
+.ldd-dialog--closed {
+  --ldd-accent-color: var(--brand-red);
+}
+
+.ldd-dialog::before {
+  background: var(--ldd-accent-color);
+  content: '';
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.ldd-close {
+  align-items: center;
+  background: var(--surface-3);
+  border: 0;
+  border-radius: var(--r-full);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  position: absolute;
+  right: var(--space-3);
+  top: var(--space-3);
+  transition: transform 180ms var(--spring), background 180ms var(--spring);
+  width: 32px;
+  z-index: 1;
+}
+
+.ldd-close svg {
+  height: 18px;
+  width: 18px;
+}
+
+.ldd-close:hover {
+  background: var(--mist);
+  transform: translate(1px, 1px);
+}
+
+.ldd-close:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.ldd-close:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.ldd-scroll-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-5) var(--space-3);
+}
+
+/* ── Hero block ─────────────────────────────────────────────────────── */
+.ldd-hero {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 120px 1fr;
+}
+
+.ldd-image {
+  align-items: center;
+  background: var(--surface-3);
+  border-radius: var(--r-md);
+  color: var(--ink-3);
+  display: inline-flex;
+  flex: 0 0 120px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  height: 120px;
+  justify-content: center;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  width: 120px;
+}
+
+.ldd-image img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.ldd-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ldd-status-eyebrow {
+  align-items: center;
+  color: var(--ldd-accent-color);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  gap: 6px;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.ldd-status-eyebrow::before {
+  background: currentColor;
+  border-radius: var(--r-full);
+  content: '';
+  display: block;
+  height: 8px;
+  width: 8px;
+}
+
+.ldd-name {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.ldd-address {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.ldd-contact {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ── Sections ───────────────────────────────────────────────────────── */
+.ldd-section {
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+}
+
+.ldd-eyebrow {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Stats 4-grid */
+.ldd-stats {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ldd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ldd-stat-num {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.ldd-stat-sub {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Active campaign block */
+.ldd-campaign-row {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.ldd-campaign-title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+  min-width: 0;
+}
+
+.ldd-mini-pill {
+  align-items: center;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  gap: 6px;
+  letter-spacing: 0.12em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ldd-mini-pill::before {
+  background: currentColor;
+  border-radius: var(--r-full);
+  content: '';
+  display: block;
+  height: 6px;
+  width: 6px;
+}
+
+.ldd-mini-pill--active {
+  background: var(--success);
+  color: var(--snow);
+}
+
+.ldd-mini-pill--paused {
+  background: var(--warning);
+  color: var(--ink);
+}
+
+.ldd-mini-pill--closed {
+  background: var(--brand-red);
+  color: var(--snow);
+}
+
+/* QR codes list */
+.ldd-qr-list,
+.ldd-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ldd-qr-row {
+  align-items: center;
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: 8px 1fr auto;
+  padding: 6px 0;
+}
+
+.ldd-qr-dot {
+  background: var(--ink-5);
+  border-radius: var(--r-full);
+  display: block;
+  height: 8px;
+  width: 8px;
+}
+
+.ldd-qr-dot--active {
+  background: var(--success);
+}
+
+.ldd-qr-label {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ldd-qr-stats {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Recent campaigns history */
+.ldd-history-row {
+  align-items: center;
+  border-bottom: 1px solid var(--hairline);
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: 1fr auto;
+  padding: var(--space-1) 0;
+}
+
+.ldd-history-row:last-child {
+  border-bottom: 0;
+}
+
+.ldd-history-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ldd-history-title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.ldd-history-period {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.ldd-history-revenue {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ── Action bar ─────────────────────────────────────────────────────── */
+.ldd-actions {
+  align-items: center;
+  background: var(--snow);
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding: var(--space-3) var(--space-5);
+}
+
+.ldd-action-primary,
+.ldd-action-secondary {
+  flex: 0 0 auto;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  min-width: 120px;
+}
+
+.ldd-action-primary {
+  text-decoration: none;
+}
+
+/* Animations */
+@keyframes ldd-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ldd-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .ldd-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .ldd-dialog {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-height: 92svh;
+    width: 100%;
+  }
+
+  .ldd-scroll-area {
+    padding: var(--space-4) var(--space-3) var(--space-2);
+  }
+
+  .ldd-hero {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .ldd-image {
+    flex-basis: 80px;
+    font-size: 24px;
+    height: 80px;
+    width: 80px;
+  }
+
+  .ldd-name {
+    font-size: 22px;
+  }
+
+  .ldd-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ldd-actions {
+    flex-direction: column-reverse;
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+
+  .ldd-action-primary,
+  .ldd-action-secondary {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ldd-backdrop,
+  .ldd-dialog {
+    animation: none;
+  }
+}

@@ -1,0 +1,105 @@
+/* New-location form — Push v12 Product UI register
+ * White card surface, --shadow-2 elevation, no border, 8px atomic grid.
+ * Reuses --snow / --ink / --ink-3 / --hairline tokens only.
+ */
+
+.newloc-form {
+  background: var(--snow);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.newloc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-3);
+}
+
+.newloc-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.newloc-field--full {
+  grid-column: 1 / -1;
+}
+
+.newloc-label {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.newloc-input {
+  background: var(--snow);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 12px 16px;
+  transition: border-color 180ms var(--spring);
+  width: 100%;
+}
+
+.newloc-input:hover {
+  border-color: var(--hairline-2);
+}
+
+.newloc-input:focus {
+  border-color: var(--ink);
+  outline: 2px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  outline-offset: 0;
+}
+
+.newloc-textarea {
+  font-family: var(--font-mono);
+  resize: vertical;
+}
+
+.newloc-footer {
+  align-items: center;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: space-between;
+  padding-top: var(--space-3);
+}
+
+.newloc-footnote {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  margin: 0;
+  max-width: 320px;
+}
+
+.newloc-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .newloc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .newloc-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .newloc-actions {
+    flex-direction: column-reverse;
+  }
+}
