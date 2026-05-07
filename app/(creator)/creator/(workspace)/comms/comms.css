@@ -319,3 +319,59 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .comms-hub button:not([class*="icon-only"]),
+  .comms-hub a[role="button"],
+  .comms-hub [role="button"],
+  .comms-hub [class*="msg-row"][role="button"] {
+    min-height: 44px;
+  }
+  .comms-hub button[class*="icon-only"],
+  .comms-hub [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Sender / subject single-line ellipsis */
+  .comms-hub [class*="thread-title"],
+  .comms-hub [class*="thread-subject"],
+  .comms-hub [class*="sender-name"],
+  .comms-hub [class*="participant-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Preview body 2-line clamp */
+  .comms-hub [class*="thread-preview"],
+  .comms-hub [class*="message-preview"],
+  .comms-hub [class*="last-message"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* URLs in messages wrap rather than overflow */
+  .comms-hub [class*="-url"],
+  .comms-hub [class*="message-body"] a,
+  .comms-hub code {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Composer respects safe area */
+  .comms-hub [class*="composer"][class*="sticky"],
+  .comms-hub [class*="composer-bar"] {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .comms-hub {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

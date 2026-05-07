@@ -1297,3 +1297,51 @@
   color: var(--ink-3);
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────
+   Touch targets, text overflow, modal sizing, safe-area insets. */
+
+@media (max-width: 767px) {
+  .ap-page button:not([class*="icon-only"]),
+  .ap-page a[role="button"],
+  .ap-page [role="button"],
+  .ap-page [class*="applicant-row"][role="button"] {
+    min-height: 44px;
+  }
+  .ap-page button[class*="icon-only"],
+  .ap-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long applicant handle / campaign name ellipsis */
+  .ap-page [class*="creator-handle"],
+  .ap-page [class*="creator-name"],
+  .ap-page [class*="campaign-name"],
+  .ap-page [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Multi-line clamp for application messages */
+  .ap-page [class*="application-message"],
+  .ap-page [class*="pitch-text"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ap-page [class*="-url"],
+  .ap-page [class*="-mono"],
+  .ap-page code {
+    word-break: break-all;
+  }
+
+  .ap-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

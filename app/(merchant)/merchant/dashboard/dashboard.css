@@ -1168,3 +1168,53 @@
   }
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────
+   Touch targets, text overflow, modal sizing, safe-area insets.
+   Targets only the merchant dashboard surface. Wave 1-9 untouched. */
+
+@media (max-width: 767px) {
+  /* Touch target minimum — buttons / clickable cards / nav items */
+  .db-dashboard-page button:not([class*="icon-only"]),
+  .db-dashboard-page a[role="button"],
+  .db-dashboard-page [role="button"],
+  .db-dashboard-page [class*="kpi-card"],
+  .db-dashboard-page [class*="bento-tile"][role="link"] {
+    min-height: 44px;
+  }
+  .db-dashboard-page button[class*="icon-only"],
+  .db-dashboard-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long campaign / venue / thread titles ellipsis on single-line previews */
+  .db-dashboard-page [class*="campaign-name"],
+  .db-dashboard-page [class*="venue-name"],
+  .db-dashboard-page [class*="merchant-name"],
+  .db-dashboard-page [class*="thread-preview"],
+  .db-dashboard-page [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* URLs / IDs / monospace fields wrap */
+  .db-dashboard-page [class*="-url"],
+  .db-dashboard-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
+  .db-dashboard-page code,
+  .db-dashboard-page [class*="-mono"] {
+    word-break: break-all;
+  }
+
+  /* Prevent rogue horizontal scroll from negative-margin escapes */
+  .db-dashboard-page {
+    overflow-x: hidden;
+  }
+
+  /* Safe-area inset for notched devices */
+  .db-dashboard-page {
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

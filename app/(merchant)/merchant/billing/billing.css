@@ -1038,3 +1038,43 @@
   color: var(--ink-3);
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .bill-page button:not([class*="icon-only"]),
+  .bill-page a[role="button"],
+  .bill-page [role="button"] {
+    min-height: 44px;
+  }
+  .bill-page button[class*="icon-only"],
+  .bill-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long invoice descriptions ellipsis on rows */
+  .bill-page [class*="invoice-title"],
+  .bill-page [class*="invoice-name"],
+  .bill-page [class*="line-item-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Receipt URLs / hosted invoice URLs / payment intent IDs wrap */
+  .bill-page [class*="-url"],
+  .bill-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
+  .bill-page [class*="-mono"],
+  .bill-page [class*="invoice-description"],
+  .bill-page code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .bill-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

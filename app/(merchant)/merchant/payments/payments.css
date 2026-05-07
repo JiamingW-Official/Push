@@ -1289,3 +1289,43 @@
   color: var(--ink-3);
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .pay-page button:not([class*="icon-only"]),
+  .pay-page a[role="button"],
+  .pay-page [role="button"] {
+    min-height: 44px;
+  }
+  .pay-page button[class*="icon-only"],
+  .pay-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long payment descriptions / payee labels ellipsis */
+  .pay-page [class*="payment-title"],
+  .pay-page [class*="payee-name"],
+  .pay-page [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Stripe IDs / transaction IDs / hosted URLs wrap */
+  .pay-page [class*="-url"],
+  .pay-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
+  .pay-page [class*="-mono"],
+  .pay-page [class*="payment-description"],
+  .pay-page code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .pay-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

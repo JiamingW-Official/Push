@@ -486,3 +486,31 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 10 — Creator Deep (2026-05-07)
+   APPENDED ONLY. Pulls /creator/gigs/history into the same readable type
+   ladder as the rest of the creator workspace. The atmospheric backdrop
+   + .gigs-pane glass treatment + 4-state hero accent are owned by the
+   parent gigs.css (also appended); this file only ladders typography on
+   the history-specific sub-elements.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.hist-pulse__label,
+.hist-row__brand-label,
+.hist-detail__label {
+  letter-spacing: 0.08em;
+}
+
+.hist-row__title,
+.hist-detail__title {
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
+
+.hist-detail p,
+.hist-row p,
+.hist-empty p {
+  max-width: 72ch;
+  line-height: 1.6;
+}

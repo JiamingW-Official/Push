@@ -2021,3 +2021,59 @@
 .msg-page .ms-page-header-subtitle {
   color: var(--ink-3);
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .msg-page button:not([class*="icon-only"]),
+  .msg-page a[role="button"],
+  .msg-page [role="button"],
+  .msg-page [class*="thread-row"][role="button"] {
+    min-height: 44px;
+  }
+  .msg-page button[class*="icon-only"],
+  .msg-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Thread title / sender name single-line ellipsis */
+  .msg-page [class*="thread-title"],
+  .msg-page [class*="thread-subject"],
+  .msg-page [class*="sender-name"],
+  .msg-page [class*="participant-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Thread preview text 2-line clamp */
+  .msg-page [class*="thread-preview"],
+  .msg-page [class*="message-preview"],
+  .msg-page [class*="last-message"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* URLs in messages wrap rather than overflow */
+  .msg-page [class*="-url"],
+  .msg-page [class*="message-body"] a,
+  .msg-page code {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Sticky composer pinned with safe-area */
+  .msg-page [class*="composer"][class*="sticky"],
+  .msg-page [class*="composer-bar"] {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .msg-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

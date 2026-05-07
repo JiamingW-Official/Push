@@ -235,3 +235,56 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 10 — Creator Deep (2026-05-07)
+   APPENDED ONLY. Aligns /creator/settings/notifications to the same type
+   ladder + horizontal breathing as the rest of the creator workspace.
+   .notif-prefs uses its own wrapper (not .set-sub), so Wave 9 typography
+   + colorful divider must be re-threaded locally.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.notif-prefs p,
+.notif-section__head__sub,
+.notif-pref-row__body {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.notif-prefs .set-sub__title {
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  position: relative;
+  padding-bottom: 12px;
+}
+.notif-prefs .set-sub__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: min(320px, 60%);
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .notif-prefs {
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .notif-prefs {
+    max-width: 1080px;
+  }
+}

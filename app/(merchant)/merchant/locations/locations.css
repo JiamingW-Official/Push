@@ -1510,3 +1510,45 @@
   color: var(--ink-3);
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .locations-page button:not([class*="icon-only"]),
+  .locations-page a[role="button"],
+  .locations-page [role="button"],
+  .location-detail-page button:not([class*="icon-only"]),
+  .location-detail-page a[role="button"] {
+    min-height: 44px;
+  }
+  .locations-page button[class*="icon-only"],
+  .locations-page [class*="icon-btn"],
+  .location-detail-page button[class*="icon-only"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Venue / address strings ellipsis on cards */
+  .locations-page [class*="venue-name"],
+  .locations-page [class*="location-name"],
+  .locations-page [class*="address-line"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Long full address / map URL wrap */
+  .locations-page [class*="-url"],
+  .locations-page [class*="-mono"],
+  .location-detail-page [class*="-url"],
+  .location-detail-page [class*="-mono"] {
+    word-break: break-all;
+  }
+
+  .locations-page,
+  .location-detail-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

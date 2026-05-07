@@ -850,3 +850,50 @@
   color: var(--ink-3);
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .qr-page button:not([class*="icon-only"]),
+  .qr-page a[role="button"],
+  .qr-page [role="button"] {
+    min-height: 44px;
+  }
+  .qr-page button[class*="icon-only"],
+  .qr-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long location / campaign labels ellipsis */
+  .qr-page [class*="location-name"],
+  .qr-page [class*="campaign-name"],
+  .qr-page [class*="qr-label"]:not([class*="grid"]):not([class*="page"]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* QR slug / id / public URL must wrap, not overflow */
+  .qr-page [class*="qr-slug"],
+  .qr-page [class*="qr-url"],
+  .qr-page [class*="public-url"],
+  .qr-page [class*="-mono"],
+  .qr-page code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Modal viewport constraint */
+  .qr-page [class*="modal"]:not([class*="overlay"]):not([class*="modal-backdrop"]) {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  .qr-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

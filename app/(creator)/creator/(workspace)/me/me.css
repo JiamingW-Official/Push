@@ -612,3 +612,64 @@
       0 32px 80px rgba(60, 45, 30, 0.06);
   }
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .me-hub button:not([class*="icon-only"]),
+  .me-hub a[role="button"],
+  .me-hub [role="button"] {
+    min-height: 44px;
+  }
+  .me-hub button[class*="icon-only"],
+  .me-hub [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Form inputs minimum touch height */
+  .me-hub input:not([type="checkbox"]):not([type="radio"]),
+  .me-hub select,
+  .me-hub textarea {
+    min-height: 44px;
+  }
+
+  /* Display name / handle ellipsis on rows */
+  .me-hub [class*="display-name"],
+  .me-hub [class*="creator-handle"],
+  .me-hub [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Long bio — 4-line clamp on summary cards */
+  .me-hub [class*="bio-text"],
+  .me-hub [class*="profile-bio"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Public profile URL / referral link wrap */
+  .me-hub [class*="-url"],
+  .me-hub [class*="-mono"],
+  .me-hub [class*="referral-link"],
+  .me-hub code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Sticky save bar — keep above iOS home indicator */
+  .me-hub [class*="save-bar"][class*="sticky"],
+  .me-hub [class*="save-bar"][class*="fixed"] {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .me-hub {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

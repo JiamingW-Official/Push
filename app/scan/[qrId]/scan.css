@@ -271,3 +271,110 @@
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Scan Landing Readability (2026-05-07)
+   APPENDED ONLY. Adds a marketing-tier readability layer on top of the
+   v11 Ticket Panel design — body text leading, eyebrow tracking, and
+   subtle letter-spacing on metadata. The Ticket Panel itself (GA Orange,
+   grommets, perforation, Magvix headline) is NOT touched — Design.md § 9
+   keeps it flat / no-shadow / token-color.
+   Only properties NOT set inline can be overridden via class CSS without
+   !important. We target letter-spacing + max-width where inline styles
+   leave them unset.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* FTC disclosure banner — uppercase #ad tag already gets 0.06em inline;
+   apply a comfortable tracking floor to the body sentence (no inline
+   letter-spacing → class wins). */
+.scan-page [role="note"] span:nth-of-type(2) {
+  letter-spacing: 0.01em;
+}
+
+/* Body paragraphs inside scan landing get 72ch — line-height is set
+   inline on most, so we only constrain horizontal measure. */
+.scan-page p {
+  max-width: 72ch;
+}
+
+/* Caption-tier 12px metadata — no inline letter-spacing → class wins */
+.scan-page p[style*="font-size: 12px"],
+.scan-page p[style*='font-size: "12px"'] {
+  letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Scan Verify Readability (2026-05-07)
+   APPENDED ONLY. Same readability principles applied to the receipt /
+   verify upload page. Countdown card untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.scan-verify-page p {
+  max-width: 72ch;
+}
+
+.scan-verify-page p[style*="font-size: 12px"],
+.scan-verify-page p[style*="font-size: 11px"] {
+  letter-spacing: 0.02em;
+}
+
+/* Section labels — small uppercase eyebrows (no inline letter-spacing) */
+.scan-verify-page p[style*="text-transform: uppercase"] {
+  letter-spacing: 0.06em;
+}
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+/* /scan/[qrId] is the public landing — a customer reaches it from a poster
+   QR scan, so it's almost always opened on a phone. Wave 5 handled the
+   responsive sweep; Wave 10 handles the iOS-specific edge cases.
+
+   Note: scan.css does not have a single page-root class — its three states
+   each use their own wrapper. We scope to all three. */
+
+@media (max-width: 767px) {
+  /* Touch targets */
+  .scan-loading-wrap button,
+  .scan-loading-wrap a[role="button"],
+  .scan-error-wrap button,
+  .scan-error-wrap a[role="button"],
+  .scan-error-card button,
+  .scan-error-card a[role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long campaign / merchant labels ellipsis */
+  .scan-error-card [class*="campaign-name"],
+  .scan-error-card [class*="merchant-name"],
+  .scan-error-card [class*="venue-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* QR slug / id / debug URLs wrap */
+  .scan-error-card [class*="-url"],
+  .scan-error-card [class*="-id"],
+  .scan-error-card [class*="-mono"],
+  .scan-error-card code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* iPhone notch + home indicator: pad inside loading + error containers */
+  .scan-loading-wrap,
+  .scan-error-wrap {
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  /* Prevent any rogue horizontal scroll on a poster QR landing */
+  .scan-loading-wrap,
+  .scan-error-wrap {
+    overflow-x: hidden;
+  }
+}

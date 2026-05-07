@@ -161,7 +161,7 @@ export default function ScanLandingPage() {
   const heroExhausted = heroLeft === 0;
 
   return (
-    <div style={st.page}>
+    <div className="scan-page" style={st.page}>
       {/* ── FTC §255 disclosure ── */}
       <div style={st.ftcBanner} role="note" aria-label="Ad disclosure">
         <span style={st.ftcTag}>#ad</span>

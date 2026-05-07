@@ -1182,3 +1182,65 @@
 .hp-root [class*="empty-state-description"] {
   color: var(--ink-3);
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  /* Touch target minimum on hero / panel CTAs */
+  .hp-root button:not([class*="icon-only"]),
+  .hp-root a[role="button"],
+  .hp-root [role="button"],
+  .hp-root .hp-cta,
+  .hp-root [class*="-cta"] {
+    min-height: 44px;
+  }
+  .hp-root button[class*="icon-only"],
+  .hp-root [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* GA tri-color nav pills — already tappable, just enforce minimum */
+  .hp-root nav a,
+  .hp-root nav button {
+    min-height: 44px;
+  }
+
+  /* Long campaign / case-study titles ellipsis on cards */
+  .hp-root [class*="case-title"],
+  .hp-root [class*="card-title"],
+  .hp-root [class*="venue-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Quote / testimonial 4-line clamp on tight cards */
+  .hp-root [class*="quote-text"],
+  .hp-root [class*="testimonial-body"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Long URLs in footer / changelog wrap */
+  .hp-root [class*="-url"],
+  .hp-root [class*="-mono"],
+  .hp-root code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Prevent rogue horizontal scroll from hero negative-margin escape */
+  .hp-root,
+  .hp-panels {
+    overflow-x: hidden;
+  }
+
+  /* Safe-area inset on giant footer wordmark panel */
+  .hp-root [class*="footer"] {
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

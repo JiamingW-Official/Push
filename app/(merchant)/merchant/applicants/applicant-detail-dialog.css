@@ -570,3 +570,34 @@
     transition: none !important;
   }
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────
+   Modal viewport constraint + 44×44 close target. */
+
+@media (max-width: 767px) {
+  .apd-dialog {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .apd-dialog [class*="close"],
+  .apd-dialog button[aria-label*="close" i],
+  .apd-dialog button[aria-label*="dismiss" i] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .apd-dialog button:not([class*="icon-only"]) {
+    min-height: 44px;
+  }
+  .apd-dialog [class*="creator-handle"],
+  .apd-dialog [class*="creator-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  .apd-dialog [class*="-url"],
+  .apd-dialog code {
+    word-break: break-all;
+  }
+}

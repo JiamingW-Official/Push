@@ -931,3 +931,55 @@
 .redeem-page p + p {
   margin-top: 12px;
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .redeem-page button:not([class*="icon-only"]),
+  .redeem-page a[role="button"],
+  .redeem-page [role="button"] {
+    min-height: 44px;
+  }
+  .redeem-page button[class*="icon-only"],
+  .redeem-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long campaign / customer names ellipsis */
+  .redeem-page [class*="campaign-name"],
+  .redeem-page [class*="customer-name"],
+  .redeem-page [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* QR slug / redemption code wrap (cashier reads it on phone) */
+  .redeem-page [class*="qr-slug"],
+  .redeem-page [class*="redemption-code"],
+  .redeem-page [class*="-mono"],
+  .redeem-page code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Confirm modal / receipt modal viewport constraint */
+  .redeem-page [class*="modal"]:not([class*="overlay"]):not([class*="modal-backdrop"]) {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  /* Bottom-fixed CTA respects safe area on iPhone */
+  .redeem-page [class*="cta-bar"][class*="fixed"],
+  .redeem-page [class*="bottom-bar"] {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .redeem-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

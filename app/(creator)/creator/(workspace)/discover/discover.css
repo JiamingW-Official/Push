@@ -2307,3 +2307,61 @@ body:has(.disc--split-mode) .dh-main {
       0 32px 80px rgba(60, 45, 30, 0.06);
   }
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .cw-page.disc button:not([class*="icon-only"]),
+  .cw-page.disc a[role="button"],
+  .cw-page.disc [role="button"],
+  .cw-page.disc [class*="card"][role="button"] {
+    min-height: 44px;
+  }
+  .cw-page.disc button[class*="icon-only"],
+  .cw-page.disc [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Filter pill chips — keep tappable */
+  .cw-page.disc [class*="chip"],
+  .cw-page.disc [class*="pill"] {
+    min-height: 36px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  /* Campaign card title / merchant ellipsis */
+  .cw-page.disc [class*="campaign-name"],
+  .cw-page.disc [class*="merchant-name"],
+  .cw-page.disc [class*="venue-name"],
+  .cw-page.disc [class*="card-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Brief 3-line clamp inside discovery cards */
+  .cw-page.disc [class*="brief-text"],
+  .cw-page.disc [class*="card-body"] p,
+  .cw-page.disc [class*="card-description"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Public campaign URL wrap */
+  .cw-page.disc [class*="-url"],
+  .cw-page.disc [class*="-mono"],
+  .cw-page.disc code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .cw-page.disc {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

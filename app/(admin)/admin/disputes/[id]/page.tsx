@@ -159,6 +159,7 @@ function DisputeDetail({ disputeId }: { disputeId: string }) {
 
   return (
     <div
+      className="disp-page disp-detail-page"
       style={{
         minHeight: "100vh",
         background: "var(--surface)",

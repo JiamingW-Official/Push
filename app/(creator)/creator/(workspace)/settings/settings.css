@@ -346,3 +346,185 @@
 .set-sub__cta:hover {
   transform: translate(2px, 2px);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 10 — Creator Deep (2026-05-07)
+   APPENDED ONLY. Pulls /creator/settings + every /creator/settings/*
+   sub-route into the same visual register as merchant dashboard +
+   creator today/money/leaderboard. The Liquid Glass on .set-cell already
+   exists above; this block adds:
+     · 5-layer atmospheric backdrop on the hub + sub-route shells
+     · Wave 9 typography (72ch measure, line-height 1.6, fluid title clamp)
+     · Wave 9 vertical rhythm + horizontal breathing ladder
+     · Colorful section-divider underline below the sub-route title
+   No JSX changes. No new global tokens.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.set-hub,
+.set-sub {
+  /* Liquid Glass tokens scoped to settings — same values as merchant
+     dashboard / analytics / money hub. Cells already define their own
+     glass via existing rules above; this declares the tokens at the
+     route level so sub-route hero blocks can reuse them. */
+  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-hero: blur(32px) saturate(1.55);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+/* 5-layer atmospheric backdrop — only on the hub (route boundary).
+   Sub-routes already render against the .set-cell field of glass cards,
+   so they don't need their own backdrop ::before — they inherit the
+   visual continuity from the workspace shell. */
+.set-hub::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.set-hub > * { position: relative; z-index: 1; }
+
+/* ── Colorful section divider under sub-route titles ─────────────────
+   The .set-sub flow is intentionally minimal (back link → Magvix title →
+   body → CTA), but the title can feel orphaned without a chromatic
+   anchor. Same gradient signature as merchant dashboard / money hub. */
+.set-sub__title {
+  position: relative;
+  padding-bottom: 12px;
+}
+.set-sub__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: min(320px, 60%);
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* ── Wave 9 typography — readable measure + fluid scale ──────────── */
+
+.set-hub p,
+.set-hub [class*="hub-shell__"] p,
+.set-sub p,
+.set-sub__body {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.set-cell__body {
+  max-width: 38ch;     /* card body stays compact — same value as base */
+  line-height: 1.55;
+}
+
+.set-sub__body {
+  max-width: 64ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+}
+
+.set-sub__title {
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+}
+
+/* ── Wave 9 vertical rhythm — section breathing ladder ──────────── */
+
+@media (min-width: 1024px) {
+  .set-hub {
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+  .set-sub {
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+  .set-sub__back { margin-bottom: 24px; }
+  .set-sub__title { margin-bottom: 24px; }
+  .set-sub__body { margin-bottom: 32px; }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .set-hub {
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+  .set-sub {
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .set-sub {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+  .set-sub__back { margin-bottom: 16px; }
+  .set-sub__title { margin-bottom: 16px; }
+  .set-sub__body { margin-bottom: 24px; }
+}
+
+/* ── Wave 9 horizontal breathing — ultra-wide cap + 1440 polish ──── */
+
+@media (min-width: 1440px) {
+  .set-hub,
+  .set-sub {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1920px) {
+  .set-hub,
+  .set-sub {
+    max-width: 1480px;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .set-hub,
+  .set-sub {
+    max-width: 1600px;
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+/* ── Reduced motion / transparency fallbacks ─────────────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .set-hub::before {
+    display: none !important;
+  }
+}

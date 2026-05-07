@@ -1196,3 +1196,43 @@
   color: var(--ink-3);
 }
 
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .pv11-wrapper button:not([class*="icon-only"]),
+  .pv11-wrapper a[role="button"],
+  .pv11-wrapper [role="button"],
+  .pv11-wrapper [class*="-cta"] {
+    min-height: 44px;
+  }
+  .pv11-wrapper button[class*="icon-only"],
+  .pv11-wrapper [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Tier names on cards ellipsis */
+  .pv11-wrapper [class*="tier-name"],
+  .pv11-wrapper [class*="plan-name"],
+  .pv11-wrapper [class*="card-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Feature bullet lines wrap rather than overflow */
+  .pv11-wrapper [class*="feature-text"],
+  .pv11-wrapper [class*="bullet-text"] {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .pv11-wrapper {
+    overflow-x: hidden;
+  }
+  .pv11-wrapper [class*="footer"] {
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

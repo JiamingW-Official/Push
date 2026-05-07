@@ -488,3 +488,50 @@
       0 32px 80px rgba(60, 45, 30, 0.06);
   }
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .work-hub button:not([class*="icon-only"]),
+  .work-hub a[role="button"],
+  .work-hub [role="button"] {
+    min-height: 44px;
+  }
+  .work-hub button[class*="icon-only"],
+  .work-hub [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Pipeline campaign titles ellipsis */
+  .work-hub [class*="campaign-name"],
+  .work-hub [class*="merchant-name"],
+  .work-hub [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Brief / requirement 3-line clamp on bento tiles */
+  .work-hub [class*="brief-text"],
+  .work-hub [class*="requirements-text"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Submission URLs / IDs wrap */
+  .work-hub [class*="-url"],
+  .work-hub [class*="-mono"],
+  .work-hub code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .work-hub {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

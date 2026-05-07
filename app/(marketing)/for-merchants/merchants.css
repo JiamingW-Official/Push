@@ -1147,3 +1147,46 @@
       0 32px 80px rgba(60, 45, 30, 0.06);
   }
 }
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .mn-section-inner button:not([class*="icon-only"]),
+  .mn-section-inner a[role="button"],
+  .mn-section-inner [role="button"],
+  .mn-section-inner [class*="-cta"] {
+    min-height: 44px;
+  }
+  .mn-section-inner button[class*="icon-only"],
+  .mn-section-inner [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Card / quote titles ellipsis */
+  .mn-section-inner [class*="card-title"],
+  .mn-section-inner [class*="venue-name"],
+  .mn-section-inner [class*="merchant-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Testimonial body 4-line clamp */
+  .mn-section-inner [class*="quote-text"],
+  .mn-section-inner [class*="testimonial-body"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* URL / mono fields wrap */
+  .mn-section-inner [class*="-url"],
+  .mn-section-inner [class*="-mono"],
+  .mn-section-inner code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+}

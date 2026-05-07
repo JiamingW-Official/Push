@@ -200,6 +200,9 @@ export default function AdminPrivacyRequestsPage() {
                 <div
                   key={r.ticket_id}
                   className={`pr-row${r.overdue ? " pr-row--overdue" : ""}`}
+                  data-sla-critical={
+                    !r.overdue && days <= 7 ? "true" : undefined
+                  }
                 >
                   {/* Ticket ID */}
                   <div>
