@@ -48,7 +48,7 @@ export default function ActionQueue({
           body="No urgent replies, no expiring invites. Coast."
         />
       ) : (
-        <ul className="action-list" role="list">
+        <ul className="action-list anim-stagger" role="list">
           {actions.map((action) => (
             <li key={action.id}>
               <div className="action-card">

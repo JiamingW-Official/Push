@@ -676,6 +676,7 @@ interface PayoutMethodsTabProps {
   onSetDefault: (id: string) => void;
   onRemove: (id: string) => void;
   onAddClick: () => void;
+  onEdit: (method: PayoutMethod) => void;
 }
 
 function PayoutMethodsTab({
@@ -683,6 +684,7 @@ function PayoutMethodsTab({
   onSetDefault,
   onRemove,
   onAddClick,
+  onEdit,
 }: PayoutMethodsTabProps) {
   const STATUS_RANK: Record<PayoutMethod["status"], number> = {
     verified: 0,
@@ -754,7 +756,11 @@ function PayoutMethodsTab({
                   Make default
                 </button>
               )}
-              <button type="button" className="wallet-action-btn">
+              <button
+                type="button"
+                className="wallet-action-btn"
+                onClick={() => onEdit(m)}
+              >
                 Edit
               </button>
               {!m.isDefault && (
@@ -787,13 +793,15 @@ function PayoutMethodsTab({
 interface HistoryTabProps {
   withdrawals: Withdrawal[];
   methods: PayoutMethod[];
+  onRetry?: (withdrawalId: string) => void;
 }
 
-function HistoryTab({ withdrawals, methods }: HistoryTabProps) {
+function HistoryTab({ withdrawals, methods, onRetry }: HistoryTabProps) {
   const [filterMethod, setFilterMethod] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterYear, setFilterYear] = useState("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState<string | null>(null);
 
   const years = [...new Set(withdrawals.map((w) => w.date.slice(0, 4)))].sort(
     (a, b) => +b - +a,
@@ -918,8 +926,17 @@ function HistoryTab({ withdrawals, methods }: HistoryTabProps) {
                       <div className="wallet-failed-reason">
                         {w.failureReason}
                       </div>
-                      <button type="button" className="wallet-action-btn">
-                        Retry withdrawal
+                      <button
+                        type="button"
+                        className="wallet-action-btn"
+                        disabled={retrying === w.id}
+                        onClick={() => {
+                          setRetrying(w.id);
+                          onRetry?.(w.id);
+                          setTimeout(() => setRetrying(null), 2000);
+                        }}
+                      >
+                        {retrying === w.id ? "Retrying..." : "Retry withdrawal"}
                       </button>
                     </td>
                   </tr>
@@ -1138,6 +1155,19 @@ export default function WalletPage() {
     showToast("Method removed");
   }
 
+  function handleEdit(method: PayoutMethod) {
+    showToast(`Editing ${method.name} — feature coming soon`);
+  }
+
+  function handleRetry(withdrawalId: string) {
+    setWithdrawals((prev) =>
+      prev.map((w) =>
+        w.id === withdrawalId ? { ...w, status: "processing" } : w,
+      ),
+    );
+    showToast("Withdrawal retried — processing");
+  }
+
   function handleAddMethod(partial: Omit<PayoutMethod, "id" | "addedAt">) {
     const newMethod: PayoutMethod = {
       ...partial,
@@ -1216,10 +1246,15 @@ export default function WalletPage() {
             onSetDefault={handleSetDefault}
             onRemove={handleRemove}
             onAddClick={() => setShowAddMethod(true)}
+            onEdit={handleEdit}
           />
         )}
         {tab === "history" && (
-          <HistoryTab withdrawals={withdrawals} methods={methods} />
+          <HistoryTab
+            withdrawals={withdrawals}
+            methods={methods}
+            onRetry={handleRetry}
+          />
         )}
         {tab === "tax" && <TaxTab />}
       </div>

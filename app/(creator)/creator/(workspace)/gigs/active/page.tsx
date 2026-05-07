@@ -785,6 +785,8 @@ export default function ActiveGigsPage() {
   const now = useNow();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [phaseFilter, setPhaseFilter] = useState<"all" | Phase>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [view, setView] = useState<"list" | "board" | "calendar">("list");
 
   /* Merge SWR active list with local WorkspaceState mutations. Same
      pattern as /gigs/invites — server is the canonical list, local copies
@@ -825,13 +827,17 @@ export default function ActiveGigsPage() {
     0,
   );
 
-  const filtered = useMemo(
-    () =>
-      phaseFilter === "all"
-        ? gigsWithPhase
-        : gigsWithPhase.filter((g) => g._phase === phaseFilter),
-    [gigsWithPhase, phaseFilter],
-  );
+  const filtered = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    return gigsWithPhase
+      .filter((g) => phaseFilter === "all" || g._phase === phaseFilter)
+      .filter(
+        (g) =>
+          !q ||
+          g.brand?.toLowerCase().includes(q) ||
+          g.campaign?.toLowerCase().includes(q),
+      );
+  }, [gigsWithPhase, phaseFilter, searchQuery]);
 
   const groups = useMemo(() => {
     const order: Phase[] = ["shoot", "ready", "revise", "review", "prep"];
@@ -1051,6 +1057,8 @@ export default function ActiveGigsPage() {
           </span>
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Find an active campaign..."
             aria-label="Search active campaigns"
           />
@@ -1088,18 +1096,19 @@ export default function ActiveGigsPage() {
         </div>
 
         <div className="giv-view-toggle">
-          <button
-            type="button"
-            className="giv-view-toggle__btn giv-view-toggle__btn--active"
-          >
-            List
-          </button>
-          <button type="button" className="giv-view-toggle__btn">
-            Board
-          </button>
-          <button type="button" className="giv-view-toggle__btn">
-            Calendar
-          </button>
+          {(["list", "board", "calendar"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              className={
+                "giv-view-toggle__btn" +
+                (view === v ? " giv-view-toggle__btn--active" : "")
+              }
+              onClick={() => setView(v)}
+            >
+              {v.charAt(0).toUpperCase() + v.slice(1)}
+            </button>
+          ))}
         </div>
 
         <div />

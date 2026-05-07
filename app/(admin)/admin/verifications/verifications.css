@@ -958,3 +958,178 @@ a:focus-visible {
     padding: 12px 16px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 10 — Admin Uplift (Verifications) — 2026-05-07
+   Page-scoped via this verifications.css route module. Atmosphere comes
+   from the shared .adm-shell backdrop in admin.css. Page-specific accents:
+   – Liquid-glass on KPI tiles (rotating 4-color top accent)
+   – Liquid-glass on the verification row cards + slide-over panel
+   – Colorful divider on the page H1 (inline-styled in JSX, so we target
+     the specific markup pattern via .adm-shell h1 contiguous to .eyebrow)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.adm-shell {
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .vq-kpi-tile,
+  .vq-row,
+  .vq-panel,
+  .vq-id-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* Wave 9 typography — verifications page uses inline-styled h1, so we cap
+   only the long body strings (panel descriptions, empty states, applicant
+   info) and the eyebrow tracking. */
+.adm-shell .eyebrow,
+.adm-shell .vq-col-label,
+.adm-shell .vq-kpi-label {
+  letter-spacing: 0.08em;
+}
+.adm-shell .vq-empty-body,
+.adm-shell .vq-applicant-info,
+.adm-shell .vq-address-text,
+.adm-shell .vq-checklist-detail {
+  max-width: 72ch;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 1440px) {
+  .adm-shell .vq-content,
+  .adm-shell .vq-filters,
+  .adm-shell .vq-rows,
+  .adm-shell .vq-kpi-grid {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Liquid-glass KPI tiles with rotating 4-color top accent */
+.vq-kpi-grid > .vq-kpi-tile {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 16px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 320ms ease, background 320ms ease;
+}
+.vq-kpi-grid > .vq-kpi-tile::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  border-radius: 16px 16px 0 0;
+}
+.vq-kpi-grid > .vq-kpi-tile:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.vq-kpi-grid > .vq-kpi-tile:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+.vq-kpi-grid > .vq-kpi-tile:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
+.vq-kpi-grid > .vq-kpi-tile:nth-child(4)::before { background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45)); }
+.vq-kpi-grid > .vq-kpi-tile:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  background: var(--lg-bg-light);
+}
+
+/* Liquid-glass verification row cards */
+.vq-row {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-soft);
+          backdrop-filter: var(--lg-blur-soft);
+  border-radius: 14px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+}
+.vq-row:hover {
+  background: var(--lg-bg-light);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* Slide-over verification panel — heavier glass to read against the
+   atmospheric backdrop. */
+.vq-panel {
+  background: var(--lg-bg-light);
+  -webkit-backdrop-filter: blur(32px) saturate(1.55);
+          backdrop-filter: blur(32px) saturate(1.55);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* Colorful section divider — applied to any descendant H1 inside the
+   adm-shell when it sits next to a .eyebrow. Verifications uses inline
+   style for h1 so we anchor on adjacent siblings via :has(). */
+.adm-shell .eyebrow + h1,
+.adm-shell h1:has(+ p) {
+  position: relative;
+  padding-left: 24px;
+  padding-bottom: 12px;
+}
+.adm-shell .eyebrow + h1::before,
+.adm-shell h1:has(+ p)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 5px rgba(193, 18, 31, 0.10);
+}
+.adm-shell .eyebrow + h1::after,
+.adm-shell h1:has(+ p)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 60%;
+  max-width: 480px;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}

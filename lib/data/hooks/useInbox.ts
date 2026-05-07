@@ -26,6 +26,7 @@ export function useInbox(creatorId?: string) {
   const { data, error, isLoading, mutate } = useSWR<Thread[]>(swrKey, fetcher, {
     revalidateOnFocus: true,
     refreshInterval: 60_000,
+    revalidateOnReconnect: true,
   });
 
   useEffect(() => {

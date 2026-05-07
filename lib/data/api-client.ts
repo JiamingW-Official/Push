@@ -41,6 +41,9 @@ import {
   type ApplicationStatus,
 } from "./mock-applications";
 
+import { MOCK_MERCHANT_NOTIFICATIONS } from "./mock-notifications";
+import { MOCK_MERCHANT_PAYMENTS_HISTORY } from "./mock-payments";
+
 import {
   MOCK_QR_CODES,
   type QRCodeRecord,
@@ -205,8 +208,7 @@ async function exploreFn(filters: ExploreFilters = {}): Promise<ExploreResult> {
 //   apiBaseUrl() to build absolute URLs in SSR context, and cache:'no-store'
 //   to avoid Next 16's default fetch cache swallowing fresh data.
 const USE_MOCK =
-  typeof process !== "undefined" &&
-  process.env.NEXT_PUBLIC_USE_MOCK === "1";
+  typeof process !== "undefined" && process.env.NEXT_PUBLIC_USE_MOCK === "1";
 
 function apiBaseUrl(): string {
   if (typeof window !== "undefined") return "";
@@ -256,13 +258,18 @@ async function apiFetch<T>(
       ...options,
       headers,
     });
+    if (!res.ok) {
+      // Try to parse error body as JSON; fall back to HTTP status text so a
+      // non-JSON error page (e.g. Vercel 502 HTML) doesn't throw a misleading
+      // "Network error" before we even know the real status code.
+      let errMsg = `HTTP ${res.status}`;
+      try {
+        const e = await res.json();
+        errMsg = e.error ?? errMsg;
+      } catch {}
+      return { ok: false, error: errMsg, status: res.status };
+    }
     const json = await res.json();
-    if (!res.ok)
-      return {
-        ok: false,
-        error: json?.error ?? "Request failed",
-        status: res.status,
-      };
     return { ok: true, data: json as T };
   } catch (err) {
     return {
@@ -276,7 +283,9 @@ function mockOk<T>(data: T): ApiResult<T> {
   return { ok: true, data };
 }
 
-function qs(params: Record<string, string | number | boolean | null | undefined>): string {
+function qs(
+  params: Record<string, string | number | boolean | null | undefined>,
+): string {
   const search = new URLSearchParams();
 
   for (const [key, value] of Object.entries(params)) {
@@ -320,20 +329,21 @@ export type QRUpdateInput = {
 
 export type CampaignCreatePayload = Partial<
   Pick<
-  Campaign,
-  | "title"
-  | "description"
-  | "location"
-  | "lat"
-  | "lng"
-  | "budget_total"
-  | "reward_per_visit"
-  | "max_creators"
-  | "start_date"
-  | "end_date"
-  | "tags"
-  | "applicable_location_ids"
-  | "hero_offer"
+    Campaign,
+    | "title"
+    | "description"
+    | "location"
+    | "lat"
+    | "lng"
+    | "budget_total"
+    | "reward_per_visit"
+    | "max_creators"
+    | "start_date"
+    | "end_date"
+    | "tags"
+    | "applicable_location_ids"
+    | "hero_offer"
+    | "status"
   >
 > & {
   image_url?: string;
@@ -476,10 +486,7 @@ function buildAttributionSummary(
     if (toTime !== null && recordTime > toTime) return false;
 
     const campaignLocationIds = getCampaignLocationIds(record.campaign_id);
-    if (
-      params.locationId &&
-      !campaignLocationIds.includes(params.locationId)
-    ) {
+    if (params.locationId && !campaignLocationIds.includes(params.locationId)) {
       return false;
     }
 
@@ -496,7 +503,8 @@ function buildAttributionSummary(
     0,
   );
   const fraud_flags = records.filter(
-    (record) => record.disabled || record.scan_count - record.verified_customers > 10,
+    (record) =>
+      record.disabled || record.scan_count - record.verified_customers > 10,
   ).length;
 
   const byCreatorMap = new Map<
@@ -551,7 +559,11 @@ function buildAttributionSummary(
     ? new Date(params.to)
     : records.length
       ? new Date(
-          Math.max(...records.map((record) => new Date(record.last_active_at).getTime())),
+          Math.max(
+            ...records.map((record) =>
+              new Date(record.last_active_at).getTime(),
+            ),
+          ),
         )
       : new Date();
 
@@ -572,19 +584,23 @@ function buildAttributionSummary(
     revenue_attributed,
     roi: safeRoi(revenue_attributed, verified_customers),
     fraud_flags,
-    by_creator: Array.from(byCreatorMap.entries()).map(([creator_id, value]) => ({
-      creator_id,
-      scans: value.scans,
-      verified: value.verified,
-      revenue: value.revenue,
-      roi: safeRoi(value.revenue, value.verified),
-    })),
-    by_location: Array.from(byLocationMap.entries()).map(([location_id, value]) => ({
-      location_id,
-      scans: roundMetric(value.scans),
-      verified: roundMetric(value.verified),
-      revenue: roundMetric(value.revenue),
-    })),
+    by_creator: Array.from(byCreatorMap.entries()).map(
+      ([creator_id, value]) => ({
+        creator_id,
+        scans: value.scans,
+        verified: value.verified,
+        revenue: value.revenue,
+        roi: safeRoi(value.revenue, value.verified),
+      }),
+    ),
+    by_location: Array.from(byLocationMap.entries()).map(
+      ([location_id, value]) => ({
+        location_id,
+        scans: roundMetric(value.scans),
+        verified: roundMetric(value.verified),
+        revenue: roundMetric(value.revenue),
+      }),
+    ),
     by_day,
   };
 }
@@ -769,7 +785,7 @@ const merchantMock = {
       reward_per_visit: data.reward_per_visit ?? 25,
       max_creators: data.max_creators ?? 10,
       accepted_creators: 0,
-      status: CampaignStatus.Draft,
+      status: data.status ?? CampaignStatus.Draft,
       applicable_location_ids: data.applicable_location_ids ?? ["loc-bed-stuy"],
       hero_offer: data.hero_offer ?? {
         type: "percent_off",
@@ -790,7 +806,9 @@ const merchantMock = {
   },
 
   payments(): ApiResult<Payment[]> {
-    return mockOk(mockStore.read<Payment[]>("merchant-payments", []));
+    const stored = mockStore.read<Payment[]>("merchant-payments", []);
+    if (stored.length) return mockOk(stored);
+    return mockOk([...MOCK_MERCHANT_PAYMENTS_HISTORY]);
   },
 
   async getLocations(): Promise<MerchantLocation[]> {
@@ -895,7 +913,9 @@ const merchantMock = {
     },
   },
   billing: {
-    async listInvoices(_params: { from?: string; to?: string } = {}): Promise<ApiResult<Invoice[]>> {
+    async listInvoices(
+      _params: { from?: string; to?: string } = {},
+    ): Promise<ApiResult<Invoice[]>> {
       return mockOk([]);
     },
     async getInvoice(id: string): Promise<ApiResult<Invoice>> {
@@ -947,7 +967,7 @@ const merchantMock = {
   },
   notifications: {
     async list(): Promise<ApiResult<Notification[]>> {
-      return mockOk([]);
+      return mockOk([...MOCK_MERCHANT_NOTIFICATIONS]);
     },
     async markRead(_id: string): Promise<ApiResult<{ read_at: string }>> {
       return mockOk({ read_at: new Date().toISOString() });
@@ -968,13 +988,19 @@ const merchantReal = {
       method: "POST",
       body: JSON.stringify(data),
     }),
-  payments: () => apiFetch<Payment[]>("/merchant/payments"),
+  // /api/merchant/payments returns a wrapped object (summary/payments/...) that
+  // doesn't match Payment[]. Until that route is rewritten, serve the demo
+  // history so the merchant playtest UI has data.
+  payments: async (): Promise<ApiResult<Payment[]>> =>
+    mockOk([...MOCK_MERCHANT_PAYMENTS_HISTORY]),
   async getLocations(): Promise<MerchantLocation[]> {
     return unwrap(apiFetch<MerchantLocation[]>("/merchant/locations"));
   },
   async getLocation(id: string): Promise<MerchantLocation | undefined> {
     try {
-      return await unwrap(apiFetch<MerchantLocation>(`/merchant/locations/${id}`));
+      return await unwrap(
+        apiFetch<MerchantLocation>(`/merchant/locations/${id}`),
+      );
     } catch {
       return undefined;
     }
@@ -993,9 +1019,7 @@ const merchantReal = {
     if (typeof filters.limit === "number")
       qs.set("limit", String(filters.limit));
     const path = `/merchant/applicants${qs.toString() ? `?${qs}` : ""}`;
-    return unwrap(
-      apiFetch<{ data: MockApplication[]; total: number }>(path),
-    );
+    return unwrap(apiFetch<{ data: MockApplication[]; total: number }>(path));
   },
 
   async decideApplication(
@@ -1045,9 +1069,7 @@ const merchantReal = {
     },
     async get(id: string): Promise<QRCodeRecord | undefined> {
       try {
-        return await unwrap(
-          apiFetch<QRCodeRecord>(`/merchant/qr-codes/${id}`),
-        );
+        return await unwrap(apiFetch<QRCodeRecord>(`/merchant/qr-codes/${id}`));
       } catch {
         return undefined;
       }
@@ -1083,7 +1105,8 @@ const merchantReal = {
   billing: {
     listInvoices: (params: { from?: string; to?: string } = {}) =>
       apiFetch<Invoice[]>(`/merchant/billing/invoices${qs(params)}`),
-    getInvoice: (id: string) => apiFetch<Invoice>(`/merchant/billing/invoices/${id}`),
+    getInvoice: (id: string) =>
+      apiFetch<Invoice>(`/merchant/billing/invoices/${id}`),
     addPaymentMethod: (data: {
       brand: string;
       last_four: string;
@@ -1101,11 +1124,12 @@ const merchantReal = {
       }),
   },
   notifications: {
-    list: () => apiFetch<Notification[]>(`/merchant/notifications`),
-    markRead: (id: string) =>
-      apiFetch<{ read_at: string }>(`/merchant/notifications/${id}/read`, {
-        method: "PATCH",
-      }),
+    // No /api/merchant/notifications route ships yet — serve the demo set so
+    // the inbox + filter pills have data to render.
+    list: async (): Promise<ApiResult<Notification[]>> =>
+      mockOk([...MOCK_MERCHANT_NOTIFICATIONS]),
+    markRead: async (_id: string): Promise<ApiResult<{ read_at: string }>> =>
+      mockOk({ read_at: new Date().toISOString() }),
   },
   redeem: {
     search: (q: string) =>
@@ -1114,7 +1138,11 @@ const merchantReal = {
           claim_id: string;
           claim_code: string;
           creator: { handle: string; name: string };
-          hero_offer: { type: string; value_numeric: number | null; value_text: string | null };
+          hero_offer: {
+            type: string;
+            value_numeric: number | null;
+            value_text: string | null;
+          };
           campaign: { title: string };
           claimed_at: string;
           status: string;
@@ -1154,7 +1182,10 @@ const attributionMock = {
       click_id: `click-${Date.now()}`,
       short_code: shortCode,
     };
-    const existing = mockStore.read<typeof event[]>(`clicks-${shortCode}`, []);
+    const existing = mockStore.read<(typeof event)[]>(
+      `clicks-${shortCode}`,
+      [],
+    );
     mockStore.write(`clicks-${shortCode}`, [...existing, event]);
     return mockOk({ click_id: event.click_id });
   },

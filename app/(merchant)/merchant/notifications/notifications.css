@@ -489,3 +489,355 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Notifications Uplift v2 (2026-05-07) — Liquid Glass · Colorful · iOS 26
+   Layered on top of the v11/v12 product baseline above. Each group head
+   (Today / Yesterday / Earlier) gets the colorful divider; the summary
+   tile and notification cards get full glass treatment so the page reads
+   as a continuous panel of the dashboard atmosphere.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.notif-page {
+  /* Liquid Glass tokens (scoped — same values as dashboard.db) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .notif-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* ── Atmospheric backdrop — 5-layer radial-gradient haze ─────────────── */
+.notif-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.notif-page > * { position: relative; z-index: 1; }
+
+/* ── Today Summary glass tile uplift — boost shadow + brighter bg ────── */
+.notif-page .notif-summary-glass {
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 55%),
+    var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  position: relative;
+  overflow: hidden;
+}
+/* Colorful 4-stop top accent strip on the summary tile */
+.notif-page .notif-summary-glass::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--brand-red) 0%,
+    var(--champagne, #bfa170) 35%,
+    var(--accent-blue, #0085ff) 70%,
+    var(--champagne-deep, #8d7245) 100%
+  );
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
+}
+
+/* ── Group head — colorful gradient underline + red dot ──────────────── */
+.notif-page .notif-group-head {
+  border-bottom: none;
+  position: relative;
+  padding-bottom: 8px;
+}
+.notif-page .notif-group-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+.notif-page .notif-group-title {
+  align-items: center;
+  gap: 12px;
+}
+.notif-page .notif-group-title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* ── Notification items glass surface ────────────────────────────────── */
+.notif-page .notif-item {
+  border: none;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  border-radius: 16px;
+}
+.notif-page .notif-item--read {
+  background: rgba(255, 255, 255, 0.48);
+}
+.notif-page .notif-item--unread {
+  background: var(--lg-bg-light);
+  box-shadow:
+    inset 4px 0 0 0 var(--brand-red),
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+}
+.notif-page .notif-item:hover {
+  border-color: transparent;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+.notif-page .notif-item--unread:hover {
+  box-shadow:
+    inset 4px 0 0 0 var(--brand-red),
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* ── Reduced transparency fallback ───────────────────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  .notif-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .notif-page .notif-summary-glass,
+  .notif-page .notif-item,
+  .notif-page .notif-item--read,
+  .notif-page .notif-item--unread {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Filter chip row → horizontal scroller · group head + cards full-width
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin so phone has no negative side margin */
+  .notif-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Mark-all-read button + toolbar wrap nicely */
+  .notif-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Filter row should not horizontally clip — let it scroll if it does */
+  .notif-toolbar .ms-filter-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+  .notif-toolbar .ms-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .notif-toolbar .ms-filter-tabs-btn {
+    flex-shrink: 0;
+  }
+
+  /* Notification items full-width with reduced left/right padding */
+  .notif-item {
+    border-radius: 12px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Adds :active state (was hover-only).
+   Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .notif-item (had hover only — add :active for parity) */
+.notif-page .notif-item:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notif-page .notif-item:active {
+    transform: none !important;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.notif-page p,
+.notif-page .body-text,
+.notif-page .description,
+.notif-page .ms-page-header-subtitle,
+.notif-page [class*="empty-state"] p,
+.notif-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.notif-page .ms-page-header-subtitle,
+.notif-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.notif-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.notif-page h1,
+.notif-page .ms-page-header-title,
+.notif-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.notif-page h2,
+.notif-page .db-section-title,
+.notif-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.notif-page p + p {
+  margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through for any local filter chip
+   under .notif-page. Active state stays solid via shared filter-tabs.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.notif-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.notif-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.notif-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.notif-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Notifications page carries summary eyebrows, time
+   stamps, item descriptions — all small text on Liquid Glass which
+   over the atmospheric haze can drop below WCAG AA. Strategy A:
+   denser glass on summary / item cards; floor every ≤14px copy color
+   at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards holding small copy */
+.notif-page .kpi-card,
+.notif-page [class*="summary-card"],
+.notif-page [class*="caption-card"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor */
+.notif-page .notif-summary-eyebrow,
+.notif-page .kpi-card__eyebrow,
+.notif-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.notif-page [class*="__eyebrow"],
+.notif-page [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.notif-page .ms-empty-state__description,
+.notif-page [class*="empty-state-description"],
+.notif-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.notif-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.notif-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.notif-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}

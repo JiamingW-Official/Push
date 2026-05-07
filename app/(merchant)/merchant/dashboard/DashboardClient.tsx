@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { PageHeader } from '@/components/merchant/shared';
-import { ActiveCampaigns } from './sections/ActiveCampaigns';
-import { KPIGrid } from './sections/KPIGrid';
-import { RecentApplications } from './sections/RecentApplications';
-import type { Application, Campaign } from './types';
-import './dashboard.css';
+import Link from "next/link";
+import { PageHeader } from "@/components/merchant/shared";
+import { ActiveCampaigns } from "./sections/ActiveCampaigns";
+import { KPIGrid } from "./sections/KPIGrid";
+import { RecentApplications } from "./sections/RecentApplications";
+import type { Application, Campaign } from "./types";
+import "./dashboard.css";
+import "../_anim/anim.css";
 
 export type DashboardState = {
   campaigns: Campaign[];
@@ -21,7 +22,7 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ initialData }: DashboardClientProps) {
   return (
-    <div className="db-dashboard-page">
+    <div className="db-dashboard-page anim-page">
       <PageHeader
         eyebrow="OVERVIEW"
         title="Merchant Dashboard"

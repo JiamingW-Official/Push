@@ -20,6 +20,9 @@ export interface EarningsBreakdown {
  *  Until real DB aggregation is wired, returns deterministic mock data
  *  keyed to the May 2026 campaign set in mock-events.ts. */
 export function getMockEarningsBreakdown(yearMonth: string): EarningsBreakdown {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("getMockEarningsBreakdown: not connected to real data yet");
+  }
   // May 2026: Flamingo $75, Glossier $120, KITH $199 — total $394
   const _ = yearMonth; // reserved for future DB query
   return {

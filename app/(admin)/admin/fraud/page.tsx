@@ -742,6 +742,7 @@ export default function FraudQueuePage() {
 
   return (
     <div
+      className="fraud-page"
       style={{
         minHeight: "100vh",
         background: "var(--surface)",

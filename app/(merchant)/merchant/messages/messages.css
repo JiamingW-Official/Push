@@ -630,3 +630,1450 @@
     transform: none !important;
   }
 }
+
+/* ─── Live status pill ────────────────────────────────────────── */
+.msg-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(52, 199, 89, 0.12);
+  color: #1a8a3a;
+  font-family: var(--font-darky, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.msg-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34c759;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18);
+  animation: msg-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes msg-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18); }
+  50%       { box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.06); }
+}
+.msg-live-pill--offline {
+  background: rgba(97, 96, 92, 0.1);
+  color: var(--ink-4, #9b9a96);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Messages Uplift v2 (2026-05-07) — Liquid Glass · Colorful · iOS 26
+   Layered on top of the v11/v12 product baseline above. Mirrors the
+   dashboard / analytics atmosphere so transitioning between Push merchant
+   pages feels continuous. Sidebar + chat panes get glass; bubbles keep
+   their solid fills for chat readability.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.msg-page {
+  /* Liquid Glass tokens (scoped — same values as dashboard.db / analytics.an2) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .msg-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* ── Atmospheric backdrop — 5-layer radial-gradient haze ─────────────── */
+.msg-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.msg-page > * { position: relative; z-index: 1; }
+
+/* ── Sidebar (thread list) glass surface ─────────────────────────────── */
+.msg-page .msg-sidebar {
+  border: none;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  border-radius: 20px;
+}
+
+.msg-page .msg-sidebar-head {
+  border-bottom: 1px solid rgba(20, 19, 15, 0.06);
+  position: relative;
+}
+/* Colorful gradient underline on sidebar head — 4-stop horizon */
+.msg-page .msg-sidebar-head::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+/* Red dot anchor on the eyebrow */
+.msg-page .msg-sidebar-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.msg-page .msg-sidebar-eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* Active thread row glass-tinted instead of solid surface */
+.msg-page .msg-thread--active {
+  background: var(--lg-bg-light);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+          backdrop-filter: blur(16px) saturate(1.2);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(60, 45, 30, 0.05);
+}
+
+/* ── Chat pane glass surface ─────────────────────────────────────────── */
+.msg-page .msg-chat {
+  border: none;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  border-radius: 20px;
+}
+
+.msg-page .msg-chat-head {
+  border-bottom: 1px solid rgba(20, 19, 15, 0.06);
+}
+
+/* Input row blends with chat pane glass */
+.msg-page .msg-input-row {
+  border-top: 1px solid rgba(20, 19, 15, 0.06);
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+          backdrop-filter: blur(12px) saturate(1.2);
+}
+
+/* IMPORTANT: bubbles keep their solid fills for chat readability — do NOT
+   override .msg-bubble--own (brand-red) or .msg-bubble--other (surface). */
+
+/* ── Pinned tile uplift — slight shadow boost on the floating glass ──── */
+.msg-page .msg-pinned {
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  border: none;
+}
+.msg-page .msg-pinned:hover {
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* ── Reduced motion / transparency fallbacks ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .msg-page .msg-thread--active,
+  .msg-page .msg-pinned {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .msg-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .msg-page .msg-sidebar,
+  .msg-page .msg-chat,
+  .msg-page .msg-input-row,
+  .msg-page .msg-thread--active,
+  .msg-page .msg-pinned {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 8 — iMessage Two-Pane Merchant Inbox (2026-05-07)
+   Mirror of /creator/inbox/messages, role-swapped: merchant outgoing
+   bubbles use N2W Blue (Filled Secondary per Design.md § 9), creator
+   incoming bubbles use surface-2. Reuses Liquid Glass + atmospheric
+   tokens declared on .msg-page above. Class prefix: .mm-* (Merchant
+   Messages) — kept distinct from the legacy .msg-* rules so neither
+   conflicts.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.mm-pane-layout {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 24px;
+  min-height: 640px;
+  border-radius: 20px;
+}
+
+/* ── Left pane: thread list ─────────────────────────────────────────── */
+.msg-page .mm-list-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.mm-list-pane-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid rgba(20, 19, 15, 0.06);
+  position: relative;
+}
+
+.mm-list-pane-head::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.mm-list-pane-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mm-list-pane-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.mm-list-pane-eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* Search input — pill, ink-2 text, hairline border */
+.mm-list-search {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  padding: 8px 12px;
+}
+
+.mm-list-search:focus-within {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.12);
+}
+
+.mm-list-search-icon {
+  display: inline-flex;
+  color: var(--ink-4);
+}
+
+.mm-list-search input {
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  min-width: 0;
+}
+
+.mm-list-search input::placeholder {
+  color: var(--ink-4);
+}
+
+/* Filter chips — Pill variant per § 9 */
+.mm-list-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mm-list-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--hairline);
+  background: var(--surface-3);
+  color: var(--ink-3);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 180ms var(--spring), background 180ms ease,
+    color 180ms ease, border-color 180ms ease;
+}
+
+.mm-list-filter-chip:hover {
+  transform: translate(2px, 2px);
+  background: var(--surface);
+  color: var(--ink-2);
+}
+
+.mm-list-filter-chip:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.mm-list-filter-chip.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--snow);
+}
+
+.mm-list-filter-chip:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.mm-list-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--r-pill);
+  background: var(--brand-red);
+  color: var(--snow);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mm-list-filter-chip.is-active .mm-list-filter-badge {
+  background: var(--snow);
+  color: var(--ink);
+}
+
+/* List body */
+.mm-list-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mm-list-empty {
+  padding: 24px 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.mm-list-empty p {
+  margin: 0;
+}
+
+.mm-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mm-list-group-label {
+  margin: 0 0 4px;
+  padding: 4px 8px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* Thread row — same grid as legacy .msg-thread but with hover/active polish */
+.mm-list-row {
+  position: relative;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 180ms var(--spring), background 180ms ease,
+    border-color 180ms ease;
+}
+
+.mm-list-row:hover {
+  background: rgba(255, 255, 255, 0.55);
+  transform: translate(2px, 2px);
+}
+
+.mm-list-row:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.mm-list-row:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+.mm-list-row.is-active {
+  background: var(--lg-bg-light);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+          backdrop-filter: blur(16px) saturate(1.2);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(60, 45, 30, 0.05);
+}
+
+.mm-list-row-dot {
+  position: absolute;
+  left: 4px;
+  top: 22px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.18);
+}
+
+.mm-list-row-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--hairline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--snow);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mm-list-row-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mm-list-row-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mm-list-row-top,
+.mm-list-row-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mm-list-row-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mm-list-row.is-unread .mm-list-row-name {
+  color: var(--ink);
+}
+
+.mm-list-row-time {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mm-list-row-preview {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.mm-list-row.is-unread .mm-list-row-preview {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.mm-list-row-unread {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  background: var(--brand-red);
+  color: var(--snow);
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mm-list-row-tag {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+  padding: 2px 8px;
+  align-self: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* List hint footer */
+.mm-list-hint {
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(20, 19, 15, 0.06);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mm-list-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ── Right pane: conversation ───────────────────────────────────────── */
+.msg-page .mm-thread-pane {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 640px;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.mm-thread-empty {
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  gap: 12px;
+}
+
+.mm-thread-empty-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-4);
+}
+
+.mm-thread-empty-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.mm-thread-empty-body {
+  margin: 0;
+  max-width: 360px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+/* Header */
+.mm-thread-head {
+  display: grid;
+  grid-template-columns: auto 40px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(20, 19, 15, 0.06);
+}
+
+.mm-thread-back {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.mm-thread-head-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--snow);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  border: 1px solid var(--hairline);
+}
+
+.mm-thread-head-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mm-thread-head-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mm-thread-head-meta {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Body / bubbles */
+.mm-thread-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mm-thread-loading,
+.mm-thread-empty-bubbles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.mm-thread-empty-bubbles p,
+.mm-thread-loading p {
+  margin: 0;
+}
+
+.mm-bubble-stamp {
+  margin: 16px 0 8px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.mm-bubble-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: end;
+  margin-bottom: 2px;
+}
+
+.mm-bubble-row.is-self {
+  grid-template-columns: minmax(0, 1fr) 28px;
+  justify-items: end;
+}
+
+.mm-bubble-row.is-grouped-mid,
+.mm-bubble-row.is-grouped-top {
+  margin-bottom: 1px;
+}
+
+.mm-bubble-row .mm-bubble-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--hairline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--snow);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  visibility: hidden;
+}
+
+.mm-bubble-row.show-avatar .mm-bubble-avatar {
+  visibility: visible;
+}
+
+.mm-bubble {
+  max-width: 72%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.mm-bubble--in {
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  border-bottom-left-radius: 6px;
+}
+
+.mm-bubble-row.is-grouped-top .mm-bubble--in {
+  border-bottom-left-radius: 18px;
+}
+.mm-bubble-row.is-grouped-mid .mm-bubble--in {
+  border-bottom-left-radius: 18px;
+  border-top-left-radius: 6px;
+}
+.mm-bubble-row.is-grouped-bottom .mm-bubble--in {
+  border-top-left-radius: 6px;
+}
+
+/* Outgoing (merchant) — N2W Blue per Filled Secondary § 9 */
+.mm-bubble--out {
+  margin-left: auto;
+  background: var(--accent-blue, #0085ff);
+  color: var(--snow);
+  border-bottom-right-radius: 6px;
+}
+
+.mm-bubble-row.is-grouped-top .mm-bubble--out {
+  border-bottom-right-radius: 18px;
+}
+.mm-bubble-row.is-grouped-mid .mm-bubble--out {
+  border-bottom-right-radius: 18px;
+  border-top-right-radius: 6px;
+}
+.mm-bubble-row.is-grouped-bottom .mm-bubble--out {
+  border-top-right-radius: 6px;
+}
+
+/* Composer */
+.mm-composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: end;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(20, 19, 15, 0.06);
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+          backdrop-filter: blur(12px) saturate(1.2);
+}
+
+.mm-composer-input {
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  background: var(--snow);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px 14px;
+  resize: none;
+  min-height: 40px;
+  max-height: 140px;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.mm-composer-input::placeholder {
+  color: var(--ink-4);
+}
+
+.mm-composer-input:focus-visible {
+  border-color: var(--accent-blue, #0085ff);
+  box-shadow: 0 0 0 3px rgba(0, 133, 255, 0.16);
+}
+
+.mm-composer-input:disabled {
+  background: var(--surface-3);
+  color: var(--ink-4);
+  cursor: not-allowed;
+}
+
+.mm-composer-send {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--r-full);
+  background: var(--accent-blue, #0085ff);
+  color: var(--snow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 180ms var(--spring), background 180ms ease;
+}
+
+.mm-composer-send:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+}
+
+.mm-composer-send:active:not(:disabled) {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.mm-composer-send:disabled {
+  background: var(--surface-3);
+  color: var(--ink-4);
+  cursor: not-allowed;
+}
+
+.mm-composer-send:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Live pill in the new header — push to the right edge */
+.mm-thread-head .msg-live-pill {
+  margin-left: auto;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .mm-pane-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 16px;
+  }
+
+  /* Mobile single-pane: hide thread pane unless an active thread is set;
+     hide list pane while reading a thread. */
+  .mm-pane-layout.has-active .mm-list-pane {
+    display: none;
+  }
+
+  .mm-pane-layout:not(.has-active) .mm-thread-pane {
+    display: none;
+  }
+
+  .mm-thread-back {
+    display: inline-flex;
+  }
+
+  .msg-page .mm-thread-pane {
+    min-height: 540px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mm-thread-body,
+  .mm-thread-head {
+    padding: 16px;
+  }
+
+  .mm-bubble {
+    max-width: 84%;
+  }
+
+  .mm-composer {
+    padding: 12px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .mm-list-row,
+  .mm-list-filter-chip,
+  .mm-composer-send {
+    transition: none !important;
+  }
+  .mm-list-row:hover,
+  .mm-list-row:active,
+  .mm-list-filter-chip:hover,
+  .mm-list-filter-chip:active,
+  .mm-composer-send:hover,
+  .mm-composer-send:active {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .msg-page .mm-list-pane,
+  .msg-page .mm-thread-pane,
+  .mm-composer,
+  .mm-list-row.is-active {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Single-pane swap (.has-active) already in place above.
+   This pass tightens spacing on phone + ensures the active thread fills
+   the viewport without the list peeking through.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .msg-page {
+    gap: var(--space-3);
+  }
+
+  /* Single-pane: when active, thread pane fills its container, no max-height */
+  .msg-page .mm-pane-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: var(--space-2);
+  }
+
+  /* List pane height naturally (drop the 400px cap on phone so the list
+     doesn't double-scroll inside the page scroll) */
+  .msg-page .mm-list-pane,
+  .msg-page .msg-sidebar {
+    max-height: none;
+  }
+
+  /* Thread pane — full-screen feel when a thread is active */
+  .msg-page .mm-pane-layout.has-active .mm-thread-pane {
+    min-height: calc(100svh - 160px);
+  }
+
+  /* List filter chips — horizontal scroller on phone */
+  .msg-page .mm-list-pane-filters,
+  .msg-page .mm-list-filters {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .msg-page .mm-list-pane-filters::-webkit-scrollbar,
+  .msg-page .mm-list-filters::-webkit-scrollbar { display: none; }
+
+  /* Composer row sticks to the bottom of viewport vibe — keep generous tap area */
+  .msg-page .mm-composer,
+  .msg-page .msg-input-row {
+    padding: 12px;
+  }
+  .msg-page .mm-composer-send,
+  .msg-page .msg-send {
+    min-height: 44px;
+  }
+
+  /* Bubbles a little wider so short replies don't look orphaned */
+  .msg-page .mm-bubble,
+  .msg-page .msg-bubble {
+    max-width: 88%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps inbox copy at 72ch, hero subtitle at 56ch, raises
+   bubble + chat line-height, expands eyebrow tracking. Bubble fills +
+   widths preserved (controlled by Wave 1-8). Liquid Glass + atmospheric
+   rules untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Inbox descriptions / empty-state copy / pinned blurbs */
+.msg-page p,
+.msg-page .msg-pinned p,
+.msg-page .ms-empty-state__description,
+.msg-page .mm-thread-empty-body {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Page subtitle — channel context, tighter measure */
+.msg-page .ms-page-header-subtitle {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows: readable tracking */
+.msg-page .ms-page-header-eyebrow,
+.msg-page .msg-pinned-eyebrow,
+.msg-page .msg-sidebar-eyebrow,
+.msg-page .mm-list-pane-eyebrow {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40 */
+.msg-page .ms-page-header-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* Chat bubbles: readable line-height (override the default 1.4-1.5) */
+.msg-page .mm-bubble,
+.msg-page .msg-bubble,
+.msg-page .msg-bubble p,
+.msg-page .mm-bubble p {
+  line-height: 1.55;
+}
+
+/* Stacked bubble paragraphs / inbox copy paragraphs */
+.msg-page .msg-bubble p + p,
+.msg-page .mm-bubble p + p,
+.msg-page p + p {
+  margin-top: 8px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+/* Note: 2-pane is dense by design — only adjust PageHeader → 2-pane gap */
+
+@media (min-width: 1024px) {
+  .msg-page > .ms-page-header,
+  .msg-page > [class*="page-header"] {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .msg-page > .ms-page-header,
+  .msg-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .msg-page > .ms-page-header,
+  .msg-page > [class*="page-header"] {
+    margin-bottom: 16px;
+  }
+}
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Cap conversation-list search at ~480px (search isn't a wall of text) */
+@media (min-width: 768px) {
+  .mm-list-search {
+    max-width: 480px;
+  }
+}
+
+/* Composer textarea (.mm-composer-input) intentionally fills chat pane —
+   do NOT cap width. */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps the page wrapper at 1440px on ultra-wide and
+   ladders padding 16/32/48/64; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right. SPECIAL: the
+   2-pane chat layout (.mm-pane-layout) gets a centered max-width
+   instead of the kpi-grid rule; capping the chat panel itself would
+   break the flex split. Atmospheric ::before backdrop is position:fixed
+   and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .msg-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  .msg-page .mm-pane-layout {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .msg-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .msg-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .msg-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* NOTE: do NOT apply the kpi-grid max-width rule here — the chat panel
+   and conversation list must keep their flex split unbounded inside the
+   capped page wrapper. */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for inputs on the merchant
+   messages page. Special case: the composer textarea inside
+   .mm-composer keeps its bottom-border-only style (do NOT override) —
+   only .mm-list-search input picks up the glass treatment with extra
+   left padding for the inline search icon.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.msg-page input[type="text"],
+.msg-page input[type="email"],
+.msg-page input[type="number"],
+.msg-page input[type="tel"],
+.msg-page input[type="url"],
+.msg-page input[type="search"],
+.msg-page input[type="password"],
+.msg-page select {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.msg-page input:focus,
+.msg-page input:focus-visible,
+.msg-page select:focus {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.msg-page input::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.msg-page input:disabled,
+.msg-page select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* List search: stronger left padding so the inline magnifier icon
+   visually clears the field padding. */
+.msg-page .mm-list-search input {
+  padding-left: 40px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Messages keeps its .mm-pane-layout 1440 cap (per
+   spec — the chat pane reads better narrower than dashboard panels).
+   This adds 1920+/2560+ side-padding on the wrapper .msg-page so the
+   layout sits centered with breathing room on huge displays, plus a
+   shadow lift on KPI / hero surfaces (the dashboard banner above
+   the pane). The pane itself is left at 1440 cap.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .msg-page {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  .msg-page .db-kpi-grid,
+  .msg-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .msg-page {
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .msg-page .db-kpi-grid .kpi-card,
+  .msg-page [class*="hero-card"],
+  .msg-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Incoming bubbles use `--surface-2` (warm cream) and
+   carry chat copy at 14px — already at AA but we lock the color to
+   `--ink` so future cascade edits don't downgrade it. Outgoing bubbles
+   are N2W-blue/Snow → high contrast → no change. Eyebrows on glass
+   cards floor at `--ink-3`; empty-state copy too. Filter pill labels
+   (Wave 3 → glass) get ink-3 so the inactive pill reads at AA.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Incoming bubble copy — keep at --ink so AA holds against surface-2 */
+.msg-page .mm-bubble--in,
+.msg-page .mm-bubble--in p {
+  color: var(--ink);
+}
+
+/* Eyebrows / small uppercase copy on glass */
+.msg-page .kpi-card__eyebrow,
+.msg-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.msg-page [class*="__eyebrow"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description floor */
+.msg-page .ms-empty-state__description,
+.msg-page [class*="empty-state-description"],
+.msg-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.msg-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.msg-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle on atmospheric backdrop */
+.msg-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .msg-page button:not([class*="icon-only"]),
+  .msg-page a[role="button"],
+  .msg-page [role="button"],
+  .msg-page [class*="thread-row"][role="button"] {
+    min-height: 44px;
+  }
+  .msg-page button[class*="icon-only"],
+  .msg-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Thread title / sender name single-line ellipsis */
+  .msg-page [class*="thread-title"],
+  .msg-page [class*="thread-subject"],
+  .msg-page [class*="sender-name"],
+  .msg-page [class*="participant-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Thread preview text 2-line clamp */
+  .msg-page [class*="thread-preview"],
+  .msg-page [class*="message-preview"],
+  .msg-page [class*="last-message"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* URLs in messages wrap rather than overflow */
+  .msg-page [class*="-url"],
+  .msg-page [class*="message-body"] a,
+  .msg-page code {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Sticky composer pinned with safe-area */
+  .msg-page [class*="composer"][class*="sticky"],
+  .msg-page [class*="composer-bar"] {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .msg-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

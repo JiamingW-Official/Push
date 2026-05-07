@@ -2,6 +2,7 @@ import Link from "next/link";
 import { EmptyState, KPICard, StatusBadge } from "@/components/merchant/shared";
 import { api } from "@/lib/data/api-client";
 import LocationsMap from "../LocationsMap";
+import LocationDeactivateButton from "./LocationDeactivateButton";
 import "../locations.css";
 
 function formatRoi(scans: number, conversions: number): string {
@@ -109,12 +110,10 @@ export default async function LocationDetailPage({
             >
               Edit location
             </Link>
-            <button
-              type="button"
-              className="btn-ghost loc-hero__cta loc-hero__cta--ghost"
-            >
-              Deactivate
-            </button>
+            <LocationDeactivateButton
+              locationId={location.id}
+              initialStatus={location.status === "open" ? "open" : "closed"}
+            />
           </div>
         </div>
       </header>

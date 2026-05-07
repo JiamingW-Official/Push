@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import "./referrals.css";
 
 export const metadata: Metadata = {
   title: "Referrals — Push",
@@ -58,7 +59,7 @@ const PAYOUT_ROWS = [
 
 export default function ReferralsPage() {
   return (
-    <>
+    <main className="ref-uplift">
       {/* ══ 01 — HERO (dark ink, Darky display bottom-left) ══ */}
       <section
         style={{
@@ -693,6 +694,6 @@ export default function ReferralsPage() {
           </Link>
         </div>
       </section>
-    </>
+    </main>
   );
 }

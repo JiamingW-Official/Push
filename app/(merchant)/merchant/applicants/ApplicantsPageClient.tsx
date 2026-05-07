@@ -13,7 +13,10 @@ import {
   StatusBadge,
   TierBadge,
 } from "@/components/merchant/shared";
+import { useToast } from "@/components/toast/Toaster";
+import { ApplicantDetailDialog } from "./ApplicantDetailDialog";
 import "./applicants.css";
+import "../_anim/anim.css";
 
 type ApplicantsTab = "all" | "pending" | "approved" | "rejected" | "shortlist";
 type Decision = "accept" | "decline" | "shortlist";
@@ -92,7 +95,7 @@ function toastMessageForDecision(
   response: unknown,
 ): string {
   if (hasQrCode(response) && response.qr_code) {
-    return "QR generated";
+    return "Application approved — QR auto-generated";
   }
 
   switch (decision) {
@@ -105,25 +108,23 @@ function toastMessageForDecision(
   }
 }
 
+function toastVariantForDecision(decision: Decision): "success" | "decline" {
+  return decision === "decline" ? "decline" : "success";
+}
+
 export default function ApplicantsPageClient({
   initialApplicants,
 }: ApplicantsPageClientProps) {
   const [activeTab, setActiveTab] = useState<ApplicantsTab>("all");
   const [allApplicants, setAllApplicants] = useState(initialApplicants);
   const [pendingIds, setPendingIds] = useState<string[]>([]);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const [drawerId, setDrawerId] = useState<string | null>(null);
-  const toastTimerRef = useRef<number | null>(null);
+  const [dialogApplicantId, setDialogApplicantId] = useState<string | null>(
+    null,
+  );
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
-
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current !== null) {
-        window.clearTimeout(toastTimerRef.current);
-      }
-    };
-  }, []);
+  const { toast } = useToast();
 
   const filteredApplicants = useMemo(
     () =>
@@ -175,18 +176,6 @@ export default function ApplicantsPageClient({
     [tabCounts],
   );
 
-  const showToast = useCallback((message: string) => {
-    if (toastTimerRef.current !== null) {
-      window.clearTimeout(toastTimerRef.current);
-    }
-
-    setToastMessage(message);
-    toastTimerRef.current = window.setTimeout(() => {
-      setToastMessage(null);
-      toastTimerRef.current = null;
-    }, 2500);
-  }, []);
-
   const decide = useCallback(
     async (application: MockApplication, decision: Decision) => {
       setPendingIds((current) => [...current, application.id]);
@@ -215,27 +204,46 @@ export default function ApplicantsPageClient({
         setAllApplicants((current) =>
           current.map((item) => (item.id === result.id ? result : item)),
         );
-        showToast(toastMessageForDecision(decision, result));
+        const variant = toastVariantForDecision(decision);
+        toast[variant](toastMessageForDecision(decision, result));
       } catch {
         setAllApplicants((current) =>
           current.map((item) =>
             item.id === application.id ? application : item,
           ),
         );
-        showToast("Unable to update application");
+        toast.error(
+          decision === "accept"
+            ? "Approve failed"
+            : "Unable to update application",
+          {
+            actionLabel: "Retry",
+            onAction: () => {
+              void decide(application, decision);
+            },
+          },
+        );
       } finally {
         setPendingIds((current) =>
           current.filter((id) => id !== application.id),
         );
       }
     },
-    [showToast],
+    [toast],
   );
 
   const drawerApplicant = useMemo(
     () =>
       drawerId ? (allApplicants.find((a) => a.id === drawerId) ?? null) : null,
     [drawerId, allApplicants],
+  );
+
+  const dialogApplicant = useMemo(
+    () =>
+      dialogApplicantId
+        ? (allApplicants.find((a) => a.id === dialogApplicantId) ?? null)
+        : null,
+    [dialogApplicantId, allApplicants],
   );
 
   // Keyboard navigation: J/K (or arrow down/up) to move; Enter to open drawer; Esc closes drawer.
@@ -251,7 +259,7 @@ export default function ApplicantsPageClient({
         return;
       }
 
-      if (editable || drawerId) return;
+      if (editable || drawerId || dialogApplicantId) return;
       if (filteredApplicants.length === 0) return;
 
       if (event.key === "j" || event.key === "ArrowDown") {
@@ -275,12 +283,12 @@ export default function ApplicantsPageClient({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [drawerId, filteredApplicants, focusedIndex]);
+  }, [drawerId, dialogApplicantId, filteredApplicants, focusedIndex]);
 
   const pendingCount = tabCounts.pending;
 
   return (
-    <div className="ap-page">
+    <div className="ap-page anim-page">
       <PageHeader
         eyebrow="LINKS · TALENT PIPELINE"
         title="Applicants"
@@ -323,20 +331,70 @@ export default function ApplicantsPageClient({
           <span>close</span>
         </p>
 
-        <div className="ap-toast-slot" aria-live="polite" role="status">
-          {toastMessage ? <div className="ap-toast">{toastMessage}</div> : null}
-        </div>
-
         <div className="ap-list">
           {filteredApplicants.length === 0 ? (
-            <EmptyState
-              title="No applicants in this view"
-              description="Nothing here yet. Adjust the filter, or publish a campaign to attract creators."
-              ctaLabel="Create a campaign"
-              ctaHref="/merchant/campaigns/new"
-            />
+            (() => {
+              if (tabCounts.all === 0) {
+                return (
+                  <EmptyState
+                    title="No applicants yet"
+                    description="Publish a campaign and creators will start applying here. Each application includes match score, audience, and recent work so you can decide in seconds."
+                    ctaLabel="Launch a campaign"
+                    ctaHref="/merchant/campaigns/new"
+                  />
+                );
+              }
+              if (activeTab === "pending") {
+                return (
+                  <EmptyState
+                    title="All caught up"
+                    description="No creators awaiting review. New applications land here the moment they apply — usually within minutes of going live."
+                    ctaLabel="View accepted creators"
+                    ctaOnClick={() => setActiveTab("approved")}
+                  />
+                );
+              }
+              if (activeTab === "approved") {
+                return (
+                  <EmptyState
+                    title="No accepted creators yet"
+                    description="Approve a pending applicant and they'll show up here, ready to receive their QR poster and start posting."
+                    ctaLabel="Review pending applicants"
+                    ctaOnClick={() => setActiveTab("pending")}
+                  />
+                );
+              }
+              if (activeTab === "rejected") {
+                return (
+                  <EmptyState
+                    title="No rejections on file"
+                    description="Applicants you decline appear here for reference. Empty is a good sign — your bar is sharp without being noisy."
+                    ctaLabel="Review pending applicants"
+                    ctaOnClick={() => setActiveTab("pending")}
+                  />
+                );
+              }
+              if (activeTab === "shortlist") {
+                return (
+                  <EmptyState
+                    title="Shortlist is empty"
+                    description="Tag promising creators as Shortlist to revisit before deciding. Useful when you want a second look or to wait for budget."
+                    ctaLabel="Review pending applicants"
+                    ctaOnClick={() => setActiveTab("pending")}
+                  />
+                );
+              }
+              return (
+                <EmptyState
+                  title="Nothing in this view"
+                  description="No applicants match the current filter. Reset to see your full pipeline."
+                  ctaLabel="Show all applicants"
+                  ctaOnClick={() => setActiveTab("all")}
+                />
+              );
+            })()
           ) : (
-            <div className="ap-card-grid">
+            <div className="ap-card-grid anim-stagger">
               {filteredApplicants.map((applicant, idx) => {
                 const mappedStatus = toSharedStatus(applicant.status);
                 const isPending = pendingIds.includes(applicant.id);
@@ -489,6 +547,17 @@ export default function ApplicantsPageClient({
               </p>
               <button
                 type="button"
+                className="btn-ghost ap-drawer-expand"
+                onClick={() => {
+                  const id = drawerApplicant.id;
+                  setDrawerId(null);
+                  setDialogApplicantId(id);
+                }}
+              >
+                Open full review
+              </button>
+              <button
+                type="button"
                 className="ap-drawer-close"
                 aria-label="Close drawer"
                 onClick={() => setDrawerId(null)}
@@ -595,6 +664,22 @@ export default function ApplicantsPageClient({
           </aside>
         </div>
       ) : null}
+
+      <ApplicantDetailDialog
+        applicant={dialogApplicant}
+        appliedLabel={
+          dialogApplicant
+            ? `Applied ${formatRelative(dialogApplicant.appliedAt)}`
+            : ""
+        }
+        isPending={
+          dialogApplicant ? pendingIds.includes(dialogApplicant.id) : false
+        }
+        onClose={() => setDialogApplicantId(null)}
+        onDecide={(applicant, decision) => {
+          void decide(applicant, decision);
+        }}
+      />
     </div>
   );
 }

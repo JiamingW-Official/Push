@@ -778,3 +778,331 @@
   .int-header__row { flex-direction: column; align-items: flex-start; }
   .int-header__stat-tile { width: 100%; min-width: 0; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Integrations Uplift v2 (2026-05-07) — Atmospheric Backdrop · Liquid Glass
+   Mirrors dashboard.db-* haze so dashboard ↔ integrations share a single
+   continuous visual register. NOTE: .int-shell is a flex container with
+   100svh + bg surface, and inner .int-main is auto-centered with
+   max-width:1140px — therefore we skip the desktop escape margin (would
+   conflict with .int-shell's own width logic). Backdrop + featured-card
+   glass only.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.int-shell {
+  /* Liquid Glass tokens (scoped — same values as dashboard.db-*) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+/* Atmospheric backdrop — 5-layer radial-gradient haze (mirrors dashboard) */
+.int-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.int-shell > * { position: relative; z-index: 1; }
+
+/* ── Featured strip — wrap entire strip in liquid-glass surface ────────── */
+
+.int-shell .int-featured {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 16px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .int-shell::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .int-shell .int-featured {
+    background: var(--surface-2) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Featured strip already scrolls. Category tabs already scroll. Grid
+   already drops to 1-col at 640. This block tightens main padding,
+   ensures grid breathes nicely at tablet 768 (2-col), and clamps the
+   header stat tile to full-width on phone.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reduce main padding so cards have more horizontal room */
+  .int-main {
+    padding: 24px 16px 64px;
+  }
+
+  /* Sub-nav padding */
+  .int-subnav {
+    padding: 12px 16px;
+  }
+
+  /* 2-col grid at tablet, 1-col below 640 (already covered) */
+  .int-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* Header stat tile already goes full-width via existing 768 block;
+     re-affirm + bump radius down */
+  .int-header__stat-tile {
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+  }
+
+  /* Featured strip — slightly tighter padding */
+  .int-shell .int-featured {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  /* Confirm modal (disconnect) — already constrained at 480; mirror at 768 */
+  .int-confirm {
+    padding: 24px;
+  }
+  .int-confirm__actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .int-grid {
+    grid-template-columns: 1fr;
+  }
+  .int-main {
+    padding: 16px 12px 48px;
+  }
+  /* Confirm modal stays inside viewport */
+  .int-confirm {
+    max-width: calc(100vw - 32px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .int-subnav__back (was 1px hover, no active → 2/3) */
+.int-shell .int-subnav__back {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease;
+}
+.int-shell .int-subnav__back:hover  { transform: translate(2px, 2px); }
+.int-shell .int-subnav__back:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .int-tab (was 1/2 → 2/3) */
+.int-shell .int-tab {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease,
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.int-shell .int-tab:hover  { transform: translate(2px, 2px); }
+.int-shell .int-tab:active { transform: translate(3px, 3px) scale(0.98); background: var(--mist); }
+.int-shell .int-tab[aria-pressed="true"]:active { background: var(--char); }
+
+/* .int-card__disconnect (was 1/2 → 2/3) */
+.int-shell .int-card__disconnect {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease,
+    border-color 240ms ease,
+    background 240ms ease;
+}
+.int-shell .int-card__disconnect:hover  { transform: translate(2px, 2px); }
+.int-shell .int-card__disconnect:active { transform: translate(3px, 3px) scale(0.98); background: var(--brand-red-tint); }
+
+@media (prefers-reduced-motion: reduce) {
+  .int-shell .int-subnav__back,
+  .int-shell .int-subnav__back:hover,
+  .int-shell .int-subnav__back:active,
+  .int-shell .int-tab,
+  .int-shell .int-tab:hover,
+  .int-shell .int-tab:active,
+  .int-shell .int-card__disconnect,
+  .int-shell .int-card__disconnect:hover,
+  .int-shell .int-card__disconnect:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.int-shell p,
+.int-shell .body-text,
+.int-shell .description,
+.int-shell .ms-page-header-subtitle,
+.int-shell [class*="empty-state"] p,
+.int-shell [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.int-shell .ms-page-header-subtitle,
+.int-shell [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.int-shell [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.int-shell h1,
+.int-shell .ms-page-header-title,
+.int-shell [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.int-shell h2,
+.int-shell .db-section-title,
+.int-shell [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.int-shell p + p {
+  margin-top: 12px;
+}
+
+/* Per-page override: integration card description tightened to 64ch */
+.int-shell .int-card__desc,
+.int-shell [class*="card__desc"],
+.int-shell [class*="card__description"] {
+  max-width: 64ch;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. The inactive `.int-tab` (defined further up at L254)
+   keeps its hairline border + cream surface as fallback, but gains a
+   liquid-glass overlay so it reads in the same register as shared
+   FilterTabs. The `[aria-pressed="true"]` Ink lockup (defined L283)
+   wins via specificity.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.int-shell .int-tab:not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border-color: transparent;
+}
+
+.int-shell .int-tab:not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* Generic fall-through for any other [class*="filter-tab"] that gets
+   added under .int-shell in the future. */
+.int-shell [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.int-shell [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.int-shell [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.int-shell [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Integrations carries the floating liquid-glass stat
+   tile + integration-card descriptions + status captions on glass.
+   Strategy A: denser glass on integration cards + floating stat tile;
+   floor every ≤14px copy color at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards holding small copy */
+.int-shell .kpi-card,
+.int-shell [class*="integration-card"],
+.int-shell [class*="stat-tile"]:not([class*="hero"]) {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor */
+.int-shell .kpi-card__eyebrow,
+.int-shell [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.int-shell [class*="__eyebrow"],
+.int-shell [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.int-shell .ms-empty-state__description,
+.int-shell [class*="empty-state-description"],
+.int-shell [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.int-shell [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.int-shell [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.int-shell .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

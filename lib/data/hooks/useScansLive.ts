@@ -27,9 +27,14 @@ type ScanCounts = {
  */
 export function useScansLive(campaignId: string | null, creatorId?: string) {
   const swrKey = campaignScansKey(campaignId);
-  const { data, mutate } = useSWR<ScanCounts>(swrKey, fetcher, {
-    revalidateOnFocus: true,
-  });
+  const { data, error, isLoading, mutate } = useSWR<ScanCounts>(
+    swrKey,
+    fetcher,
+    {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+    },
+  );
 
   const [lastEventAt, setLastEventAt] = useState<string | null>(
     data?.lastEventAt ?? null,
@@ -79,5 +84,7 @@ export function useScansLive(campaignId: string | null, creatorId?: string) {
     count: data?.verified ?? 0,
     lastEventAt,
     isLive,
+    error,
+    isLoading,
   };
 }

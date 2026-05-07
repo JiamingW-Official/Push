@@ -181,6 +181,7 @@ export default function CreatorNotificationsPage() {
     useNotifications("creator");
 
   const [activeTab, setActiveTab] = useState<FilterTab>("All");
+  const [visibleCount, setVisibleCount] = useState(20);
 
   // Sort once + filter per tab
   const filteredNotifications = useMemo(() => {
@@ -196,6 +197,9 @@ export default function CreatorNotificationsPage() {
         return tabMatchesKind(activeTab, notifKind(n.title, n.body));
       });
   }, [notifications, activeTab]);
+
+  const visibleNotifications = filteredNotifications.slice(0, visibleCount);
+  const hasMore = filteredNotifications.length > visibleCount;
 
   // Today summary — counts for the floating glass tile
   const todaySummary = useMemo(() => {
@@ -216,7 +220,7 @@ export default function CreatorNotificationsPage() {
     return { total: today.length, invites, payouts, tasks };
   }, [notifications]);
 
-  const groups = groupNotifications(filteredNotifications);
+  const groups = groupNotifications(visibleNotifications);
 
   const tabs: FilterTab[] = [
     "All",
@@ -413,11 +417,17 @@ export default function CreatorNotificationsPage() {
             ))}
 
             {/* Load more */}
-            <div className="notif-load-more-row">
-              <button type="button" className="btn-ghost click-shift">
-                Load more
-              </button>
-            </div>
+            {hasMore && (
+              <div className="notif-load-more-row">
+                <button
+                  type="button"
+                  className="btn-ghost click-shift"
+                  onClick={() => setVisibleCount((c) => c + 20)}
+                >
+                  Load more
+                </button>
+              </div>
+            )}
           </>
         )}
       </main>

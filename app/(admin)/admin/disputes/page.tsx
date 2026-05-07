@@ -115,7 +115,8 @@ function DisputeRow({ dispute: d }: { dispute: Dispute }) {
   return (
     <Link
       href={`/admin/disputes/${d.id}`}
-      className="click-shift"
+      className="click-shift disp-row"
+      data-status={d.status}
       style={{
         display: "grid",
         gridTemplateColumns: "1fr auto",
@@ -419,6 +420,7 @@ export default function AdminDisputesPage() {
 
   return (
     <div
+      className="disp-page"
       style={{
         minHeight: "100vh",
         background: "var(--surface)",

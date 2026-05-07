@@ -1109,7 +1109,7 @@ export default function CreatorCalendarPage() {
                               <Link
                                 href={
                                   ev.postUrl ??
-                                  `/creator/campaigns/${ev.campaignId}/post`
+                                  `/creator/campaigns/${ev.campaignId}`
                                 }
                                 className="cal-chip-hover__link"
                               >

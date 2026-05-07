@@ -10,6 +10,7 @@ import {
   PageHeader,
   StatusBadge,
 } from "@/components/merchant/shared";
+import { useToast } from "@/components/toast/Toaster";
 import "./payments.css";
 
 type PaymentBrand = "visa" | "mastercard" | "amex";
@@ -95,15 +96,47 @@ function mapPaymentStatus(
   return "closed";
 }
 
+const TRANSACTION_KINDS: readonly TransactionType[] = [
+  "topup",
+  "campaign-charge",
+  "refund",
+  "adjustment",
+];
+
+function isTransactionKind(value: unknown): value is TransactionType {
+  return (
+    typeof value === "string" &&
+    (TRANSACTION_KINDS as readonly string[]).includes(value)
+  );
+}
+
 function mapPayments(payments: Payment[]): TransactionItem[] {
-  return payments.map((payment) => ({
-    id: payment.id,
-    date: payment.paid_at ?? payment.created_at,
-    type: "campaign-charge",
-    description: `Creator payout${payment.campaign_id ? ` — ${payment.campaign_id}` : ""}`,
-    amount: -Math.abs(payment.amount / 100),
-    status: mapPaymentStatus(payment.status),
-  }));
+  return payments.map((payment) => {
+    // Demo data tags the kind via `milestone_id` (see lib/data/mock-payments.ts).
+    // Real Stripe-backed rows fall back to "campaign-charge".
+    const taggedKind = isTransactionKind(payment.milestone_id)
+      ? payment.milestone_id
+      : "campaign-charge";
+
+    // Preserve sign for top-ups and adjustment credits; clamp legacy rows
+    // (which only stored magnitude) to negative for charges/refunds.
+    const dollars = payment.amount / 100;
+    const signedAmount =
+      taggedKind === "topup" || taggedKind === "adjustment"
+        ? dollars
+        : -Math.abs(dollars);
+
+    return {
+      id: payment.id,
+      date: payment.paid_at ?? payment.created_at,
+      type: taggedKind,
+      description:
+        (payment as Payment & { description?: string }).description ??
+        `Creator payout${payment.campaign_id ? ` — ${payment.campaign_id}` : ""}`,
+      amount: signedAmount,
+      status: mapPaymentStatus(payment.status),
+    };
+  });
 }
 
 function CardBrandIcon({ brand }: { brand: PaymentBrand }) {
@@ -155,6 +188,7 @@ export default function PaymentsClient({
 }: {
   initialPayments: Payment[];
 }) {
+  const { toast } = useToast();
   const [methods, setMethods] = useState(PAYMENT_METHODS);
   const [activeFilter, setActiveFilter] = useState<TransactionFilter>("all");
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
@@ -239,6 +273,7 @@ export default function PaymentsClient({
   }
 
   function setDefaultMethod(methodId: string) {
+    const target = methods.find((m) => m.id === methodId);
     setMethods((prev) =>
       prev.map((method) => ({
         ...method,
@@ -246,9 +281,13 @@ export default function PaymentsClient({
       })),
     );
     setSelectedMethodId(methodId);
+    if (target) {
+      toast.success(`${target.brandLabel} •••• ${target.last4} is now default`);
+    }
   }
 
   function removeMethod(methodId: string) {
+    const target = methods.find((m) => m.id === methodId);
     setMethods((prev) => {
       const remaining = prev.filter((method) => method.id !== methodId);
       if (!remaining.length) return prev;
@@ -260,6 +299,32 @@ export default function PaymentsClient({
       }
       return remaining;
     });
+    if (target) {
+      toast.info(`${target.brandLabel} •••• ${target.last4} removed`);
+    }
+  }
+
+  function handleConfirmCharge() {
+    if (topUpAmount <= 0 || !selectedMethodId) return;
+    const method = methods.find((m) => m.id === selectedMethodId);
+    toast.success(`Charged ${formatMoney(totalCharge)}`, {
+      body: `${method?.brandLabel ?? "Method"} •••• ${method?.last4 ?? "—"}`,
+    });
+    setCustomAmount("");
+    setIsTopUpOpen(false);
+  }
+
+  function handleTransactionClick(transaction: TransactionItem) {
+    toast.info(
+      `${formatTransactionType(transaction.type)} · ${transaction.id}`,
+      {
+        body: `${transaction.amount >= 0 ? "+" : "-"}${formatMoney(Math.abs(transaction.amount))}`,
+      },
+    );
+  }
+
+  function handleAddMethod() {
+    toast.info("New payment method form coming soon");
   }
 
   const topUpFooter = (
@@ -275,6 +340,7 @@ export default function PaymentsClient({
         type="button"
         className="btn btn-primary pay-btn"
         disabled={topUpAmount <= 0 || !selectedMethodId}
+        onClick={handleConfirmCharge}
       >
         Charge {formatMoney(totalCharge)}
       </button>
@@ -355,7 +421,11 @@ export default function PaymentsClient({
               </div>
             </article>
           ))}
-          <button type="button" className="pay-method-add" onClick={openTopUp}>
+          <button
+            type="button"
+            className="pay-method-add"
+            onClick={handleAddMethod}
+          >
             + Add payment method
           </button>
         </div>
@@ -388,7 +458,21 @@ export default function PaymentsClient({
               <span>Status</span>
             </div>
             {filteredTransactions.map((transaction) => (
-              <div key={transaction.id} className="pay-history-row" role="row">
+              <div
+                key={transaction.id}
+                className="pay-history-row"
+                role="row"
+                tabIndex={0}
+                onClick={() => handleTransactionClick(transaction)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    handleTransactionClick(transaction);
+                  }
+                }}
+                style={{ cursor: "pointer" }}
+                aria-label={`View transaction ${transaction.id}`}
+              >
                 <span>{formatDate(transaction.date)}</span>
                 <span>{formatTransactionType(transaction.type)}</span>
                 <span>{transaction.description}</span>
@@ -411,7 +495,66 @@ export default function PaymentsClient({
           </div>
         ) : (
           <div className="pay-empty-wrap">
-            <EmptyState title="No transactions yet" />
+            {(() => {
+              if (transactions.length === 0) {
+                return (
+                  <EmptyState
+                    title="No transactions yet"
+                    description="Top-ups, campaign charges, refunds, and adjustments all post here as they happen. Top up your wallet to start spending against live campaigns."
+                    ctaLabel="Top up balance"
+                    ctaOnClick={openTopUp}
+                  />
+                );
+              }
+              if (activeFilter === "topup") {
+                return (
+                  <EmptyState
+                    title="No top-ups in this view"
+                    description="You haven't topped up your wallet yet. Add funds to keep campaigns running without interruption."
+                    ctaLabel="Top up balance"
+                    ctaOnClick={openTopUp}
+                  />
+                );
+              }
+              if (activeFilter === "campaign-charge") {
+                return (
+                  <EmptyState
+                    title="No campaign charges yet"
+                    description="Charges post here each time a verified scan converts. Reset to see your full transaction history."
+                    ctaLabel="Show all transactions"
+                    ctaOnClick={() => setActiveFilter("all")}
+                  />
+                );
+              }
+              if (activeFilter === "refund") {
+                return (
+                  <EmptyState
+                    title="No refunds on file"
+                    description="Refunds appear here when a charge is reversed. A clean record is a good sign."
+                    ctaLabel="Show all transactions"
+                    ctaOnClick={() => setActiveFilter("all")}
+                  />
+                );
+              }
+              if (activeFilter === "adjustment") {
+                return (
+                  <EmptyState
+                    title="No adjustments yet"
+                    description="Manual credits and corrections from Push ops appear here. Empty means your ledger is in sync."
+                    ctaLabel="Show all transactions"
+                    ctaOnClick={() => setActiveFilter("all")}
+                  />
+                );
+              }
+              return (
+                <EmptyState
+                  title="Nothing in this view"
+                  description="No transactions match the current filter. Reset to see your full ledger."
+                  ctaLabel="Show all transactions"
+                  ctaOnClick={() => setActiveFilter("all")}
+                />
+              );
+            })()}
           </div>
         )}
       </section>
@@ -514,6 +657,7 @@ export default function PaymentsClient({
               type="button"
               className="btn btn-primary pay-confirm-btn"
               disabled={topUpAmount <= 0 || !selectedMethodId}
+              onClick={handleConfirmCharge}
             >
               Confirm amount
             </button>

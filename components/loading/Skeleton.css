@@ -22,15 +22,25 @@
   background-image: linear-gradient(
     90deg,
     var(--skel-base) 0%,
-    var(--skel-tint) 50%,
+    rgba(255, 255, 255, 0.6) 50%,
     var(--skel-base) 100%
   );
   background-size: 200% 100%;
-  background-position: 200% 0;
-  animation: skel-shimmer-slide 1.5s linear infinite;
-  border-radius: 8px;
+  background-position: -200% 0;
+  animation: skeletonShimmer 2.4s linear infinite;
+  border-radius: 4px;
 }
 
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Legacy alias kept for any inherited references. */
 @keyframes skel-shimmer-slide {
   0% {
     background-position: 200% 0;
@@ -245,11 +255,157 @@
   margin-top: 8px;
 }
 
+/* ── Wave-7B atoms: line / heading / circle / card / table / kpi-grid ── */
+
+.skel-group {
+  display: contents;
+}
+
+.skel-line {
+  display: block;
+}
+
+.skel-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skel-heading__line {
+  height: 24px;
+  border-radius: 4px;
+}
+
+.skel-heading__line:first-child {
+  height: 32px;
+}
+
+.skel-circle {
+  border-radius: 50% !important;
+  flex-shrink: 0;
+}
+
+/* Generic card shell — used by SkeletonCard with `padding` / `heightHint`.
+   Matches Push v11 liquid-glass card: warm tone + soft elevation. */
+.skel-card-shell {
+  background: var(--surface-2, #f5f3ee);
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: skelCardFadeIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes skelCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Table — header + body rows in a CSS grid */
+.skel-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface-2, #f5f3ee);
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+}
+
+.skel-table__row {
+  display: grid;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 0.5px dashed rgba(0, 0, 0, 0.06);
+  animation: skelCardFadeIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.skel-table__row:last-child {
+  border-bottom: none;
+}
+
+.skel-table__row--head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+}
+
+.skel-table__cell {
+  border-radius: 4px;
+}
+
+/* KPI grid — 3 or 4 tiles in a responsive grid */
+.skel-kpi-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.skel-kpi-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.skel-kpi-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .skel-kpi-grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .skel-kpi-grid--3,
+  .skel-kpi-grid--4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skel-kpi-tile {
+  background: var(--surface-2, #f5f3ee);
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 120px;
+  animation: skelCardFadeIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.skel-kpi-tile__label {
+  height: 12px;
+  width: 50%;
+}
+
+.skel-kpi-tile__value {
+  height: 36px;
+  width: 70%;
+}
+
+.skel-kpi-tile__delta {
+  height: 12px;
+  width: 40%;
+}
+
 /* ── Reduced-motion: kill the shimmer, keep the layout ──── */
 
 @media (prefers-reduced-motion: reduce) {
+  .skel-shimmer,
+  .skel-card-shell,
+  .skel-table__row,
+  .skel-kpi-tile {
+    animation: none !important;
+  }
   .skel-shimmer {
-    animation: none;
     background-image: none;
+    background-color: var(--skel-tint);
   }
 }

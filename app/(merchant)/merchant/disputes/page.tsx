@@ -10,7 +10,79 @@ import {
 } from "@/lib/disputes/mock-disputes";
 import { DisputeList } from "@/components/disputes/DisputeList";
 import { NewDisputeModal } from "@/components/disputes/NewDisputeModal";
+import { EmptyState } from "@/components/merchant/shared";
 import "@/components/disputes/disputes.css";
+
+interface DisputesFilteredEmptyProps {
+  activeTab: DisputeStatus | "all";
+  onResetFilter: () => void;
+  onOpenDispute: () => void;
+}
+
+function DisputesFilteredEmpty({
+  activeTab,
+  onResetFilter,
+  onOpenDispute,
+}: DisputesFilteredEmptyProps) {
+  if (activeTab === "open") {
+    return (
+      <EmptyState
+        title="No open disputes"
+        description="Nothing is currently in dispute on your end. Open ones land here the moment a creator or your team flags an issue."
+        ctaLabel="Show all disputes"
+        ctaOnClick={onResetFilter}
+      />
+    );
+  }
+  if (activeTab === "under_review") {
+    return (
+      <EmptyState
+        title="Nothing under review"
+        description="No disputes are awaiting Push ops review. We respond within 48 hours of escalation."
+        ctaLabel="Show all disputes"
+        ctaOnClick={onResetFilter}
+      />
+    );
+  }
+  if (activeTab === "awaiting_response") {
+    return (
+      <EmptyState
+        title="No replies needed"
+        description="No disputes are waiting on a response from your team. Anything that needs your input lands here with a deadline."
+        ctaLabel="Show all disputes"
+        ctaOnClick={onResetFilter}
+      />
+    );
+  }
+  if (activeTab === "resolved") {
+    return (
+      <EmptyState
+        title="No resolved disputes yet"
+        description="Wrapped disputes archive here with the final outcome and any agreed adjustments. Empty means none have closed yet."
+        ctaLabel="Show all disputes"
+        ctaOnClick={onResetFilter}
+      />
+    );
+  }
+  if (activeTab === "closed") {
+    return (
+      <EmptyState
+        title="No closed disputes"
+        description="Disputes closed without action — typically withdrawn — file here for your records."
+        ctaLabel="Show all disputes"
+        ctaOnClick={onResetFilter}
+      />
+    );
+  }
+  return (
+    <EmptyState
+      title="Nothing in this view"
+      description="No disputes match the current filter. Reset to see your full case history, or open a new one if something needs attention."
+      ctaLabel="Open a dispute"
+      ctaOnClick={onOpenDispute}
+    />
+  );
+}
 
 /* ── Demo mode ───────────────────────────────────────────── */
 function checkDemoMode(): boolean {
@@ -66,6 +138,7 @@ export default function MerchantDisputesPage() {
 
   return (
     <div
+      className="disp-page"
       style={{
         minHeight: "100svh",
         background: "var(--surface)",
@@ -226,7 +299,15 @@ export default function MerchantDisputesPage() {
 
         {/* List */}
         <div style={{ marginTop: 24 }}>
-          <DisputeList disputes={filtered} basePath="/merchant/disputes" />
+          {filtered.length === 0 && disputes.length > 0 ? (
+            <DisputesFilteredEmpty
+              activeTab={activeTab}
+              onResetFilter={() => setActiveTab("all")}
+              onOpenDispute={() => setModalOpen(true)}
+            />
+          ) : (
+            <DisputeList disputes={filtered} basePath="/merchant/disputes" />
+          )}
         </div>
       </div>
 

@@ -266,3 +266,261 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Disputes Uplift v2 (2026-05-07) — Atmospheric Backdrop · Liquid Glass
+   Mirrors dashboard.db-* haze so dashboard ↔ disputes share a single
+   continuous visual register. Stat cards in this page are inline-styled
+   so we keep the treatment to backdrop + dispute-list card glass.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.disp-page {
+  /* Liquid Glass tokens (scoped — same values as dashboard.db-*) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .disp-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* Atmospheric backdrop — 5-layer radial-gradient haze (mirrors dashboard) */
+.disp-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.disp-page > * { position: relative; z-index: 1; }
+
+/* ── Dispute list cards — liquid-glass surface treatment ──────────────── */
+
+.disp-page .mdisp-card {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border-radius: 14px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+}
+
+.disp-page .mdisp-card:hover {
+  background: var(--lg-bg-light);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .disp-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .disp-page .mdisp-card {
+    background: var(--surface-2) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Stat row already wraps (inline flex-wrap). Tab bar already overflows-x.
+   Page-header + tabs use inline-style padding 32px which is acceptable at
+   375 (gives ~311 content width). This block strengthens .mdisp-card
+   stacking and ensures the desktop escape margin (none here) doesn't trip.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Dispute list cards full-width, stacked layout */
+  .mdisp-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .mdisp-card__amount {
+    font-size: 20px;
+  }
+
+  .mdisp-creator__name {
+    max-width: none;
+  }
+
+  /* Stat tiles in the inline-styled stat row — already wrap; just nudge min-width
+     so on a 375 viewport they can fit two-up before stacking */
+  .disp-page [style*="minWidth: 120"],
+  .disp-page [style*="min-width: 120"] {
+    flex: 1 1 calc(50% - 12px);
+  }
+}
+
+/* Phone < 480 — stat tiles stack 1-col */
+@media (max-width: 480px) {
+  .disp-page [style*="minWidth: 120"],
+  .disp-page [style*="min-width: 120"] {
+    flex: 1 1 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Adds :active state (was hover-only).
+   Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .mdisp-card (had hover only — add :active for parity with rest of suite) */
+.disp-page .mdisp-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disp-page .mdisp-card:active {
+    transform: none !important;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.disp-page p,
+.disp-page .body-text,
+.disp-page .description,
+.disp-page .ms-page-header-subtitle,
+.disp-page [class*="empty-state"] p,
+.disp-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.disp-page .ms-page-header-subtitle,
+.disp-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.disp-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.disp-page h1,
+.disp-page .ms-page-header-title,
+.disp-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.disp-page h2,
+.disp-page .db-section-title,
+.disp-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.disp-page p + p {
+  margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through for any local filter chip
+   under .disp-page. Active state stays solid via shared filter-tabs.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.disp-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.disp-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.disp-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.disp-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Disputes carries timeline metadata, evidence captions,
+   case eyebrows on Liquid Glass. Strategy A: denser glass on case +
+   timeline cards; floor every ≤14px copy color at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards holding small copy */
+.disp-page .kpi-card,
+.disp-page [class*="case-card"],
+.disp-page [class*="timeline-card"],
+.disp-page [class*="evidence-card"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor */
+.disp-page .kpi-card__eyebrow,
+.disp-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.disp-page [class*="__eyebrow"],
+.disp-page [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.disp-page .ms-empty-state__description,
+.disp-page [class*="empty-state-description"],
+.disp-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.disp-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.disp-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.disp-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

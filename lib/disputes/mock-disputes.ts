@@ -806,6 +806,236 @@ export const MOCK_DISPUTES: Dispute[] = [
   },
 ];
 
+// ── Flamingo Estate NYC demo disputes ────────────────────────────────────────
+// The merchant playtest persona is "Flamingo Estate NYC" (see merchant/disputes
+// page.tsx + [id]/page.tsx). The 15 generic fixtures above only contain ONE
+// Flamingo dispute (D-2026-003), so the merchant view felt empty. These five
+// extra Flamingo entries cover every dispute status so all status filter tabs
+// have visible activity.
+const FLAMINGO_DISPUTES: Dispute[] = [
+  {
+    id: "D-2026-101",
+    campaignId: "demo-campaign-101",
+    campaignTitle: "Spring Tasting Menu Launch",
+    merchantName: "Flamingo Estate NYC",
+    creatorName: "Riley Tanaka",
+    filedBy: "Flamingo Estate NYC",
+    filedByRole: "merchant",
+    otherPartyName: "Riley Tanaka",
+    otherPartyRole: "creator",
+    reason: "no_show_scan",
+    description:
+      "Customer claimed redemption at the door but the receipt total ($28.50) does not match the menu price for the offered item. ConversionOracle flagged the scan for follow-up.",
+    amount: 45,
+    expectedOutcome: "Withhold payout pending receipt re-upload",
+    status: "open",
+    events: [
+      {
+        id: "evt-101-1",
+        disputeId: "D-2026-101",
+        type: "filed",
+        authorRole: "merchant",
+        authorName: "Flamingo Estate NYC",
+        message:
+          "Receipt total does not match the offered menu item. Oracle flagged a mismatch — please re-upload a clearer photo of the receipt.",
+        createdAt: "2026-05-05T14:00:00Z",
+      },
+    ],
+    evidence: [],
+    createdAt: "2026-05-05T14:00:00Z",
+    updatedAt: "2026-05-05T14:00:00Z",
+    relatedScanId: "scan-flamingo-101",
+  },
+  {
+    id: "D-2026-102",
+    campaignId: "demo-campaign-102",
+    campaignTitle: "Patio Reopening Stories",
+    merchantName: "Flamingo Estate NYC",
+    creatorName: "Harper Wynn",
+    filedBy: "Flamingo Estate NYC",
+    filedByRole: "merchant",
+    otherPartyName: "Harper Wynn",
+    otherPartyRole: "creator",
+    reason: "no_show_scan",
+    description:
+      "Creator reports a verified scan but the customer who arrived denies ever visiting. We need creator and customer session logs cross-checked before releasing payout.",
+    amount: 60,
+    expectedOutcome: "Manual review of QR scan + customer session",
+    status: "under_review",
+    events: [
+      {
+        id: "evt-102-1",
+        disputeId: "D-2026-102",
+        type: "filed",
+        authorRole: "merchant",
+        authorName: "Flamingo Estate NYC",
+        message:
+          "Creator claims a verified scan but the matched customer denies the visit. Requesting full audit trail.",
+        createdAt: "2026-05-02T09:00:00Z",
+      },
+      {
+        id: "evt-102-2",
+        disputeId: "D-2026-102",
+        type: "status_change",
+        authorRole: "admin",
+        authorName: "Push Support",
+        message:
+          "Pulled session logs and Oracle decision audit. Reviewing scan timing vs. content post timing — response within 48 hours.",
+        createdAt: "2026-05-03T10:00:00Z",
+      },
+    ],
+    evidence: [],
+    createdAt: "2026-05-02T09:00:00Z",
+    updatedAt: "2026-05-03T10:00:00Z",
+    relatedScanId: "scan-flamingo-102",
+  },
+  {
+    id: "D-2026-103",
+    campaignId: "demo-campaign-103",
+    campaignTitle: "Easter Brunch Coverage",
+    merchantName: "Flamingo Estate NYC",
+    creatorName: "Devon Pierce",
+    filedBy: "Flamingo Estate NYC",
+    filedByRole: "merchant",
+    otherPartyName: "Devon Pierce",
+    otherPartyRole: "creator",
+    reason: "content_violation",
+    description:
+      "Asked the creator for proof their reel hit the contractual run-time of 30 seconds. No reply for 48 hours. Holding payout pending response.",
+    amount: 80,
+    expectedOutcome: "Creator submits raw clip for length verification",
+    status: "awaiting_response",
+    events: [
+      {
+        id: "evt-103-1",
+        disputeId: "D-2026-103",
+        type: "filed",
+        authorRole: "merchant",
+        authorName: "Flamingo Estate NYC",
+        message:
+          "Reel appears under the 30-second minimum. Please send the raw export so we can verify length and audio.",
+        createdAt: "2026-04-29T11:00:00Z",
+      },
+      {
+        id: "evt-103-2",
+        disputeId: "D-2026-103",
+        type: "admin_message",
+        authorRole: "admin",
+        authorName: "Push Support",
+        message:
+          "Devon Pierce, please respond within 72 hours or the dispute escalates automatically.",
+        createdAt: "2026-04-30T09:00:00Z",
+      },
+    ],
+    evidence: [],
+    createdAt: "2026-04-29T11:00:00Z",
+    updatedAt: "2026-04-30T09:00:00Z",
+    relatedPaymentId: "demo-payout-103",
+  },
+  {
+    id: "D-2026-104",
+    campaignId: "demo-campaign-104",
+    campaignTitle: "Spring Floral Pop-Up",
+    merchantName: "Flamingo Estate NYC",
+    creatorName: "Imani Cole",
+    filedBy: "Imani Cole",
+    filedByRole: "creator",
+    otherPartyName: "Flamingo Estate NYC",
+    otherPartyRole: "merchant",
+    reason: "incorrect_amount",
+    description:
+      "Customer flagged a duplicate scan on the same receipt — refunded $45 to the customer after fraud review. Adjusting creator payout accordingly.",
+    amount: 45,
+    expectedOutcome: "Refund customer, deduct duplicate from creator payout",
+    status: "resolved",
+    events: [
+      {
+        id: "evt-104-1",
+        disputeId: "D-2026-104",
+        type: "filed",
+        authorRole: "creator",
+        authorName: "Imani Cole",
+        message:
+          "Customer is asking for a refund — receipt was scanned twice on accident. Deferring to merchant + Push Support.",
+        createdAt: "2026-04-18T15:00:00Z",
+      },
+      {
+        id: "evt-104-2",
+        disputeId: "D-2026-104",
+        type: "merchant_response",
+        authorRole: "merchant",
+        authorName: "Flamingo Estate NYC",
+        message:
+          "Confirmed duplicate scan in our POS — same receipt, two attribution events 4 minutes apart.",
+        createdAt: "2026-04-19T10:00:00Z",
+      },
+      {
+        id: "evt-104-3",
+        disputeId: "D-2026-104",
+        type: "admin_decision",
+        authorRole: "admin",
+        authorName: "Push Support",
+        message:
+          "Refunded $45 to the customer. Creator payout adjusted to remove the duplicate event. Closed.",
+        createdAt: "2026-04-20T09:00:00Z",
+      },
+    ],
+    evidence: [],
+    createdAt: "2026-04-18T15:00:00Z",
+    updatedAt: "2026-04-20T09:00:00Z",
+    resolvedAt: "2026-04-20T09:00:00Z",
+    outcome: "refund_merchant",
+    outcomeNote: "Customer refunded $45; creator payout reduced for duplicate",
+    relatedPaymentId: "demo-payout-104",
+  },
+  {
+    id: "D-2026-105",
+    campaignId: "demo-campaign-105",
+    campaignTitle: "Valentine's Day Tasting",
+    merchantName: "Flamingo Estate NYC",
+    creatorName: "Theo Marsh",
+    filedBy: "Flamingo Estate NYC",
+    filedByRole: "merchant",
+    otherPartyName: "Theo Marsh",
+    otherPartyRole: "creator",
+    reason: "other",
+    description:
+      "Same QR scan submitted twice within 90 seconds — Oracle caught the duplicate before payout. Closing as dismissed.",
+    amount: 25,
+    expectedOutcome: "Dismiss — duplicate caught pre-settlement",
+    status: "closed",
+    events: [
+      {
+        id: "evt-105-1",
+        disputeId: "D-2026-105",
+        type: "filed",
+        authorRole: "merchant",
+        authorName: "Flamingo Estate NYC",
+        message:
+          "Duplicate scan on a single receipt within 90s. No payout was released — flagging for record.",
+        createdAt: "2026-02-22T18:00:00Z",
+      },
+      {
+        id: "evt-105-2",
+        disputeId: "D-2026-105",
+        type: "admin_decision",
+        authorRole: "admin",
+        authorName: "Push Support",
+        message:
+          "Confirmed via Oracle audit: duplicate caught before settlement. No financial action needed. Dismissed.",
+        createdAt: "2026-02-23T09:00:00Z",
+      },
+    ],
+    evidence: [],
+    createdAt: "2026-02-22T18:00:00Z",
+    updatedAt: "2026-02-23T09:00:00Z",
+    resolvedAt: "2026-02-23T09:00:00Z",
+    outcome: "dismissed",
+    outcomeNote: "Duplicate scan caught pre-settlement",
+    relatedScanId: "scan-flamingo-105",
+  },
+];
+
 // Filter disputes by role (creator or merchant context)
 export function getDisputesForRole(
   role: "creator" | "merchant",
@@ -817,15 +1047,25 @@ export function getDisputesForRole(
       (d) => d.filedByRole === "creator" || d.otherPartyRole === "creator",
     ).slice(0, 8);
   } else {
-    // Show disputes where merchant is involved
-    return MOCK_DISPUTES.filter(
-      (d) => d.filedByRole === "merchant" || d.otherPartyRole === "merchant",
-    ).slice(0, 8);
+    // Show disputes where the playtest merchant ("Flamingo Estate NYC") is
+    // involved. We surface the Flamingo-specific fixtures first so the
+    // merchant tab + filter chips always have content; remaining role-matched
+    // disputes provide volume for the "All" tab.
+    const flamingo = FLAMINGO_DISPUTES;
+    const otherMerchant = MOCK_DISPUTES.filter(
+      (d) =>
+        (d.filedByRole === "merchant" || d.otherPartyRole === "merchant") &&
+        d.merchantName !== "Flamingo Estate NYC",
+    );
+    return [...flamingo, ...otherMerchant].slice(0, 10);
   }
 }
 
 export function getDisputeById(id: string): Dispute | undefined {
-  return MOCK_DISPUTES.find((d) => d.id === id);
+  return (
+    MOCK_DISPUTES.find((d) => d.id === id) ??
+    FLAMINGO_DISPUTES.find((d) => d.id === id)
+  );
 }
 
 export function getDisputeStats(disputes: Dispute[]) {

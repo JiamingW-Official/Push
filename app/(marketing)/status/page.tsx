@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "./status.css";
 
 export const metadata: Metadata = {
   title: "System Status — Push",
@@ -27,7 +28,7 @@ const UPTIME_STATS = [
 
 export default function StatusPage() {
   return (
-    <>
+    <div className="status-page-uplift">
       {/* ══ 01 — HERO (dark ink, big status indicator) ══ */}
       <section
         style={{
@@ -225,6 +226,7 @@ export default function StatusPage() {
             (SERVICES)
           </p>
           <h2
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -247,13 +249,20 @@ export default function StatusPage() {
               marginBottom: 48,
             }}
           >
-            {SERVICES.map((svc) => (
+            {SERVICES.map((svc, i) => (
               <div
                 key={svc.name}
+                className="lg-tile status-svc-tile"
+                data-accent={
+                  i % 4 === 0
+                    ? "red"
+                    : i % 4 === 1
+                      ? "blue"
+                      : i % 4 === 2
+                        ? "champagne"
+                        : "champagne-deep"
+                }
                 style={{
-                  background: "var(--surface-2)",
-                  borderRadius: 10,
-                  border: "1px solid var(--hairline)",
                   padding: 24,
                   display: "flex",
                   flexDirection: "column",
@@ -497,6 +506,7 @@ export default function StatusPage() {
             (INCIDENT HISTORY)
           </p>
           <h2
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -512,10 +522,9 @@ export default function StatusPage() {
 
           <div
             role="status"
+            className="lg-tile"
+            data-accent="blue"
             style={{
-              background: "var(--surface)",
-              borderRadius: 10,
-              border: "1px solid var(--hairline)",
               padding: "clamp(32px,4vw,48px)",
               display: "flex",
               alignItems: "center",
@@ -581,6 +590,6 @@ export default function StatusPage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

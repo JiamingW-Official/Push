@@ -1757,3 +1757,167 @@
     flex-wrap: wrap;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 10 — Admin Uplift (2026-05-07) · Disputes
+   APPENDED ONLY. Layered on top of v11 Admin baseline.
+   Page-specific accent: status-driven left accent strip on rows
+   (open=red / escalated=red / resolved=blue / dismissed=ink-5 etc.)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.disp-page {
+  /* Liquid Glass tokens (scoped) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .disp-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* ── Atmospheric backdrop — 5-layer haze (status-mixed) ──────────────── */
+.disp-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(193, 18, 31, 0.08),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(0, 133, 255, 0.07),  transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.07), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.04),   transparent 75%);
+}
+.disp-page > * { position: relative; z-index: 1; }
+
+/* ── Wave 9 typography ─────────────────────────────────────────────────── */
+.disp-page p {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+.disp-page p + p { margin-top: 12px; }
+
+.disp-page .adm-page-eyebrow,
+.disp-page .adm-kpi-card__eyebrow {
+  letter-spacing: 0.08em;
+}
+
+.disp-page .adm-page-title {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* ── Wave 9 vertical rhythm ────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .disp-page {
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+}
+@media (max-width: 1023px) and (min-width: 768px) {
+  .disp-page {
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+@media (max-width: 767px) {
+  .disp-page {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ── Wave 9 horizontal breathing ───────────────────────────────────────── */
+@media (min-width: 1440px) {
+  .disp-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+/* ── KPI cards — glass treatment ───────────────────────────────────────── */
+.disp-page .adm-kpi-grid .adm-kpi-card {
+  position: relative;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+}
+.disp-page .adm-kpi-grid .adm-kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+}
+.disp-page .adm-kpi-grid .adm-kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.disp-page .adm-kpi-grid .adm-kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+.disp-page .adm-kpi-grid .adm-kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
+.disp-page .adm-kpi-grid .adm-kpi-card:nth-child(4)::before { background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45)); }
+
+/* ── Status-driven left accent strip on dispute rows ───────────────────── */
+.disp-page .disp-row {
+  position: relative;
+  padding-left: 28px !important;
+}
+.disp-page .disp-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  pointer-events: none;
+}
+.disp-page .disp-row[data-status="open"]::before { background: var(--brand-red); }
+.disp-page .disp-row[data-status="escalated"]::before { background: var(--brand-red); }
+.disp-page .disp-row[data-status="investigating"]::before { background: var(--champagne-deep, #8d7245); }
+.disp-page .disp-row[data-status="awaiting_response"]::before { background: var(--champagne, #bfa170); }
+.disp-page .disp-row[data-status="resolved"]::before { background: var(--accent-blue, #0085ff); }
+.disp-page .disp-row[data-status="dismissed"]::before { background: var(--ink-5, #80807c); }
+
+/* ── Detail page — softer atmospheric haze ─────────────────────────────── */
+.disp-detail-page::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(193, 18, 31, 0.06),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(0, 133, 255, 0.06),  transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.5), transparent 70%);
+}
+
+/* ── Reduced motion / transparency fallbacks ───────────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  .disp-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .disp-page .adm-kpi-grid .adm-kpi-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

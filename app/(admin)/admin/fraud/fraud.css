@@ -1112,3 +1112,157 @@
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 10 — Admin Uplift (2026-05-07) · Fraud Queue
+   APPENDED ONLY. Layered on top of the v11 Admin baseline above.
+   Mirrors merchant Dashboard Uplift v2 atmosphere so admin↔merchant↔
+   creator share one continuous Liquid-Glass register.
+   Page-specific accent: red-tinted atmosphere (this is the fraud queue).
+   Glass on KPI + rules-engine panel. Brand-red top-strip on KPI #1
+   (Pending Review — the queue's highest-priority bucket).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.fraud-page {
+  /* Liquid Glass tokens (scoped — same values as merchant dashboard) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .fraud-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* ── Atmospheric backdrop — 5-layer, red-tinted (fraud queue) ─────────── */
+.fraud-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(193, 18, 31, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(193, 18, 31, 0.07),  transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.05),   transparent 75%);
+}
+.fraud-page > * { position: relative; z-index: 1; }
+
+/* ── Wave 9 typography ─────────────────────────────────────────────────── */
+.fraud-page p {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+.fraud-page p + p { margin-top: 12px; }
+
+.fraud-page .adm-page-eyebrow,
+.fraud-page .adm-kpi-card__eyebrow {
+  letter-spacing: 0.08em;
+}
+
+.fraud-page .adm-page-title {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* ── Wave 9 vertical rhythm ────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .fraud-page {
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+}
+@media (max-width: 1023px) and (min-width: 768px) {
+  .fraud-page {
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+@media (max-width: 767px) {
+  .fraud-page {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ── Wave 9 horizontal breathing — caps content at 1440 ────────────────── */
+@media (min-width: 1440px) {
+  .fraud-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+/* ── KPI cards — glass treatment + red top accent on Pending Review ───── */
+.fraud-page .adm-kpi-grid .adm-kpi-card {
+  position: relative;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.fraud-page .adm-kpi-grid .adm-kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+}
+.fraud-page .adm-kpi-grid .adm-kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.fraud-page .adm-kpi-grid .adm-kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45)); }
+.fraud-page .adm-kpi-grid .adm-kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--ink-3, #61605c), rgba(97, 96, 92, 0.35)); }
+.fraud-page .adm-kpi-grid .adm-kpi-card:nth-child(4)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+
+/* ── Rules engine panel — glass surface ────────────────────────────────── */
+.fraud-page .fraud-rules-panel {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+}
+
+/* ── Reduced motion / transparency fallbacks ───────────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  .fraud-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .fraud-page .adm-kpi-grid .adm-kpi-card,
+  .fraud-page .fraud-rules-panel {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

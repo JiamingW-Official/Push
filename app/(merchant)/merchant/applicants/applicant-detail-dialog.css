@@ -1,0 +1,603 @@
+/* Applicant detail dialog — Push v12 Product UI register
+ *
+ * Apple-style sheet: heavy backdrop blur, --r-3xl big radius, --shadow-3
+ * elevation, spring transitions, snow surface (Product UI), generous
+ * padding. Dialog has a fixed sticky-feeling action bar at bottom.
+ *
+ * Token discipline: --snow / --ink* / --hairline / --shadow-3 / --r-3xl /
+ * --r-pill / --font-display / --font-mono / --spring / --space-* / status
+ * tokens (--success / --accent-blue / --warning / --brand-red /
+ * --champagne).
+ */
+
+.apd-backdrop {
+  align-items: center;
+  animation: apd-backdrop-in 240ms var(--spring) both;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: var(--scrim);
+  display: grid;
+  inset: 0;
+  justify-items: center;
+  padding: var(--space-3);
+  place-items: center;
+  position: fixed;
+  z-index: 200;
+}
+
+.apd-dialog {
+  animation: apd-dialog-in 280ms var(--spring) both;
+  background: var(--snow);
+  border-radius: var(--r-3xl);
+  box-shadow: var(--shadow-3);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  max-height: calc(100svh - var(--space-6));
+  overflow: hidden;
+  position: relative;
+  width: min(100%, 720px);
+  --apd-accent-color: var(--accent-blue);
+}
+
+.apd-dialog--accepted {
+  --apd-accent-color: var(--success);
+}
+
+.apd-dialog--pending {
+  --apd-accent-color: var(--accent-blue);
+}
+
+.apd-dialog--declined {
+  --apd-accent-color: var(--brand-red);
+}
+
+.apd-dialog--shortlisted {
+  --apd-accent-color: var(--warning);
+}
+
+/* Top status bar — thin accent strip at the top of the dialog */
+.apd-dialog::before {
+  background: var(--apd-accent-color);
+  content: '';
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.apd-close {
+  align-items: center;
+  background: var(--surface-3);
+  border: 0;
+  border-radius: var(--r-full);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  position: absolute;
+  right: var(--space-3);
+  top: var(--space-3);
+  transition: transform 180ms var(--spring), background 180ms var(--spring);
+  width: 32px;
+  z-index: 1;
+}
+
+.apd-close svg {
+  height: 18px;
+  width: 18px;
+}
+
+.apd-close:hover {
+  background: var(--mist);
+  transform: translate(1px, 1px);
+}
+
+.apd-close:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.apd-close:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Scroll area — body content scrolls; action bar stays pinned at bottom */
+.apd-scroll-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-5) var(--space-3);
+}
+
+/* ── Hero block: avatar + identity ──────────────────────────────────── */
+.apd-hero {
+  align-items: center;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 96px 1fr;
+}
+
+.apd-avatar {
+  align-items: center;
+  background: var(--surface-3);
+  border-radius: var(--r-full);
+  color: var(--ink-3);
+  display: inline-flex;
+  flex: 0 0 96px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  height: 96px;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  width: 96px;
+}
+
+.apd-avatar img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.apd-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.apd-status-eyebrow {
+  align-items: center;
+  color: var(--apd-accent-color);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  gap: 6px;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.apd-status-eyebrow::before {
+  background: currentColor;
+  border-radius: var(--r-full);
+  content: '';
+  display: block;
+  height: 8px;
+  width: 8px;
+}
+
+.apd-name {
+  align-items: center;
+  color: var(--ink);
+  display: flex;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  gap: var(--space-1);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.apd-handle {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.apd-tier {
+  margin-top: 4px;
+}
+
+.apd-tier-stamp {
+  align-items: center;
+  color: var(--champagne);
+  display: inline-flex;
+  flex: 0 0 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.apd-tier-stamp svg {
+  height: 18px;
+  width: 18px;
+}
+
+/* ── Section shell ──────────────────────────────────────────────────── */
+.apd-section {
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+}
+
+.apd-eyebrow {
+  color: var(--ink-3);
+  cursor: help;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Match Score block ──────────────────────────────────────────────── */
+.apd-match-head {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.apd-match-value {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.apd-match-bar {
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.apd-match-bar-fill {
+  background: var(--apd-accent-color);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  transition: width 320ms var(--spring);
+}
+
+/* ── Stats 4-grid ───────────────────────────────────────────────────── */
+.apd-stats {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.apd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.apd-stat-num {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.apd-stat-sub {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* ── Cover letter / bio ─────────────────────────────────────────────── */
+.apd-cover-letter {
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.apd-bio {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Recent work — 3-up sample row ──────────────────────────────────── */
+.apd-sample-grid {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.apd-sample {
+  aspect-ratio: 1 / 1;
+  background: var(--surface-3);
+  border-radius: var(--r-md);
+  display: block;
+  overflow: hidden;
+  position: relative;
+  transition: transform 180ms var(--spring);
+}
+
+.apd-sample:hover {
+  transform: translate(1px, 1px);
+}
+
+.apd-sample:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.apd-sample img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* ── Context (applied to which campaign + when) ─────────────────────── */
+.apd-context-campaign {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.apd-context-meta {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ── Sticky action bar ──────────────────────────────────────────────── */
+.apd-actions {
+  align-items: center;
+  background: var(--snow);
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-5);
+}
+
+.apd-actions-decisions {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.apd-message-btn {
+  align-items: center;
+  background: var(--surface-3);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  gap: var(--space-1);
+  letter-spacing: 0.04em;
+  padding: 10px 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform 180ms var(--spring), background 180ms var(--spring);
+}
+
+.apd-message-btn svg {
+  height: 16px;
+  width: 16px;
+}
+
+.apd-message-btn:hover {
+  background: var(--mist);
+  transform: translate(1px, 1px);
+}
+
+.apd-message-btn:active {
+  transform: translate(2px, 2px) scale(0.98);
+}
+
+.apd-action {
+  flex: 0 1 auto;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  min-width: 120px;
+}
+
+.apd-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none !important;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────── */
+@keyframes apd-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes apd-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .apd-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .apd-dialog {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-height: 92svh;
+    width: 100%;
+  }
+
+  .apd-scroll-area {
+    padding: var(--space-4) var(--space-3) var(--space-2);
+  }
+
+  .apd-hero {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .apd-avatar {
+    flex-basis: 80px;
+    height: 80px;
+    width: 80px;
+  }
+
+  .apd-name {
+    font-size: 22px;
+  }
+
+  .apd-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .apd-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+
+  .apd-actions-decisions {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  .apd-action,
+  .apd-message-btn {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apd-backdrop,
+  .apd-dialog {
+    animation: none;
+  }
+
+  .apd-match-bar-fill,
+  .apd-sample {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .apd-close (was 1/2 → 2/3) */
+.apd-close {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease;
+}
+.apd-close:hover  { transform: translate(2px, 2px); }
+.apd-close:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .apd-sample (was 1/2 → 2/3) */
+.apd-sample {
+  transition:
+    transform 240ms var(--spring),
+    box-shadow 240ms ease;
+}
+.apd-sample:hover  { transform: translate(2px, 2px); }
+.apd-sample:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .apd-message-btn (was 1/2 → 2/3) */
+.apd-message-btn {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease;
+}
+.apd-message-btn:hover  { transform: translate(2px, 2px); }
+.apd-message-btn:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .apd-close,
+  .apd-close:hover,
+  .apd-close:active,
+  .apd-sample:hover,
+  .apd-sample:active,
+  .apd-message-btn,
+  .apd-message-btn:hover,
+  .apd-message-btn:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────
+   Modal viewport constraint + 44×44 close target. */
+
+@media (max-width: 767px) {
+  .apd-dialog {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .apd-dialog [class*="close"],
+  .apd-dialog button[aria-label*="close" i],
+  .apd-dialog button[aria-label*="dismiss" i] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .apd-dialog button:not([class*="icon-only"]) {
+    min-height: 44px;
+  }
+  .apd-dialog [class*="creator-handle"],
+  .apd-dialog [class*="creator-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  .apd-dialog [class*="-url"],
+  .apd-dialog code {
+    word-break: break-all;
+  }
+}

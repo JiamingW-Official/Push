@@ -140,3 +140,26 @@
     gap: 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .ms-modal-close (was 1/2 → 2/3) */
+.ms-modal-close {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease;
+}
+.ms-modal-close:hover  { transform: translate(2px, 2px); }
+.ms-modal-close:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-modal-close,
+  .ms-modal-close:hover,
+  .ms-modal-close:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

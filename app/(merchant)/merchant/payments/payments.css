@@ -626,3 +626,706 @@
     transform: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Payments Uplift v2 (2026-05-07) — Liquid Glass · Colorful · iOS 26
+   Mirrors dashboard.db-* atmosphere so dashboard ↔ payments share the
+   same continuous register. Pure CSS — no JSX changes.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.pay-page {
+  /* Liquid Glass tokens (scoped — same values as dashboard) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .pay-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* Atmospheric backdrop — 5-layer radial-gradient haze (same as dashboard) */
+.pay-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.pay-page > * { position: relative; z-index: 1; }
+
+/* ── Page-specific accents ─────────────────────────────────────────────
+   Most prominent surfaces = .pay-hero-tile (balance hero) and
+   .pay-method-card (saved payment methods grid). Section heads get
+   the colorful divider with pulsing red dot. */
+
+.pay-page .pay-hero-tile {
+  background: var(--lg-bg-light);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 24px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  isolation: isolate;
+}
+
+.pay-page .pay-method-card {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  isolation: isolate;
+}
+.pay-page .pay-method-card:hover {
+  background: var(--lg-bg-light);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* Section head — colorful gradient underline + pulsing dot */
+.pay-page .pay-section-head {
+  position: relative;
+  border-bottom: none;
+}
+.pay-page .pay-section-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+.pay-page .pay-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.pay-page .pay-title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* Reduced-motion / reduced-transparency fallbacks */
+@media (prefers-reduced-motion: reduce) {
+  .pay-page .pay-hero-tile,
+  .pay-page .pay-method-card {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .pay-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6;
+  }
+  .pay-page .pay-hero-tile,
+  .pay-page .pay-method-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Stack hero + KPI + method grid · table allows horizontal scroll fallback
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin so phone has no negative side margin */
+  .pay-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Hero + KPIs stack 1-col on phone (the existing 780 breakpoint covers this,
+     but tablet 768 sometimes hits a hairline diff — re-affirm here) */
+  .pay-kpi-grid,
+  .pay-method-grid,
+  .pay-preset-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Section heads wrap title + CTA */
+  .pay-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Transaction list — keep grid form but allow horizontal scroll if it overflows */
+  .pay-history-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pay-history-head,
+  .pay-history-row {
+    min-width: 600px;
+  }
+  /* Override min-width back to single-col on the per-row stacked layout
+     defined in the existing 780 block (those rows use grid-template-columns: 1fr) */
+  @supports (selector(:has(*))) {
+    .pay-history-table:has(.pay-history-head[hidden]) .pay-history-row,
+    .pay-history-row[style*="grid-template-columns: 1fr"] {
+      min-width: 0;
+    }
+  }
+
+  /* Modal footer + form action area stack */
+  .pay-modal-footer-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .pay-btn {
+    width: 100%;
+  }
+
+  /* Confirm button full-width */
+  .pay-confirm-btn {
+    width: 100%;
+  }
+}
+
+/* On phone (≤480) the history rows already collapse to grid 1fr per existing 780 block;
+   make sure the wrapping table doesn't keep min-width that forces overflow */
+@media (max-width: 480px) {
+  .pay-history-table {
+    overflow-x: visible;
+  }
+  .pay-history-row {
+    min-width: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .pay-method-card (was 1/2 → 2/3) */
+.pay-page .pay-method-card {
+  transition:
+    transform 240ms var(--spring),
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+.pay-page .pay-method-card:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-method-card:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-link-btn (was 1/2 → 2/3) */
+.pay-page .pay-link-btn {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease;
+}
+.pay-page .pay-link-btn:not(:disabled):hover  { transform: translate(2px, 2px); }
+.pay-page .pay-link-btn:not(:disabled):active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-method-add (was 1/2 → 2/3) */
+.pay-page .pay-method-add {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.pay-page .pay-method-add:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-method-add:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-preset-btn (was 1/2 → 2/3) */
+.pay-page .pay-preset-btn {
+  transition:
+    transform 240ms var(--spring),
+    border-color 240ms ease,
+    color 240ms ease,
+    background 240ms ease;
+}
+.pay-page .pay-preset-btn:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-preset-btn:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-history-row — hover background only (table row); add canonical
+   shift for visual consistency with rest of suite. */
+.pay-page .pay-history-row {
+  transition:
+    background 240ms ease,
+    transform 240ms var(--spring);
+}
+.pay-page .pay-history-row:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-history-row:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pay-page .pay-method-card,
+  .pay-page .pay-method-card:hover,
+  .pay-page .pay-method-card:active,
+  .pay-page .pay-link-btn,
+  .pay-page .pay-link-btn:hover,
+  .pay-page .pay-link-btn:active,
+  .pay-page .pay-method-add,
+  .pay-page .pay-method-add:hover,
+  .pay-page .pay-method-add:active,
+  .pay-page .pay-preset-btn,
+  .pay-page .pay-preset-btn:hover,
+  .pay-page .pay-preset-btn:active,
+  .pay-page .pay-history-row,
+  .pay-page .pay-history-row:hover,
+  .pay-page .pay-history-row:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.pay-page p,
+.pay-page .body-text,
+.pay-page .description,
+.pay-page .ms-page-header-subtitle,
+.pay-page [class*="empty-state"] p,
+.pay-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.pay-page .ms-page-header-subtitle,
+.pay-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.pay-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.pay-page h1,
+.pay-page .ms-page-header-title,
+.pay-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.pay-page h2,
+.pay-page .db-section-title,
+.pay-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.pay-page p + p {
+  margin-top: 12px;
+}
+
+/* Per-page override: payments hero subtitle tightened to 64ch */
+.pay-page .pay-hero-tile .ms-page-header-subtitle,
+.pay-page .pay-hero-tile [class*="hero-sub"] {
+  max-width: 64ch;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .pay-page {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .pay-page > .ms-page-header,
+  .pay-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .pay-page > section,
+  .pay-page > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .pay-page > section + section {
+    margin-top: 0;
+  }
+
+  .pay-page [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .pay-page {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pay-page {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right (the existing
+   1024+ rule sets margin: 0 calc(...) to bleed into the shell gutter,
+   so cascade order requires !important to win on 1440+). Atmospheric
+   ::before backdrop is position:fixed and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .pay-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .pay-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pay-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pay-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for KPI rows and payout tables */
+.pay-page .db-kpi-grid,
+.pay-page .db-list-surface,
+.pay-page [class*="kpi-row"],
+.pay-page [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for inputs on the payments page
+   (filters, add-method forms, modal payment dialogs).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.pay-page input[type="text"],
+.pay-page input[type="email"],
+.pay-page input[type="number"],
+.pay-page input[type="tel"],
+.pay-page input[type="url"],
+.pay-page input[type="search"],
+.pay-page input[type="password"],
+.pay-page select,
+.pay-page textarea,
+.pay-form input[type="text"],
+.pay-form input[type="email"],
+.pay-form input[type="number"],
+.pay-form input[type="tel"],
+.pay-form input[type="url"],
+.pay-form input[type="search"],
+.pay-form input[type="password"],
+.pay-form select,
+.pay-form textarea,
+.pay-modal-shell input[type="text"],
+.pay-modal-shell input[type="email"],
+.pay-modal-shell input[type="number"],
+.pay-modal-shell input[type="tel"],
+.pay-modal-shell input[type="url"],
+.pay-modal-shell input[type="search"],
+.pay-modal-shell input[type="password"],
+.pay-modal-shell select,
+.pay-modal-shell textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.pay-page input:focus,
+.pay-page input:focus-visible,
+.pay-page select:focus,
+.pay-page textarea:focus,
+.pay-page textarea:focus-visible,
+.pay-form input:focus,
+.pay-form input:focus-visible,
+.pay-form select:focus,
+.pay-form textarea:focus,
+.pay-form textarea:focus-visible,
+.pay-modal-shell input:focus,
+.pay-modal-shell input:focus-visible,
+.pay-modal-shell select:focus,
+.pay-modal-shell textarea:focus,
+.pay-modal-shell textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.pay-page input::placeholder,
+.pay-page textarea::placeholder,
+.pay-form input::placeholder,
+.pay-form textarea::placeholder,
+.pay-modal-shell input::placeholder,
+.pay-modal-shell textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.pay-page input:disabled,
+.pay-page select:disabled,
+.pay-page textarea:disabled,
+.pay-form input:disabled,
+.pay-form select:disabled,
+.pay-form textarea:disabled,
+.pay-modal-shell input:disabled,
+.pay-modal-shell select:disabled,
+.pay-modal-shell textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through for any local filter chip
+   under .pay-page. Active state stays solid via shared filter-tabs.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.pay-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.pay-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.pay-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.pay-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the payments page feels iOS
+   26 native instead of jammed-against-sidebar on huge displays.
+   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
+   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
+   - Holds KPI gap to 24px so cards do not balloon.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     (inline rgba fallback; no new tokens introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .pay-page {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .pay-page .db-kpi-grid,
+  .pay-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .pay-page {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .pay-page .db-kpi-grid .kpi-card,
+  .pay-page [class*="hero-card"],
+  .pay-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Payments carries hero-tile caption copy
+   (`.pay-hero-tile__caption`), method-card eyebrows, and history-row
+   metadata — all small text on Liquid Glass. Strategy A: raise glass
+   on hero / method / preset / history cards to `--lg-bg-light`; floor
+   every ≤14px copy color at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass on hero / method / preset cards holding small copy */
+.pay-page .pay-hero-tile,
+.pay-page .pay-method-card,
+.pay-page .pay-preset-btn,
+.pay-page .pay-history-row,
+.pay-page .kpi-card {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Caption + eyebrow color floor */
+.pay-page .pay-hero-tile__caption,
+.pay-page .pay-hero-tile__eyebrow,
+.pay-page .pay-eyebrow,
+.pay-page .kpi-card__eyebrow,
+.pay-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.pay-page [class*="__eyebrow"],
+.pay-page [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.pay-page .ms-empty-state__description,
+.pay-page [class*="empty-state-description"],
+.pay-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.pay-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.pay-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.pay-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .pay-page button:not([class*="icon-only"]),
+  .pay-page a[role="button"],
+  .pay-page [role="button"] {
+    min-height: 44px;
+  }
+  .pay-page button[class*="icon-only"],
+  .pay-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Long payment descriptions / payee labels ellipsis */
+  .pay-page [class*="payment-title"],
+  .pay-page [class*="payee-name"],
+  .pay-page [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Stripe IDs / transaction IDs / hosted URLs wrap */
+  .pay-page [class*="-url"],
+  .pay-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
+  .pay-page [class*="-mono"],
+  .pay-page [class*="payment-description"],
+  .pay-page code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .pay-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

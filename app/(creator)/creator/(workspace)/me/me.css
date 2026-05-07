@@ -206,3 +206,470 @@
 .bento:hover .me-public-action {
   color: var(--accent-blue, #0085ff);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   /creator/me Uplift v1 (2026-05-07) — Liquid Glass + Atmospheric Backdrop
+   Mirrors the merchant Dashboard Uplift v2 register so creator ↔ merchant
+   share one continuous visual language. Pure CSS — no token additions.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.me-hub {
+  /* Liquid Glass tokens (scoped — same values as merchant dashboard) */
+  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-hero: blur(32px) saturate(1.55);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+
+/* Desktop escape — bleed atmosphere full-bleed beyond the hub-shell padding. */
+@media (min-width: 1024px) {
+  .me-hub {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* ── 5-layer atmospheric backdrop ─────────────────────────────────────── */
+.me-hub::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.me-hub > * { position: relative; z-index: 1; }
+
+/* ── Section heads (.hub-section h2) — colorful gradient underline ────── */
+.me-hub .hub-section {
+  position: relative;
+}
+.me-hub .hub-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+.me-hub .hub-section__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.me-hub .hub-section__title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* ── Hero anchor BentoModule — liquid glass + brand-red top accent strip ─
+   Targets the first .bento inside the first .me-bento (Profile module).
+*/
+.me-hub .me-bento:first-of-type > .bento:first-child {
+  position: relative;
+  background: var(--lg-bg-hero);
+  -webkit-backdrop-filter: var(--lg-blur-hero);
+          backdrop-filter: var(--lg-blur-hero);
+  border-radius: 24px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  overflow: hidden;
+  isolation: isolate;
+}
+.me-hub .me-bento:first-of-type > .bento:first-child::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 2;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4));
+  pointer-events: none;
+}
+
+/* ── Public-link bento (last span-12) — glass tile so it reads as a footer
+     CTA panel without competing with the hero. */
+.me-hub .me-bento:last-of-type > .bento:last-child {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  isolation: isolate;
+}
+
+/* ── Public-row KPI strip — 4-color rotation accents on each KpiBlock ── */
+.me-hub .me-public-row > :nth-child(1) { box-shadow: inset 3px 0 0 var(--brand-red); border-radius: 4px; padding-left: 12px; }
+.me-hub .me-public-row > :nth-child(2) { box-shadow: inset 3px 0 0 var(--accent-blue); border-radius: 4px; padding-left: 12px; }
+.me-hub .me-public-row > :nth-child(3) { box-shadow: inset 3px 0 0 var(--champagne); border-radius: 4px; padding-left: 12px; }
+
+/* ── Reduced-transparency fallback ────────────────────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  .me-hub::before { display: none !important; }
+  .me-hub .me-bento:first-of-type > .bento:first-child,
+  .me-hub .me-bento:last-of-type > .bento:last-child {
+    background: var(--surface, #f8f4e8) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.me-hub p,
+.me-hub .body-text,
+.me-hub .description,
+.me-hub .ms-page-header-subtitle,
+.me-hub [class*="empty-state"] p,
+.me-hub [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.me-hub .ms-page-header-subtitle,
+.me-hub [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.me-hub [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.me-hub h1,
+.me-hub .ms-page-header-title,
+.me-hub [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.me-hub h2,
+.me-hub .db-section-title,
+.me-hub [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.me-hub p + p {
+  margin-top: 12px;
+}
+
+/* Per-page override: profile bio capped at 64ch */
+.me-hub [class*="profile-bio"],
+.me-hub [class*="bio"],
+.me-hub .me-profile-text p {
+  max-width: 64ch;
+  line-height: 1.6;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .me-hub {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .me-hub > .ms-page-header,
+  .me-hub > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .me-hub > section,
+  .me-hub > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .me-hub > section + section {
+    margin-top: 0;
+  }
+
+  .me-hub [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .me-hub {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .me-hub {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints; overrides the existing 1024+ negative
+   escape margin via !important on margin-left/right (the prior rule
+   uses margin: 0 calc(-1 * (10vw - 48px)) to bleed into the shell
+   gutter, so cascade order requires !important to win on 1440+).
+   Atmospheric ::before backdrop is position:fixed and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .me-hub {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .me-hub {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .me-hub {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .me-hub {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for profile bento + public-row */
+.me-hub .db-kpi-grid,
+.me-hub .db-list-surface,
+.me-hub [class*="kpi-row"],
+.me-hub [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for any inputs on the creator
+   me hub.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.me-hub input[type="text"],
+.me-hub input[type="email"],
+.me-hub input[type="number"],
+.me-hub input[type="tel"],
+.me-hub input[type="url"],
+.me-hub input[type="search"],
+.me-hub input[type="password"],
+.me-hub select,
+.me-hub textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.me-hub input:focus,
+.me-hub input:focus-visible,
+.me-hub select:focus,
+.me-hub textarea:focus,
+.me-hub textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.me-hub input::placeholder,
+.me-hub textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.me-hub input:disabled,
+.me-hub select:disabled,
+.me-hub textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the creator me hub feels iOS
+   26 native instead of jammed-against-sidebar on huge displays.
+   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
+   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
+   - Holds KPI gap to 24px so cards do not balloon.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     (inline rgba fallback; no new tokens introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .me-hub {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .me-hub .db-kpi-grid,
+  .me-hub [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .me-hub {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .me-hub .db-kpi-grid .kpi-card,
+  .me-hub [class*="hero-card"],
+  .me-hub [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .me-hub button:not([class*="icon-only"]),
+  .me-hub a[role="button"],
+  .me-hub [role="button"] {
+    min-height: 44px;
+  }
+  .me-hub button[class*="icon-only"],
+  .me-hub [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Form inputs minimum touch height */
+  .me-hub input:not([type="checkbox"]):not([type="radio"]),
+  .me-hub select,
+  .me-hub textarea {
+    min-height: 44px;
+  }
+
+  /* Display name / handle ellipsis on rows */
+  .me-hub [class*="display-name"],
+  .me-hub [class*="creator-handle"],
+  .me-hub [class*="row-title"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Long bio — 4-line clamp on summary cards */
+  .me-hub [class*="bio-text"],
+  .me-hub [class*="profile-bio"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Public profile URL / referral link wrap */
+  .me-hub [class*="-url"],
+  .me-hub [class*="-mono"],
+  .me-hub [class*="referral-link"],
+  .me-hub code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Sticky save bar — keep above iOS home indicator */
+  .me-hub [class*="save-bar"][class*="sticky"],
+  .me-hub [class*="save-bar"][class*="fixed"] {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .me-hub {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

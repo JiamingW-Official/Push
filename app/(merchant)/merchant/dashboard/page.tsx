@@ -32,30 +32,67 @@ function mapApplications(applications: MockApplication[]): Application[] {
   }));
 }
 
+// Accept both the formal MerchantCampaign shape (Supabase / future API) and
+// the legacy DemoCampaign mock shape (spots_total / spots_remaining / deadline /
+// category) that flows through `as unknown as Campaign[]` in api-client. Without
+// this normalization, mock-driven dashboards render `NaN/NaN spots` and
+// `Deadline: No deadline` because the upstream cast hides missing fields.
 function mapCampaigns(campaigns: MerchantCampaign[]): Campaign[] {
-  return campaigns.map((campaign) => ({
-    id: campaign.id,
-    merchant_id: campaign.merchant_id,
-    title: campaign.title,
-    description: campaign.description ?? "",
-    category: campaign.tags?.[0] ?? undefined,
-    payout: campaign.reward_per_visit,
-    spots_total: campaign.max_creators,
-    spots_remaining: Math.max(
-      campaign.max_creators - campaign.accepted_creators,
-      0,
-    ),
-    deadline: campaign.end_date,
-    status:
-      campaign.status === CampaignStatus.Completed ||
-      campaign.status === CampaignStatus.Cancelled
-        ? "closed"
-        : campaign.status,
-    created_at: campaign.created_at,
-    applications_count: campaign.accepted_creators,
-    qr_scans: 0,
-    attributed_revenue: 0,
-  }));
+  return campaigns.map((rawCampaign) => {
+    const campaign = rawCampaign as MerchantCampaign &
+      Partial<{
+        spots_total: number;
+        spots_remaining: number;
+        deadline: string;
+        category: string;
+        applications_count: number;
+        qr_scans: number;
+        attributed_revenue: number;
+      }>;
+
+    const maxCreators =
+      typeof campaign.max_creators === "number"
+        ? campaign.max_creators
+        : typeof campaign.spots_total === "number"
+          ? campaign.spots_total
+          : 0;
+
+    const acceptedCreators =
+      typeof campaign.accepted_creators === "number"
+        ? campaign.accepted_creators
+        : typeof campaign.spots_remaining === "number"
+          ? Math.max(maxCreators - campaign.spots_remaining, 0)
+          : 0;
+
+    const spotsRemaining =
+      typeof campaign.spots_remaining === "number"
+        ? campaign.spots_remaining
+        : Math.max(maxCreators - acceptedCreators, 0);
+
+    const deadline = campaign.end_date ?? campaign.deadline ?? null;
+    const category = campaign.category ?? campaign.tags?.[0];
+
+    return {
+      id: campaign.id,
+      merchant_id: campaign.merchant_id,
+      title: campaign.title,
+      description: campaign.description ?? "",
+      category,
+      payout: campaign.reward_per_visit ?? 0,
+      spots_total: maxCreators,
+      spots_remaining: spotsRemaining,
+      deadline,
+      status:
+        campaign.status === CampaignStatus.Completed ||
+        campaign.status === CampaignStatus.Cancelled
+          ? "closed"
+          : campaign.status,
+      created_at: campaign.created_at,
+      applications_count: campaign.applications_count ?? acceptedCreators,
+      qr_scans: campaign.qr_scans ?? 0,
+      attributed_revenue: campaign.attributed_revenue ?? 0,
+    };
+  });
 }
 
 function safeNumber(value: unknown): number {

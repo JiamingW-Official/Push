@@ -1,0 +1,169 @@
+/* ============================================================================
+ * Push — Unified page-enter + list-stagger animation system
+ *
+ * Single source for "native polish" entrance choreography across the merchant
+ * + creator suites. Pure CSS keyframes scoped via class names — no runtime
+ * library dependency.
+ *
+ * Tokens consumed (all defined in app/globals.css):
+ *   --spring : cubic-bezier(0.34, 1.56, 0.64, 1)  iOS 26 spring
+ *
+ * Public surface (only these names are guaranteed; everything else is internal):
+ *   .anim-page          -> apply pageEnter once on mount
+ *   .anim-stagger > *   -> children stagger in (60ms cadence, up to 20 kids)
+ *   .anim-hero          -> hero card scale + fade
+ *   .anim-pulse-live    -> 2.4s green-dot pulse (extracted from dashboard.css)
+ *
+ * Reduced-motion: every entrance class is suppressed and forced to its
+ * end-state via a single block at the bottom of this file. We use !important
+ * there as the exception explicitly carved out in CLAUDE.md.
+ *
+ * Performance: every keyframe animates only `opacity` + `transform` so the
+ * compositor handles them; no layout thrash, no paint cost on large grids.
+ * ========================================================================== */
+
+/* ── Keyframes ──────────────────────────────────────────────────────────── */
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes listItemEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseLive {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18); }
+  50%      { box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.06); }
+}
+
+/* Modal / drawer entrance pair — used by dialogs that opt in via class.
+   Existing dialogs with their own animations are untouched (apd-, ldd-,
+   disputeModalIn, ms-modal-*). These are here for any modal that lacks
+   a transition today. */
+@keyframes modalBackdropEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalDialogEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* ── Utility classes ────────────────────────────────────────────────────── */
+
+.anim-page {
+  /* iOS 26 spring on a short 360ms ramp keeps total motion < 400ms */
+  animation: pageEnter 360ms var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)) both;
+  will-change: opacity, transform;
+}
+
+.anim-hero {
+  animation: heroEnter 380ms var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)) both;
+  will-change: opacity, transform;
+}
+
+.anim-pulse-live {
+  animation: pulseLive 2.4s ease-in-out infinite;
+}
+
+/*
+ * .anim-stagger — children fade up one after another.
+ *
+ * Each direct child gets `--stagger-i` from its nth-child position, then
+ * computes its own delay. We support up to 20 siblings; beyond that the
+ * default `--stagger-i: 0` applies (everything in the tail enters together,
+ * which is fine — typical lists rarely paint 20+ before the user scrolls).
+ */
+.anim-stagger > * {
+  animation: listItemEnter 320ms var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)) both;
+  animation-delay: calc(var(--stagger-i, 0) * 60ms);
+  will-change: opacity, transform;
+}
+
+.anim-stagger > *:nth-child(1)  { --stagger-i: 0;  }
+.anim-stagger > *:nth-child(2)  { --stagger-i: 1;  }
+.anim-stagger > *:nth-child(3)  { --stagger-i: 2;  }
+.anim-stagger > *:nth-child(4)  { --stagger-i: 3;  }
+.anim-stagger > *:nth-child(5)  { --stagger-i: 4;  }
+.anim-stagger > *:nth-child(6)  { --stagger-i: 5;  }
+.anim-stagger > *:nth-child(7)  { --stagger-i: 6;  }
+.anim-stagger > *:nth-child(8)  { --stagger-i: 7;  }
+.anim-stagger > *:nth-child(9)  { --stagger-i: 8;  }
+.anim-stagger > *:nth-child(10) { --stagger-i: 9;  }
+.anim-stagger > *:nth-child(11) { --stagger-i: 10; }
+.anim-stagger > *:nth-child(12) { --stagger-i: 11; }
+.anim-stagger > *:nth-child(13) { --stagger-i: 12; }
+.anim-stagger > *:nth-child(14) { --stagger-i: 13; }
+.anim-stagger > *:nth-child(15) { --stagger-i: 14; }
+.anim-stagger > *:nth-child(16) { --stagger-i: 15; }
+.anim-stagger > *:nth-child(17) { --stagger-i: 16; }
+.anim-stagger > *:nth-child(18) { --stagger-i: 17; }
+.anim-stagger > *:nth-child(19) { --stagger-i: 18; }
+.anim-stagger > *:nth-child(20) { --stagger-i: 19; }
+
+/* Modal opt-in classes — only modals that lack their own transition should
+   wear these. They animate the same shape we use elsewhere so the suite
+   feels uniform. */
+.anim-modal-backdrop {
+  animation: modalBackdropEnter 240ms ease both;
+}
+
+.anim-modal-dialog {
+  animation: modalDialogEnter 320ms var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)) both;
+  will-change: opacity, transform;
+}
+
+/* ── Reduced motion fallback ────────────────────────────────────────────── */
+/* If a user requests reduced motion we suppress every entrance animation
+   and snap to the end state immediately. The pulsing live-dot is allowed
+   to persist (subtle, communicates "live" status) but its tween is killed.
+   !important is intentional and explicitly permitted by CLAUDE.md for the
+   prefers-reduced-motion fallback. */
+@media (prefers-reduced-motion: reduce) {
+  .anim-page,
+  .anim-hero,
+  .anim-stagger > *,
+  .anim-modal-backdrop,
+  .anim-modal-dialog {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .anim-pulse-live {
+    animation: none !important;
+  }
+}

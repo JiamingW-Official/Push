@@ -898,3 +898,37 @@
     display: none;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Analytics (.an2) is intentionally full-bleed (no cap)
+   per the analytics-strict L/R margin escape. On 1920+ that full-bleed
+   risks looking sparse, so this:
+   - Holds inner KPI / bento grid gap to 24px.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     so cards retain depth at large surface area (no width cap added).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .an2 .db-kpi-grid,
+  .an2 [class*="kpi-row"],
+  .an2-bento {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .an2 .db-kpi-grid .kpi-card,
+  .an2 [class*="hero-card"],
+  .an2 [class*="bento-tile"],
+  .an2-card {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}

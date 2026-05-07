@@ -219,3 +219,116 @@
     border-top: 1px solid var(--line);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   /creator/dashboard Uplift v1 (2026-05-07) — Liquid Glass + Atmospheric
+   Backdrop. Legacy split-pane layout — atmosphere lives in the sidebar
+   scope (the campaign-list area) since the map pane owns the left half.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.dashboard {
+  /* Liquid Glass tokens — same values as merchant dashboard for continuity */
+  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+
+  isolation: isolate;
+}
+
+/* ── 5-layer atmospheric backdrop — scoped to sidebar so the map pane
+   stays untouched. Position absolute inside .sidebar (not fixed). */
+.dashboard .sidebar {
+  position: relative;
+  isolation: isolate;
+}
+.dashboard .sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80vw 60vh at 80% 14%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 70vw 55vh at 10% 30%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 70vw 50vh at 90% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 90vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 40vw 30vh at 20% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.dashboard .sidebar > * { position: relative; z-index: 1; }
+
+/* ── Sidebar header — colorful gradient underline + pulsing dot ──────── */
+.dashboard .sidebar-header {
+  background: var(--lg-bg-light);
+  -webkit-backdrop-filter: var(--lg-blur-soft);
+          backdrop-filter: var(--lg-blur-soft);
+  border-bottom: none;
+  position: relative;
+}
+.dashboard .sidebar-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  pointer-events: none;
+}
+.dashboard .sidebar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.dashboard .sidebar-title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* ── Campaign list — glass surface tile that lets backdrop bleed through ── */
+.dashboard .campaign-list {
+  background: transparent;
+  gap: 8px;
+  padding: 12px;
+}
+
+/* Empty-state card — glass tile */
+.dashboard .empty-state {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border-radius: 16px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+}
+
+/* ── Reduced-transparency fallback ────────────────────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  .dashboard .sidebar::before { display: none !important; }
+  .dashboard .sidebar-header,
+  .dashboard .empty-state {
+    background: var(--surface, #f8f4e8) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

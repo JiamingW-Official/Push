@@ -124,6 +124,10 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
 export interface UnifiedSidebarProps {
   role: SidebarRole;
   notificationCount?: number;
+  /** Unread inbox badge — appears on the Inbox/Messages nav item.
+   *  Currently merchant-only; pass through MerchantShell's
+   *  useThreadInboxStream + mock thread sum. */
+  inboxUnread?: number;
   userInitial?: string;
   avatarUrl?: string;
   userName?: string;
@@ -136,6 +140,7 @@ export interface UnifiedSidebarProps {
 export function UnifiedSidebar({
   role,
   notificationCount = 0,
+  inboxUnread = 0,
   userInitial,
   avatarUrl,
   userName,
@@ -213,12 +218,18 @@ export function UnifiedSidebar({
           const active = isActive(item.href, item.exact);
           const isGigs = item.href === "/creator/gigs";
           const isTodayItem = item.href === "/creator/dashboard";
+          const isMerchantInbox =
+            role === "merchant" && item.href === "/merchant/messages";
           const itemBadge =
             isGigs && gigsPending > 0
               ? gigsPending
               : isTodayItem && todayActionCount > 0
                 ? todayActionCount
-                : 0;
+                : isMerchantInbox && inboxUnread > 0
+                  ? inboxUnread
+                  : 0;
+          // Merchant inbox unread is a soft notification (no urgency tier),
+          // gigs urgent + today urgent already drive the urgent variant.
           const itemBadgeUrgent =
             (isGigs && gigsUrgent > 0) || (isTodayItem && todayActionCount > 0);
           return (
@@ -232,7 +243,9 @@ export function UnifiedSidebar({
                   ? `Gigs, ${itemBadge} pending invite${itemBadge === 1 ? "" : "s"}`
                   : isTodayItem && itemBadge > 0
                     ? `Today, ${itemBadge} urgent action${itemBadge === 1 ? "" : "s"}`
-                    : undefined
+                    : isMerchantInbox && itemBadge > 0
+                      ? `Inbox, ${itemBadge} unread message${itemBadge === 1 ? "" : "s"}`
+                      : undefined
               }
             >
               <span className="us-item__pill">

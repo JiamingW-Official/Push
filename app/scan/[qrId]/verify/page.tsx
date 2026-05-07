@@ -9,6 +9,7 @@ import {
   type MockQRCode,
 } from "@/lib/attribution/mock-qr-codes";
 import { getScanTimestamp, trackVerify } from "@/lib/attribution/track";
+import "../scan.css";
 
 /* ── Constants ─────────────────────────────────────────────── */
 
@@ -772,7 +773,7 @@ export default function VerifyPage() {
   /* ── Success state ── */
   if (pageState === "success") {
     return (
-      <div style={S.page}>
+      <div className="scan-page scan-verify-page" style={S.page}>
         <header style={S.topBar}>
           <span style={S.topBarLogo}>PUSH</span>
           <span style={S.topBarTag}>Visit Confirmed</span>
@@ -824,7 +825,7 @@ export default function VerifyPage() {
     : null;
 
   return (
-    <div style={S.page}>
+    <div className="scan-page scan-verify-page" style={S.page}>
       <header style={S.topBar}>
         <button
           style={S.backButton}

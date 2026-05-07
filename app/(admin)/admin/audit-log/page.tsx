@@ -502,6 +502,7 @@ export default function AuditLogPage() {
 
   return (
     <div
+      className="al-page"
       style={{
         minHeight: "100vh",
         background: "var(--surface)",

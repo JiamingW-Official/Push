@@ -999,3 +999,151 @@
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Trust Uplift v2 (2026-05-07) — Atmospheric · Liquid Glass · Colorful
+   Mirrors merchant Dashboard Uplift v2. CSS-first; pages opt into the
+   uplift by adding the .trust-page-uplift class and the .lg-tile class
+   on cards that should become Liquid-Glass.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.trust-page-uplift {
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+  --uplift-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Atmospheric backdrop — 5-layer radial-gradient (mirrors dashboard) */
+.trust-page-uplift::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.trust-page-uplift > * { position: relative; z-index: 1; }
+
+/* Section heading: brand-red dot + 4-stop colorful gradient underline.
+   Class is opt-in via JSX className on <h2>, so it composes cleanly
+   with inline styles instead of fighting them. */
+.uplift-h {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+.uplift-h::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+.uplift-h::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+/* On dark sections, soften the underline so it reads on ink */
+.uplift-h--dark::after {
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.85) 0%,
+    rgba(191, 161, 112, 0.65) 35%,
+    rgba(0, 133, 255, 0.65) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+}
+
+/* Liquid-Glass tile — opt-in by adding .lg-tile class. Author the
+   card in JSX with NO inline background/border so this class wins
+   without !important. The accent strip color rotates by data-attr. */
+.lg-tile {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 320ms var(--uplift-spring),
+    box-shadow 320ms ease,
+    background 320ms ease;
+}
+.lg-tile::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4));
+}
+.lg-tile[data-accent="blue"]::before {
+  background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4));
+}
+.lg-tile[data-accent="champagne"]::before {
+  background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45));
+}
+.lg-tile[data-accent="champagne-deep"]::before {
+  background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45));
+}
+.lg-tile:hover {
+  transform: translate(2px, 2px);
+  background: var(--lg-bg-light);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* Reduced-motion / reduced-transparency fallbacks */
+@media (prefers-reduced-motion: reduce) {
+  .lg-tile { transition: none; }
+  .lg-tile:hover { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .lg-tile {
+    background: var(--surface) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+    border: 1px solid var(--hairline) !important;
+  }
+}

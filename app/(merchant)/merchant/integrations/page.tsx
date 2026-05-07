@@ -25,6 +25,7 @@ import {
   IntegrationCategory,
   Integration,
 } from "@/lib/integrations/mock-integrations";
+import { useToast } from "@/components/toast/Toaster";
 import "./integrations.css";
 
 /* -- Logo tile — 40×40 r-lg, third-party brand color preserved ------------------- */
@@ -319,14 +320,30 @@ function FeaturedStrip() {
 
 /* -- Page ------------------------------------------------------------------------- */
 export default function IntegrationsPage() {
+  const { toast } = useToast();
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY);
   const [pendingDisconnect, setPendingDisconnect] =
     useState<Integration | null>(null);
+  // Local override map — once a merchant disconnects in playtest, drop the
+  // tile to "available" without round-tripping to the static fixture.
+  const [statusOverrides, setStatusOverrides] = useState<
+    Record<string, Integration["status"]>
+  >({});
+
+  const liveIntegrations = useMemo(
+    () =>
+      INTEGRATIONS.map((integration) =>
+        statusOverrides[integration.slug]
+          ? { ...integration, status: statusOverrides[integration.slug] }
+          : integration,
+      ),
+    [statusOverrides],
+  );
 
   const filtered = useMemo(() => {
-    if (activeCategory === ALL_CATEGORY) return INTEGRATIONS;
-    return INTEGRATIONS.filter((i) => i.category === activeCategory);
-  }, [activeCategory]);
+    if (activeCategory === ALL_CATEGORY) return liveIntegrations;
+    return liveIntegrations.filter((i) => i.category === activeCategory);
+  }, [activeCategory, liveIntegrations]);
 
   const sectionLabel =
     activeCategory === ALL_CATEGORY
@@ -334,8 +351,8 @@ export default function IntegrationsPage() {
       : CATEGORY_LABELS[activeCategory as IntegrationCategory];
 
   const connectedCount = useMemo(
-    () => INTEGRATIONS.filter((i) => i.status === "connected").length,
-    [],
+    () => liveIntegrations.filter((i) => i.status === "connected").length,
+    [liveIntegrations],
   );
 
   const handleDisconnect = useCallback((i: Integration) => {
@@ -343,9 +360,14 @@ export default function IntegrationsPage() {
   }, []);
 
   const confirmDisconnect = useCallback(() => {
-    // Mock data — real impl would call DELETE /api/merchant/integrations/:slug
+    if (!pendingDisconnect) return;
+    setStatusOverrides((prev) => ({
+      ...prev,
+      [pendingDisconnect.slug]: "available",
+    }));
+    toast.info(`${pendingDisconnect.name} disconnected`);
     setPendingDisconnect(null);
-  }, []);
+  }, [pendingDisconnect, toast]);
 
   return (
     <div className="int-shell">
@@ -400,11 +422,23 @@ export default function IntegrationsPage() {
 
         {filtered.length === 0 ? (
           <div className="int-empty" role="status">
-            <h3 className="int-empty__title">Nothing here yet</h3>
+            <h3 className="int-empty__title">
+              No integrations in {sectionLabel}
+            </h3>
             <p className="int-empty__body">
-              No integrations in this category right now. Try another category
-              or request the tool you need below.
+              We haven&apos;t shipped a native connector for this category yet.
+              Browse all integrations, pipe through Zapier, or tell us what
+              you&apos;d like us to build next.
             </p>
+            <div style={{ marginTop: 16 }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setActiveCategory(ALL_CATEGORY)}
+              >
+                Show all integrations
+              </button>
+            </div>
           </div>
         ) : (
           <div className="int-grid">

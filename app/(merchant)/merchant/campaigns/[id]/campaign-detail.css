@@ -516,3 +516,102 @@
     text-align: left;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   2-pane already collapses (1024 + 768 above). KPI grid drops to 1-col,
+   sub-tabs stay scrollable, applicant cards full-width.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Inner 2-pane padding tightened so cards have more horizontal room */
+  .cd-layout {
+    padding: 0 16px 48px;
+    gap: 24px;
+  }
+
+  /* KPI grid — single column on phone (already in dashboard.css for general
+     dashboard-kpi-grid, but reaffirm scoped to detail page in case dashboard
+     wave doesn't run) */
+  .cd-page .cd-kpi-grid,
+  .cd-page .dashboard-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Sub-tabs — pinch up + ensure horizontal scroll */
+  .cd-tabs {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  /* Bottom action bar — buttons full-width */
+  .cd-bottom-bar .cd-actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .cd-bottom-bar > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cd-hero__overlay {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .cd-layout {
+    padding: 0 12px 40px;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.cd-page p,
+.cd-page .body-text,
+.cd-page .description,
+.cd-page .ms-page-header-subtitle,
+.cd-page [class*="empty-state"] p,
+.cd-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.cd-page .ms-page-header-subtitle,
+.cd-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.cd-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.cd-page h1,
+.cd-page .ms-page-header-title,
+.cd-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.cd-page h2,
+.cd-page .db-section-title,
+.cd-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.cd-page p + p {
+  margin-top: 12px;
+}

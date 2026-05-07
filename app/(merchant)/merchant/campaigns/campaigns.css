@@ -367,3 +367,459 @@
     gap: 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Campaigns Uplift v2 (2026-05-07) — Liquid Glass · Colorful KPI · iOS 26
+   Mirrors dashboard.db-* atmosphere so dashboard ↔ campaigns share a single
+   continuous visual register. Pure CSS — no JSX changes.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.cl-page {
+  /* Liquid Glass tokens (scoped — same values as dashboard.db-*) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .cl-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* Atmospheric backdrop — same 5-layer radial-gradient haze as dashboard */
+.cl-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.cl-page > * { position: relative; z-index: 1; }
+
+/* ── KPI row — colorful bento with liquid glass surface ───────────────── */
+
+.cl-page .cl-kpi-row .kpi-card {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 24px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 320ms var(--spring),
+    box-shadow 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    background 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.cl-page .cl-kpi-row .kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  border-radius: 24px 24px 0 0;
+}
+.cl-page .cl-kpi-row .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.cl-page .cl-kpi-row .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+.cl-page .cl-kpi-row .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
+
+.cl-page .cl-kpi-row .kpi-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  background: var(--lg-bg-light);
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-page .cl-kpi-row .kpi-card {
+    transition: none;
+  }
+  .cl-page .cl-kpi-row .kpi-card:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cl-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .cl-page .cl-kpi-row .kpi-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   List-page: KPI row stacks · campaign rows full-width with image-on-top
+   Detail-page: 2-pane already collapses at 1024 + 768 (campaign-detail.css)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin */
+  .cl-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* KPI row — single column on phone */
+  .cl-kpi-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  /* List rows — image small + title + stats compact */
+  .cl-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .cl-row-image {
+    height: 64px;
+    width: 64px;
+  }
+
+  .cl-row-stats {
+    grid-column: 1 / -1;
+    text-align: left;
+    justify-items: start;
+  }
+}
+
+/* Phone < 480 — image goes full-width banner above text */
+@media (max-width: 480px) {
+  .cl-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .cl-row-image {
+    height: 140px;
+    width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .cl-row (was 1/2 → 2/3) */
+.cl-page .cl-row {
+  transition:
+    transform 240ms var(--spring),
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+.cl-page .cl-row:hover  { transform: translate(2px, 2px); }
+.cl-page .cl-row:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-page .cl-row,
+  .cl-page .cl-row:hover,
+  .cl-page .cl-row:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.cl-page p,
+.cl-page .body-text,
+.cl-page .description,
+.cl-page .ms-page-header-subtitle,
+.cl-page [class*="empty-state"] p,
+.cl-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.cl-page .ms-page-header-subtitle,
+.cl-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.cl-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.cl-page h1,
+.cl-page .ms-page-header-title,
+.cl-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.cl-page h2,
+.cl-page .db-section-title,
+.cl-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.cl-page p + p {
+  margin-top: 12px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .cl-page,
+  .cd-page {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .cl-page > .ms-page-header,
+  .cl-page > [class*="page-header"],
+  .cd-page > .ms-page-header,
+  .cd-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .cl-page > section,
+  .cl-page > [class*="-section"],
+  .cd-page > section,
+  .cd-page > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .cl-page > section + section,
+  .cd-page > section + section {
+    margin-top: 0;
+  }
+
+  .cl-page [class*="section-head"]:not([class*="card"]),
+  .cd-page [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .cl-page,
+  .cd-page {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cl-page,
+  .cd-page {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right (the existing
+   1024+ rule sets margin: 0 calc(...) to bleed into the shell gutter,
+   so cascade order requires !important to win on 1440+). Atmospheric
+   ::before backdrop is position:fixed and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .cl-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .cl-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cl-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cl-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for KPI row + campaign list grids */
+.cl-page .db-kpi-grid,
+.cl-page .db-list-surface,
+.cl-page [class*="kpi-row"],
+.cl-page [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ / 2560+ breakpoints for the campaigns hub
+   (.cl-page) and detail (.cd-page) so they feel iOS 26 native on large
+   displays. Same recipe as dashboard: bumped cap, deeper padding,
+   24px KPI gap hold, third-layer halo shadow on key surfaces.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .cl-page,
+  .cd-page {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .cl-page .db-kpi-grid,
+  .cl-page [class*="kpi-row"],
+  .cd-page .db-kpi-grid,
+  .cd-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .cl-page,
+  .cd-page {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .cl-page .db-kpi-grid .kpi-card,
+  .cl-page [class*="hero-card"],
+  .cl-page [class*="bento-tile"],
+  .cd-page .db-kpi-grid .kpi-card,
+  .cd-page [class*="hero-card"],
+  .cd-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
+
+@media (max-width: 767px) {
+  .cl-page button:not([class*="icon-only"]),
+  .cl-page a[role="button"],
+  .cl-page [role="button"],
+  .cd-page button:not([class*="icon-only"]),
+  .cd-page a[role="button"],
+  .cd-page [role="button"] {
+    min-height: 44px;
+  }
+  .cl-page button[class*="icon-only"],
+  .cl-page [class*="icon-btn"],
+  .cd-page button[class*="icon-only"],
+  .cd-page [class*="icon-btn"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Campaign name / venue ellipsis on row + tile titles */
+  .cl-page [class*="campaign-name"],
+  .cl-page [class*="row-title"],
+  .cl-page [class*="venue-name"],
+  .cd-page [class*="campaign-name"],
+  .cd-page [class*="row-title"],
+  .cd-page [class*="venue-name"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Brief / description 3-line clamp */
+  .cl-page [class*="campaign-brief"],
+  .cl-page [class*="campaign-description"],
+  .cd-page [class*="campaign-brief"],
+  .cd-page [class*="campaign-description"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Public campaign URL / tracking link wrap */
+  .cl-page [class*="-url"],
+  .cl-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
+  .cl-page [class*="-mono"],
+  .cl-page code,
+  .cd-page [class*="-url"],
+  .cd-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
+  .cd-page [class*="-mono"],
+  .cd-page code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .cl-page,
+  .cd-page {
+    overflow-x: hidden;
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}

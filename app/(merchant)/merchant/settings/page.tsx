@@ -8,7 +8,9 @@ import { ToggleRow, Channel } from "@/components/settings/ToggleRow";
 import { SelectRow } from "@/components/settings/SelectRow";
 import { InputRow } from "@/components/settings/InputRow";
 import { Modal, PageHeader, StatusBadge } from "@/components/merchant/shared";
+import { useToast } from "@/components/toast/Toaster";
 import "@/components/settings/settings.css";
+import "./settings.css";
 
 /* ── Types ──────────────────────────────────────────────────── */
 
@@ -724,6 +726,7 @@ function NewKeyModal({
 
 export default function MerchantSettingsPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [activeSection, setActiveSection] = useState("business");
   const [settings, setSettings] = useState<MerchantSettings>(DEFAULT_SETTINGS);
   const [team, setTeam] = useState<TeamMember[]>(DEFAULT_TEAM);
@@ -835,22 +838,33 @@ export default function MerchantSettingsPage() {
   const save = useCallback(async () => {
     setSaveStatus("saving");
     const payload = buildSectionPayload(activeSection, settings, team, apiKeys);
-    const response = await fetch("/api/merchant/settings", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch("/api/merchant/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        throw new Error(`Save failed (${response.status})`);
+      }
+
+      setSavedSnapshot({ settings, team, apiKeys });
+      setSaveStatus("saved");
+      setDirty(false);
+      setTimeout(() => setSaveStatus("idle"), 2500);
+      toast.success("Settings saved");
+    } catch {
+      // Keep dirty so the user can retry, surface a retry-action toast.
       setSaveStatus("idle");
-      return;
+      toast.error("Save failed", {
+        actionLabel: "Retry",
+        onAction: () => {
+          void save();
+        },
+      });
     }
-
-    setSavedSnapshot({ settings, team, apiKeys });
-    setSaveStatus("saved");
-    setDirty(false);
-    setTimeout(() => setSaveStatus("idle"), 2500);
-  }, [activeSection, apiKeys, settings, team]);
+  }, [activeSection, apiKeys, settings, team, toast]);
 
   const notifAny = (key: keyof MerchantNotifSettings) =>
     Object.values(settings.notifications[key]).some(Boolean);
@@ -1411,131 +1425,138 @@ export default function MerchantSettingsPage() {
   };
 
   return (
-    <SettingsShell
-      title="Merchant"
-      navItems={NAV_ITEMS}
-      activeSection={activeSection}
-      onSectionChange={setActiveSection}
-    >
-      {renderSection()}
+    <div className="settings-page">
+      <SettingsShell
+        title="Merchant"
+        navItems={NAV_ITEMS}
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
+      >
+        {renderSection()}
 
-      {/* Save bar */}
-      {dirty && (
-        <div className="settings-save-bar" role="status" aria-live="polite">
-          <span className="settings-save-bar__status">
-            {saveStatus === "saving"
-              ? "Saving…"
-              : hasFieldError
-                ? "Fix highlighted fields to save"
-                : "You have unsaved changes"}
-          </span>
-          <div className="settings-save-bar__actions">
-            <button
-              className="btn btn--ghost btn--sm"
-              type="button"
-              onClick={() => {
-                setSettings(savedSnapshot.settings);
-                setTeam(savedSnapshot.team);
-                setApiKeys(savedSnapshot.apiKeys);
-                setDirty(false);
-                setSaveStatus("idle");
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn--primary btn--sm"
-              type="button"
-              onClick={save}
-              disabled={saveStatus === "saving" || hasFieldError}
-              style={{
-                opacity: saveStatus === "saving" || hasFieldError ? 0.4 : 1,
-              }}
-            >
-              Save changes
-            </button>
+        {/* Save bar */}
+        {dirty && (
+          <div className="settings-save-bar" role="status" aria-live="polite">
+            <span className="settings-save-bar__status">
+              {saveStatus === "saving"
+                ? "Saving…"
+                : hasFieldError
+                  ? "Fix highlighted fields to save"
+                  : "You have unsaved changes"}
+            </span>
+            <div className="settings-save-bar__actions">
+              <button
+                className="btn btn--ghost btn--sm"
+                type="button"
+                disabled={saveStatus === "saving"}
+                onClick={() => {
+                  setSettings(savedSnapshot.settings);
+                  setTeam(savedSnapshot.team);
+                  setApiKeys(savedSnapshot.apiKeys);
+                  setDirty(false);
+                  setSaveStatus("idle");
+                }}
+                style={{ opacity: saveStatus === "saving" ? 0.4 : 1 }}
+              >
+                Discard
+              </button>
+              <button
+                className="btn btn--primary btn--sm"
+                type="button"
+                onClick={save}
+                disabled={saveStatus === "saving" || hasFieldError}
+                style={{
+                  opacity: saveStatus === "saving" || hasFieldError ? 0.4 : 1,
+                }}
+              >
+                {saveStatus === "saving" ? "Saving…" : "Save changes"}
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-      {saveStatus === "saved" && !dirty && (
-        <div className="settings-save-bar" role="status" aria-live="polite">
-          <span className="settings-save-bar__status settings-save-bar__status--saved">
-            Changes saved
-          </span>
-        </div>
-      )}
+        )}
+        {saveStatus === "saved" && !dirty && (
+          <div className="settings-save-bar" role="status" aria-live="polite">
+            <span className="settings-save-bar__status settings-save-bar__status--saved">
+              Changes saved
+            </span>
+          </div>
+        )}
 
-      {/* Modals */}
-      {modal === "invite" && (
-        <InviteModal onCancel={() => setModal(null)} onInvite={handleInvite} />
-      )}
-
-      {modal === "new-key" && (
-        <NewKeyModal
-          onCancel={() => setModal(null)}
-          onCreate={handleGenerateKey}
-        />
-      )}
-
-      {modal !== null &&
-        typeof modal === "object" &&
-        modal.type === "revoke" && (
-          <ConfirmModal
-            title="Revoke API key?"
-            description="The key stops working immediately. Update any integrations using it before revoking."
-            confirmLabel="Revoke key"
+        {/* Modals */}
+        {modal === "invite" && (
+          <InviteModal
             onCancel={() => setModal(null)}
-            onConfirm={() =>
-              handleRevokeKey(
-                (modal as { type: "revoke"; keyId: string }).keyId,
-              )
-            }
+            onInvite={handleInvite}
           />
         )}
 
-      {modal !== null &&
-        typeof modal === "object" &&
-        modal.type === "remove" && (
-          <ConfirmModal
-            title="Remove team member?"
-            description="Their access ends as soon as you confirm."
-            confirmLabel="Remove member"
+        {modal === "new-key" && (
+          <NewKeyModal
             onCancel={() => setModal(null)}
-            onConfirm={() =>
-              handleRemoveMember(
-                (modal as { type: "remove"; memberId: string }).memberId,
-              )
-            }
+            onCreate={handleGenerateKey}
           />
         )}
 
-      {modal === "deactivate" && (
-        <ConfirmModal
-          title="Deactivate your account?"
-          description="Active campaigns pause and creators are notified. Sign in any time to reactivate."
-          confirmWord="DEACTIVATE"
-          confirmLabel="Deactivate account"
-          onCancel={() => setModal(null)}
-          onConfirm={() => {
-            setModal(null);
-            router.push("/merchant/dashboard");
-          }}
-        />
-      )}
+        {modal !== null &&
+          typeof modal === "object" &&
+          modal.type === "revoke" && (
+            <ConfirmModal
+              title="Revoke API key?"
+              description="The key stops working immediately. Update any integrations using it before revoking."
+              confirmLabel="Revoke key"
+              onCancel={() => setModal(null)}
+              onConfirm={() =>
+                handleRevokeKey(
+                  (modal as { type: "revoke"; keyId: string }).keyId,
+                )
+              }
+            />
+          )}
 
-      {modal === "delete" && (
-        <ConfirmModal
-          title="Delete your merchant account?"
-          description="Campaigns, creator relationships, API keys, and analytics will be permanently deleted. Settle any unpaid payouts first."
-          confirmWord="DELETE"
-          confirmLabel="Permanently delete"
-          onCancel={() => setModal(null)}
-          onConfirm={() => {
-            setModal(null);
-            router.push("/");
-          }}
-        />
-      )}
-    </SettingsShell>
+        {modal !== null &&
+          typeof modal === "object" &&
+          modal.type === "remove" && (
+            <ConfirmModal
+              title="Remove team member?"
+              description="Their access ends as soon as you confirm."
+              confirmLabel="Remove member"
+              onCancel={() => setModal(null)}
+              onConfirm={() =>
+                handleRemoveMember(
+                  (modal as { type: "remove"; memberId: string }).memberId,
+                )
+              }
+            />
+          )}
+
+        {modal === "deactivate" && (
+          <ConfirmModal
+            title="Deactivate your account?"
+            description="Active campaigns pause and creators are notified. Sign in any time to reactivate."
+            confirmWord="DEACTIVATE"
+            confirmLabel="Deactivate account"
+            onCancel={() => setModal(null)}
+            onConfirm={() => {
+              setModal(null);
+              router.push("/merchant/dashboard");
+            }}
+          />
+        )}
+
+        {modal === "delete" && (
+          <ConfirmModal
+            title="Delete your merchant account?"
+            description="Campaigns, creator relationships, API keys, and analytics will be permanently deleted. Settle any unpaid payouts first."
+            confirmWord="DELETE"
+            confirmLabel="Permanently delete"
+            onCancel={() => setModal(null)}
+            onConfirm={() => {
+              setModal(null);
+              router.push("/");
+            }}
+          />
+        )}
+      </SettingsShell>
+    </div>
   );
 }

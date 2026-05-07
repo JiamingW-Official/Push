@@ -855,6 +855,8 @@ export default function InvitesPage() {
   const [batchConfirming, setBatchConfirming] = useState(false);
   const [filter, setFilter] = useState<InviteFilter>("all");
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [view, setView] = useState<"list" | "board">("list");
   const [acceptToast, setAcceptToast] = useState<{ brand: string } | null>(
     null,
   );
@@ -886,19 +888,29 @@ export default function InvitesPage() {
   ).length;
 
   const filteredInvites = useMemo(() => {
-    if (filter === "urgent")
-      return now == null
-        ? []
-        : invites.filter(
-            (i) =>
-              i.status === "pending" && i.expiresAt - now < 6 * 60 * 60 * 1000,
-          );
-    if (filter === "match")
-      return invites.filter(
-        (i) => i.status === "pending" && i.matchScore >= 90,
-      );
-    return invites.filter((i) => i.status !== "declined");
-  }, [invites, filter, now]);
+    const q = searchQuery.toLowerCase().trim();
+    const byFilter = (() => {
+      if (filter === "urgent")
+        return now == null
+          ? []
+          : invites.filter(
+              (i) =>
+                i.status === "pending" &&
+                i.expiresAt - now < 6 * 60 * 60 * 1000,
+            );
+      if (filter === "match")
+        return invites.filter(
+          (i) => i.status === "pending" && i.matchScore >= 90,
+        );
+      return invites.filter((i) => i.status !== "declined");
+    })();
+    if (!q) return byFilter;
+    return byFilter.filter(
+      (i) =>
+        i.brand?.toLowerCase().includes(q) ||
+        i.campaign?.toLowerCase().includes(q),
+    );
+  }, [invites, filter, now, searchQuery]);
 
   const acceptedInvites = useMemo(
     () => invites.filter((i) => i.status === "accepted"),
@@ -1122,6 +1134,8 @@ export default function InvitesPage() {
           </span>
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Find a brand or campaign..."
             aria-label="Search invites"
           />
@@ -1165,15 +1179,19 @@ export default function InvitesPage() {
         </div>
 
         <div className="giv-view-toggle">
-          <button
-            type="button"
-            className="giv-view-toggle__btn giv-view-toggle__btn--active"
-          >
-            List
-          </button>
-          <button type="button" className="giv-view-toggle__btn">
-            Board
-          </button>
+          {(["list", "board"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              className={
+                "giv-view-toggle__btn" +
+                (view === v ? " giv-view-toggle__btn--active" : "")
+              }
+              onClick={() => setView(v)}
+            >
+              {v.charAt(0).toUpperCase() + v.slice(1)}
+            </button>
+          ))}
         </div>
 
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>

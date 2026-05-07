@@ -43,12 +43,5 @@ export async function POST(req: NextRequest) {
   // TODO: Slack notification
   // await fetch(process.env.SLACK_WEBHOOK_URL, { method: "POST", body: JSON.stringify({ text: `...` }) });
 
-  console.log("[contact] submission", {
-    name,
-    email,
-    role,
-    followUp: body.followUp,
-  });
-
   return NextResponse.json({ ok: true }, { status: 200 });
 }
