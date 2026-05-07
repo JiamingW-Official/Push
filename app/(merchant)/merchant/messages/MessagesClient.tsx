@@ -601,6 +601,7 @@ export default function MessagesClient({
       {threads.length === 0 ? (
         <div className="msg-empty-wrap">
           <EmptyState
+            artKind="messages"
             title="No conversations yet"
             description="Once you approve creators or comment on applicants, threads land here. Open an applicant card and tap Message to start a conversation."
             ctaLabel="Review applicants"

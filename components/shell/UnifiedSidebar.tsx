@@ -20,6 +20,7 @@ import { useOptionalWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
 import { useInvitesLive } from "@/lib/data/hooks";
 import { buildActionQueue } from "@/lib/today/briefing";
+import { useCommandPalette } from "@/components/feedback/CommandPalette";
 import "./unified-sidebar.css";
 
 // ---------------------------------------------------------------------------
@@ -268,6 +269,7 @@ export function UnifiedSidebar({
       </nav>
 
       <div className="us-foot">
+        <CommandKHintPill />
         <Link
           href={config.settingsHref}
           className={`us-item${
@@ -329,5 +331,22 @@ function AvatarImg({ src, alt }: { src: string; alt: string }): ReactNode {
       loading="lazy"
       decoding="async"
     />
+  );
+}
+
+/* Discoverability pill — sits in us-foot above Settings. Click opens the
+   global command palette. Visible on every role surface. */
+function CommandKHintPill() {
+  const { open } = useCommandPalette();
+  return (
+    <button
+      type="button"
+      className="us-cmdk-pill"
+      onClick={open}
+      aria-label="Open command palette"
+      title="Command palette (⌘K)"
+    >
+      <span aria-hidden>⌘K</span>
+    </button>
   );
 }

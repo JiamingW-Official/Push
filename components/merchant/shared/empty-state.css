@@ -18,6 +18,14 @@
   text-align: center;
 }
 
+.ms-empty-state-art {
+  /* 24px gap between art and title (or eyebrow / icon if either follows) */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
 .ms-empty-state-icon {
   align-items: center;
   background: var(--surface-3);

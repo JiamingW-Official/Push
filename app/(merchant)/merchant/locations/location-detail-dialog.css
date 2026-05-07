@@ -238,6 +238,10 @@
   margin: 0;
 }
 
+.ldd-stat-spark {
+  margin-top: 4px;
+}
+
 /* Active campaign block */
 .ldd-campaign-row {
   align-items: center;

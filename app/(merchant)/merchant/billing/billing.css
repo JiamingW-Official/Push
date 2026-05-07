@@ -76,6 +76,12 @@
   text-transform: uppercase;
 }
 
+.bill-hero-tile__spark {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 240px;
+}
+
 /* Champagne numeral for the lifetime-spend KPI — ceremonial, ≤1 instance.
    Targets the shared KPICard's inner numeral when wrapped in [data-kpi="lifetime"]. */
 .bill-kpis [data-kpi="lifetime"] .kpi-card__numeral {

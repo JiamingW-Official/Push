@@ -337,6 +337,7 @@ export default function ApplicantsPageClient({
               if (tabCounts.all === 0) {
                 return (
                   <EmptyState
+                    artKind="applicants"
                     title="No applicants yet"
                     description="Publish a campaign and creators will start applying here. Each application includes match score, audience, and recent work so you can decide in seconds."
                     ctaLabel="Launch a campaign"
@@ -347,6 +348,8 @@ export default function ApplicantsPageClient({
               if (activeTab === "pending") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="All caught up"
                     description="No creators awaiting review. New applications land here the moment they apply — usually within minutes of going live."
                     ctaLabel="View accepted creators"
@@ -357,6 +360,8 @@ export default function ApplicantsPageClient({
               if (activeTab === "approved") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="No accepted creators yet"
                     description="Approve a pending applicant and they'll show up here, ready to receive their QR poster and start posting."
                     ctaLabel="Review pending applicants"
@@ -367,6 +372,8 @@ export default function ApplicantsPageClient({
               if (activeTab === "rejected") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="No rejections on file"
                     description="Applicants you decline appear here for reference. Empty is a good sign — your bar is sharp without being noisy."
                     ctaLabel="Review pending applicants"
@@ -377,6 +384,8 @@ export default function ApplicantsPageClient({
               if (activeTab === "shortlist") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="Shortlist is empty"
                     description="Tag promising creators as Shortlist to revisit before deciding. Useful when you want a second look or to wait for budget."
                     ctaLabel="Review pending applicants"
@@ -386,6 +395,8 @@ export default function ApplicantsPageClient({
               }
               return (
                 <EmptyState
+                  artKind="filter"
+                  artVariant="muted"
                   title="Nothing in this view"
                   description="No applicants match the current filter. Reset to see your full pipeline."
                   ctaLabel="Show all applicants"

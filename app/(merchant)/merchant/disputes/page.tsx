@@ -27,6 +27,7 @@ function DisputesFilteredEmpty({
   if (activeTab === "open") {
     return (
       <EmptyState
+        artKind="disputes"
         title="No open disputes"
         description="Nothing is currently in dispute on your end. Open ones land here the moment a creator or your team flags an issue."
         ctaLabel="Show all disputes"
@@ -37,6 +38,8 @@ function DisputesFilteredEmpty({
   if (activeTab === "under_review") {
     return (
       <EmptyState
+        artKind="filter"
+        artVariant="muted"
         title="Nothing under review"
         description="No disputes are awaiting Push ops review. We respond within 48 hours of escalation."
         ctaLabel="Show all disputes"
@@ -47,6 +50,8 @@ function DisputesFilteredEmpty({
   if (activeTab === "awaiting_response") {
     return (
       <EmptyState
+        artKind="filter"
+        artVariant="muted"
         title="No replies needed"
         description="No disputes are waiting on a response from your team. Anything that needs your input lands here with a deadline."
         ctaLabel="Show all disputes"
@@ -57,6 +62,8 @@ function DisputesFilteredEmpty({
   if (activeTab === "resolved") {
     return (
       <EmptyState
+        artKind="filter"
+        artVariant="muted"
         title="No resolved disputes yet"
         description="Wrapped disputes archive here with the final outcome and any agreed adjustments. Empty means none have closed yet."
         ctaLabel="Show all disputes"
@@ -67,6 +74,8 @@ function DisputesFilteredEmpty({
   if (activeTab === "closed") {
     return (
       <EmptyState
+        artKind="filter"
+        artVariant="muted"
         title="No closed disputes"
         description="Disputes closed without action — typically withdrawn — file here for your records."
         ctaLabel="Show all disputes"
@@ -76,6 +85,8 @@ function DisputesFilteredEmpty({
   }
   return (
     <EmptyState
+      artKind="filter"
+      artVariant="muted"
       title="Nothing in this view"
       description="No disputes match the current filter. Reset to see your full case history, or open a new one if something needs attention."
       ctaLabel="Open a dispute"

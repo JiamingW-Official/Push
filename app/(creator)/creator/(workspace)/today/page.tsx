@@ -19,8 +19,17 @@ import ActionQueue from "./components/ActionQueue";
 import AttributionPulse from "./components/AttributionPulse";
 import YesterdayRecap from "./components/YesterdayRecap";
 import NextOpportunities from "./components/NextOpportunities";
+import { Sparkline } from "@/components/charts/Sparkline";
 import "./today.css";
 import "@/app/(merchant)/merchant/_anim/anim.css";
+
+// Inline 7-day mock series for the Pulse Strip stats. These read as
+// realistic recent-week curves (earnings up, payouts flat/declining,
+// active gigs holding steady, push score climbing).
+const TODAY_EARNINGS_7D = [42, 56, 48, 72, 65, 88, 96];
+const TODAY_PAYOUTS_7D = [120, 110, 95, 88, 76, 72, 68];
+const TODAY_GIGS_7D = [3, 3, 4, 4, 5, 5, 5];
+const TODAY_SCORE_7D = [68, 70, 71, 73, 74, 76, 78];
 
 export default function TodayPage() {
   /* Data: invites/threads/notifications/attribution come from the SWR cache
@@ -155,6 +164,14 @@ export default function TodayPage() {
             <span className="today-pulse-stat__value" suppressHydrationWarning>
               {actions.length}
             </span>
+            <Sparkline
+              data={TODAY_EARNINGS_7D}
+              width={56}
+              height={20}
+              trend="auto"
+              showArea
+              className="today-pulse-stat__spark"
+            />
             <span className="today-pulse-stat__delta">
               {actions.length === 0 ? "all clear" : "to triage"}
             </span>
@@ -165,6 +182,14 @@ export default function TodayPage() {
             <span className="today-pulse-stat__value" suppressHydrationWarning>
               {pulse.openInvites}
             </span>
+            <Sparkline
+              data={TODAY_PAYOUTS_7D}
+              width={56}
+              height={20}
+              trend="auto"
+              showArea
+              className="today-pulse-stat__spark"
+            />
             <span
               className={
                 "today-pulse-stat__delta" +
@@ -185,6 +210,14 @@ export default function TodayPage() {
             <span className="today-pulse-stat__value" suppressHydrationWarning>
               {pulse.activeCampaigns}
             </span>
+            <Sparkline
+              data={TODAY_GIGS_7D}
+              width={56}
+              height={20}
+              trend="auto"
+              showArea
+              className="today-pulse-stat__spark"
+            />
             <span className="today-pulse-stat__delta">in flight</span>
           </div>
           <div className="today-pulse-stat today-pulse-stat--scans">
@@ -193,6 +226,14 @@ export default function TodayPage() {
             <span className="today-pulse-stat__value" suppressHydrationWarning>
               {pulse.weekScans}
             </span>
+            <Sparkline
+              data={TODAY_SCORE_7D}
+              width={56}
+              height={20}
+              trend="auto"
+              showArea
+              className="today-pulse-stat__spark"
+            />
             <span
               className={
                 "today-pulse-stat__delta" +

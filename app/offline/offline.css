@@ -1,0 +1,328 @@
+/* ============================================================
+   offline.css — v11 Offline page (Marketing register)
+   Atmospheric mesh + Liquid Glass card + Magvix Italic title +
+   live online/offline status indicator. All tokens, 8px grid.
+   ============================================================ */
+
+.off-root {
+  min-height: 100svh;
+  width: 100%;
+  background:
+    radial-gradient(ellipse 900px 600px at 88% 8%, rgba(74, 122, 140, 0.14), transparent 55%),
+    radial-gradient(ellipse 700px 500px at 5% 95%, rgba(191, 161, 112, 0.18), transparent 60%),
+    radial-gradient(ellipse 600px 480px at 92% 95%, rgba(0, 133, 255, 0.05), transparent 65%),
+    linear-gradient(180deg, var(--surface) 0%, var(--surface) 60%, var(--surface-2) 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ─── PANEL 1 — Hero ─── */
+.off-hero {
+  position: relative;
+  width: 100%;
+  min-height: clamp(560px, 78svh, 760px);
+  padding: clamp(96px, 12vw, 160px) clamp(24px, 5vw, 64px) 96px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.off-hero-ghost {
+  position: absolute;
+  top: clamp(40px, 8vw, 96px);
+  right: clamp(-32px, -2vw, -16px);
+  font-family: var(--font-display);
+  font-size: clamp(120px, 18vw, 260px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  color: var(--ink);
+  opacity: 0.05;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+.off-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: end;
+}
+
+@media (max-width: 1023px) {
+  .off-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+.off-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.off-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-3) !important;
+  margin-bottom: 32px;
+}
+
+.off-hero-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: off-pulse 1.6s ease-in-out infinite;
+}
+
+.off-hero-pulse--red   { background: var(--brand-red); }
+.off-hero-pulse--green { background: var(--accent-blue); }
+
+@keyframes off-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+.off-hero-h1 {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(56px, 8vw, 128px);
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+  color: var(--ink);
+  margin: 0 0 32px;
+}
+
+.off-hero-h1-em {
+  font-style: italic;
+  color: var(--brand-red);
+}
+
+.off-hero-sub {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  max-width: 56ch;
+  margin: 0 0 48px;
+}
+
+.off-hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .off-hero-cta-row { gap: 12px; }
+}
+
+.off-hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+  margin: 0;
+}
+
+.off-hero-status strong {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.off-hero-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-4);
+  animation: off-dot 2s ease-in-out infinite;
+}
+
+@keyframes off-dot {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+/* Right column — Liquid Glass illustration card */
+.off-hero-illustration {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 360px;
+  width: 100%;
+  margin-left: auto;
+  align-items: stretch;
+}
+
+.off-hero-illustration svg {
+  width: 100%;
+  height: auto;
+  max-width: 240px;
+  margin: 0 auto;
+  display: block;
+}
+
+.off-hero-illustration-label {
+  color: var(--ink-3) !important;
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 1023px) {
+  .off-hero-illustration {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+/* ─── SIGNATURE DIVIDER ─── */
+.off-sig-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.off-sig-divider {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(28px, 3.5vw, 40px);
+  letter-spacing: -0.01em;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* ─── PANEL 2 — Action cards ─── */
+.off-actions {
+  width: 100%;
+  padding: 0 clamp(24px, 5vw, 64px) clamp(80px, 10vw, 120px);
+}
+
+.off-actions-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.off-actions-eyebrow {
+  color: var(--ink-3) !important;
+  margin: 0 0 16px;
+}
+
+.off-actions-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 48px;
+}
+
+.off-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .off-action-grid { grid-template-columns: repeat(2, 1fr); }
+  .off-action-grid > :last-child {
+    grid-column: 1 / -1;
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .off-action-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.off-action-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--mist);
+  text-align: left;
+  min-height: 200px;
+}
+
+.off-action-card--butter { background: var(--panel-butter); }
+.off-action-card--sky    { background: var(--panel-sky); }
+.off-action-card--peach  { background: var(--panel-peach); }
+
+.off-action-card-eyebrow {
+  color: var(--ink-4) !important;
+  margin: 0;
+}
+
+.off-action-card-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0;
+}
+
+.off-action-card-desc {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ─── FOOTER ─── */
+.off-footer {
+  width: 100%;
+  padding: 24px clamp(24px, 5vw, 64px) 48px;
+  border-top: 1px solid var(--mist);
+}
+
+.off-footer-line {
+  max-width: 1140px;
+  margin: 0 auto;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.off-footer-link {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mist);
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.off-footer-link:hover {
+  color: var(--brand-red);
+  border-bottom-color: var(--brand-red);
+}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
-import { CommandKProvider } from "@/components/search/CommandKProvider";
+import { CommandPaletteProvider } from "@/components/feedback/CommandPalette";
 import { BRAND } from "@/lib/constants/brand";
 
 export const metadata: Metadata = {
@@ -122,12 +122,12 @@ export default function RootLayout({
         <a href="#main-content" className="skip-nav">
           Skip to main content
         </a>
-        <CommandKProvider>
+        <CommandPaletteProvider>
           <SmoothScroll>
             {children}
             <BackToTop />
           </SmoothScroll>
-        </CommandKProvider>
+        </CommandPaletteProvider>
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+import { Sparkline, type SparklineProps } from "@/components/charts/Sparkline";
 import "./kpi-card.css";
 
 export interface KPICardProps {
@@ -16,6 +17,13 @@ export interface KPICardProps {
    */
   numeralColor?: "default" | "champagne" | "ink";
   delay?: number;
+  /**
+   * Optional 7-day or 30-day micro-trend rendered below the delta line.
+   * Only `data` is required; component computes the rest. Pass any other
+   * `Sparkline` prop overrides via `sparklineProps`.
+   */
+  sparkline?: number[];
+  sparklineProps?: Omit<SparklineProps, "data">;
 }
 
 export function KPICard({
@@ -26,6 +34,8 @@ export function KPICard({
   variant = "default",
   numeralColor = "default",
   delay,
+  sparkline,
+  sparklineProps,
 }: KPICardProps) {
   const deltaClass = delta
     ? deltaPositive
@@ -57,6 +67,21 @@ export function KPICard({
           </span>
           {delta}
         </p>
+      ) : null}
+      {sparkline && sparkline.length > 1 ? (
+        <div className="kpi-card__spark" aria-hidden="false">
+          <Sparkline
+            data={sparkline}
+            width={sparklineProps?.width ?? 96}
+            height={sparklineProps?.height ?? 28}
+            trend={sparklineProps?.trend ?? "auto"}
+            showArea={sparklineProps?.showArea ?? true}
+            showLastDot={sparklineProps?.showLastDot ?? true}
+            ariaLabel={sparklineProps?.ariaLabel}
+            variant={sparklineProps?.variant}
+            className={sparklineProps?.className}
+          />
+        </div>
       ) : null}
     </article>
   );

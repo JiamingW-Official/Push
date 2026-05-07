@@ -453,6 +453,11 @@
 .today-pulse-stat__delta--up    { color: var(--champagne, #bfa170); }
 .today-pulse-stat__delta--alert { color: var(--editorial-pink, #e8447d); }
 
+.today-pulse-stat__spark {
+  align-self: center;
+  margin: 0 4px;
+}
+
 @media (max-width: 768px) {
   .today-pulse-strip { padding: 10px 4px; }
   .today-pulse-stat { padding: 0 14px; }

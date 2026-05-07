@@ -119,6 +119,7 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (tabCounts.all === 0) {
             return (
               <EmptyState
+                artKind="campaigns"
                 title="No campaigns yet"
                 description="Launch your first campaign and creators will start applying within hours. You set the brief, budget, and payout — Push handles attribution end-to-end."
                 ctaLabel="Launch your first campaign"
@@ -129,6 +130,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "active") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No live campaigns right now"
                 description="Nothing is currently accepting creators. Activate a draft to reopen the application queue, or start a new campaign."
                 ctaLabel="View all campaigns"
@@ -139,6 +142,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "paused") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No paused campaigns"
                 description="Pause a live campaign to stop accepting new applicants without losing your existing creator roster."
                 ctaLabel="View all campaigns"
@@ -149,6 +154,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "draft") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No drafts in progress"
                 description="Drafts let you scope a brief and budget before going live. Start one when you want to plan a campaign without publishing it yet."
                 ctaLabel="Start a new draft"
@@ -159,6 +166,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "closed") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No closed campaigns"
                 description="Wrapped campaigns archive here for reference — final spend, ROI, and creator roster all stay accessible."
                 ctaLabel="View all campaigns"
@@ -168,6 +177,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           }
           return (
             <EmptyState
+              artKind="filter"
+              artVariant="muted"
               title="Nothing in this view"
               description="No campaigns match the current filter. Reset to see your full roster."
               ctaLabel="Show all campaigns"
