@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireCreatorSession } from "@/lib/api/creator-auth";
 
 // TODO: wire to Stripe Connect + Supabase
 // POST /api/creator/cashout — initiates a cashout request
@@ -12,10 +13,8 @@ type CashoutBody = {
 };
 
 export async function POST(request: NextRequest) {
-  // TODO: authenticate via Supabase session
-  // const supabase = createServerClient(...)
-  // const { data: { user } } = await supabase.auth.getUser()
-  // if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  const gate = await requireCreatorSession();
+  if (!gate.ok) return gate.response;
 
   let body: CashoutBody;
   try {

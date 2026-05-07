@@ -205,8 +205,7 @@ async function exploreFn(filters: ExploreFilters = {}): Promise<ExploreResult> {
 //   apiBaseUrl() to build absolute URLs in SSR context, and cache:'no-store'
 //   to avoid Next 16's default fetch cache swallowing fresh data.
 const USE_MOCK =
-  typeof process !== "undefined" &&
-  process.env.NEXT_PUBLIC_USE_MOCK === "1";
+  typeof process !== "undefined" && process.env.NEXT_PUBLIC_USE_MOCK === "1";
 
 function apiBaseUrl(): string {
   if (typeof window !== "undefined") return "";
@@ -256,13 +255,18 @@ async function apiFetch<T>(
       ...options,
       headers,
     });
+    if (!res.ok) {
+      // Try to parse error body as JSON; fall back to HTTP status text so a
+      // non-JSON error page (e.g. Vercel 502 HTML) doesn't throw a misleading
+      // "Network error" before we even know the real status code.
+      let errMsg = `HTTP ${res.status}`;
+      try {
+        const e = await res.json();
+        errMsg = e.error ?? errMsg;
+      } catch {}
+      return { ok: false, error: errMsg, status: res.status };
+    }
     const json = await res.json();
-    if (!res.ok)
-      return {
-        ok: false,
-        error: json?.error ?? "Request failed",
-        status: res.status,
-      };
     return { ok: true, data: json as T };
   } catch (err) {
     return {
@@ -276,7 +280,9 @@ function mockOk<T>(data: T): ApiResult<T> {
   return { ok: true, data };
 }
 
-function qs(params: Record<string, string | number | boolean | null | undefined>): string {
+function qs(
+  params: Record<string, string | number | boolean | null | undefined>,
+): string {
   const search = new URLSearchParams();
 
   for (const [key, value] of Object.entries(params)) {
@@ -320,20 +326,20 @@ export type QRUpdateInput = {
 
 export type CampaignCreatePayload = Partial<
   Pick<
-  Campaign,
-  | "title"
-  | "description"
-  | "location"
-  | "lat"
-  | "lng"
-  | "budget_total"
-  | "reward_per_visit"
-  | "max_creators"
-  | "start_date"
-  | "end_date"
-  | "tags"
-  | "applicable_location_ids"
-  | "hero_offer"
+    Campaign,
+    | "title"
+    | "description"
+    | "location"
+    | "lat"
+    | "lng"
+    | "budget_total"
+    | "reward_per_visit"
+    | "max_creators"
+    | "start_date"
+    | "end_date"
+    | "tags"
+    | "applicable_location_ids"
+    | "hero_offer"
   >
 > & {
   image_url?: string;
@@ -476,10 +482,7 @@ function buildAttributionSummary(
     if (toTime !== null && recordTime > toTime) return false;
 
     const campaignLocationIds = getCampaignLocationIds(record.campaign_id);
-    if (
-      params.locationId &&
-      !campaignLocationIds.includes(params.locationId)
-    ) {
+    if (params.locationId && !campaignLocationIds.includes(params.locationId)) {
       return false;
     }
 
@@ -496,7 +499,8 @@ function buildAttributionSummary(
     0,
   );
   const fraud_flags = records.filter(
-    (record) => record.disabled || record.scan_count - record.verified_customers > 10,
+    (record) =>
+      record.disabled || record.scan_count - record.verified_customers > 10,
   ).length;
 
   const byCreatorMap = new Map<
@@ -551,7 +555,11 @@ function buildAttributionSummary(
     ? new Date(params.to)
     : records.length
       ? new Date(
-          Math.max(...records.map((record) => new Date(record.last_active_at).getTime())),
+          Math.max(
+            ...records.map((record) =>
+              new Date(record.last_active_at).getTime(),
+            ),
+          ),
         )
       : new Date();
 
@@ -572,19 +580,23 @@ function buildAttributionSummary(
     revenue_attributed,
     roi: safeRoi(revenue_attributed, verified_customers),
     fraud_flags,
-    by_creator: Array.from(byCreatorMap.entries()).map(([creator_id, value]) => ({
-      creator_id,
-      scans: value.scans,
-      verified: value.verified,
-      revenue: value.revenue,
-      roi: safeRoi(value.revenue, value.verified),
-    })),
-    by_location: Array.from(byLocationMap.entries()).map(([location_id, value]) => ({
-      location_id,
-      scans: roundMetric(value.scans),
-      verified: roundMetric(value.verified),
-      revenue: roundMetric(value.revenue),
-    })),
+    by_creator: Array.from(byCreatorMap.entries()).map(
+      ([creator_id, value]) => ({
+        creator_id,
+        scans: value.scans,
+        verified: value.verified,
+        revenue: value.revenue,
+        roi: safeRoi(value.revenue, value.verified),
+      }),
+    ),
+    by_location: Array.from(byLocationMap.entries()).map(
+      ([location_id, value]) => ({
+        location_id,
+        scans: roundMetric(value.scans),
+        verified: roundMetric(value.verified),
+        revenue: roundMetric(value.revenue),
+      }),
+    ),
     by_day,
   };
 }
@@ -895,7 +907,9 @@ const merchantMock = {
     },
   },
   billing: {
-    async listInvoices(_params: { from?: string; to?: string } = {}): Promise<ApiResult<Invoice[]>> {
+    async listInvoices(
+      _params: { from?: string; to?: string } = {},
+    ): Promise<ApiResult<Invoice[]>> {
       return mockOk([]);
     },
     async getInvoice(id: string): Promise<ApiResult<Invoice>> {
@@ -974,7 +988,9 @@ const merchantReal = {
   },
   async getLocation(id: string): Promise<MerchantLocation | undefined> {
     try {
-      return await unwrap(apiFetch<MerchantLocation>(`/merchant/locations/${id}`));
+      return await unwrap(
+        apiFetch<MerchantLocation>(`/merchant/locations/${id}`),
+      );
     } catch {
       return undefined;
     }
@@ -993,9 +1009,7 @@ const merchantReal = {
     if (typeof filters.limit === "number")
       qs.set("limit", String(filters.limit));
     const path = `/merchant/applicants${qs.toString() ? `?${qs}` : ""}`;
-    return unwrap(
-      apiFetch<{ data: MockApplication[]; total: number }>(path),
-    );
+    return unwrap(apiFetch<{ data: MockApplication[]; total: number }>(path));
   },
 
   async decideApplication(
@@ -1045,9 +1059,7 @@ const merchantReal = {
     },
     async get(id: string): Promise<QRCodeRecord | undefined> {
       try {
-        return await unwrap(
-          apiFetch<QRCodeRecord>(`/merchant/qr-codes/${id}`),
-        );
+        return await unwrap(apiFetch<QRCodeRecord>(`/merchant/qr-codes/${id}`));
       } catch {
         return undefined;
       }
@@ -1083,7 +1095,8 @@ const merchantReal = {
   billing: {
     listInvoices: (params: { from?: string; to?: string } = {}) =>
       apiFetch<Invoice[]>(`/merchant/billing/invoices${qs(params)}`),
-    getInvoice: (id: string) => apiFetch<Invoice>(`/merchant/billing/invoices/${id}`),
+    getInvoice: (id: string) =>
+      apiFetch<Invoice>(`/merchant/billing/invoices/${id}`),
     addPaymentMethod: (data: {
       brand: string;
       last_four: string;
@@ -1114,7 +1127,11 @@ const merchantReal = {
           claim_id: string;
           claim_code: string;
           creator: { handle: string; name: string };
-          hero_offer: { type: string; value_numeric: number | null; value_text: string | null };
+          hero_offer: {
+            type: string;
+            value_numeric: number | null;
+            value_text: string | null;
+          };
           campaign: { title: string };
           claimed_at: string;
           status: string;
@@ -1154,7 +1171,10 @@ const attributionMock = {
       click_id: `click-${Date.now()}`,
       short_code: shortCode,
     };
-    const existing = mockStore.read<typeof event[]>(`clicks-${shortCode}`, []);
+    const existing = mockStore.read<(typeof event)[]>(
+      `clicks-${shortCode}`,
+      [],
+    );
     mockStore.write(`clicks-${shortCode}`, [...existing, event]);
     return mockOk({ click_id: event.click_id });
   },

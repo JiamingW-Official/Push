@@ -35,6 +35,7 @@ export function useNotifications(creatorId?: string) {
     {
       refreshInterval: 60_000,
       revalidateOnFocus: true,
+      revalidateOnReconnect: true,
     },
   );
 

@@ -191,16 +191,13 @@ export default function MoneyTax() {
             />
           </span>
           {form1099 === "ready" ? (
-            <a
-              href="#"
+            <button
+              type="button"
               className="tax-cta tax-cta--ghost"
-              onClick={(e) => {
-                e.preventDefault();
-                setForm1099("sent-to-irs");
-              }}
+              onClick={() => setForm1099("sent-to-irs")}
             >
               Download PDF
-            </a>
+            </button>
           ) : null}
         </BentoModule>
       </section>

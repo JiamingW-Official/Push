@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { serverError } from "@/lib/api/responses";
 
 // POST /api/attribution/scan
 // Records a QR-code scan event.
@@ -104,10 +105,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) {
-    return NextResponse.json(
-      { error: "Insert failed", detail: error.message },
-      { status: 500 },
-    );
+    return serverError("attribution-scan", error);
   }
 
   return NextResponse.json({

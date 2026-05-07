@@ -681,7 +681,7 @@ export default function CreatorEarningsPage() {
                 Stripe connected
               </span>
               <Link
-                href="#"
+                href="/creator/money/methods"
                 className="btn-ghost click-shift"
                 style={{
                   fontSize: 12,
