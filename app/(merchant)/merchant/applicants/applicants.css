@@ -497,6 +497,16 @@
   width: 20px;
 }
 
+.ap-drawer-expand {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+}
+
 .ap-drawer-row {
   align-items: center;
   display: flex;
@@ -817,5 +827,81 @@
     background: var(--snow);
     -webkit-backdrop-filter: none;
             backdrop-filter: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Do not modify the v2 uplift rules above.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Glass tile hugs full width on mobile so KPI doesn't squeeze the chip row */
+  .ap-control-row {
+    gap: var(--space-2);
+  }
+
+  /* Filter chip row becomes a horizontal scroller on mobile so 5 tabs
+     never wrap to a second row that pushes the list down. */
+  .ap-page .ap-filter-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 calc(-1 * var(--space-3));
+    padding: 0 var(--space-3);
+    scrollbar-width: none;
+  }
+  .ap-page .ap-filter-row::-webkit-scrollbar { display: none; }
+  .ap-page .ap-filter-row .ms-filter-tabs {
+    flex-wrap: nowrap;
+    width: max-content;
+  }
+
+  /* Drawer — full-bleed cover on phone, edge-to-edge */
+  .ap-drawer {
+    left: 0;
+    right: 0;
+    width: 100vw;
+    max-width: 100vw;
+    border-left: none;
+    padding: var(--space-4) var(--space-3);
+  }
+
+  /* Drawer header expand button — wraps below name on narrow widths */
+  .ap-drawer-expand {
+    margin-top: var(--space-1);
+  }
+
+  /* Drawer footer actions — stack so each tap target is full-width */
+  .ap-drawer-actions {
+    flex-direction: column-reverse;
+    gap: var(--space-1);
+  }
+  .ap-drawer-actions .ap-action-btn {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  /* Card action row — full-width buttons stack on mobile to avoid 3-up squeeze */
+  .ap-card .ap-actions {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .ap-card .ap-actions .ap-action-btn {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  /* Stats grid — compact 3-up stays but reduce column gap */
+  .ap-stats {
+    gap: 8px;
+  }
+}
+
+/* ── Tablet refinement (768-1023) ─────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .ap-control-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ap-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

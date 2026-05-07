@@ -5,9 +5,13 @@ import {
   EmptyState,
   FilterTabs,
   KPICard,
+  Modal,
   PageHeader,
   StatusBadge,
 } from "@/components/merchant/shared";
+import PosterPreview from "@/components/merchant/qr/PosterPreview";
+import type { PosterType } from "@/lib/attribution/mock-qr-codes-extended";
+import { useToast } from "@/components/toast/Toaster";
 import "./qr-codes.css";
 
 type PosterFilterType =
@@ -70,6 +74,59 @@ export default function QRCodesClient({
 }) {
   const [campaignFilter, setCampaignFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState<PosterFilterType>("all");
+  const [previewQR, setPreviewQR] = useState<QRCodeRecord | null>(null);
+  const [previewSize, setPreviewSize] = useState<PosterType>("a4");
+  const toast = useToast();
+
+  function openPreview(item: QRCodeRecord) {
+    setPreviewQR(item);
+    setPreviewSize(item.poster_type);
+  }
+
+  function closePreview() {
+    setPreviewQR(null);
+  }
+
+  function handleDownload(campaignName: string) {
+    toast.push({
+      variant: "success",
+      title: "Downloading QR poster",
+      body: `${campaignName} — preparing PDF…`,
+      duration: 1800,
+    });
+    window.setTimeout(() => {
+      toast.push({
+        variant: "info",
+        title: "Poster ready",
+        body: "Saved to your downloads (demo).",
+      });
+    }, 1100);
+  }
+
+  function handlePrint(campaignName: string) {
+    toast.push({
+      variant: "success",
+      title: "Sending to printer queue",
+      body: campaignName,
+      duration: 1800,
+    });
+    window.setTimeout(() => {
+      toast.push({
+        variant: "info",
+        title: "Queued for printing",
+        body: "Printer will pick this up next (demo).",
+      });
+    }, 1100);
+  }
+
+  function handleGenerate() {
+    toast.push({
+      variant: "info",
+      title: "QR generation",
+      body: "Accept an applicant in /merchant/applicants to mint a new QR (demo).",
+      duration: 4500,
+    });
+  }
 
   const campaignTabs = useMemo(
     () => [
@@ -106,7 +163,11 @@ export default function QRCodesClient({
         title="QR Codes & Posters"
         subtitle="Print-ready QR codes that link each scan back to your Push campaigns."
         action={
-          <button type="button" className="btn-primary">
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={handleGenerate}
+          >
             Generate new QR
           </button>
         }
@@ -135,8 +196,10 @@ export default function QRCodesClient({
       {initialQRs.length === 0 ? (
         <div className="qr-empty-wrap">
           <EmptyState
-            title="NO QR CODES YET"
-            description="Accept an applicant in /merchant/applicants to auto-generate their QR code."
+            title="No QR codes yet"
+            description="Each accepted creator gets a unique QR poster wired to your campaign. Approve your first applicant and the generated poster will land here, ready to print."
+            ctaLabel="Review pending applicants"
+            ctaHref="/merchant/applicants"
           />
         </div>
       ) : (
@@ -157,8 +220,13 @@ export default function QRCodesClient({
           {filtered.length === 0 ? (
             <div className="qr-empty-wrap">
               <EmptyState
-                title="No poster templates"
-                description="Try a different campaign or QR type filter."
+                title="No posters match these filters"
+                description="No QR posters match the campaign and format you've selected. Reset to see every poster across your active campaigns."
+                ctaLabel="Reset filters"
+                ctaOnClick={() => {
+                  setCampaignFilter("all");
+                  setTypeFilter("all");
+                }}
               />
             </div>
           ) : (
@@ -179,13 +247,19 @@ export default function QRCodesClient({
                     <strong>@{renderHandle(item.creator_handle)}</strong>
                   </p>
 
-                  <div className="qr-poster-code" aria-hidden="true">
+                  <button
+                    type="button"
+                    className="qr-poster-code qr-poster-code--button"
+                    aria-label={`Preview ${item.campaign_name} poster`}
+                    onClick={() => openPreview(item)}
+                  >
                     <svg
                       viewBox="0 0 64 64"
                       width="96"
                       height="96"
                       fill="none"
                       role="img"
+                      aria-hidden="true"
                     >
                       <rect
                         x="2"
@@ -203,7 +277,7 @@ export default function QRCodesClient({
                       <rect x="26" y="34" width="4" height="4" fill="#000" />
                       <rect x="34" y="34" width="4" height="4" fill="#000" />
                     </svg>
-                  </div>
+                  </button>
 
                   <div
                     className="qr-card__stats"
@@ -232,8 +306,17 @@ export default function QRCodesClient({
                   <div className="qr-card__actions">
                     <button
                       type="button"
+                      className="btn-secondary"
+                      aria-label={`Preview poster for ${item.campaign_name}`}
+                      onClick={() => openPreview(item)}
+                    >
+                      Preview
+                    </button>
+                    <button
+                      type="button"
                       className="btn-ghost"
                       aria-label={`Download QR for ${item.campaign_name}`}
+                      onClick={() => handleDownload(item.campaign_name)}
                     >
                       Download
                     </button>
@@ -241,6 +324,7 @@ export default function QRCodesClient({
                       type="button"
                       className="btn-ghost"
                       aria-label={`Print QR for ${item.campaign_name}`}
+                      onClick={() => handlePrint(item.campaign_name)}
                     >
                       Print
                     </button>
@@ -251,6 +335,86 @@ export default function QRCodesClient({
           )}
         </>
       )}
+
+      <Modal
+        open={previewQR !== null}
+        onClose={closePreview}
+        title={previewQR ? `${previewQR.campaign_name} — Poster Preview` : ""}
+        size="md"
+        footer={
+          previewQR ? (
+            <>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={closePreview}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => handlePrint(previewQR.campaign_name)}
+              >
+                Print
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => handleDownload(previewQR.campaign_name)}
+              >
+                Download
+              </button>
+            </>
+          ) : null
+        }
+      >
+        {previewQR ? (
+          <div className="qr-preview-body">
+            <div
+              className="qr-preview-size-switcher"
+              role="group"
+              aria-label="Poster size"
+            >
+              {(
+                [
+                  { value: "a4", label: "A4 Poster" },
+                  { value: "table-tent", label: 'Table Tent 4×6"' },
+                  { value: "window-sticker", label: 'Window Sticker 8×8"' },
+                  { value: "cash-register", label: 'Cash Register 3×3"' },
+                ] as { value: PosterType; label: string }[]
+              ).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={[
+                    "qr-preview-size-btn",
+                    previewSize === opt.value
+                      ? "qr-preview-size-btn--active"
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  aria-pressed={previewSize === opt.value}
+                  onClick={() => setPreviewSize(opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="qr-preview-canvas">
+              <PosterPreview
+                posterType={previewSize}
+                heroMessage={previewQR.hero_message}
+                subMessage={previewQR.sub_message}
+                campaignName={previewQR.campaign_name}
+                qrId={previewQR.id}
+              />
+            </div>
+          </div>
+        ) : null}
+      </Modal>
     </section>
   );
 }

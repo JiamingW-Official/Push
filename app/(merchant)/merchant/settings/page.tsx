@@ -8,6 +8,7 @@ import { ToggleRow, Channel } from "@/components/settings/ToggleRow";
 import { SelectRow } from "@/components/settings/SelectRow";
 import { InputRow } from "@/components/settings/InputRow";
 import { Modal, PageHeader, StatusBadge } from "@/components/merchant/shared";
+import { useToast } from "@/components/toast/Toaster";
 import "@/components/settings/settings.css";
 import "./settings.css";
 
@@ -725,6 +726,7 @@ function NewKeyModal({
 
 export default function MerchantSettingsPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [activeSection, setActiveSection] = useState("business");
   const [settings, setSettings] = useState<MerchantSettings>(DEFAULT_SETTINGS);
   const [team, setTeam] = useState<TeamMember[]>(DEFAULT_TEAM);
@@ -836,22 +838,33 @@ export default function MerchantSettingsPage() {
   const save = useCallback(async () => {
     setSaveStatus("saving");
     const payload = buildSectionPayload(activeSection, settings, team, apiKeys);
-    const response = await fetch("/api/merchant/settings", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch("/api/merchant/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        throw new Error(`Save failed (${response.status})`);
+      }
+
+      setSavedSnapshot({ settings, team, apiKeys });
+      setSaveStatus("saved");
+      setDirty(false);
+      setTimeout(() => setSaveStatus("idle"), 2500);
+      toast.success("Settings saved");
+    } catch {
+      // Keep dirty so the user can retry, surface a retry-action toast.
       setSaveStatus("idle");
-      return;
+      toast.error("Save failed", {
+        actionLabel: "Retry",
+        onAction: () => {
+          void save();
+        },
+      });
     }
-
-    setSavedSnapshot({ settings, team, apiKeys });
-    setSaveStatus("saved");
-    setDirty(false);
-    setTimeout(() => setSaveStatus("idle"), 2500);
-  }, [activeSection, apiKeys, settings, team]);
+  }, [activeSection, apiKeys, settings, team, toast]);
 
   const notifAny = (key: keyof MerchantNotifSettings) =>
     Object.values(settings.notifications[key]).some(Boolean);
@@ -1435,6 +1448,7 @@ export default function MerchantSettingsPage() {
               <button
                 className="btn btn--ghost btn--sm"
                 type="button"
+                disabled={saveStatus === "saving"}
                 onClick={() => {
                   setSettings(savedSnapshot.settings);
                   setTeam(savedSnapshot.team);
@@ -1442,8 +1456,9 @@ export default function MerchantSettingsPage() {
                   setDirty(false);
                   setSaveStatus("idle");
                 }}
+                style={{ opacity: saveStatus === "saving" ? 0.4 : 1 }}
               >
-                Cancel
+                Discard
               </button>
               <button
                 className="btn btn--primary btn--sm"
@@ -1454,7 +1469,7 @@ export default function MerchantSettingsPage() {
                   opacity: saveStatus === "saving" || hasFieldError ? 0.4 : 1,
                 }}
               >
-                Save changes
+                {saveStatus === "saving" ? "Saving…" : "Save changes"}
               </button>
             </div>
           </div>

@@ -1182,3 +1182,59 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Do not modify the uplift v2 rules above.
+   Layout already stacks at 1280px (map above list, list below).
+   This pass shrinks the map height + tightens map popup width on mobile.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* KPI strip stacks 1-up — already grid-template-columns: 1fr at 1024px,
+     but tighten gap on phone */
+  .locations-page .locations-kpi-row {
+    gap: var(--space-2);
+  }
+
+  /* Map shorter on mobile so list shows without scroll-of-death */
+  .locations-page .locations-map-panel,
+  .locations-page .loc-map-canvas {
+    min-height: 320px;
+  }
+
+  /* Filter row — chips wrap is fine, but action button (Add Location) needs
+     to drop to its own row at full width on phone */
+  .locations-page .locations-filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+  .locations-page .locations-filter-row > .locations-add-link {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Location cards — meta row gets a wrap to avoid horizontal overflow */
+  .location-card__meta {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  /* List panel — let it grow tall on mobile (no scroll-trap) */
+  .locations-page .locations-list-panel {
+    max-height: none;
+  }
+
+  /* Map popup — shrink width so it never bleeds past viewport */
+  .merchant-map-popup {
+    width: min(240px, calc(100vw - 64px));
+  }
+}
+
+@media (max-width: 480px) {
+  /* Tighten ticket-style location header gap */
+  .locations-page .ms-page-header {
+    gap: var(--space-2);
+  }
+}

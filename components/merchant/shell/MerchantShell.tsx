@@ -7,6 +7,7 @@
 import { usePathname } from "next/navigation";
 import { useMemo, type ReactNode } from "react";
 import { UnifiedSidebar } from "@/components/shell/UnifiedSidebar";
+import { ToastProvider } from "@/components/toast/Toaster";
 import { useThreadInboxStream } from "@/lib/realtime/use-thread-stream";
 import {
   buildMerchantMockThreads,
@@ -48,19 +49,21 @@ export function MerchantShell({ children }: MerchantShellProps) {
   const inboxUnread = mockUnread + liveUnread;
 
   if (isUnframed) {
-    return <>{children}</>;
+    return <ToastProvider>{children}</ToastProvider>;
   }
 
   return (
-    <div className="ms-shell">
-      <UnifiedSidebar
-        role="merchant"
-        userInitial="M"
-        userName="Merchant"
-        notificationCount={1}
-        inboxUnread={inboxUnread}
-      />
-      <main className="ms-main-content">{children}</main>
-    </div>
+    <ToastProvider>
+      <div className="ms-shell">
+        <UnifiedSidebar
+          role="merchant"
+          userInitial="M"
+          userName="Merchant"
+          notificationCount={1}
+          inboxUnread={inboxUnread}
+        />
+        <main className="ms-main-content">{children}</main>
+      </div>
+    </ToastProvider>
   );
 }

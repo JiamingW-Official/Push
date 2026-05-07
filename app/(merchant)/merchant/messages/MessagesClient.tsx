@@ -600,7 +600,9 @@ export default function MessagesClient({
         <div className="msg-empty-wrap">
           <EmptyState
             title="No conversations yet"
-            description="Open an applicant card and tap Message to start a thread with a creator."
+            description="Once you approve creators or comment on applicants, threads land here. Open an applicant card and tap Message to start a conversation."
+            ctaLabel="Review applicants"
+            ctaHref="/merchant/applicants"
           />
         </div>
       ) : (
@@ -670,9 +672,90 @@ export default function MessagesClient({
             <div ref={listRef} className="mm-list-body">
               {grouped.length === 0 ? (
                 <div className="mm-list-empty">
-                  <p>
-                    {query ? `Nothing matches "${query}".` : "Quiet for now."}
-                  </p>
+                  {query ? (
+                    <>
+                      <p>
+                        Nothing matches &ldquo;{query}&rdquo;. Try a creator
+                        name, campaign, or keyword from the message body.
+                      </p>
+                      <button
+                        type="button"
+                        className="btn-ghost"
+                        style={{
+                          marginTop: 12,
+                          padding: "8px 16px",
+                          fontSize: 12,
+                          fontFamily: "var(--font-body)",
+                          fontWeight: 700,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          borderRadius: 8,
+                          border: "1px solid var(--hairline)",
+                          background: "transparent",
+                          color: "var(--ink)",
+                        }}
+                        onClick={() => setQuery("")}
+                      >
+                        Clear search
+                      </button>
+                    </>
+                  ) : filter === "unread" ? (
+                    <>
+                      <p>Inbox zero — no unread threads.</p>
+                      <button
+                        type="button"
+                        className="btn-ghost"
+                        style={{
+                          marginTop: 12,
+                          padding: "8px 16px",
+                          fontSize: 12,
+                          fontFamily: "var(--font-body)",
+                          fontWeight: 700,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          borderRadius: 8,
+                          border: "1px solid var(--hairline)",
+                          background: "transparent",
+                          color: "var(--ink)",
+                        }}
+                        onClick={() => setFilter("all")}
+                      >
+                        Show all conversations
+                      </button>
+                    </>
+                  ) : filter === "needs-reply" ? (
+                    <>
+                      <p>
+                        Nothing waiting on you. Replies you owe creators land
+                        here so nothing slips.
+                      </p>
+                      <button
+                        type="button"
+                        className="btn-ghost"
+                        style={{
+                          marginTop: 12,
+                          padding: "8px 16px",
+                          fontSize: 12,
+                          fontFamily: "var(--font-body)",
+                          fontWeight: 700,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          borderRadius: 8,
+                          border: "1px solid var(--hairline)",
+                          background: "transparent",
+                          color: "var(--ink)",
+                        }}
+                        onClick={() => setFilter("all")}
+                      >
+                        Show all conversations
+                      </button>
+                    </>
+                  ) : (
+                    <p>Quiet for now — new threads will appear here.</p>
+                  )}
                 </div>
               ) : (
                 grouped.map((g) => (

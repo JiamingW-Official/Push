@@ -516,3 +516,52 @@
     text-align: left;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   2-pane already collapses (1024 + 768 above). KPI grid drops to 1-col,
+   sub-tabs stay scrollable, applicant cards full-width.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Inner 2-pane padding tightened so cards have more horizontal room */
+  .cd-layout {
+    padding: 0 16px 48px;
+    gap: 24px;
+  }
+
+  /* KPI grid — single column on phone (already in dashboard.css for general
+     dashboard-kpi-grid, but reaffirm scoped to detail page in case dashboard
+     wave doesn't run) */
+  .cd-page .cd-kpi-grid,
+  .cd-page .dashboard-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Sub-tabs — pinch up + ensure horizontal scroll */
+  .cd-tabs {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  /* Bottom action bar — buttons full-width */
+  .cd-bottom-bar .cd-actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .cd-bottom-bar > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cd-hero__overlay {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .cd-layout {
+    padding: 0 12px 40px;
+  }
+}

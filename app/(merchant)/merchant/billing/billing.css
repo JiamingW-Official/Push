@@ -473,3 +473,110 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Stack KPIs · invoice table → card-form · constrain modals
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin on bill-page so phone has no negative side margin */
+  .bill-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* KPI row stacks single column */
+  .bill-kpis {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Section head wraps; CTA (e.g. "ADD METHOD") moves below title */
+  .bill-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Invoice table → stacked card-form
+     Each <tr> becomes a card, hide thead, label cells via data-attr if present. */
+  .bill-table-wrap {
+    border-radius: 16px;
+  }
+  .bill-table thead {
+    /* Visually hide but keep accessible */
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  .bill-table,
+  .bill-table tbody,
+  .bill-table tr,
+  .bill-table td {
+    display: block;
+    width: 100%;
+  }
+  .bill-table tr {
+    border-bottom: 1px solid var(--hairline);
+    padding: 16px;
+  }
+  .bill-table tr:last-child {
+    border-bottom: 0;
+  }
+  .bill-table td {
+    padding: 4px 0;
+    text-align: left;
+  }
+  .bill-table td.bill-col-right,
+  .bill-table td.bill-table-amount {
+    text-align: left;
+    justify-content: flex-start;
+  }
+  .bill-table td.bill-table-id {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .bill-table td.bill-table-amount {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .bill-actions-cell {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .bill-row-btn {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+
+  /* Method card row stacks meta + side */
+  .bill-method-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .bill-method-side {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  /* Modal action buttons stack full-width */
+  .bill-modal-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .bill-modal-actions > * {
+    width: 100%;
+  }
+}

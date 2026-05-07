@@ -1,23 +1,25 @@
 /* ============================================================
-   Toaster — bottom-center stack, FIFO 3-max. v12.2 tokens only.
-   Each toast variant uses an existing role-locked color:
-     info     : warm gray panel + ink text
-     success  : N2W blue accent strip
-     error    : Brand Red accent strip
-     decline  : Editorial Pink accent strip (matches invite decline-undo)
+   Toaster — bottom-right stack, FIFO 3-max. v12.2 tokens only.
+   Liquid Glass surface (matches dashboard .an2-mod register):
+     translucent white + saturate blur + spec/edge/shadow.
+   Variants paint a 4px left accent strip (role-locked colors):
+     info     : graphite (neutral updates)
+     success  : N2W blue (Filled Secondary)
+     error    : Brand Red (Filled Primary)
+     warn     : Champagne (ceremonial / cautionary)
+     decline  : Editorial Pink (invite decline-undo)
    ============================================================ */
 
 .toaster {
   position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 24px;
+  bottom: 24px;
   display: flex;
-  flex-direction: column-reverse; /* newest on top of the stack */
+  flex-direction: column-reverse; /* newest closest to corner */
   gap: 12px;
   z-index: 1000;
   pointer-events: none;
-  max-width: 480px;
+  max-width: 420px;
   width: calc(100vw - 32px);
 }
 
@@ -28,22 +30,28 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: var(--snow, #fff);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  /* Liquid Glass — translucent + saturate blur (mirrors --lg-bg-light) */
+  background: rgba(255, 255, 255, 0.74);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border-radius: 12px;
+  /* Spec highlight on top + soft inner edge + 2-layer drop shadow */
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 24px 48px rgba(0, 0, 0, 0.10);
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 8px 24px rgba(60, 45, 30, 0.06),
+    0 16px 48px rgba(60, 45, 30, 0.10);
   font-family: var(--font-body, "Open Sans");
-  animation: toast-in 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: toast-in 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .toast::before {
   content: "";
   display: block;
   width: 4px;
-  height: 100%;
+  align-self: stretch;
   border-radius: 2px;
   background: var(--graphite, #2c2a26);
 }
@@ -51,6 +59,7 @@
 .toast--info::before    { background: var(--graphite, #2c2a26); }
 .toast--success::before { background: var(--accent-blue, #0085ff); }
 .toast--error::before   { background: var(--brand-red, #c1121f); }
+.toast--warn::before    { background: var(--champagne, #bfa170); }
 .toast--decline::before { background: var(--editorial-pink, #e8447d); }
 
 .toast__body {
@@ -71,7 +80,7 @@
 .toast__msg {
   font-size: 13px;
   font-weight: 500;
-  color: var(--graphite, #3a3835);
+  color: var(--ink-3, #61605c);
   line-height: 1.4;
 }
 
@@ -120,11 +129,11 @@
 @keyframes toast-in {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.96);
+    transform: translate(24px, 8px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(0, 0) scale(1);
   }
 }
 
@@ -137,5 +146,15 @@
   }
   .toast__action:hover {
     transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .toaster {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+    width: auto;
   }
 }

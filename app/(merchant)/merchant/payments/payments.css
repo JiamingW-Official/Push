@@ -772,3 +772,76 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Stack hero + KPI + method grid · table allows horizontal scroll fallback
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin so phone has no negative side margin */
+  .pay-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Hero + KPIs stack 1-col on phone (the existing 780 breakpoint covers this,
+     but tablet 768 sometimes hits a hairline diff — re-affirm here) */
+  .pay-kpi-grid,
+  .pay-method-grid,
+  .pay-preset-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Section heads wrap title + CTA */
+  .pay-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Transaction list — keep grid form but allow horizontal scroll if it overflows */
+  .pay-history-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pay-history-head,
+  .pay-history-row {
+    min-width: 600px;
+  }
+  /* Override min-width back to single-col on the per-row stacked layout
+     defined in the existing 780 block (those rows use grid-template-columns: 1fr) */
+  @supports (selector(:has(*))) {
+    .pay-history-table:has(.pay-history-head[hidden]) .pay-history-row,
+    .pay-history-row[style*="grid-template-columns: 1fr"] {
+      min-width: 0;
+    }
+  }
+
+  /* Modal footer + form action area stack */
+  .pay-modal-footer-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .pay-btn {
+    width: 100%;
+  }
+
+  /* Confirm button full-width */
+  .pay-confirm-btn {
+    width: 100%;
+  }
+}
+
+/* On phone (≤480) the history rows already collapse to grid 1fr per existing 780 block;
+   make sure the wrapping table doesn't keep min-width that forces overflow */
+@media (max-width: 480px) {
+  .pay-history-table {
+    overflow-x: visible;
+  }
+  .pay-history-row {
+    min-width: 0;
+  }
+}

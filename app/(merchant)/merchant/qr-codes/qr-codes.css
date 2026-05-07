@@ -393,3 +393,123 @@
             backdrop-filter: none;
   }
 }
+
+/* ── QR poster preview button + modal contents ──────────────────────── */
+.qr-poster-code--button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 180ms var(--spring);
+}
+
+.qr-poster-code--button:hover {
+  transform: translate(2px, 2px);
+}
+
+.qr-poster-code--button:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+.qr-poster-code--button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.qr-preview-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.qr-preview-size-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.qr-preview-size-btn {
+  background: var(--surface-3);
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 8px 18px;
+  text-transform: uppercase;
+  transition: transform 180ms var(--spring), background 180ms ease;
+}
+
+.qr-preview-size-btn:hover {
+  transform: translate(2px, 2px);
+}
+
+.qr-preview-size-btn--active {
+  background: var(--ink);
+  color: var(--snow);
+}
+
+.qr-preview-canvas {
+  display: flex;
+  justify-content: center;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  padding: 24px;
+}
+
+.qr-preview-canvas .poster-preview-wrapper {
+  max-width: 360px;
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Do not modify the uplift v2 rules above.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* KPI strip stacks 1-up so the glass tile doesn't crush the standard cards */
+  .qr-page .qr-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+  .qr-page .qr-glass-tile {
+    grid-column: auto;
+  }
+
+  /* Poster grid 1-up so each card has room for action buttons */
+  .qr-page .qr-poster-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  /* Card action row — stack so Download / Locations buttons are full-width */
+  .qr-page .qr-card__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .qr-page .qr-card__actions > * {
+    width: 100%;
+  }
+
+  /* Card stats — 3-up stays but tighten gap so tile-tent labels fit */
+  .qr-page .qr-card__stats {
+    gap: 8px;
+  }
+
+  /* Preview modal canvas — let the poster preview shrink to fit */
+  .qr-preview-canvas {
+    padding: 12px;
+  }
+  .qr-preview-canvas .poster-preview-wrapper {
+    max-width: 100%;
+  }
+  .qr-preview-size-switcher {
+    gap: 6px;
+  }
+  .qr-preview-size-btn {
+    padding: 6px 12px;
+  }
+}

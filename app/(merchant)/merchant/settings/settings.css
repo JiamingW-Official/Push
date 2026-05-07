@@ -154,3 +154,34 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   SettingsShell already handles drawer at 1024 / 768 (in components/settings).
+   This block only resets the desktop escape margin and tightens the
+   floating save-bar so it doesn't overflow on a 375-px viewport.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin so phone has no negative side margin */
+  .settings-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Save bar — keep visible at bottom but constrained to viewport */
+  .settings-page .settings-save-bar {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: calc(100vw - 32px);
+    border-radius: 16px;
+  }
+
+  /* Section title row wraps title + helper */
+  .settings-page .settings-section__title {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

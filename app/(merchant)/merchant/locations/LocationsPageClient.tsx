@@ -166,8 +166,8 @@ export default function LocationsPageClient({
       {filteredLocations.length === 0 ? (
         <div className="locations-empty-wrap">
           <EmptyState
-            title="No matching locations"
-            description="Try a different city or status filter to inspect live venues."
+            title="No locations match this view"
+            description="Nothing fits the current city and status combination. Reset filters to see every venue running QR posters across your portfolio."
             ctaLabel="Reset filters"
             ctaOnClick={() => {
               setCityFilter("all");

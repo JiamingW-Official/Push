@@ -819,3 +819,74 @@
             backdrop-filter: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Existing 720px rule trims grommet/perforation already.
+   This pass tightens phone (≤480) further + ensures Ticket Panel fits
+   a 375px viewport without horizontal scroll.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Page container inherits sm padding from MerchantShell on phones —
+     ensure ticket panel never overflows viewport */
+  .redeem-page .redeem-ticket {
+    padding: 32px 20px;
+  }
+
+  /* Reduce headline size so it never wraps mid-word at 375px */
+  .redeem-page .redeem-ticket-title {
+    font-size: clamp(28px, 8vw, 40px);
+  }
+
+  /* Result card grid fully stacks (already partial above) */
+  .redeem-page .redeem-result-card {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  /* Result actions full-width stack */
+  .redeem-result-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .redeem-result-actions > .redeem-cta {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Phone — tightest ticket panel padding */
+  .redeem-page .redeem-ticket {
+    padding: 24px 16px;
+  }
+  .redeem-page .redeem-ticket > .redeem-ticket-grommet {
+    height: 10px;
+    width: 10px;
+  }
+  .redeem-ticket-grommet--tl,
+  .redeem-ticket-grommet--tr { top: 12px; }
+  .redeem-ticket-grommet--bl,
+  .redeem-ticket-grommet--br { bottom: 12px; }
+  .redeem-ticket-grommet--tl,
+  .redeem-ticket-grommet--bl { left: 12px; }
+  .redeem-ticket-grommet--tr,
+  .redeem-ticket-grommet--br { right: 12px; }
+  .redeem-page .redeem-ticket::before,
+  .redeem-page .redeem-ticket::after {
+    left: 12px;
+    right: 12px;
+  }
+
+  /* Input — slightly smaller numeral so 8 chars fit */
+  .redeem-ticket-input {
+    font-size: 20px;
+    min-height: 52px;
+  }
+
+  /* Toast stack — full-width edge-pinned */
+  .redeem-toast-stack {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+  }
+}

@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { CategoryPicker } from "@/components/merchant/campaign-wizard/CategoryPicker";
 import { TierSelector } from "@/components/merchant/campaign-wizard/TierSelector";
 import type { CreatorTier } from "@/components/merchant/campaign-wizard/TierSelector";
+import { useToast } from "@/components/toast/Toaster";
 import { api, type CampaignCreatePayload } from "@/lib/data/api-client";
+import { CampaignStatus } from "@/lib/data/types";
 import { MOCK_LOCATIONS } from "@/lib/merchant/mock-locations";
 import type { HeroOffer, HeroOfferType } from "@/lib/offers/types";
 import "./campaign-new.css";
@@ -311,13 +313,67 @@ function StepIndicator({ current }: { current: Step }) {
   );
 }
 
+// Map a FormErrorKey to the wizard step it belongs to. Used to focus
+// the offending step when whole-form validation fires from Step 6.
+const ERROR_TO_STEP: Record<FormErrorKey, Step> = {
+  name: 1,
+  category: 1,
+  description: 1,
+  budget: 2,
+  tier: 2,
+  commissionSplit: 2,
+  contentType: 3,
+  platform: 3,
+  dueDate: 3,
+  applicable_location_ids: 4,
+  hero_offer_type: 5,
+  hero_offer_value: 5,
+  hero_offer_description: 5,
+  hero_offer_valid_from: 5,
+  hero_offer_valid_until: 5,
+  hero_offer_max_redemptions_per_customer: 5,
+  hero_offer_max_redemptions_total: 5,
+  hero_offer_bonus_positions: 5,
+  hero_offer_bonus_reward_text: 5,
+};
+
+function firstStepWithError(errors: FormErrors): Step | null {
+  const order: FormErrorKey[] = [
+    "name",
+    "category",
+    "description",
+    "budget",
+    "tier",
+    "commissionSplit",
+    "contentType",
+    "platform",
+    "dueDate",
+    "applicable_location_ids",
+    "hero_offer_type",
+    "hero_offer_value",
+    "hero_offer_description",
+    "hero_offer_valid_from",
+    "hero_offer_valid_until",
+    "hero_offer_max_redemptions_per_customer",
+    "hero_offer_max_redemptions_total",
+    "hero_offer_bonus_positions",
+    "hero_offer_bonus_reward_text",
+  ];
+  for (const key of order) {
+    if (errors[key]) return ERROR_TO_STEP[key];
+  }
+  return null;
+}
+
 export default function CampaignNewPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<FormData>(() => createEmptyForm());
   const [errors, setErrors] = useState<FormErrors>({});
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [savingDraft, setSavingDraft] = useState(false);
 
   const selectedLocations = MOCK_LOCATIONS.filter((location) =>
     form.applicable_location_ids.includes(location.id),
@@ -662,27 +718,11 @@ export default function CampaignNewPage() {
     };
   }
 
-  async function handlePublish() {
-    const allErrors = {
-      ...validateStep(1),
-      ...validateStep(2),
-      ...validateStep(3),
-      ...validateStep(4),
-      ...validateStep(5),
-    };
-
-    if (Object.keys(allErrors).length > 0) {
-      setErrors(allErrors);
-      setFormError("Some fields need attention. Please review previous steps.");
-      return;
-    }
-
+  function buildPayload(
+    status: CampaignStatus,
+  ): { ok: true; payload: CampaignCreatePayload } | { ok: false } {
     const heroOffer = buildHeroOfferPayload();
-    if (!heroOffer) {
-      setFormError("Hero offer could not be created. Review the offer step.");
-      setStep(5);
-      return;
-    }
+    if (!heroOffer) return { ok: false };
 
     const primaryLocation = selectedLocations[0];
     const payload: CampaignCreatePayload = {
@@ -706,9 +746,124 @@ export default function CampaignNewPage() {
       ),
       applicable_location_ids: form.applicable_location_ids,
       hero_offer: heroOffer,
+      status,
+    };
+    return { ok: true, payload };
+  }
+
+  async function handlePublish() {
+    const allErrors = {
+      ...validateStep(1),
+      ...validateStep(2),
+      ...validateStep(3),
+      ...validateStep(4),
+      ...validateStep(5),
     };
 
+    if (Object.keys(allErrors).length > 0) {
+      setErrors(allErrors);
+      const targetStep = firstStepWithError(allErrors);
+      const firstErrorKey = (Object.keys(allErrors) as FormErrorKey[]).find(
+        (k) => allErrors[k],
+      );
+      const firstMessage = firstErrorKey ? allErrors[firstErrorKey] : undefined;
+      setFormError(
+        firstMessage ??
+          "Some fields need attention. Please review previous steps.",
+      );
+      toast.error(
+        firstMessage ??
+          "Some fields need attention. Please review previous steps.",
+      );
+      if (targetStep && targetStep !== step) setStep(targetStep);
+      return;
+    }
+
+    const built = buildPayload(CampaignStatus.Active);
+    if (!built.ok) {
+      setFormError("Hero offer could not be created. Review the offer step.");
+      toast.error("Hero offer could not be created. Review the offer step.");
+      setStep(5);
+      return;
+    }
+
     setLoading(true);
+    setFormError("");
+
+    try {
+      const result = await Promise.resolve(
+        api.merchant.createCampaign(built.payload),
+      );
+      if (!result.ok) {
+        throw new Error(result.error ?? "Campaign creation failed.");
+      }
+
+      toast.success(`${result.data.title} is live`);
+      router.push(`/merchant/campaigns/${result.data.id}`);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong.";
+      setFormError(message);
+      toast.error(message);
+      setLoading(false);
+    }
+  }
+
+  async function handleSaveDraft() {
+    // Drafts don't need full validation. Title is the only hard
+    // requirement so the row renders meaningfully in the list.
+    if (!form.name.trim()) {
+      setErrors((current) => ({
+        ...current,
+        name: "Add a name so creators recognize the campaign.",
+      }));
+      setFormError("Give the draft a name before saving.");
+      toast.error("Give the draft a name before saving.");
+      setStep(1);
+      return;
+    }
+
+    // For drafts we still want a hero_offer object. If the form
+    // didn't get that far, fall back to a minimal placeholder so
+    // CampaignCreatePayload typing stays happy.
+    const heroOffer =
+      buildHeroOfferPayload() ??
+      ({
+        type: "percent_off",
+        value: 10,
+        max_redemptions_per_customer: 1,
+        max_redemptions_total: null,
+        description: "Draft offer — finalize before publishing",
+      } as HeroOffer);
+
+    const primaryLocation = selectedLocations[0];
+    const payload: CampaignCreatePayload = {
+      title: form.name.trim(),
+      description: form.description.trim() || "Draft campaign",
+      location: primaryLocation?.address ?? "New York, NY",
+      lat: primaryLocation?.lat ?? 40.7128,
+      lng: primaryLocation?.lng ?? -74.006,
+      budget_total: Number(form.budget) || 0,
+      reward_per_visit: Math.max(
+        1,
+        Math.round(
+          Number(form.budget || 0) / Math.max(1, selectedLocations.length || 1),
+        ),
+      ),
+      max_creators: 10,
+      start_date: new Date().toISOString(),
+      end_date: form.dueDate
+        ? new Date(form.dueDate).toISOString()
+        : new Date(Date.now() + 30 * 86400_000).toISOString(),
+      tags: [form.category, form.platform, form.contentType, form.tier].filter(
+        Boolean,
+      ),
+      applicable_location_ids: form.applicable_location_ids,
+      hero_offer: heroOffer,
+      status: CampaignStatus.Draft,
+    };
+
+    setSavingDraft(true);
     setFormError("");
 
     try {
@@ -716,16 +871,17 @@ export default function CampaignNewPage() {
         api.merchant.createCampaign(payload),
       );
       if (!result.ok) {
-        throw new Error(result.error ?? "Campaign creation failed.");
+        throw new Error(result.error ?? "Could not save draft.");
       }
 
-      router.push(`/merchant/campaigns/${result.data.id}`);
+      toast.success("Saved as draft");
+      router.push("/merchant/campaigns?status=draft");
     } catch (error) {
-      setFormError(
-        error instanceof Error ? error.message : "Something went wrong.",
-      );
-    } finally {
-      setLoading(false);
+      const message =
+        error instanceof Error ? error.message : "Could not save draft.";
+      setFormError(message);
+      toast.error(message);
+      setSavingDraft(false);
     }
   }
 
@@ -1760,15 +1916,23 @@ export default function CampaignNewPage() {
                   type="button"
                   className="btn-ghost"
                   onClick={handleBack}
-                  disabled={loading}
+                  disabled={loading || savingDraft}
                 >
                   ← Edit
                 </button>
                 <button
                   type="button"
+                  className="btn-ghost"
+                  onClick={handleSaveDraft}
+                  disabled={loading || savingDraft}
+                >
+                  {savingDraft ? "Saving…" : "Save as draft"}
+                </button>
+                <button
+                  type="button"
                   className="btn-primary"
                   onClick={handlePublish}
-                  disabled={loading}
+                  disabled={loading || savingDraft}
                 >
                   {loading ? (
                     <>
@@ -1777,7 +1941,7 @@ export default function CampaignNewPage() {
                         <span className="cn-dot" />
                         <span className="cn-dot" />
                       </span>
-                      <span className="sr-only">Launching…</span>
+                      <span>Publishing…</span>
                     </>
                   ) : (
                     "Launch Campaign →"

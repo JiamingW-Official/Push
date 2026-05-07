@@ -480,3 +480,55 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   List-page: KPI row stacks · campaign rows full-width with image-on-top
+   Detail-page: 2-pane already collapses at 1024 + 768 (campaign-detail.css)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin */
+  .cl-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* KPI row — single column on phone */
+  .cl-kpi-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  /* List rows — image small + title + stats compact */
+  .cl-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .cl-row-image {
+    height: 64px;
+    width: 64px;
+  }
+
+  .cl-row-stats {
+    grid-column: 1 / -1;
+    text-align: left;
+    justify-items: start;
+  }
+}
+
+/* Phone < 480 — image goes full-width banner above text */
+@media (max-width: 480px) {
+  .cl-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .cl-row-image {
+    height: 140px;
+    width: 100%;
+  }
+}

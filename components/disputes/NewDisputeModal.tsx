@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type {
   Dispute,
   DisputeReason,
   ParticipantRole,
 } from "@/lib/disputes/types";
 import { DISPUTE_REASON_LABELS } from "@/lib/disputes/types";
+import { useToast } from "@/components/toast/Toaster";
 import { EvidenceUploader } from "./EvidenceUploader";
 
 const DEMO_CAMPAIGNS = [
@@ -60,6 +61,7 @@ export function NewDisputeModal({
   filedBy,
   onCreated,
 }: NewDisputeModalProps) {
+  const { toast } = useToast();
   const [campaignId, setCampaignId] = useState("");
   const [reason, setReason] = useState<DisputeReason>("missing_payment");
   const [description, setDescription] = useState("");
@@ -69,18 +71,45 @@ export function NewDisputeModal({
     Omit<import("@/lib/disputes/types").DisputeEvidence, "id" | "uploadedAt">[]
   >([]);
   const [submitting, setSubmitting] = useState(false);
+  const campaignRef = useRef<HTMLSelectElement | null>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+  const amountRef = useRef<HTMLInputElement | null>(null);
 
   if (!open) return null;
 
   const selectedCampaign = DEMO_CAMPAIGNS.find((c) => c.id === campaignId);
-  const canSubmit = campaignId && description.trim().length > 10 && !submitting;
+  const canSubmit = !submitting;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (submitting) return;
+
+    if (!campaignId) {
+      toast.error("Pick a campaign to file against");
+      campaignRef.current?.focus();
+      return;
+    }
+    if (description.trim().length < 10) {
+      toast.error("Add a description (10 chars minimum)");
+      descriptionRef.current?.focus();
+      return;
+    }
+    const parsedAmount = parseFloat(amount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      toast.error("Enter a disputed amount in USD");
+      amountRef.current?.focus();
+      return;
+    }
+
     setSubmitting(true);
 
-    const payload = {
+    // Frontend-only mock: build the Dispute row that matches mock-disputes
+    // shape, push to localStorage so the disputes page picks it up on next
+    // mount (it already merges localStorage entries with the static fixtures).
+    const now = new Date().toISOString();
+    const newId = `D-2026-${String(Date.now()).slice(-6)}`;
+    const localDispute: Dispute = {
+      id: newId,
       campaignId,
       campaignTitle: selectedCampaign?.title ?? "",
       merchantName: selectedCampaign?.merchant ?? "",
@@ -94,76 +123,40 @@ export function NewDisputeModal({
       otherPartyRole: filedByRole === "creator" ? "merchant" : "creator",
       reason,
       description,
-      amount: parseFloat(amount) || 0,
+      amount: parsedAmount,
       expectedOutcome,
+      status: "open",
+      events: [
+        {
+          id: `evt-${newId}-1`,
+          disputeId: newId,
+          type: "filed",
+          authorRole: filedByRole,
+          authorName: filedBy,
+          message: description,
+          createdAt: now,
+        },
+      ],
+      evidence: [],
+      createdAt: now,
+      updatedAt: now,
     };
 
     try {
-      const res = await fetch("/api/disputes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-
-      // Persist optimistically to localStorage
-      const stored = JSON.parse(
-        localStorage.getItem("push-disputes") ?? "[]",
-      ) as Dispute[];
-      stored.unshift(data.dispute);
-      localStorage.setItem("push-disputes", JSON.stringify(stored));
-
-      onCreated(data.dispute);
-      onClose();
-      resetForm();
-    } catch {
-      // Optimistic fallback — create local dispute
-      const localDispute: Dispute = {
-        id: `D-2026-${String(Date.now()).slice(-3)}`,
-        campaignId,
-        campaignTitle: selectedCampaign?.title ?? "",
-        merchantName: selectedCampaign?.merchant ?? "",
-        creatorName: filedByRole === "creator" ? filedBy : "",
-        filedBy,
-        filedByRole,
-        otherPartyName:
-          filedByRole === "creator"
-            ? (selectedCampaign?.merchant ?? "")
-            : filedBy,
-        otherPartyRole: filedByRole === "creator" ? "merchant" : "creator",
-        reason,
-        description,
-        amount: parseFloat(amount) || 0,
-        expectedOutcome,
-        status: "open",
-        events: [
-          {
-            id: `evt-local-1`,
-            disputeId: `D-2026-local`,
-            type: "filed",
-            authorRole: filedByRole,
-            authorName: filedBy,
-            message: description,
-            createdAt: new Date().toISOString(),
-          },
-        ],
-        evidence: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
       const stored = JSON.parse(
         localStorage.getItem("push-disputes") ?? "[]",
       ) as Dispute[];
       stored.unshift(localDispute);
       localStorage.setItem("push-disputes", JSON.stringify(stored));
-
-      onCreated(localDispute);
-      onClose();
-      resetForm();
-    } finally {
-      setSubmitting(false);
+    } catch {
+      // localStorage unavailable — still emit to parent so the in-memory list updates.
     }
+
+    onCreated(localDispute);
+    toast.success(`Dispute opened · ${newId}`);
+    onClose();
+    resetForm();
+    setSubmitting(false);
   }
 
   function resetForm() {
@@ -208,6 +201,7 @@ export function NewDisputeModal({
               <label htmlFor="dm-campaign">Campaign</label>
               <select
                 id="dm-campaign"
+                ref={campaignRef}
                 value={campaignId}
                 onChange={(e) => setCampaignId(e.target.value)}
                 required
@@ -242,6 +236,7 @@ export function NewDisputeModal({
               <label htmlFor="dm-amount">Amount in dispute (USD)</label>
               <input
                 id="dm-amount"
+                ref={amountRef}
                 type="number"
                 min="0"
                 step="0.01"
@@ -258,6 +253,7 @@ export function NewDisputeModal({
               </label>
               <textarea
                 id="dm-description"
+                ref={descriptionRef}
                 placeholder="Describe the issue in detail…"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}

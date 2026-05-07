@@ -41,6 +41,9 @@ import {
   type ApplicationStatus,
 } from "./mock-applications";
 
+import { MOCK_MERCHANT_NOTIFICATIONS } from "./mock-notifications";
+import { MOCK_MERCHANT_PAYMENTS_HISTORY } from "./mock-payments";
+
 import {
   MOCK_QR_CODES,
   type QRCodeRecord,
@@ -340,6 +343,7 @@ export type CampaignCreatePayload = Partial<
     | "tags"
     | "applicable_location_ids"
     | "hero_offer"
+    | "status"
   >
 > & {
   image_url?: string;
@@ -781,7 +785,7 @@ const merchantMock = {
       reward_per_visit: data.reward_per_visit ?? 25,
       max_creators: data.max_creators ?? 10,
       accepted_creators: 0,
-      status: CampaignStatus.Draft,
+      status: data.status ?? CampaignStatus.Draft,
       applicable_location_ids: data.applicable_location_ids ?? ["loc-bed-stuy"],
       hero_offer: data.hero_offer ?? {
         type: "percent_off",
@@ -802,7 +806,9 @@ const merchantMock = {
   },
 
   payments(): ApiResult<Payment[]> {
-    return mockOk(mockStore.read<Payment[]>("merchant-payments", []));
+    const stored = mockStore.read<Payment[]>("merchant-payments", []);
+    if (stored.length) return mockOk(stored);
+    return mockOk([...MOCK_MERCHANT_PAYMENTS_HISTORY]);
   },
 
   async getLocations(): Promise<MerchantLocation[]> {
@@ -961,7 +967,7 @@ const merchantMock = {
   },
   notifications: {
     async list(): Promise<ApiResult<Notification[]>> {
-      return mockOk([]);
+      return mockOk([...MOCK_MERCHANT_NOTIFICATIONS]);
     },
     async markRead(_id: string): Promise<ApiResult<{ read_at: string }>> {
       return mockOk({ read_at: new Date().toISOString() });
@@ -982,7 +988,11 @@ const merchantReal = {
       method: "POST",
       body: JSON.stringify(data),
     }),
-  payments: () => apiFetch<Payment[]>("/merchant/payments"),
+  // /api/merchant/payments returns a wrapped object (summary/payments/...) that
+  // doesn't match Payment[]. Until that route is rewritten, serve the demo
+  // history so the merchant playtest UI has data.
+  payments: async (): Promise<ApiResult<Payment[]>> =>
+    mockOk([...MOCK_MERCHANT_PAYMENTS_HISTORY]),
   async getLocations(): Promise<MerchantLocation[]> {
     return unwrap(apiFetch<MerchantLocation[]>("/merchant/locations"));
   },
@@ -1114,11 +1124,12 @@ const merchantReal = {
       }),
   },
   notifications: {
-    list: () => apiFetch<Notification[]>(`/merchant/notifications`),
-    markRead: (id: string) =>
-      apiFetch<{ read_at: string }>(`/merchant/notifications/${id}/read`, {
-        method: "PATCH",
-      }),
+    // No /api/merchant/notifications route ships yet — serve the demo set so
+    // the inbox + filter pills have data to render.
+    list: async (): Promise<ApiResult<Notification[]>> =>
+      mockOk([...MOCK_MERCHANT_NOTIFICATIONS]),
+    markRead: async (_id: string): Promise<ApiResult<{ read_at: string }>> =>
+      mockOk({ read_at: new Date().toISOString() }),
   },
   redeem: {
     search: (q: string) =>

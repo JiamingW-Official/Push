@@ -9,14 +9,25 @@ import {
   PageHeader,
   StatusBadge,
 } from "@/components/merchant/shared";
+import { useToast } from "@/components/toast/Toaster";
 import { api, type Invoice, type PaymentMethod } from "@/lib/data/api-client";
 import "./billing.css";
 
 type InvoiceFilter = "all" | "paid" | "pending" | "failed";
 
+type WalletStats = {
+  current_balance_cents: number;
+  month_to_date_spend_cents: number;
+  lifetime_spend_cents: number;
+  lifetime_campaigns: number;
+};
+
 type BillingClientProps = {
   initialInvoices: Invoice[];
   initialPaymentMethods: PaymentMethod[];
+  // Optional aggregate stats used when the page is in demo / fixture mode.
+  // When null the live ledger (initialInvoices) is the only source for KPIs.
+  walletStats?: WalletStats | null;
 };
 
 const INVOICE_TABS = [
@@ -94,9 +105,12 @@ function toBadgeStatus(
 export default function BillingClient({
   initialInvoices,
   initialPaymentMethods,
+  walletStats = null,
 }: BillingClientProps) {
+  const { toast } = useToast();
   const [invoiceFilter, setInvoiceFilter] = useState<InvoiceFilter>("all");
   const [paymentMethods, setPaymentMethods] = useState(initialPaymentMethods);
+  const [paidInvoiceIds, setPaidInvoiceIds] = useState<Set<string>>(new Set());
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [addMethodOpen, setAddMethodOpen] = useState(false);
   const [topUpAmount, setTopUpAmount] = useState("");
@@ -106,6 +120,23 @@ export default function BillingClient({
   const [lastFour, setLastFour] = useState("");
   const [methodError, setMethodError] = useState("");
   const [methodSubmitting, setMethodSubmitting] = useState(false);
+
+  function handlePayInvoice(invoiceId: string, amountCents: number) {
+    setPaidInvoiceIds((prev) => {
+      const next = new Set(prev);
+      next.add(invoiceId);
+      return next;
+    });
+    toast.success(`Invoice ${invoiceId} paid`, {
+      body: `${formatCurrency(amountCents)} settled (playtest)`,
+    });
+  }
+
+  function handleDownloadInvoice(invoiceId: string) {
+    toast.info(`Downloading ${invoiceId}.pdf`, {
+      body: "Playtest mode — no real file generated.",
+    });
+  }
 
   const filteredInvoices = useMemo(() => {
     if (invoiceFilter === "all") {
@@ -143,6 +174,10 @@ export default function BillingClient({
   );
 
   const thisMonthDue = useMemo(() => {
+    if (walletStats) {
+      return walletStats.month_to_date_spend_cents;
+    }
+
     const now = new Date();
 
     return initialInvoices.reduce((sum, invoice) => {
@@ -158,16 +193,20 @@ export default function BillingClient({
       }
       return sum + invoice.total_cents;
     }, 0);
-  }, [initialInvoices]);
+  }, [initialInvoices, walletStats]);
 
   const lifetimeSpend = useMemo(() => {
+    if (walletStats) {
+      return walletStats.lifetime_spend_cents;
+    }
+
     return initialInvoices.reduce((sum, invoice) => {
       if (normalizeInvoiceStatus(invoice.status) === "paid") {
         return sum + invoice.total_cents;
       }
       return sum;
     }, 0);
-  }, [initialInvoices]);
+  }, [initialInvoices, walletStats]);
 
   const pendingCount = invoiceCounts.pending;
 
@@ -194,6 +233,7 @@ export default function BillingClient({
 
       setTopUpAmount("");
       setTopUpOpen(false);
+      toast.success(`Wallet topped up · ${formatCurrency(amountCents)}`);
     } catch (error) {
       setTopUpError(error instanceof Error ? error.message : "Top up failed.");
     } finally {
@@ -227,6 +267,7 @@ export default function BillingClient({
       setLastFour("");
       setBrand("VISA");
       setAddMethodOpen(false);
+      toast.success(`${brand} •••• ${lastFour} added`);
     } catch (error) {
       setMethodError(
         error instanceof Error ? error.message : "Method save failed.",
@@ -270,7 +311,14 @@ export default function BillingClient({
           </p>
         </article>
 
-        <KPICard label="WALLET BALANCE" value="—" />
+        <KPICard
+          label="WALLET BALANCE"
+          value={
+            walletStats
+              ? formatCurrency(walletStats.current_balance_cents)
+              : "—"
+          }
+        />
 
         <div data-kpi="lifetime">
           <KPICard
@@ -300,10 +348,54 @@ export default function BillingClient({
 
         {filteredInvoices.length === 0 ? (
           <div className="bill-empty-wrap">
-            <EmptyState
-              title="NO INVOICES YET"
-              description="Your billing history will appear here once your first campaign settles."
-            />
+            {(() => {
+              if (initialInvoices.length === 0) {
+                return (
+                  <EmptyState
+                    title="No invoices yet"
+                    description="Your billing history appears here as soon as your first campaign settles. You'll see issued date, amount, and status for every charge."
+                    ctaLabel="Browse campaigns"
+                    ctaHref="/merchant/campaigns"
+                  />
+                );
+              }
+              if (invoiceFilter === "paid") {
+                return (
+                  <EmptyState
+                    title="No paid invoices yet"
+                    description="Your first invoice settles after the first verified scan converts. Once paid, the receipt files here for your records."
+                    ctaLabel="Browse campaigns"
+                    ctaHref="/merchant/campaigns"
+                  />
+                );
+              }
+              if (invoiceFilter === "pending") {
+                return (
+                  <EmptyState
+                    title="No pending invoices"
+                    description="Nothing waiting on payment — your account is current. New invoices arrive on the first of each month."
+                    ctaLabel="View paid invoices"
+                    ctaOnClick={() => setInvoiceFilter("paid")}
+                  />
+                );
+              }
+              if (invoiceFilter === "failed") {
+                return (
+                  <EmptyState
+                    title="No failed invoices"
+                    description="Payments are running clean — no retries needed."
+                  />
+                );
+              }
+              return (
+                <EmptyState
+                  title="Nothing in this view"
+                  description="No invoices match the current filter. Reset to see your full billing history."
+                  ctaLabel="Show all invoices"
+                  ctaOnClick={() => setInvoiceFilter("all")}
+                />
+              );
+            })()}
           </div>
         ) : (
           <div className="bill-table-wrap">
@@ -324,7 +416,11 @@ export default function BillingClient({
               </thead>
               <tbody>
                 {filteredInvoices.map((invoice) => {
-                  const normalized = normalizeInvoiceStatus(invoice.status);
+                  const isLocallyPaid = paidInvoiceIds.has(invoice.id);
+                  const effectiveStatus = isLocallyPaid
+                    ? "paid"
+                    : invoice.status;
+                  const normalized = normalizeInvoiceStatus(effectiveStatus);
                   return (
                     <tr key={invoice.id}>
                       <td className="bill-table-id">{invoice.id}</td>
@@ -337,8 +433,8 @@ export default function BillingClient({
                         {formatCurrency(invoice.total_cents)}
                       </td>
                       <td>
-                        <StatusBadge status={toBadgeStatus(invoice.status)}>
-                          {invoice.status.toUpperCase()}
+                        <StatusBadge status={toBadgeStatus(effectiveStatus)}>
+                          {effectiveStatus.toUpperCase()}
                         </StatusBadge>
                       </td>
                       <td className="bill-col-right">
@@ -348,6 +444,12 @@ export default function BillingClient({
                               type="button"
                               className="btn-primary bill-row-btn"
                               aria-label={`Pay invoice ${invoice.id}`}
+                              onClick={() =>
+                                handlePayInvoice(
+                                  invoice.id,
+                                  invoice.total_cents,
+                                )
+                              }
                             >
                               PAY NOW
                             </button>
@@ -356,6 +458,7 @@ export default function BillingClient({
                             type="button"
                             className="btn-ghost bill-row-btn"
                             aria-label={`Download invoice ${invoice.id}`}
+                            onClick={() => handleDownloadInvoice(invoice.id)}
                           >
                             DOWNLOAD
                           </button>
@@ -390,9 +493,9 @@ export default function BillingClient({
         {paymentMethods.length === 0 ? (
           <div className="bill-empty-wrap">
             <EmptyState
-              title="NO PAYMENT METHODS"
-              description="Add a card to keep billing in sync with your campaigns."
-              ctaLabel="ADD METHOD"
+              title="No payment methods on file"
+              description="Add a card to settle invoices automatically the moment a campaign converts. You can add backups and rotate primary anytime."
+              ctaLabel="Add payment method"
               ctaOnClick={() => setAddMethodOpen(true)}
             />
           </div>

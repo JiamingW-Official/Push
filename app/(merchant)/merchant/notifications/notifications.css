@@ -667,3 +667,44 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Filter chip row → horizontal scroller · group head + cards full-width
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reset desktop escape margin so phone has no negative side margin */
+  .notif-page {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Mark-all-read button + toolbar wrap nicely */
+  .notif-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Filter row should not horizontally clip — let it scroll if it does */
+  .notif-toolbar .ms-filter-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+  .notif-toolbar .ms-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .notif-toolbar .ms-filter-tabs-btn {
+    flex-shrink: 0;
+  }
+
+  /* Notification items full-width with reduced left/right padding */
+  .notif-item {
+    border-radius: 12px;
+  }
+}

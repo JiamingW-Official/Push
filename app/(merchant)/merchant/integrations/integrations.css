@@ -850,3 +850,64 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Featured strip already scrolls. Category tabs already scroll. Grid
+   already drops to 1-col at 640. This block tightens main padding,
+   ensures grid breathes nicely at tablet 768 (2-col), and clamps the
+   header stat tile to full-width on phone.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reduce main padding so cards have more horizontal room */
+  .int-main {
+    padding: 24px 16px 64px;
+  }
+
+  /* Sub-nav padding */
+  .int-subnav {
+    padding: 12px 16px;
+  }
+
+  /* 2-col grid at tablet, 1-col below 640 (already covered) */
+  .int-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* Header stat tile already goes full-width via existing 768 block;
+     re-affirm + bump radius down */
+  .int-header__stat-tile {
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+  }
+
+  /* Featured strip — slightly tighter padding */
+  .int-shell .int-featured {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  /* Confirm modal (disconnect) — already constrained at 480; mirror at 768 */
+  .int-confirm {
+    padding: 24px;
+  }
+  .int-confirm__actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .int-grid {
+    grid-template-columns: 1fr;
+  }
+  .int-main {
+    padding: 16px 12px 48px;
+  }
+  /* Confirm modal stays inside viewport */
+  .int-confirm {
+    max-width: calc(100vw - 32px);
+  }
+}

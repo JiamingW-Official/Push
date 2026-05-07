@@ -351,3 +351,44 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 7B Mobile (2026-05-07) — Phone playtest fixes (375px / 768px)
+   Stat row already wraps (inline flex-wrap). Tab bar already overflows-x.
+   Page-header + tabs use inline-style padding 32px which is acceptable at
+   375 (gives ~311 content width). This block strengthens .mdisp-card
+   stacking and ensures the desktop escape margin (none here) doesn't trip.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Dispute list cards full-width, stacked layout */
+  .mdisp-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .mdisp-card__amount {
+    font-size: 20px;
+  }
+
+  .mdisp-creator__name {
+    max-width: none;
+  }
+
+  /* Stat tiles in the inline-styled stat row — already wrap; just nudge min-width
+     so on a 375 viewport they can fit two-up before stacking */
+  .disp-page [style*="minWidth: 120"],
+  .disp-page [style*="min-width: 120"] {
+    flex: 1 1 calc(50% - 12px);
+  }
+}
+
+/* Phone < 480 — stat tiles stack 1-col */
+@media (max-width: 480px) {
+  .disp-page [style*="minWidth: 120"],
+  .disp-page [style*="min-width: 120"] {
+    flex: 1 1 100%;
+  }
+}

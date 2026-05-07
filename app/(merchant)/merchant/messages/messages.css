@@ -1673,3 +1673,61 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Single-pane swap (.has-active) already in place above.
+   This pass tightens spacing on phone + ensures the active thread fills
+   the viewport without the list peeking through.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .msg-page {
+    gap: var(--space-3);
+  }
+
+  /* Single-pane: when active, thread pane fills its container, no max-height */
+  .msg-page .mm-pane-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: var(--space-2);
+  }
+
+  /* List pane height naturally (drop the 400px cap on phone so the list
+     doesn't double-scroll inside the page scroll) */
+  .msg-page .mm-list-pane,
+  .msg-page .msg-sidebar {
+    max-height: none;
+  }
+
+  /* Thread pane — full-screen feel when a thread is active */
+  .msg-page .mm-pane-layout.has-active .mm-thread-pane {
+    min-height: calc(100svh - 160px);
+  }
+
+  /* List filter chips — horizontal scroller on phone */
+  .msg-page .mm-list-pane-filters,
+  .msg-page .mm-list-filters {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .msg-page .mm-list-pane-filters::-webkit-scrollbar,
+  .msg-page .mm-list-filters::-webkit-scrollbar { display: none; }
+
+  /* Composer row sticks to the bottom of viewport vibe — keep generous tap area */
+  .msg-page .mm-composer,
+  .msg-page .msg-input-row {
+    padding: 12px;
+  }
+  .msg-page .mm-composer-send,
+  .msg-page .msg-send {
+    min-height: 44px;
+  }
+
+  /* Bubbles a little wider so short replies don't look orphaned */
+  .msg-page .mm-bubble,
+  .msg-page .msg-bubble {
+    max-width: 88%;
+  }
+}
+

@@ -218,6 +218,8 @@
     background 180ms ease;
   cursor: pointer;
   outline: none;
+  text-decoration: none;
+  color: inherit;
 }
 
 .db-list-row:last-child {
@@ -770,5 +772,32 @@
     background: var(--snow);
     -webkit-backdrop-filter: none;
             backdrop-filter: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
+   APPENDED ONLY. Do not modify the v2 uplift rules above.
+   Targets: 768px (phone) and 768-1023 tablet refinements.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Title + section heads — soften clamp floor so H1 doesn't crush */
+  .db-dashboard-page .ms-page-header-title {
+    font-size: clamp(32px, 7vw, 48px);
+  }
+
+  /* KPI numerals — smaller floor so $114,800 fits without ellipsis */
+  .db-dashboard-page .db-kpi-grid .kpi-card .kpi-card__numeral {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+
+  /* Section "View all" pill — full-tap target on mobile */
+  .db-dashboard-page .db-section-link {
+    padding: 10px 16px;
+  }
+
+  /* List rows — let title and meta wrap; keep dense padding */
+  .db-dashboard-page .db-list-row {
+    padding: 12px 16px;
   }
 }
