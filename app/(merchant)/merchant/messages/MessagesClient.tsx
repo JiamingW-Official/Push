@@ -22,6 +22,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { EmptyState, PageHeader } from "@/components/merchant/shared";
 import type { Message, Thread, ThreadParticipant } from "@/lib/messaging/types";
 import { useThreadStream } from "@/lib/realtime/use-thread-stream";
@@ -230,9 +231,21 @@ function isDemoThread(threadId: string): boolean {
 
 export default function MessagesClient({
   initialThreads,
+  initialThreadId,
 }: {
   initialThreads: Thread[];
+  /** Thread id from /merchant/messages/[threadId] when deep-linked.
+   *  Falls back to first thread when not provided (legacy /messages route). */
+  initialThreadId?: string;
 }) {
+  const router = useRouter();
+  const routeParams = useParams<{ threadId?: string | string[] }>();
+  const urlThreadId = useMemo(() => {
+    const raw = routeParams?.threadId;
+    if (!raw) return null;
+    return Array.isArray(raw) ? (raw[0] ?? null) : raw;
+  }, [routeParams]);
+
   /* When the server returns no threads (demo / no-session), fall back
      to the merchant-mock seeds so the page is never empty. */
   const seedThreads = useMemo<Thread[]>(
@@ -242,8 +255,35 @@ export default function MessagesClient({
   );
 
   const [threads, setThreads] = useState<Thread[]>(seedThreads);
+  /* Active thread resolution priority on first render:
+     1. /messages/[threadId] URL — initialThreadId from server params
+     2. seedThreads[0].id — sensible default for /messages root
+     3. null — empty inbox */
   const [activeThreadId, setActiveThreadId] = useState<string | null>(
-    seedThreads[0]?.id ?? null,
+    initialThreadId ?? seedThreads[0]?.id ?? null,
+  );
+
+  /* URL → state sync: when user clicks browser back/forward or pastes a
+     /messages/[threadId] URL, keep the rendered thread aligned with the
+     URL. Only fires when a threadId is present in the URL — for the
+     listing route /messages we keep whatever the user last selected. */
+  useEffect(() => {
+    if (urlThreadId && urlThreadId !== activeThreadId) {
+      setActiveThreadId(urlThreadId);
+    }
+  }, [urlThreadId, activeThreadId]);
+
+  /* selectThread — picks a thread AND keeps the URL in sync so deep-links
+     work and browser history captures the navigation. We update local state
+     immediately for snappy UI, then push the URL (router.push is enqueued).
+     Demo threads (mt-*) and real DB threads use the same scheme. */
+  const selectThread = useCallback(
+    (id: string | null) => {
+      setActiveThreadId(id);
+      const target = id ? `/merchant/messages/${id}` : "/merchant/messages";
+      router.push(target);
+    },
+    [router],
   );
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -500,12 +540,12 @@ export default function MessagesClient({
         e.preventDefault();
         const idx = orderedIds.indexOf(activeThreadId ?? "");
         const next = orderedIds[Math.min(orderedIds.length - 1, idx + 1)];
-        if (next) setActiveThreadId(next);
+        if (next) selectThread(next);
       } else if (e.key === "k" || e.key === "ArrowUp") {
         e.preventDefault();
         const idx = orderedIds.indexOf(activeThreadId ?? "");
         const next = orderedIds[Math.max(0, idx - 1)];
-        if (next) setActiveThreadId(next);
+        if (next) selectThread(next);
       } else if (e.key === "r" && activeThreadId) {
         e.preventDefault();
         composerRef.current?.focus();
@@ -528,10 +568,10 @@ export default function MessagesClient({
     (e: KeyboardEvent<HTMLButtonElement>, id: string) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        setActiveThreadId(id);
+        selectThread(id);
       }
     },
-    [],
+    [selectThread],
   );
 
   const handleComposerKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -648,7 +688,7 @@ export default function MessagesClient({
                           key={thread.id}
                           data-thread-id={thread.id}
                           type="button"
-                          onClick={() => setActiveThreadId(thread.id)}
+                          onClick={() => selectThread(thread.id)}
                           onKeyDown={(e) => handleRowKey(e, thread.id)}
                           aria-current={active ? "true" : undefined}
                           aria-label={`${other.name}${unread ? " (unread)" : ""}`}
@@ -744,7 +784,7 @@ export default function MessagesClient({
                   <button
                     type="button"
                     className="mm-thread-back"
-                    onClick={() => setActiveThreadId(null)}
+                    onClick={() => selectThread(null)}
                     aria-label="Back to list"
                   >
                     <ChevronLeft />
