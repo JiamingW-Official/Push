@@ -618,3 +618,423 @@
     transition: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps invoice descriptions + payment-method labels at
+   72ch, hero subtitle at 56ch, raises mobile heading floors, expands
+   eyebrow tracking. No Liquid Glass / atmospheric / table rules touched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Invoice descriptions / payment-method body copy / empty states */
+.bill-page p,
+.bill-page .bill-method-card p,
+.bill-page .bill-table td,
+.bill-page .ms-empty-state__description {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Page subtitle — receipts blurb */
+.bill-page .ms-page-header-subtitle {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows + table headers: readable tracking */
+.bill-page .ms-page-header-eyebrow,
+.bill-page .bill-section-eyebrow,
+.bill-page .bill-table th {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40 */
+.bill-page .ms-page-header-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* H2 — section titles */
+.bill-page .bill-section-title,
+.bill-page h2 {
+  font-size: clamp(28px, 3.5vw, 40px);
+  line-height: 1.1;
+}
+
+/* Stacked paragraphs in invoice notes */
+.bill-page p + p {
+  margin-top: 12px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .bill-page {
+    gap: 80px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .bill-page > .ms-page-header,
+  .bill-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .bill-page > section,
+  .bill-page > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .bill-page > section + section {
+    margin-top: 0;
+  }
+
+  .bill-page [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .bill-page {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .bill-page {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ─── Wave 9 — Form Field Breathing (Top up + Add Method modals) ── */
+
+/* Modal forms — bill-form is used in both Top Up and Add Method */
+.bill-form input[type="text"],
+.bill-form input[type="email"],
+.bill-form input[type="number"],
+.bill-form input[type="tel"],
+.bill-form input[type="url"],
+.bill-form select,
+.bill-form textarea {
+  max-width: 100%;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* Modal content area: 480px content + generous padding */
+.bill-form {
+  max-width: 480px;
+}
+
+@media (min-width: 768px) {
+  /* All fields cap at form width inside modal */
+  .bill-form input[type="text"],
+  .bill-form input[type="email"],
+  .bill-form input[type="number"],
+  .bill-form input[type="tel"],
+  .bill-form input[type="url"],
+  .bill-form select {
+    max-width: 100%;
+  }
+}
+
+/* Generous label → input gap inside form-field */
+.bill-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.bill-form .form-field label {
+  display: block;
+  margin-bottom: 0;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Help text under field */
+.bill-form .form-field small,
+.bill-form .form-field [class*="field-help"] {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right (cascade requires
+   it because the existing 1024+ rule sets margin: 0 calc(...) to bleed
+   into the shell gutter). Atmospheric ::before backdrop is position:fixed
+   and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .bill-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .bill-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .bill-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .bill-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for invoice tables and method-card grids */
+.bill-page .db-kpi-grid,
+.bill-page .db-list-surface,
+.bill-page [class*="kpi-row"],
+.bill-page [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for billing page inputs:
+   topup amount field, add-method form, modal forms.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.bill-page input[type="text"],
+.bill-page input[type="email"],
+.bill-page input[type="number"],
+.bill-page input[type="tel"],
+.bill-page input[type="url"],
+.bill-page input[type="search"],
+.bill-page input[type="password"],
+.bill-page select,
+.bill-page textarea,
+.bill-form input[type="text"],
+.bill-form input[type="email"],
+.bill-form input[type="number"],
+.bill-form input[type="tel"],
+.bill-form input[type="url"],
+.bill-form input[type="search"],
+.bill-form input[type="password"],
+.bill-form select,
+.bill-form textarea,
+.bill-modal input[type="text"],
+.bill-modal input[type="email"],
+.bill-modal input[type="number"],
+.bill-modal input[type="tel"],
+.bill-modal input[type="url"],
+.bill-modal input[type="search"],
+.bill-modal input[type="password"],
+.bill-modal select,
+.bill-modal textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.bill-page input:focus,
+.bill-page input:focus-visible,
+.bill-page select:focus,
+.bill-page textarea:focus,
+.bill-page textarea:focus-visible,
+.bill-form input:focus,
+.bill-form input:focus-visible,
+.bill-form select:focus,
+.bill-form textarea:focus,
+.bill-form textarea:focus-visible,
+.bill-modal input:focus,
+.bill-modal input:focus-visible,
+.bill-modal select:focus,
+.bill-modal textarea:focus,
+.bill-modal textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.bill-page input::placeholder,
+.bill-page textarea::placeholder,
+.bill-form input::placeholder,
+.bill-form textarea::placeholder,
+.bill-modal input::placeholder,
+.bill-modal textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.bill-page input:disabled,
+.bill-page select:disabled,
+.bill-page textarea:disabled,
+.bill-form input:disabled,
+.bill-form select:disabled,
+.bill-form textarea:disabled,
+.bill-modal input:disabled,
+.bill-modal select:disabled,
+.bill-modal textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through for any local filter chip
+   under .bill-page. Active state stays solid via shared filter-tabs.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.bill-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.bill-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.bill-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.bill-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the billing page feels iOS
+   26 native instead of jammed-against-sidebar on huge displays.
+   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
+   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
+   - Holds KPI gap to 24px so cards do not balloon.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     (inline rgba fallback; no new tokens introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .bill-page {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .bill-page .db-kpi-grid,
+  .bill-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .bill-page {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .bill-page .db-kpi-grid .kpi-card,
+  .bill-page [class*="hero-card"],
+  .bill-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Billing carries dense small text on glass: hero-tile
+   captions (`.bill-hero-tile__caption`), section eyebrows, table
+   metadata. The 0.62 white glass over haze can drop 12-14px text below
+   AA. Strategy A: bump card glass density on hero-tile + summary
+   cards; floor every ≤14px copy color at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on hero / summary cards holding small copy */
+.bill-page .bill-hero-tile,
+.bill-page .kpi-card,
+.bill-page [class*="summary-card"],
+.bill-page [class*="caption-card"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Caption + eyebrow color floor */
+.bill-page .bill-hero-tile__caption,
+.bill-page .bill-hero-tile__eyebrow,
+.bill-page .bill-eyebrow,
+.bill-page .bill-section-eyebrow,
+.bill-page .kpi-card__eyebrow,
+.bill-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.bill-page [class*="__eyebrow"],
+.bill-page [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.bill-page .ms-empty-state__description,
+.bill-page [class*="empty-state-description"],
+.bill-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.bill-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.bill-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.bill-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

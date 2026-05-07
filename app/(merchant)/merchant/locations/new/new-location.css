@@ -103,3 +103,120 @@
     flex-direction: column-reverse;
   }
 }
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Mobile: inputs fill column */
+.newloc-form .newloc-input,
+.newloc-form .newloc-textarea,
+.newloc-form input[type="text"],
+.newloc-form input[type="email"],
+.newloc-form input[type="number"],
+.newloc-form input[type="tel"],
+.newloc-form input[type="url"],
+.newloc-form input[type="search"],
+.newloc-form select,
+.newloc-form textarea {
+  max-width: 100%;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* Tablet+ : cap reading width — name / address / zip / city @ 480px */
+@media (min-width: 768px) {
+  .newloc-form .newloc-input,
+  .newloc-form input[type="text"],
+  .newloc-form input[type="email"],
+  .newloc-form input[type="number"],
+  .newloc-form input[type="tel"],
+  .newloc-form input[type="url"],
+  .newloc-form select {
+    max-width: 480px;
+  }
+
+  /* Notes / multi-line: 640px */
+  .newloc-form .newloc-textarea,
+  .newloc-form textarea {
+    max-width: 640px;
+  }
+
+  /* Multi-column grid stays at 2 cols, but constrain overall row width */
+  .newloc-grid {
+    max-width: 800px;
+  }
+}
+
+/* Generous label → input gap */
+.newloc-field {
+  gap: 10px;
+}
+
+.newloc-label {
+  margin-bottom: 0;
+}
+
+/* Help / footnote breathing */
+.newloc-footnote {
+  line-height: 1.5;
+  max-width: 480px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for all .newloc-form inputs.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.newloc-form input[type="text"],
+.newloc-form input[type="email"],
+.newloc-form input[type="number"],
+.newloc-form input[type="tel"],
+.newloc-form input[type="url"],
+.newloc-form input[type="search"],
+.newloc-form input[type="password"],
+.newloc-form select,
+.newloc-form textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.newloc-form input:focus,
+.newloc-form input:focus-visible,
+.newloc-form select:focus,
+.newloc-form textarea:focus,
+.newloc-form textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.newloc-form input::placeholder,
+.newloc-form textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.newloc-form input:disabled,
+.newloc-form select:disabled,
+.newloc-form textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

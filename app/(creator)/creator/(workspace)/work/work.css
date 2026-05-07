@@ -298,3 +298,193 @@
             backdrop-filter: none !important;
   }
 }
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.work-hub p,
+.work-hub .body-text,
+.work-hub .description,
+.work-hub .ms-page-header-subtitle,
+.work-hub [class*="empty-state"] p,
+.work-hub [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.work-hub .ms-page-header-subtitle,
+.work-hub [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.work-hub [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.work-hub h1,
+.work-hub .ms-page-header-title,
+.work-hub [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.work-hub h2,
+.work-hub .db-section-title,
+.work-hub [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.work-hub p + p {
+  margin-top: 12px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .work-hub {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .work-hub > .ms-page-header,
+  .work-hub > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .work-hub > section,
+  .work-hub > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .work-hub > section + section {
+    margin-top: 0;
+  }
+
+  .work-hub [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .work-hub {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .work-hub {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints. No prior negative-escape rule exists
+   on .work-hub, so !important is NOT required here — auto margins apply
+   cleanly. Atmospheric ::before backdrop is position:fixed and stays
+   full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .work-hub {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .work-hub {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .work-hub {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .work-hub {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for pipeline rows + bento */
+.work-hub .db-kpi-grid,
+.work-hub .db-list-surface,
+.work-hub [class*="kpi-row"],
+.work-hub [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the creator work hub feels iOS
+   26 native instead of jammed-against-sidebar on huge displays.
+   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
+   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
+   - Holds KPI gap to 24px so cards do not balloon.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     (inline rgba fallback; no new tokens introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .work-hub {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .work-hub .db-kpi-grid,
+  .work-hub [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .work-hub {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .work-hub .db-kpi-grid .kpi-card,
+  .work-hub [class*="hero-card"],
+  .work-hub [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}

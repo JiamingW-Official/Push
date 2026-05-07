@@ -2201,3 +2201,109 @@ body:has(.disc--split-mode) .dh-main {
     display: none !important;
   }
 }
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Cap search bar at ~480px on tablet+ — search isn't a wall of text.
+   The .disc-search-wrap currently uses flex:1 to fill the toolbar; we
+   cap the wrap so the input stops growing past 480px on wide viewports. */
+@media (min-width: 768px) {
+  .disc-search-wrap {
+    max-width: 480px;
+  }
+}
+
+/* Mobile: keep filling row (no max-width constraint) */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for the discover page search +
+   any future inputs. The search input gets stronger left padding (40px)
+   so the inline magnifier icon clears the field padding.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.cw-page.disc input[type="text"],
+.cw-page.disc input[type="email"],
+.cw-page.disc input[type="number"],
+.cw-page.disc input[type="tel"],
+.cw-page.disc input[type="url"],
+.cw-page.disc input[type="search"],
+.cw-page.disc input[type="password"],
+.cw-page.disc select,
+.cw-page.disc textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.cw-page.disc input:focus,
+.cw-page.disc input:focus-visible,
+.cw-page.disc select:focus,
+.cw-page.disc textarea:focus,
+.cw-page.disc textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.cw-page.disc input::placeholder,
+.cw-page.disc textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.cw-page.disc input:disabled,
+.cw-page.disc select:disabled,
+.cw-page.disc textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Search wrap: stronger left padding so the inline magnifier icon
+   clears the field padding. */
+.cw-page.disc .disc-search-wrap input,
+.cw-page.disc .disc-search-input {
+  padding-left: 40px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Discover is map-led — no horizontal-breathing cap is
+   added (the map and split-mode list adapt to viewport on their own).
+   This adds a soft third-layer halo shadow on KPI / card surfaces at
+   1440+ so liquid-glass cards retain depth on large displays.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .cw-page.disc .db-kpi-grid .kpi-card,
+  .cw-page.disc [class*="hero-card"],
+  .cw-page.disc [class*="bento-tile"],
+  .cw-page.disc .disc-card {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}

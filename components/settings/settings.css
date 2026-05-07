@@ -1610,3 +1610,146 @@ body:has(.us-rail) .dh-main:has(.settings-shell) {
   .settings-side { left: 0; width: min(86vw, 320px); }
   .settings-pane__inner { padding: 24px 8% 96px; }
 }
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Inputs inside settings shell: fill column on mobile */
+.settings-shell input[type="text"]:not([class*="side__search"] input),
+.settings-shell input[type="email"],
+.settings-shell input[type="number"],
+.settings-shell input[type="tel"],
+.settings-shell input[type="url"],
+.settings-shell input[type="password"],
+.settings-shell select,
+.settings-shell textarea {
+  max-width: 100%;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* Sidebar search stays compact (already in side__search, ~280px) */
+.settings-side__search {
+  max-width: 100%;
+}
+
+/* Tablet+ : cap reading width */
+@media (min-width: 768px) {
+  /* Business profile / contact / standard fields: 480px */
+  .settings-pane input[type="text"],
+  .settings-pane input[type="email"],
+  .settings-pane input[type="tel"],
+  .settings-pane input[type="url"],
+  .settings-pane input[type="password"],
+  .settings-pane input[type="number"],
+  .settings-pane select {
+    max-width: 480px;
+  }
+
+  /* Address / multi-line: 640px */
+  .settings-pane input[name*="address"],
+  .settings-pane input[id*="address"],
+  .settings-pane textarea {
+    max-width: 640px;
+  }
+
+  /* Multi-column form rows */
+  .settings-pane [class*="form-row"]:not([class*="form-row__"]) {
+    max-width: 800px;
+  }
+}
+
+/* Generous label → input gap */
+.settings-pane label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Help text breathing */
+.settings-pane small,
+.settings-pane [class*="field-help"],
+.settings-pane [class*="form-help"] {
+  display: block;
+  margin-top: 6px;
+  line-height: 1.5;
+  max-width: 480px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for inputs inside the shared
+   settings shell + pane (used by the creator workspace settings flow).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.settings-shell input[type="text"],
+.settings-shell input[type="email"],
+.settings-shell input[type="number"],
+.settings-shell input[type="tel"],
+.settings-shell input[type="url"],
+.settings-shell input[type="search"],
+.settings-shell input[type="password"],
+.settings-shell select,
+.settings-shell textarea,
+.settings-pane input[type="text"],
+.settings-pane input[type="email"],
+.settings-pane input[type="number"],
+.settings-pane input[type="tel"],
+.settings-pane input[type="url"],
+.settings-pane input[type="search"],
+.settings-pane input[type="password"],
+.settings-pane select,
+.settings-pane textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.settings-shell input:focus,
+.settings-shell input:focus-visible,
+.settings-shell select:focus,
+.settings-shell textarea:focus,
+.settings-shell textarea:focus-visible,
+.settings-pane input:focus,
+.settings-pane input:focus-visible,
+.settings-pane select:focus,
+.settings-pane textarea:focus,
+.settings-pane textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.settings-shell input::placeholder,
+.settings-shell textarea::placeholder,
+.settings-pane input::placeholder,
+.settings-pane textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.settings-shell input:disabled,
+.settings-shell select:disabled,
+.settings-shell textarea:disabled,
+.settings-pane input:disabled,
+.settings-pane select:disabled,
+.settings-pane textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

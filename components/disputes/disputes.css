@@ -1353,3 +1353,151 @@
     animation: none;
   }
 }
+
+/* ─── Wave 9 — Form Field Breathing (NewDisputeModal) ────────── */
+
+/* Mobile: fill column */
+.dispute-modal__field input,
+.dispute-modal__field select,
+.dispute-modal__field textarea {
+  max-width: 100%;
+  line-height: 1.5;
+}
+
+/* Tablet+ : cap reading width inside modal */
+@media (min-width: 768px) {
+  /* Standard text inputs / selects: full column inside modal */
+  .dispute-modal__field input[type="text"],
+  .dispute-modal__field input[type="email"],
+  .dispute-modal__field input[type="tel"],
+  .dispute-modal__field input[type="url"],
+  .dispute-modal__field select {
+    max-width: 480px;
+  }
+
+  /* Amount field — narrow numeric: 200px */
+  .dispute-modal__field input[type="number"],
+  .dispute-modal__field input[id="dm-amount"],
+  .dispute-modal__field input[name="amount"] {
+    max-width: 200px;
+  }
+
+  /* Description textarea: 480px (room to write but not wall of text) */
+  .dispute-modal__field textarea {
+    max-width: 480px;
+  }
+}
+
+/* Generous label → input gap */
+.dispute-modal__field {
+  gap: 10px;
+}
+
+/* Help / hint text under field */
+.dispute-modal__field small,
+.dispute-modal__field [class*="field-help"] {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for inputs inside .dispute-modal
+   (and the broader .dispute-detail-page / .disputes-page surfaces).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.dispute-modal input[type="text"],
+.dispute-modal input[type="email"],
+.dispute-modal input[type="number"],
+.dispute-modal input[type="tel"],
+.dispute-modal input[type="url"],
+.dispute-modal input[type="search"],
+.dispute-modal input[type="password"],
+.dispute-modal select,
+.dispute-modal textarea,
+.dispute-detail-page input[type="text"],
+.dispute-detail-page input[type="email"],
+.dispute-detail-page input[type="number"],
+.dispute-detail-page input[type="tel"],
+.dispute-detail-page input[type="url"],
+.dispute-detail-page input[type="search"],
+.dispute-detail-page input[type="password"],
+.dispute-detail-page select,
+.dispute-detail-page textarea,
+.disputes-page input[type="text"],
+.disputes-page input[type="email"],
+.disputes-page input[type="number"],
+.disputes-page input[type="tel"],
+.disputes-page input[type="url"],
+.disputes-page input[type="search"],
+.disputes-page input[type="password"],
+.disputes-page select,
+.disputes-page textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.dispute-modal input:focus,
+.dispute-modal input:focus-visible,
+.dispute-modal select:focus,
+.dispute-modal textarea:focus,
+.dispute-modal textarea:focus-visible,
+.dispute-detail-page input:focus,
+.dispute-detail-page input:focus-visible,
+.dispute-detail-page select:focus,
+.dispute-detail-page textarea:focus,
+.dispute-detail-page textarea:focus-visible,
+.disputes-page input:focus,
+.disputes-page input:focus-visible,
+.disputes-page select:focus,
+.disputes-page textarea:focus,
+.disputes-page textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.dispute-modal input::placeholder,
+.dispute-modal textarea::placeholder,
+.dispute-detail-page input::placeholder,
+.dispute-detail-page textarea::placeholder,
+.disputes-page input::placeholder,
+.disputes-page textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.dispute-modal input:disabled,
+.dispute-modal select:disabled,
+.dispute-modal textarea:disabled,
+.dispute-detail-page input:disabled,
+.dispute-detail-page select:disabled,
+.dispute-detail-page textarea:disabled,
+.disputes-page input:disabled,
+.disputes-page select:disabled,
+.disputes-page textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

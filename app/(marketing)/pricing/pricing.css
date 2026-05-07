@@ -992,3 +992,207 @@
   }
 }
 
+/* ============================================================
+   Wave 9 — Typography Readability
+   ============================================================ */
+
+.pv11-wrapper p,
+.pv11-wrapper .body-text,
+.pv11-wrapper .description,
+.pv11-wrapper [class*="subtitle"]:not(h1):not(h2):not(h3),
+.pv11-wrapper [class*="hero-body"],
+.pv11-wrapper [class*="copy"]:not([class*="copy-row"]) {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+
+.pv11-wrapper [class*="hero-sub"],
+.pv11-wrapper [class*="hero-text"] {
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+}
+
+.pv11-wrapper [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.1em;
+}
+
+.pv11-wrapper [class*="hero-title"],
+.pv11-wrapper h1[class*="display"],
+.pv11-wrapper h1.magvix {
+  font-size: clamp(48px, 8vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.pv11-wrapper h2[class*="section"],
+.pv11-wrapper h2:not([class*="card"]) {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  max-width: 24ch;
+}
+
+.pv11-wrapper h3:not([class*="card__"]) {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+  max-width: 32ch;
+}
+
+.pv11-wrapper ul[class*="features"] li,
+.pv11-wrapper ol[class*="steps"] li {
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+/* Pricing tier subtitle ($0/month + $20 per verified scan): one line on desktop, wrap clean on mobile */
+.pv11-wrapper [class*="tier-subtitle"],
+.pv11-wrapper [class*="tier-tagline"],
+.pv11-wrapper [class*="price-subtitle"] {
+  white-space: nowrap;
+  max-width: none;
+  font-size: clamp(14px, 1.1vw, 17px);
+}
+
+@media (max-width: 600px) {
+  .pv11-wrapper [class*="tier-subtitle"],
+  .pv11-wrapper [class*="tier-tagline"],
+  .pv11-wrapper [class*="price-subtitle"] {
+    white-space: normal;
+  }
+}
+
+.pv11-wrapper p + p {
+  margin-top: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Marketing register gets a 1600px cap (cinematic) on
+   ultra-wide; ladders padding 16/32/48/64 across breakpoints. No prior
+   negative-escape rule on .pv11-wrapper, so !important is NOT required.
+   Hero / billboard sections remain full-bleed inside the cap.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .pv11-wrapper {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .pv11-wrapper {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pv11-wrapper {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pv11-wrapper {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for KPI / pricing-tier grids */
+.pv11-wrapper .db-kpi-grid,
+.pv11-wrapper .db-list-surface,
+.pv11-wrapper [class*="kpi-row"],
+.pv11-wrapper [class*="bento"] {
+  max-width: 1480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Marketing register on 1920+/2560+ — bumps the existing
+   1600 cinematic cap to 1700 / 1760 with deeper L/R padding so the pricing page
+   does not feel jammed on huge displays. Adds a soft third-layer halo
+   shadow on KPI / hero / bento surfaces at 1440+ for liquid-glass depth.
+   Hero billboards and atmospheric backdrops remain full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .pv11-wrapper {
+    max-width: 1700px;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  .pv11-wrapper .db-kpi-grid,
+  .pv11-wrapper [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .pv11-wrapper {
+    max-width: 1760px;
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .pv11-wrapper .db-kpi-grid .kpi-card,
+  .pv11-wrapper [class*="hero-card"],
+  .pv11-wrapper [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Pricing tier cards (`.pv11-tier-card`) are on
+   `--lg-bg-std` (0.62) and hold eyebrow + price-note + feature-item
+   copy at 12-15px. Over the atmospheric haze with brand-red / champagne
+   sub-layers the small text was on the edge of WCAG AA. Strategy A:
+   raise tier-card glass to `--lg-bg-light` (0.78) and floor every
+   ≤14px copy color at `--ink-3`. The featured (highlight) tier card
+   keeps its dark fill / snow text — no change. Hero badge already on
+   `--lg-bg-light`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass on standard tier cards (excludes the dark highlight tier) */
+.pv11-wrapper .pv11-tier-card:not(.pv11-tier-card--highlight),
+.pv11-wrapper .kpi-card,
+.pv11-wrapper [class*="bento-tile"]:not([class*="dark"]) {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor on light register only.
+   Highlight tier card keeps its own snow/white treatment defined above. */
+.pv11-wrapper .pv11-eyebrow,
+.pv11-wrapper .pv11-tier-card:not(.pv11-tier-card--highlight) .pv11-tier-eyebrow,
+.pv11-wrapper .pv11-tier-card:not(.pv11-tier-card--highlight) .pv11-price-note,
+.pv11-wrapper .kpi-card__eyebrow,
+.pv11-wrapper [class*="-eyebrow"]:not([class*="hero-eyebrow"]):not(.pv11-tier-card--highlight *),
+.pv11-wrapper [class*="__eyebrow"]:not([class*="hero"]),
+.pv11-wrapper [class*="__caption"]:not([class*="hero"]) {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.pv11-wrapper .ms-empty-state__description,
+.pv11-wrapper [class*="empty-state-description"] {
+  color: var(--ink-3);
+}
+

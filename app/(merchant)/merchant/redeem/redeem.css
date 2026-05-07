@@ -890,3 +890,44 @@
     right: 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps body copy at 72ch, page subtitle at 56ch, raises
+   mobile heading floors, expands eyebrow tracking. Ticket panel
+   typography preserved per Design.md § 9 — only outside-of-ticket text
+   gets the readability treatment.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Body copy + result card descriptions */
+.redeem-page p,
+.redeem-page .redeem-result-card p,
+.redeem-page .redeem-empty p {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Page subtitle — kiosk context, tight measure */
+.redeem-page .redeem-page-subtitle {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows: readable tracking */
+.redeem-page .redeem-page-eyebrow,
+.redeem-page .redeem-results-label {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40 — page title sits above ticket panel */
+.redeem-page .redeem-page-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* Stacked paragraphs in result detail */
+.redeem-page p + p {
+  margin-top: 12px;
+}

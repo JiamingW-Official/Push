@@ -1731,3 +1731,293 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps inbox copy at 72ch, hero subtitle at 56ch, raises
+   bubble + chat line-height, expands eyebrow tracking. Bubble fills +
+   widths preserved (controlled by Wave 1-8). Liquid Glass + atmospheric
+   rules untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Inbox descriptions / empty-state copy / pinned blurbs */
+.msg-page p,
+.msg-page .msg-pinned p,
+.msg-page .ms-empty-state__description,
+.msg-page .mm-thread-empty-body {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Page subtitle — channel context, tighter measure */
+.msg-page .ms-page-header-subtitle {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows: readable tracking */
+.msg-page .ms-page-header-eyebrow,
+.msg-page .msg-pinned-eyebrow,
+.msg-page .msg-sidebar-eyebrow,
+.msg-page .mm-list-pane-eyebrow {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40 */
+.msg-page .ms-page-header-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* Chat bubbles: readable line-height (override the default 1.4-1.5) */
+.msg-page .mm-bubble,
+.msg-page .msg-bubble,
+.msg-page .msg-bubble p,
+.msg-page .mm-bubble p {
+  line-height: 1.55;
+}
+
+/* Stacked bubble paragraphs / inbox copy paragraphs */
+.msg-page .msg-bubble p + p,
+.msg-page .mm-bubble p + p,
+.msg-page p + p {
+  margin-top: 8px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+/* Note: 2-pane is dense by design — only adjust PageHeader → 2-pane gap */
+
+@media (min-width: 1024px) {
+  .msg-page > .ms-page-header,
+  .msg-page > [class*="page-header"] {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .msg-page > .ms-page-header,
+  .msg-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .msg-page > .ms-page-header,
+  .msg-page > [class*="page-header"] {
+    margin-bottom: 16px;
+  }
+}
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Cap conversation-list search at ~480px (search isn't a wall of text) */
+@media (min-width: 768px) {
+  .mm-list-search {
+    max-width: 480px;
+  }
+}
+
+/* Composer textarea (.mm-composer-input) intentionally fills chat pane —
+   do NOT cap width. */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps the page wrapper at 1440px on ultra-wide and
+   ladders padding 16/32/48/64; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right. SPECIAL: the
+   2-pane chat layout (.mm-pane-layout) gets a centered max-width
+   instead of the kpi-grid rule; capping the chat panel itself would
+   break the flex split. Atmospheric ::before backdrop is position:fixed
+   and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .msg-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  .msg-page .mm-pane-layout {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .msg-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .msg-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .msg-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* NOTE: do NOT apply the kpi-grid max-width rule here — the chat panel
+   and conversation list must keep their flex split unbounded inside the
+   capped page wrapper. */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for inputs on the merchant
+   messages page. Special case: the composer textarea inside
+   .mm-composer keeps its bottom-border-only style (do NOT override) —
+   only .mm-list-search input picks up the glass treatment with extra
+   left padding for the inline search icon.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.msg-page input[type="text"],
+.msg-page input[type="email"],
+.msg-page input[type="number"],
+.msg-page input[type="tel"],
+.msg-page input[type="url"],
+.msg-page input[type="search"],
+.msg-page input[type="password"],
+.msg-page select {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.msg-page input:focus,
+.msg-page input:focus-visible,
+.msg-page select:focus {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.msg-page input::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.msg-page input:disabled,
+.msg-page select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* List search: stronger left padding so the inline magnifier icon
+   visually clears the field padding. */
+.msg-page .mm-list-search input {
+  padding-left: 40px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Messages keeps its .mm-pane-layout 1440 cap (per
+   spec — the chat pane reads better narrower than dashboard panels).
+   This adds 1920+/2560+ side-padding on the wrapper .msg-page so the
+   layout sits centered with breathing room on huge displays, plus a
+   shadow lift on KPI / hero surfaces (the dashboard banner above
+   the pane). The pane itself is left at 1440 cap.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .msg-page {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  .msg-page .db-kpi-grid,
+  .msg-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .msg-page {
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .msg-page .db-kpi-grid .kpi-card,
+  .msg-page [class*="hero-card"],
+  .msg-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Incoming bubbles use `--surface-2` (warm cream) and
+   carry chat copy at 14px — already at AA but we lock the color to
+   `--ink` so future cascade edits don't downgrade it. Outgoing bubbles
+   are N2W-blue/Snow → high contrast → no change. Eyebrows on glass
+   cards floor at `--ink-3`; empty-state copy too. Filter pill labels
+   (Wave 3 → glass) get ink-3 so the inactive pill reads at AA.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Incoming bubble copy — keep at --ink so AA holds against surface-2 */
+.msg-page .mm-bubble--in,
+.msg-page .mm-bubble--in p {
+  color: var(--ink);
+}
+
+/* Eyebrows / small uppercase copy on glass */
+.msg-page .kpi-card__eyebrow,
+.msg-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.msg-page [class*="__eyebrow"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description floor */
+.msg-page .ms-empty-state__description,
+.msg-page [class*="empty-state-description"],
+.msg-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.msg-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.msg-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle on atmospheric backdrop */
+.msg-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}

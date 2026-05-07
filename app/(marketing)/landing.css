@@ -993,3 +993,192 @@
   }
 }
 
+/* ============================================================
+   Wave 9 — Typography Readability
+   Tightens line-length, line-height, and heading clamps so
+   marketing copy doesn't run edge-to-edge on wide screens.
+   ============================================================ */
+
+.hp-root p,
+.hp-root .body-text,
+.hp-root .description,
+.hp-root [class*="subtitle"]:not(h1):not(h2):not(h3),
+.hp-root [class*="hero-body"],
+.hp-root [class*="copy"]:not([class*="copy-row"]) {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+
+.hp-root [class*="hero-sub"],
+.hp-root [class*="hero-text"] {
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+}
+
+.hp-root [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.1em;
+}
+
+/* Magvix hero — "Pay per walk-in" — keep big, raise mobile floor */
+.hp-root [class*="hero-title"],
+.hp-root h1[class*="display"],
+.hp-root h1.magvix {
+  font-size: clamp(56px, 8vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+/* H2 — section anchors, short headlines stronger */
+.hp-root h2[class*="section"],
+.hp-root h2:not([class*="card"]) {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  max-width: 24ch;
+}
+
+/* H3 — sub-section */
+.hp-root h3:not([class*="card__"]) {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+  max-width: 32ch;
+}
+
+.hp-root ul[class*="features"] li,
+.hp-root ol[class*="steps"] li {
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+.hp-root p + p {
+  margin-top: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Marketing register gets a 1600px cap (cinematic) on
+   ultra-wide instead of the 1440px product cap; ladders padding
+   16/32/48/64 across breakpoints. No prior negative-escape rule on
+   .hp-root, so !important is NOT required — auto margins apply cleanly.
+   Atmospheric / hero billboards remain full-bleed inside the cap.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .hp-root {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .hp-root {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hp-root {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hp-root {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for KPI / bento sections (slightly narrower than page) */
+.hp-root .db-kpi-grid,
+.hp-root .db-list-surface,
+.hp-root [class*="kpi-row"],
+.hp-root [class*="bento"] {
+  max-width: 1480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Marketing register on 1920+/2560+ — bumps the existing
+   1600 cinematic cap to 1700 / 1760 with deeper L/R padding so the home / landing page
+   does not feel jammed on huge displays. Adds a soft third-layer halo
+   shadow on KPI / hero / bento surfaces at 1440+ for liquid-glass depth.
+   Hero billboards and atmospheric backdrops remain full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .hp-root {
+    max-width: 1700px;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  .hp-root .db-kpi-grid,
+  .hp-root [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .hp-root {
+    max-width: 1760px;
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hp-root .db-kpi-grid .kpi-card,
+  .hp-root [class*="hero-card"],
+  .hp-root [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Marketing landing has two text-on-glass registers:
+   (1) dark hero — white text on dark glass — already strong, no
+   change. (2) light atmospheric panels — bento / feature cards holding
+   12-14px eyebrow + caption copy on white glass over haze. Strategy
+   A: bump the glass density on KPI / bento / feature cards that hold
+   ≤14px copy. Floor color for that copy at `--ink-3`. Hero KPI tile
+   keeps its dark-glass treatment untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on light-glass cards holding small copy.
+   Note: scope explicitly excludes hero/proof tiles (they're on dark). */
+.hp-root .db-kpi-grid .kpi-card,
+.hp-root [class*="bento-tile"]:not([class*="dark"]),
+.hp-root [class*="feature-card"]:not([class*="dark"]) {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor — only on light register.
+   The dark hero / proof eyebrows stay white per their existing rules. */
+.hp-root .kpi-card__eyebrow,
+.hp-root [class*="-eyebrow"]:not([class*="hero-eyebrow"]):not([class*="proof"]),
+.hp-root [class*="__eyebrow"]:not([class*="hero"]):not([class*="proof"]),
+.hp-root [class*="__caption"]:not([class*="hero"]):not([class*="proof"]) {
+  color: var(--ink-3);
+}
+
+/* Empty-state description (rare on landing but covers any retrofit) */
+.hp-root .ms-empty-state__description,
+.hp-root [class*="empty-state-description"] {
+  color: var(--ink-3);
+}

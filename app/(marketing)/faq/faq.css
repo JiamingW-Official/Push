@@ -330,3 +330,75 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   ============================================================ */
+
+.faq-content-inner p,
+.faq-content-inner .body-text,
+.faq-content-inner .description,
+.faq-content-inner [class*="subtitle"]:not(h1):not(h2):not(h3),
+.faq-content-inner [class*="hero-body"],
+.faq-content-inner [class*="copy"]:not([class*="copy-row"]) {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+
+.faq-content-inner [class*="hero-sub"],
+.faq-content-inner [class*="hero-text"] {
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+}
+
+.faq-content-inner [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.1em;
+}
+
+.faq-content-inner [class*="hero-title"],
+.faq-content-inner h1[class*="display"],
+.faq-content-inner h1.magvix {
+  font-size: clamp(48px, 8vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.faq-content-inner h2[class*="section"],
+.faq-content-inner h2:not([class*="card"]) {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  max-width: 24ch;
+}
+
+.faq-content-inner h3:not([class*="card__"]) {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+  max-width: 32ch;
+}
+
+.faq-content-inner ul[class*="features"] li,
+.faq-content-inner ol[class*="steps"] li {
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+/* FAQ — question larger than answer; answer line-height generous */
+.faq-content-inner [class*="question"],
+.faq-content-inner [class*="faq-q"],
+.faq-content-inner summary {
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.35;
+  max-width: 56ch;
+}
+
+.faq-content-inner [class*="answer"],
+.faq-content-inner [class*="faq-a"] {
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.65;
+  max-width: 72ch;
+}
+
+.faq-content-inner p + p {
+  margin-top: 16px;
+}

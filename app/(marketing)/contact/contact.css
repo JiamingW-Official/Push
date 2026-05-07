@@ -766,3 +766,153 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   ============================================================ */
+
+.contact-page p,
+.contact-page .body-text,
+.contact-page .description,
+.contact-page [class*="subtitle"]:not(h1):not(h2):not(h3),
+.contact-page [class*="hero-body"],
+.contact-page [class*="copy"]:not([class*="copy-row"]) {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+
+.contact-page [class*="hero-sub"],
+.contact-page [class*="hero-text"] {
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+}
+
+.contact-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.1em;
+}
+
+.contact-page [class*="hero-title"],
+.contact-page h1[class*="display"],
+.contact-page h1.magvix {
+  font-size: clamp(48px, 8vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.contact-page h2[class*="section"],
+.contact-page h2:not([class*="card"]) {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  max-width: 24ch;
+}
+
+.contact-page h3:not([class*="card__"]) {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+  max-width: 32ch;
+}
+
+.contact-page ul[class*="features"] li,
+.contact-page ol[class*="steps"] li {
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+/* Contact-method body 56ch; form labels wider tracking */
+.contact-page [class*="contact-method"] p,
+.contact-page [class*="method-body"],
+.contact-page [class*="method-desc"] {
+  max-width: 56ch;
+  line-height: 1.55;
+}
+
+.contact-page label,
+.contact-page [class*="form-label"],
+.contact-page [class*="field-label"] {
+  letter-spacing: 0.08em;
+}
+
+.contact-page p + p {
+  margin-top: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for the marketing contact form
+   inputs (.contact-page + .contact-form).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.contact-page input[type="text"],
+.contact-page input[type="email"],
+.contact-page input[type="number"],
+.contact-page input[type="tel"],
+.contact-page input[type="url"],
+.contact-page input[type="search"],
+.contact-page input[type="password"],
+.contact-page select,
+.contact-page textarea,
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form input[type="number"],
+.contact-form input[type="tel"],
+.contact-form input[type="url"],
+.contact-form input[type="search"],
+.contact-form input[type="password"],
+.contact-form select,
+.contact-form textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.contact-page input:focus,
+.contact-page input:focus-visible,
+.contact-page select:focus,
+.contact-page textarea:focus,
+.contact-page textarea:focus-visible,
+.contact-form input:focus,
+.contact-form input:focus-visible,
+.contact-form select:focus,
+.contact-form textarea:focus,
+.contact-form textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.contact-page input::placeholder,
+.contact-page textarea::placeholder,
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.contact-page input:disabled,
+.contact-page select:disabled,
+.contact-page textarea:disabled,
+.contact-form input:disabled,
+.contact-form select:disabled,
+.contact-form textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

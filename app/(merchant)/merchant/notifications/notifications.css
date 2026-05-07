@@ -725,3 +725,119 @@
     transform: none !important;
   }
 }
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.notif-page p,
+.notif-page .body-text,
+.notif-page .description,
+.notif-page .ms-page-header-subtitle,
+.notif-page [class*="empty-state"] p,
+.notif-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.notif-page .ms-page-header-subtitle,
+.notif-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.notif-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.notif-page h1,
+.notif-page .ms-page-header-title,
+.notif-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.notif-page h2,
+.notif-page .db-section-title,
+.notif-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.notif-page p + p {
+  margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through for any local filter chip
+   under .notif-page. Active state stays solid via shared filter-tabs.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.notif-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.notif-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.notif-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.notif-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Notifications page carries summary eyebrows, time
+   stamps, item descriptions — all small text on Liquid Glass which
+   over the atmospheric haze can drop below WCAG AA. Strategy A:
+   denser glass on summary / item cards; floor every ≤14px copy color
+   at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards holding small copy */
+.notif-page .kpi-card,
+.notif-page [class*="summary-card"],
+.notif-page [class*="caption-card"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor */
+.notif-page .notif-summary-eyebrow,
+.notif-page .kpi-card__eyebrow,
+.notif-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.notif-page [class*="__eyebrow"],
+.notif-page [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.notif-page .ms-empty-state__description,
+.notif-page [class*="empty-state-description"],
+.notif-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.notif-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.notif-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.notif-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}

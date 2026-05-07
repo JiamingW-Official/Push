@@ -115,3 +115,34 @@
   border-color: var(--warning);
   color: var(--warning);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Status Badges (2026-05-07)
+   APPENDED ONLY. The badge surface becomes a frosted glass layer; the
+   semantic color (status-driven) is preserved on text + dot via the
+   already-declared `currentColor` and the per-state `color` rules. A
+   thin status-driven left accent strip carries the meaning visually.
+   Border + state background-tints from the original definitions keep
+   their identity (we only add the glass overlay + accent strip).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ms-status-badge {
+  position: relative;
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  overflow: hidden;
+}
+
+.ms-status-badge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: currentColor;
+  opacity: 0.85;
+}

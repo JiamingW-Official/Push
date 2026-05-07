@@ -185,3 +185,229 @@
     gap: 8px;
   }
 }
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.settings-page p,
+.settings-page .body-text,
+.settings-page .description,
+.settings-page .ms-page-header-subtitle,
+.settings-page [class*="empty-state"] p,
+.settings-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.settings-page .ms-page-header-subtitle,
+.settings-page [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.settings-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.settings-page h1,
+.settings-page .ms-page-header-title,
+.settings-page [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.settings-page h2,
+.settings-page .db-section-title,
+.settings-page [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.settings-page p + p {
+  margin-top: 12px;
+}
+
+/* Per-page override: SettingsShell renders nested h2/h3 — keep mobile readable */
+@media (max-width: 768px) {
+  .settings-page section h2,
+  .settings-page section [class*="section-title"]:not([class*="card"]) {
+    font-size: clamp(22px, 4vw, 28px);
+  }
+  .settings-page section h3 {
+    font-size: clamp(17px, 3vw, 20px);
+    line-height: 1.25;
+  }
+}
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Mobile: fill column */
+.settings-page input[type="text"],
+.settings-page input[type="email"],
+.settings-page input[type="number"],
+.settings-page input[type="tel"],
+.settings-page input[type="url"],
+.settings-page input[type="password"],
+.settings-page input[type="search"]:not([class*="side__search"]),
+.settings-page select,
+.settings-page textarea {
+  max-width: 100%;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* Tablet+ : cap reading width */
+@media (min-width: 768px) {
+  /* Business name / contact email / standard fields: 480px */
+  .settings-page input[type="text"]:not([class*="side__search"] input):not([class*="address"]),
+  .settings-page input[type="email"],
+  .settings-page input[type="tel"],
+  .settings-page input[type="url"],
+  .settings-page input[type="password"],
+  .settings-page input[type="number"],
+  .settings-page select {
+    max-width: 480px;
+  }
+
+  /* Address fields: 640px */
+  .settings-page input[name*="address"],
+  .settings-page input[id*="address"],
+  .settings-page input[class*="address"],
+  .settings-page textarea {
+    max-width: 640px;
+  }
+
+  /* Form rows / cards constrained */
+  .settings-page [class*="form-row"]:not([class*="form-row__"]) {
+    max-width: 800px;
+  }
+}
+
+/* Generous label → input gap */
+.settings-page label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Help text breathing */
+.settings-page small,
+.settings-page [class*="field-help"],
+.settings-page [class*="form-help"] {
+  display: block;
+  margin-top: 6px;
+  line-height: 1.5;
+  max-width: 480px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for all form inputs on the
+   merchant settings page sections.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.settings-page input[type="text"],
+.settings-page input[type="email"],
+.settings-page input[type="number"],
+.settings-page input[type="tel"],
+.settings-page input[type="url"],
+.settings-page input[type="search"],
+.settings-page input[type="password"],
+.settings-page select,
+.settings-page textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.settings-page input:focus,
+.settings-page input:focus-visible,
+.settings-page select:focus,
+.settings-page textarea:focus,
+.settings-page textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.settings-page input::placeholder,
+.settings-page textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.settings-page input:disabled,
+.settings-page select:disabled,
+.settings-page textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Settings carries section eyebrows + form-field labels
+   on Liquid Glass cards. Strategy A: section panels use denser
+   `--lg-bg-light`; floor every ≤14px copy color at `--ink-3`. Form
+   helper text gets the same floor.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass on settings panels holding small copy */
+.settings-page .kpi-card,
+.settings-page [class*="settings-card"],
+.settings-page [class*="settings-panel"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + label color floor */
+.settings-page .kpi-card__eyebrow,
+.settings-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.settings-page [class*="__eyebrow"],
+.settings-page [class*="-label"]:not([class*="hero"]),
+.settings-page [class*="-helper"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.settings-page .ms-empty-state__description,
+.settings-page [class*="empty-state-description"],
+.settings-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.settings-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.settings-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.settings-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

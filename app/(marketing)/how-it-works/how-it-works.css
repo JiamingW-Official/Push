@@ -810,3 +810,116 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   ============================================================ */
+
+.hiw-root p,
+.hiw-root .body-text,
+.hiw-root .description,
+.hiw-root [class*="subtitle"]:not(h1):not(h2):not(h3),
+.hiw-root [class*="hero-body"],
+.hiw-root [class*="copy"]:not([class*="copy-row"]) {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+
+.hiw-root [class*="hero-sub"],
+.hiw-root [class*="hero-text"] {
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+}
+
+.hiw-root [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.1em;
+}
+
+.hiw-root [class*="hero-title"],
+.hiw-root h1[class*="display"],
+.hiw-root h1.magvix {
+  font-size: clamp(48px, 8vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.hiw-root h2[class*="section"],
+.hiw-root h2:not([class*="card"]) {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  max-width: 24ch;
+}
+
+.hiw-root h3:not([class*="card__"]) {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+  max-width: 32ch;
+}
+
+.hiw-root ul[class*="features"] li,
+.hiw-root ol[class*="steps"] li {
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+/* 4-step body copy — 56ch keeps it scannable */
+.hiw-root [class*="step-body"],
+.hiw-root [class*="step-desc"],
+.hiw-root [class*="step-text"] {
+  max-width: 56ch;
+  line-height: 1.55;
+}
+
+.hiw-root p + p {
+  margin-top: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Marketing register gets a 1600px cap (cinematic) on
+   ultra-wide; ladders padding 16/32/48/64 across breakpoints. No prior
+   negative-escape rule on .hiw-root, so !important is NOT required.
+   Hero / step-by-step billboards remain full-bleed inside the cap.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .hiw-root {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .hiw-root {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hiw-root {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hiw-root {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for step-by-step grids */
+.hiw-root .db-kpi-grid,
+.hiw-root .db-list-surface,
+.hiw-root [class*="kpi-row"],
+.hiw-root [class*="bento"] {
+  max-width: 1480px;
+  margin-left: auto;
+  margin-right: auto;
+}

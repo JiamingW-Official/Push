@@ -1238,3 +1238,275 @@
     gap: var(--space-2);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps body at 72ch, page subtitle at 64ch (locations
+   subtitle is intentionally a bit longer — venue context), raises
+   mobile heading floors, tightens eyebrow tracking, paragraph rhythm.
+   No Liquid Glass / map / atmospheric rules touched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Body copy + meta + descriptions */
+.locations-page p,
+.location-detail-page p,
+.locations-page .location-card__meta,
+.locations-page .ms-empty-state__description,
+.location-detail-page .ms-empty-state__description {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Page subtitle — venue context can run a touch longer than 56ch */
+.locations-page .ms-page-header-subtitle,
+.location-detail-page .ms-page-header-subtitle {
+  max-width: 64ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows: readable tracking */
+.locations-page .ms-page-header-eyebrow,
+.location-detail-page .ms-page-header-eyebrow,
+.locations-page .locations-list-panel__heading {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40 */
+.locations-page .ms-page-header-title,
+.location-detail-page .ms-page-header-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* H2 — section heads */
+.locations-page h2,
+.location-detail-page h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.15;
+}
+
+/* Stacked paragraphs in detail body */
+.locations-page p + p,
+.location-detail-page p + p {
+  margin-top: 12px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .locations-page {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .locations-page > .ms-page-header,
+  .locations-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .locations-page > section,
+  .locations-page > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .locations-page > section + section {
+    margin-top: 0;
+  }
+
+  .locations-page [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+
+  /* Main grid row gap when stacking on narrow desktop */
+  .locations-page .locations-main-grid {
+    row-gap: 48px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .locations-page {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+
+  .locations-page .locations-main-grid {
+    row-gap: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .locations-page {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+
+  .locations-page .locations-main-grid {
+    row-gap: 24px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps the page wrapper at 1440px on ultra-wide and
+   ladders padding 16/32/48/64; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right (the existing
+   1024+ rule sets margin: 0 calc(...) to bleed into the shell gutter,
+   so cascade order requires !important to win on 1440+). The map split
+   (left list + right map column) is NOT capped — the map fills its
+   allotted column inside the bounded wrapper. Atmospheric ::before
+   backdrop is position:fixed and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .locations-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .locations-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .locations-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .locations-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for KPI / list panels — explicitly skip the map column */
+.locations-page .db-kpi-grid,
+.locations-page [class*="kpi-row"],
+.locations-page [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Locations gets the same iOS 26 ultra-wide tuning as
+   the dashboard, plus a leaflet height cap so the map does not grow
+   absurdly tall on 4K. Existing 1440px cap from Wave 9 — Horizontal
+   Breathing is bumped to 1480 @ 1920+ and 1600 @ 2560+.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .locations-page,
+  .location-detail-page {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .locations-page .db-kpi-grid,
+  .locations-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+  /* Cap leaflet height proportionally so the map does not balloon to
+     600px+ on 4K displays. */
+  .locations-page .leaflet-container,
+  .locations-page .merchant-leaflet-wrap {
+    max-height: 560px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .locations-page,
+  .location-detail-page {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .locations-page .db-kpi-grid .kpi-card,
+  .locations-page [class*="hero-card"],
+  .locations-page [class*="bento-tile"],
+  .location-detail-page .db-kpi-grid .kpi-card,
+  .location-detail-page [class*="hero-card"],
+  .location-detail-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Locations carries list-panel eyebrows, detail-peek
+   metadata, location-card descriptions on Liquid Glass, plus the map
+   column whose floating glass tiles overlay live tile imagery.
+   Strategy A: denser glass on list panels + detail peeks; floor every
+   ≤14px copy color at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards holding small copy */
+.locations-page .kpi-card,
+.location-detail-page .kpi-card,
+.locations-page [class*="list-panel"],
+.locations-page [class*="detail-peek"],
+.locations-page [class*="location-card"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor */
+.locations-page .locations-list-panel__eyebrow,
+.locations-page .locations-detail-peek__eyebrow,
+.locations-page .kpi-card__eyebrow,
+.location-detail-page .kpi-card__eyebrow,
+.locations-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.locations-page [class*="__eyebrow"],
+.locations-page [class*="__caption"],
+.location-detail-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.location-detail-page [class*="__eyebrow"],
+.location-detail-page [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.locations-page .ms-empty-state__description,
+.locations-page [class*="empty-state-description"],
+.locations-page [class*="empty-state__description"],
+.location-detail-page .ms-empty-state__description,
+.location-detail-page [class*="empty-state-description"],
+.location-detail-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.locations-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.locations-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.locations-page .ms-page-header-subtitle,
+.location-detail-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

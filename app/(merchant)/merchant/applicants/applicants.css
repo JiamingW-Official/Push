@@ -942,3 +942,358 @@
     transition: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps body + meta width at 72ch, hero subtitle at 56ch,
+   raises mobile heading floors, expands eyebrow tracking, and gives
+   stacked drawer paragraphs visual rhythm.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Body / meta / drawer text: 72ch ceiling + generous leading */
+.ap-page p,
+.ap-page .ap-card__meta,
+.ap-page .ap-drawer-section p,
+.ap-page .ms-empty-state__description {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Hero / page subtitle gets a tighter measure */
+.ap-page .ms-page-header-subtitle {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows: clearly readable letter-spacing */
+.ap-page .ms-page-header-eyebrow,
+.ap-page .ap-glass-eyebrow,
+.ap-page .ap-drawer-eyebrow {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40, desktop ceiling 72 — sits below KPIs in hierarchy */
+.ap-page .ms-page-header-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* H2 — section titles inside drawer + page get readable mobile floor */
+.ap-page h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.15;
+}
+
+/* Stacked paragraphs in drawer body get rhythm */
+.ap-page p + p {
+  margin-top: 12px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .ap-page {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .ap-page > .ms-page-header,
+  .ap-page > [class*="page-header"] {
+    margin-bottom: 64px;
+  }
+
+  .ap-page > .ap-section,
+  .ap-page > section,
+  .ap-page > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .ap-page > .ap-section + .ap-section,
+  .ap-page > section + section {
+    margin-top: 0;
+  }
+
+  .ap-page .ap-section-head,
+  .ap-page [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+
+  /* PageHeader → filter row 64px (handled by margin-bottom above on header),
+     filter row → card grid 32px */
+  .ap-page > .ap-filter-row + .ap-section,
+  .ap-page > [class*="filter-row"] + [class*="-section"] {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .ap-page {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .ap-page {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right (cascade requires
+   it — the existing 1024+ rule sets margin: 0 calc(...) to bleed into
+   the shell gutter). Atmospheric ::before backdrop is position:fixed
+   and stays full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .ap-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .ap-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ap-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .ap-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for dense grids */
+.ap-page .db-kpi-grid,
+.ap-page .db-list-surface,
+.ap-page [class*="kpi-row"],
+.ap-page [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── Wave 9 — Form Field Breathing ──────────────────────────── */
+
+/* Mobile: search inputs fill column */
+.ap-page input[type="search"],
+.ap-page input[type="text"][class*="search"],
+.ap-page [class*="search-input"] {
+  max-width: 100%;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* Tablet+ : cap search at ~480px (search isn't a wall of text) */
+@media (min-width: 768px) {
+  .ap-page input[type="search"],
+  .ap-page input[type="text"][class*="search"],
+  .ap-page [class*="search-input"] {
+    max-width: 480px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for all text-entry fields on the
+   applicants page. Search input gets a stronger left padding (40px) so
+   the inline magnifier icon clears the field padding.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ap-page input[type="text"],
+.ap-page input[type="email"],
+.ap-page input[type="number"],
+.ap-page input[type="tel"],
+.ap-page input[type="url"],
+.ap-page input[type="search"],
+.ap-page input[type="password"],
+.ap-page select,
+.ap-page textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.ap-page input:focus,
+.ap-page input:focus-visible,
+.ap-page select:focus,
+.ap-page textarea:focus,
+.ap-page textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.ap-page input::placeholder,
+.ap-page textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.ap-page input:disabled,
+.ap-page select:disabled,
+.ap-page textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ap-page .ap-search-input,
+.ap-page input.ap-search-input {
+  padding-left: 40px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through so any local filter chip
+   under .ap-page picks up the same glass register as the shared
+   FilterTabs. The shared `.ms-filter-tabs-btn--active` solid Ink/Snow
+   lockup wins via specificity (handled in filter-tabs.css). Inputs
+   already glassy from the Wave 8 block above.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ap-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.ap-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.ap-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.ap-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the applicants page feels iOS
+   26 native instead of jammed-against-sidebar on huge displays.
+   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
+   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
+   - Holds KPI gap to 24px so cards do not balloon.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     (inline rgba fallback; no new tokens introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .ap-page {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .ap-page .db-kpi-grid,
+  .ap-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .ap-page {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .ap-page .db-kpi-grid .kpi-card,
+  .ap-page [class*="hero-card"],
+  .ap-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Eyebrows, captions, applicant-meta, empty-state copy
+   sit on Liquid Glass. The 0.62-opacity surface over atmospheric haze
+   was below WCAG AA for ≤14px text in some viewports. Strategy A:
+   raise glass to `--lg-bg-light` for cards that hold small text, and
+   floor every ≤14px copy color at `--ink-3`. Filter pill labels also
+   use ink-3 so the inactive pill (now on glass) reads at AA.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards that hold small body copy + eyebrows */
+.ap-page .kpi-card,
+.ap-page [class*="caption-card"],
+.ap-page [class*="-text-card"] {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* All eyebrow / small uppercase copy on glass: ink-3 minimum */
+.ap-page .kpi-card__eyebrow,
+.ap-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.ap-page [class*="__eyebrow"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description — descriptive copy must sit at AA */
+.ap-page .ms-empty-state__description,
+.ap-page [class*="empty-state-description"],
+.ap-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label (Wave 3 made it glass) — bring text to ink-3 */
+.ap-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.ap-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle on atmospheric backdrop — floor color */
+.ap-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

@@ -530,3 +530,323 @@
     transform: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Typography Readability (2026-05-07)
+   APPENDED ONLY. Caps body width at 72ch, hero subtitle 56ch, raises
+   mobile heading floors, expands eyebrow tracking. No Liquid Glass /
+   atmospheric backdrop / colorful section divider rules touched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Body copy + counter copy + empty-state description */
+.qr-page p,
+.qr-page .qr-poster-card__caption,
+.qr-page .ms-empty-state__description {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Page subtitle gets a tighter measure */
+.qr-page .ms-page-header-subtitle {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+/* All-caps eyebrows + glass eyebrow chips: readable tracking */
+.qr-page .ms-page-header-eyebrow,
+.qr-page .qr-glass-eyebrow {
+  letter-spacing: 0.08em;
+}
+
+/* H1 mobile floor 40 — never falls below readable threshold */
+.qr-page .ms-page-header-title {
+  font-size: clamp(40px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* H2 — section heads / poster panel titles */
+.qr-page h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.15;
+}
+
+/* Stacked paragraphs (live counter caption + helper rows) */
+.qr-page p + p {
+  margin-top: 12px;
+}
+
+/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .qr-page {
+    gap: 96px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+
+  .qr-page > .ms-page-header,
+  .qr-page > [class*="page-header"] {
+    margin-bottom: 24px;
+  }
+
+  .qr-page > section,
+  .qr-page > [class*="-section"] {
+    margin-top: 24px;
+  }
+
+  .qr-page > section + section {
+    margin-top: 0;
+  }
+
+  .qr-page [class*="section-head"]:not([class*="card"]) {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .qr-page {
+    gap: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .qr-page {
+    gap: 48px;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Horizontal Breathing (2026-05-07)
+   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
+   16/32/48/64 across breakpoints; overrides the Wave B negative escape
+   margin at 1440+ via !important on margin-left/right (the existing
+   1024+ rule uses margin: 0 calc(...) to bleed into the shell gutter,
+   so cascade order requires !important to win on 1440+). Atmospheric
+   ::before backdrop is position:fixed and remains full-bleed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+  .qr-page {
+    max-width: 1440px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .qr-page {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .qr-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .qr-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Inner content cap for dense poster grids */
+.qr-page .db-kpi-grid,
+.qr-page .db-list-surface,
+.qr-page [class*="kpi-row"],
+.qr-page [class*="bento"] {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Inputs (2026-05-07)
+   APPENDED ONLY. Liquid-Glass surface for any text-entry on the QR codes
+   page (filter / search / form fields when introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.qr-page input[type="text"],
+.qr-page input[type="email"],
+.qr-page input[type="number"],
+.qr-page input[type="tel"],
+.qr-page input[type="url"],
+.qr-page input[type="search"],
+.qr-page input[type="password"],
+.qr-page select,
+.qr-page textarea {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  transition:
+    background 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms var(--spring);
+}
+
+.qr-page input:focus,
+.qr-page input:focus-visible,
+.qr-page select:focus,
+.qr-page textarea:focus,
+.qr-page textarea:focus-visible {
+  outline: none;
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
+  box-shadow:
+    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+    inset 0 0 0 1px var(--brand-red),
+    0 0 0 4px rgba(193, 18, 31, 0.12);
+}
+
+.qr-page input::placeholder,
+.qr-page textarea::placeholder {
+  color: var(--ink-4);
+  opacity: 0.7;
+}
+
+.qr-page input:disabled,
+.qr-page select:disabled,
+.qr-page textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. Page-scoped fall-through for any local filter chip
+   under .qr-page. Active state stays solid via shared filter-tabs.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.qr-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.qr-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.qr-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.qr-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Ultra-Wide Polish (2026-05-07)
+   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the QR codes page feels iOS
+   26 native instead of jammed-against-sidebar on huge displays.
+   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
+   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
+   - Holds KPI gap to 24px so cards do not balloon.
+   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
+     (inline rgba fallback; no new tokens introduced).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+  .qr-page {
+    padding-left: 80px;
+    padding-right: 80px;
+    max-width: 1480px;
+  }
+  .qr-page .db-kpi-grid,
+  .qr-page [class*="kpi-row"] {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .qr-page {
+    padding-left: 96px;
+    padding-right: 96px;
+    max-width: 1600px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .qr-page .db-kpi-grid .kpi-card,
+  .qr-page [class*="hero-card"],
+  .qr-page [class*="bento-tile"] {
+    box-shadow:
+      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
+      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
+      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
+      0 2px 4px rgba(60, 45, 30, 0.06),
+      0 16px 48px rgba(60, 45, 30, 0.10),
+      0 32px 80px rgba(60, 45, 30, 0.06);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. The QR-codes page has the highest small-text-on-glass
+   density: live-counter caption (`.qr-glass-caption`, ink-3 14px),
+   poster-card caption rows, and glass eyebrow chips. The atmospheric
+   backdrop pushes blue / red / champagne haze under the glass which
+   degrades 14px copy below AA. Strategy A: raise the glass tile that
+   holds the caption to `--lg-bg-light`; never drop caption color below
+   `--ink-3`. Filter pill labels (Wave 3 → glass) get ink-3 too.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Live-counter glass tile gets denser glass so 14px caption sits at AA */
+.qr-page .qr-glass-stat-tile,
+.qr-page [class*="glass-stat"],
+.qr-page [class*="counter-card"],
+.qr-page .kpi-card {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Caption color floor — was ink-3 14px which is right on the AA edge.
+   Pin to ink-3 explicitly so child overrides can't drop further. */
+.qr-page .qr-glass-caption,
+.qr-page .qr-poster-card__caption,
+.qr-page .ms-empty-state__description,
+.qr-page [class*="empty-state-description"],
+.qr-page [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Eyebrow chips on glass — ink-3 minimum */
+.qr-page .qr-glass-eyebrow,
+.qr-page .kpi-card__eyebrow,
+.qr-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.qr-page [class*="__eyebrow"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.qr-page [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.qr-page [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle on atmospheric backdrop */
+.qr-page .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

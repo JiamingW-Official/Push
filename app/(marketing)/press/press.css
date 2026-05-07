@@ -940,3 +940,74 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   ============================================================ */
+
+.press-page p,
+.press-page .body-text,
+.press-page .description,
+.press-page [class*="subtitle"]:not(h1):not(h2):not(h3),
+.press-page [class*="hero-body"],
+.press-page [class*="copy"]:not([class*="copy-row"]) {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+
+.press-page [class*="hero-sub"],
+.press-page [class*="hero-text"] {
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+}
+
+.press-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.1em;
+}
+
+.press-page [class*="hero-title"],
+.press-page h1[class*="display"],
+.press-page h1.magvix {
+  font-size: clamp(48px, 8vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.press-page h2[class*="section"],
+.press-page h2:not([class*="card"]) {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  max-width: 24ch;
+}
+
+.press-page h3:not([class*="card__"]) {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+  max-width: 32ch;
+}
+
+.press-page ul[class*="features"] li,
+.press-page ol[class*="steps"] li {
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+/* Press release card title 24ch; release body 64ch */
+.press-page [class*="press-card"] [class*="title"],
+.press-page [class*="press-featured-card"] [class*="title"],
+.press-page [class*="release-title"] {
+  max-width: 24ch;
+  line-height: 1.2;
+}
+
+.press-page [class*="press-card"] p,
+.press-page [class*="press-featured-card"] p,
+.press-page [class*="release-body"] {
+  max-width: 64ch;
+  line-height: 1.6;
+}
+
+.press-page p + p {
+  margin-top: 16px;
+}

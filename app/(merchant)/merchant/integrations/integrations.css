@@ -963,3 +963,146 @@
     transition: none !important;
   }
 }
+
+
+/* ============================================================
+   Wave 9 — Typography Readability
+   Cap measure on long-form text so it doesn't cram left-to-right
+   on wide screens. Hero/section titles get fluid scaling, paragraph
+   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
+   Does not modify Liquid Glass surfaces, atmospheric backdrops,
+   colorful section dividers, or Wave 1-8 uplifts.
+   ============================================================ */
+
+.int-shell p,
+.int-shell .body-text,
+.int-shell .description,
+.int-shell .ms-page-header-subtitle,
+.int-shell [class*="empty-state"] p,
+.int-shell [class*="subtitle"]:not(h1):not(h2):not(h3) {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.int-shell .ms-page-header-subtitle,
+.int-shell [class*="hero-sub"] {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.55;
+}
+
+.int-shell [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+  letter-spacing: 0.08em;
+}
+
+.int-shell h1,
+.int-shell .ms-page-header-title,
+.int-shell [class*="page-title"]:not([class*="card"]) {
+  font-size: clamp(40px, 5.6vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.int-shell h2,
+.int-shell .db-section-title,
+.int-shell [class*="section-title"]:not([class*="card"]) {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.1;
+}
+
+.int-shell p + p {
+  margin-top: 12px;
+}
+
+/* Per-page override: integration card description tightened to 64ch */
+.int-shell .int-card__desc,
+.int-shell [class*="card__desc"],
+.int-shell [class*="card__description"] {
+  max-width: 64ch;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Pills & Badges (2026-05-07)
+   APPENDED ONLY. The inactive `.int-tab` (defined further up at L254)
+   keeps its hairline border + cream surface as fallback, but gains a
+   liquid-glass overlay so it reads in the same register as shared
+   FilterTabs. The `[aria-pressed="true"]` Ink lockup (defined L283)
+   wins via specificity.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.int-shell .int-tab:not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border-color: transparent;
+}
+
+.int-shell .int-tab:not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* Generic fall-through for any other [class*="filter-tab"] that gets
+   added under .int-shell in the future. */
+.int-shell [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.int-shell [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
+  -webkit-backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+          backdrop-filter: var(--lg-blur-std, blur(20px) saturate(1.3));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  border: none;
+}
+
+.int-shell [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]):hover,
+.int-shell [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]):hover {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.85));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 9 — Glass Contrast Pass (2026-05-07)
+   APPENDED ONLY. Integrations carries the floating liquid-glass stat
+   tile + integration-card descriptions + status captions on glass.
+   Strategy A: denser glass on integration cards + floating stat tile;
+   floor every ≤14px copy color at `--ink-3`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Boost glass density on cards holding small copy */
+.int-shell .kpi-card,
+.int-shell [class*="integration-card"],
+.int-shell [class*="stat-tile"]:not([class*="hero"]) {
+  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
+}
+
+/* Eyebrow + caption color floor */
+.int-shell .kpi-card__eyebrow,
+.int-shell [class*="-eyebrow"]:not([class*="hero-eyebrow"]),
+.int-shell [class*="__eyebrow"],
+.int-shell [class*="__caption"] {
+  color: var(--ink-3);
+}
+
+/* Empty-state description */
+.int-shell .ms-empty-state__description,
+.int-shell [class*="empty-state-description"],
+.int-shell [class*="empty-state__description"] {
+  color: var(--ink-3);
+}
+
+/* Filter pill inactive label */
+.int-shell [class*="filter-tab"]:not([class*="--active"]):not([class*="-active"]):not([aria-pressed="true"]),
+.int-shell [class*="filter-pill"]:not([class*="--active"]):not([aria-pressed="true"]) {
+  color: var(--ink-3);
+}
+
+/* Page subtitle */
+.int-shell .ms-page-header-subtitle {
+  color: var(--ink-3);
+}
+

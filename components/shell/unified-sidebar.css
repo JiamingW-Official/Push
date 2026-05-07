@@ -547,3 +547,180 @@ body:has(.us-rail) main [class*="-page"]:not([class*="-page-"]) {
     animation: none;
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Wave 9 — Sidebar Glass Pill Refinement
+   ════════════════════════════════════════════════════════════
+   Per Design.md: the rail itself stays flat-white "no rail chrome";
+   only individual nav-item pills graduate to native-glass on hover.
+   The base us-item:hover already paints a warm-gradient liquid-glass
+   surface; this pass deepens the inset highlights + saturation so the
+   pill reads as a true glass lozenge over the surrounding white rail.
+   Active state gets a sharper top-edge highlight to suggest a settled
+   pane of glass that has caught light. */
+
+.us-item:hover .us-item__pill {
+  /* lift the icon + label inside the glass — pure paint, no transform */
+}
+
+.us-item:hover {
+  /* deepen the saturation a notch — already-glass rule above gets a
+     gentler inner-bottom shadow + more pronounced top highlight */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    inset 0 -0.5px 0 rgba(40, 36, 32, 0.04),
+    0 1px 2px rgba(40, 36, 32, 0.05),
+    0 4px 14px -6px rgba(40, 36, 32, 0.06);
+}
+
+.us-item.is-active {
+  /* refine: stronger inset highlight on the very top edge for that
+     "light catching the lip of glass" cue */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.6),
+    inset 0 -0.5px 0 rgba(40, 36, 32, 0.06),
+    0 1px 1px rgba(40, 36, 32, 0.05),
+    0 4px 12px -2px rgba(40, 36, 32, 0.07),
+    0 8px 24px -8px rgba(40, 36, 32, 0.09);
+}
+
+/* Bottom-cluster (settings + avatar) → same glass treatment.
+   .us-foot .us-item already inherits the .us-item rules above; the
+   selector below just exists as a documented anchor in case bottom
+   items need a subtle deviation later. No new paint here. */
+.us-foot .us-item:hover {
+  /* inherits .us-item:hover refinement above — explicit no-op for clarity */
+}
+
+/* ════════════════════════════════════════════════════════════
+   Wave 9 — Glass Back-Link / Breadcrumb Pills
+   ════════════════════════════════════════════════════════════
+   Targets product-side back-links + breadcrumbs (NOT marketing,
+   NOT auth). Append-only — no existing properties overridden in a
+   way that could collapse layout. Each rule sets:
+     - translucent white fill + backdrop-filter (the glass)
+     - inner highlights + ground shadow (depth)
+     - pill radius + tightened padding (compact chip)
+   without touching font-family / font-size / margin-bottom / display
+   so each component's existing layout slot is preserved.
+*/
+
+/* Product-side back navigation chips (admin / merchant / creator) */
+.cd-back,
+.adm-back,
+.adm-detail__back,
+.dsp-detail-back,
+.ud-back,
+.user-detail-back,
+.cohort-back,
+.int-subnav__back,
+.mddisp-header__back,
+.mm-thread-back,
+.cn-back,
+.set-sub__back,
+.settings-side__back,
+.disc-detail-back,
+.lb-nav-back,
+.money-sub__back,
+.campaign-back,
+.cdp-back-btn,
+.cr-back-link,
+.dispute-detail-back,
+.admin-topbar-breadcrumb,
+.ws-topnav__breadcrumb {
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter:         blur(16px) saturate(1.3);
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.04);
+  transition:
+    background 240ms ease,
+    transform  240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 240ms ease,
+    color      180ms ease;
+}
+
+.cd-back:hover,
+.adm-back:hover,
+.adm-detail__back:hover,
+.dsp-detail-back:hover,
+.ud-back:hover,
+.user-detail-back:hover,
+.cohort-back:hover,
+.int-subnav__back:hover,
+.mddisp-header__back:hover,
+.mm-thread-back:hover,
+.cn-back:hover,
+.set-sub__back:hover,
+.settings-side__back:hover,
+.disc-detail-back:hover,
+.lb-nav-back:hover,
+.money-sub__back:hover,
+.campaign-back:hover,
+.cdp-back-btn:hover,
+.cr-back-link:hover,
+.dispute-detail-back:hover,
+.ws-topnav__breadcrumb:hover {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.7),
+    0 2px 6px rgba(60, 45, 30, 0.06);
+}
+
+/* The two admin detail pages render their back-links over a dark
+   ink hero band — the white-glass fill above would clash. Tint the
+   chip with a translucent ink fill instead so it still reads as
+   glass-on-dark. */
+.adm-back,
+.cohort-back,
+.user-detail-back {
+  background: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.10);
+}
+.adm-back:hover,
+.cohort-back:hover,
+.user-detail-back:hover {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.14);
+}
+
+/* Reduced motion — kill the glass transition + transform shift */
+@media (prefers-reduced-motion: reduce) {
+  .cd-back,
+  .adm-back,
+  .adm-detail__back,
+  .dsp-detail-back,
+  .ud-back,
+  .user-detail-back,
+  .cohort-back,
+  .int-subnav__back,
+  .mddisp-header__back,
+  .mm-thread-back,
+  .cn-back,
+  .set-sub__back,
+  .settings-side__back,
+  .disc-detail-back,
+  .lb-nav-back,
+  .money-sub__back,
+  .campaign-back,
+  .cdp-back-btn,
+  .cr-back-link,
+  .dispute-detail-back,
+  .admin-topbar-breadcrumb,
+  .ws-topnav__breadcrumb {
+    transition: none;
+  }
+}
