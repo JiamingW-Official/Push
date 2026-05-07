@@ -11,6 +11,7 @@ import {
 } from "react";
 import { EmptyState, PageHeader } from "@/components/merchant/shared";
 import type { Message, Thread, ThreadParticipant } from "@/lib/messaging/types";
+import { useThreadStream } from "@/lib/realtime/use-thread-stream";
 import "./messages.css";
 
 type ThreadWithMessages = Thread & { messages: Message[] };
@@ -118,6 +119,24 @@ export default function MessagesClient({
   const [isLoadingMessages, setIsLoadingMessages] = useState(
     initialThreads.length > 0,
   );
+
+  /* ── Realtime stream — appends only new INSERTs from Supabase Realtime.
+     Deduplicates against `messages` so optimistic-send entries are not
+     doubled (both the HTTP response and the Realtime event carry the same id). */
+  const { messages: liveMessages, status: streamStatus } =
+    useThreadStream(activeThreadId);
+
+  useEffect(() => {
+    if (liveMessages.length === 0) return;
+    setMessages((prev) => {
+      const existingIds = new Set(prev.map((m) => m.id));
+      const incoming = liveMessages.filter((m) => !existingIds.has(m.id));
+      if (incoming.length === 0) return prev;
+      // Map ThreadMessage → Message (same shape; cast is safe — both come
+      // from the same DB row, lib/messaging/types mirrors the column list).
+      return [...prev, ...(incoming as unknown as Message[])];
+    });
+  }, [liveMessages]);
 
   const listRef = useRef<HTMLDivElement | null>(null);
   const bubblesRef = useRef<HTMLDivElement | null>(null);
@@ -468,6 +487,23 @@ export default function MessagesClient({
                     ) : null}
                   </div>
                 </div>
+                {/* Live/offline stream status pill — shown only when open or degraded */}
+                {streamStatus === "open" ? (
+                  <span
+                    className="msg-live-pill"
+                    aria-label="Live updates active"
+                  >
+                    <span className="msg-live-dot" aria-hidden />
+                    live
+                  </span>
+                ) : streamStatus === "closed" || streamStatus === "error" ? (
+                  <span
+                    className="msg-live-pill msg-live-pill--offline"
+                    aria-label="Offline"
+                  >
+                    offline
+                  </span>
+                ) : null}
               </header>
 
               {isLoadingMessages ? (

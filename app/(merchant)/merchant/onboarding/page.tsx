@@ -933,72 +933,74 @@ export default function MerchantOnboardingPage() {
   if (!mounted) return null;
 
   return (
-    <OnboardingShell
-      role="Merchant"
-      totalSteps={TOTAL}
-      currentStep={progress.activeStep}
-      completedSteps={completedCount}
-      isComplete={isComplete}
-      onDashboard={() => router.push("/merchant/dashboard")}
-    >
-      {STEPS.map(({ id, title, description }) => {
-        const status = stepStatus(id, progress);
-        const isExpanded = expandedStep === id;
+    <div className="onb-page">
+      <OnboardingShell
+        role="Merchant"
+        totalSteps={TOTAL}
+        currentStep={progress.activeStep}
+        completedSteps={completedCount}
+        isComplete={isComplete}
+        onDashboard={() => router.push("/merchant/dashboard")}
+      >
+        {STEPS.map(({ id, title, description }) => {
+          const status = stepStatus(id, progress);
+          const isExpanded = expandedStep === id;
 
-        return (
-          <ChecklistItem
-            key={id}
-            index={id}
-            total={TOTAL}
-            title={title}
-            description={description}
-            status={status}
-            isExpanded={isExpanded}
-            onExpand={() => toggleExpand(id)}
-          >
-            {id === 1 && (
-              <BizProfileStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(1)}
-              />
-            )}
-            {id === 2 && (
-              <LocationStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(2)}
-              />
-            )}
-            {id === 3 && (
-              <PosStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(3)}
-                onSkip={() => skipStep(3)}
-              />
-            )}
-            {id === 4 && (
-              <BrandStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(4)}
-                onSkip={() => skipStep(4)}
-              />
-            )}
-            {id === 5 && <CampaignStep onSkip={() => skipStep(5)} />}
-            {id === 6 && (
-              <TeamStep
-                progress={progress}
-                onChange={update}
-                onComplete={() => completeStep(6)}
-                onSkip={() => skipStep(6)}
-              />
-            )}
-            {id === 7 && <QrStep onComplete={() => completeStep(7)} />}
-          </ChecklistItem>
-        );
-      })}
-    </OnboardingShell>
+          return (
+            <ChecklistItem
+              key={id}
+              index={id}
+              total={TOTAL}
+              title={title}
+              description={description}
+              status={status}
+              isExpanded={isExpanded}
+              onExpand={() => toggleExpand(id)}
+            >
+              {id === 1 && (
+                <BizProfileStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(1)}
+                />
+              )}
+              {id === 2 && (
+                <LocationStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(2)}
+                />
+              )}
+              {id === 3 && (
+                <PosStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(3)}
+                  onSkip={() => skipStep(3)}
+                />
+              )}
+              {id === 4 && (
+                <BrandStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(4)}
+                  onSkip={() => skipStep(4)}
+                />
+              )}
+              {id === 5 && <CampaignStep onSkip={() => skipStep(5)} />}
+              {id === 6 && (
+                <TeamStep
+                  progress={progress}
+                  onChange={update}
+                  onComplete={() => completeStep(6)}
+                  onSkip={() => skipStep(6)}
+                />
+              )}
+              {id === 7 && <QrStep onComplete={() => completeStep(7)} />}
+            </ChecklistItem>
+          );
+        })}
+      </OnboardingShell>
+    </div>
   );
 }

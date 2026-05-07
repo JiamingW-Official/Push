@@ -367,3 +367,116 @@
     gap: 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Campaigns Uplift v2 (2026-05-07) — Liquid Glass · Colorful KPI · iOS 26
+   Mirrors dashboard.db-* atmosphere so dashboard ↔ campaigns share a single
+   continuous visual register. Pure CSS — no JSX changes.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.cl-page {
+  /* Liquid Glass tokens (scoped — same values as dashboard.db-*) */
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .cl-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* Atmospheric backdrop — same 5-layer radial-gradient haze as dashboard */
+.cl-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.cl-page > * { position: relative; z-index: 1; }
+
+/* ── KPI row — colorful bento with liquid glass surface ───────────────── */
+
+.cl-page .cl-kpi-row .kpi-card {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 24px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 320ms var(--spring),
+    box-shadow 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    background 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.cl-page .cl-kpi-row .kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  border-radius: 24px 24px 0 0;
+}
+.cl-page .cl-kpi-row .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.cl-page .cl-kpi-row .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+.cl-page .cl-kpi-row .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
+
+.cl-page .cl-kpi-row .kpi-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  background: var(--lg-bg-light);
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-page .cl-kpi-row .kpi-card {
+    transition: none;
+  }
+  .cl-page .cl-kpi-row .kpi-card:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cl-page::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .cl-page .cl-kpi-row .kpi-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

@@ -66,6 +66,7 @@ export default function MerchantDisputesPage() {
 
   return (
     <div
+      className="disp-page"
       style={{
         minHeight: "100svh",
         background: "var(--surface)",
