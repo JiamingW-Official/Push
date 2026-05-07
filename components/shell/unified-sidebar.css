@@ -454,7 +454,12 @@ body:has(.us-rail) .dh-main {
   background: #ffffff !important;
 }
 
-body:has(.us-rail) main [class*="-page"] {
+/* Match ROOT page containers only (e.g. .dashboard-page, .ap-page,
+   .db-dashboard-page) — NOT children whose class happens to contain
+   "-page-" mid-string (e.g. .ms-page-header-action, .ms-page-header-left).
+   Without the :not() filter the rule cascades onto every flex child of
+   PageHeader and forces width: 100% !important, collapsing siblings to 0. */
+body:has(.us-rail) main [class*="-page"]:not([class*="-page-"]) {
   background: transparent !important;
 }
 
@@ -469,7 +474,7 @@ body:has(.us-rail) .dh-main {
   padding-bottom: var(--page-pad-y-bot);
 }
 
-body:has(.us-rail) main [class*="-page"] {
+body:has(.us-rail) main [class*="-page"]:not([class*="-page-"]) {
   padding-left: 0 !important;
   padding-right: 0 !important;
   max-width: none !important;

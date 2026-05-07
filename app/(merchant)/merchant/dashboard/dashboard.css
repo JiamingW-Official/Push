@@ -462,3 +462,313 @@
     outline-offset: 2px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Dashboard Uplift v2 (2026-05-07) — Bento · Liquid Glass · Colorful · iOS 26
+   Layered on top of the v11 Product UI baseline above. Mirrors analytics
+   .an2-* atmosphere so dashboard ↔ analytics ↔ creator-side share a single
+   continuous visual register. Pure CSS — no JSX changes.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.db-dashboard-page {
+  /* Liquid Glass tokens (scoped — same values as analytics.an2) */
+  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-hero: blur(32px) saturate(1.55);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
+  /* Escape MerchantShell horizontal padding so atmosphere bleeds full-bleed
+     on wide viewports (mirrors .an2 escape logic — desktop only). */
+}
+
+@media (min-width: 1024px) {
+  .db-dashboard-page {
+    margin: 0 calc(-1 * (10vw - 48px));
+    padding-left: calc(10vw - 48px);
+    padding-right: calc(10vw - 48px);
+  }
+}
+
+/* ── Atmospheric backdrop — 5-layer radial-gradient haze ─────────────────
+   Matches analytics exactly so transitioning between Dashboard and
+   Analytics feels continuous (same atmosphere rotates around different
+   focal points).
+*/
+.db-dashboard-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.db-dashboard-page > * { position: relative; z-index: 1; }
+
+/* ── Page header — colorful live indicator + display title gradient ──── */
+
+.db-dashboard-page .ms-page-header {
+  border-bottom: none;          /* atmosphere now owns the top horizon */
+  padding-bottom: var(--space-4);
+  /* Belt-and-suspenders against flex squeeze under the new atmospheric
+     stacking context — without these, .ms-page-header-action grows to
+     fill 100% and collapses .ms-page-header-left + the H1 to width 0. */
+  align-items: flex-start;
+}
+.db-dashboard-page .ms-page-header-left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.db-dashboard-page .ms-page-header-action {
+  flex: 0 0 auto;
+  width: auto;
+  margin-left: auto;
+}
+
+.db-dashboard-page .ms-page-header-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.db-dashboard-page .ms-page-header-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34c759;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18);
+  animation: db-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes db-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18); }
+  50%      { box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.06); }
+}
+
+.db-dashboard-page .ms-page-header-title {
+  font-size: clamp(48px, 5.6vw, 80px);
+  color: var(--ink);
+  /* Atmospheric backdrop already supplies chromatic interest; keep H1 ink
+     for legibility — gradient-text over backdrop-filter regions is fragile
+     across browsers (Safari clips against ::before, Chromium loses width). */
+}
+
+/* ── Section heads — colorful gradient underline + pulsing dot ─────────── */
+
+.db-section-head {
+  border-bottom: none;
+  padding-bottom: 0;
+  position: relative;
+}
+.db-section-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.db-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.db-section-title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+}
+
+/* ── KPI grid — colorful bento with liquid glass surface ───────────────── */
+
+.db-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 960px) {
+  .db-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .db-kpi-grid { grid-template-columns: 1fr; }
+}
+
+/* Apply liquid-glass treatment + 4-color top accent strip to each KPICard.
+   nth-child rotates: brand-red → accent-blue → champagne → champagne-deep
+   so the KPI row reads as a colorful bento at-a-glance. */
+.db-dashboard-page .db-kpi-grid .kpi-card {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 24px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 320ms var(--spring),
+    box-shadow 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    background 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.db-dashboard-page .db-kpi-grid .kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  border-radius: 24px 24px 0 0;
+}
+.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
+.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(4)::before { background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45)); }
+
+.db-dashboard-page .db-kpi-grid .kpi-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+  background: var(--lg-bg-light);
+}
+
+/* Numeral overflow guard — values like "$114,800" need to fit in the
+   ~200px card body without ellipsis. Clamp the size + enable tabular-nums
+   so digit columns stay aligned across the row. */
+.db-dashboard-page .db-kpi-grid .kpi-card .kpi-card__numeral {
+  font-size: clamp(28px, 2.4vw, 44px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: visible;
+  min-width: 0;
+}
+
+/* ── Active Campaigns + Recent Applications — glass card surface ──────── */
+
+.db-major-section {
+  position: relative;
+}
+
+/* Wrap the inner list/table area in a glass surface — Push's existing
+   markup uses tables/rows directly inside the section; we target the
+   first-of-type table-or-list child after the section head. */
+.db-dashboard-page .db-major-section > .db-table-wrap,
+.db-dashboard-page .db-major-section > .db-list-wrap,
+.db-dashboard-page .db-major-section > [class*="-list-wrap"],
+.db-dashboard-page .db-major-section > [class*="-table-wrap"] {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* List rows on glass — preserve hairlines but soften since glass already
+   has the spec-top edge above. */
+.db-dashboard-page .db-list-row {
+  background: transparent;
+  border-bottom: 1px solid rgba(20, 19, 15, 0.06);
+}
+.db-dashboard-page .db-list-row:last-child {
+  border-bottom: none;
+}
+.db-dashboard-page .db-list-row:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* ── Section "View all" link — glass pill instead of underline ────────── */
+
+.db-dashboard-page .db-section-link {
+  border-bottom: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(60, 45, 30, 0.04),
+    0 6px 16px rgba(60, 45, 30, 0.06);
+}
+.db-dashboard-page .db-section-link:hover {
+  transform: translate(2px, 2px);
+  background: rgba(255, 255, 255, 0.88);
+}
+.db-dashboard-page .db-section-link::after {
+  content: "→";
+  margin-left: 6px;
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .db-dashboard-page .ms-page-header-eyebrow::before,
+  .db-section-title::before {
+    animation: none;
+  }
+  .db-dashboard-page .db-kpi-grid .kpi-card {
+    transition: none !important;
+  }
+  .db-dashboard-page .db-kpi-grid .kpi-card:hover {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .db-dashboard-page::before {
+    background: var(--surface-2);
+    opacity: 0.6;
+  }
+  .db-dashboard-page .db-kpi-grid .kpi-card,
+  .db-dashboard-page .db-major-section > [class*="-list-wrap"],
+  .db-dashboard-page .db-major-section > [class*="-table-wrap"],
+  .db-dashboard-page .db-section-link {
+    background: var(--snow);
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+  }
+}
