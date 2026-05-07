@@ -1330,3 +1330,26 @@
     animation: none;
   }
 }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Backdrop fade-in (paired with disputeModalIn above). Added to match the
+   unified-anim suite — modal slides up + backdrop fades simultaneously.
+   ─────────────────────────────────────────────────────────────────────────── */
+.dispute-modal-overlay {
+  animation: disputeBackdropIn 240ms ease both;
+}
+
+@keyframes disputeBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dispute-modal-overlay {
+    animation: none;
+  }
+}

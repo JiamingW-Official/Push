@@ -905,3 +905,40 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .ap-card (was 1/2 → 2/3) */
+.ap-page .ap-card {
+  transition:
+    transform 240ms var(--spring),
+    box-shadow 240ms ease,
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.ap-page .ap-card:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .ap-drawer-close (was 1/2 → 2/3) */
+.ap-page .ap-drawer-close {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease,
+    color 240ms ease;
+}
+.ap-page .ap-drawer-close:hover  { transform: translate(2px, 2px); }
+.ap-page .ap-drawer-close:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-page .ap-card,
+  .ap-page .ap-card:hover,
+  .ap-page .ap-card:active,
+  .ap-page .ap-drawer-close,
+  .ap-page .ap-drawer-close:hover,
+  .ap-page .ap-drawer-close:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

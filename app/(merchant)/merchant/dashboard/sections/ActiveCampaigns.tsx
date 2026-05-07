@@ -57,7 +57,7 @@ export function ActiveCampaigns({ campaigns }: ActiveCampaignsProps) {
         </Link>
       </div>
 
-      <div className="db-list-surface">
+      <div className="db-list-surface anim-stagger">
         {visibleCampaigns.length === 0 ? (
           <EmptyState
             title="NO CAMPAIGNS YET"

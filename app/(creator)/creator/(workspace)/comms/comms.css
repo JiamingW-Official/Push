@@ -85,3 +85,118 @@
   line-height: 1.55;
   color: var(--ink-4, #61605c);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Comms Uplift v2 (2026-05-07) — Liquid Glass · Atmospheric · Colorful
+   hub-shell.css already supplies surface tokens, the L/R escape margin,
+   the 2-ellipse atmosphere and the > * stacking lift — this section
+   adds the missing blur tokens, upgrades the backdrop to the dashboard
+   5-layer haze, and adds page-specific accents on the section heads
+   and the messages KPI row. APPENDED ONLY — does not modify hub-shell
+   and does not touch any chat bubble surface (this hub is a landing
+   page, not the inbox).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.comms-hub {
+  /* Blur tokens not in hub-shell — required for backdrop-filter on glass. */
+  --lg-blur-hero: blur(32px) saturate(1.55);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+
+  position: relative;
+  isolation: isolate;
+}
+
+/* Upgrade hub-shell's 2-ellipse backdrop to the 5-layer dashboard haze,
+   red-weighted (comms hub identity = alerts/conversations). */
+.comms-hub::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),   transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(193, 18, 31, 0.10),   transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.04),   transparent 75%);
+}
+
+/* ── Section heads — colorful gradient underline + brand-red status dot
+   Same chromatic horizon as dashboard + work + analytics. */
+.comms-hub .hub-section {
+  position: relative;
+}
+.comms-hub .hub-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(193, 18, 31, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+.comms-hub .hub-section__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.comms-hub .hub-section__title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red, #c1121f);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+
+/* ── Messages KPI row — liquid glass surface + colorful top stripe ──────
+   The MESSAGES bento (span 12) is the hub anchor. Wrap its inner KPI
+   row in glass + stripe so it reads as the comms equivalent of dashboard
+   KPI bento. NB: This is NOT a chat bubble — there are no bubbles in
+   this landing page, only KPIs + list rows. */
+.comms-hub .comms-msg-row {
+  position: relative;
+  padding: 20px 24px;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+}
+.comms-hub .comms-msg-row::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(
+    90deg,
+    var(--brand-red, #c1121f) 0%,
+    rgba(255, 94, 43, 0.7) 33%,
+    var(--accent-blue, #0085ff) 70%,
+    rgba(191, 161, 112, 0.45) 100%
+  );
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .comms-hub .comms-msg-row {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

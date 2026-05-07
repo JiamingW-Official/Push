@@ -801,3 +801,59 @@
     padding: 12px 16px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY — overrides existing 1px hover values to canonical 2/3px.
+   Push interaction signature (Design.md):
+     hover  → translate(2px, 2px)
+     active → translate(3px, 3px) scale(0.98)
+   timing → 240ms var(--spring), specific properties (no `all`)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .db-section-link (was 1/2 → 2/3) */
+.db-dashboard-page .db-section-link {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease,
+    background 240ms ease,
+    border-color 240ms ease,
+    box-shadow 240ms ease;
+}
+.db-dashboard-page .db-section-link:hover  { transform: translate(2px, 2px); }
+.db-dashboard-page .db-section-link:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .kpi-card (was 1px hover, no active → 2/3) */
+.db-dashboard-page .kpi-card {
+  transition:
+    transform 240ms var(--spring),
+    box-shadow 240ms ease,
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.db-dashboard-page .kpi-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* .db-list-row (was 1/2 → 2/3) */
+.db-dashboard-page .db-list-row {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease,
+    box-shadow 240ms ease;
+}
+.db-dashboard-page .db-list-row:hover  { transform: translate(2px, 2px); }
+.db-dashboard-page .db-list-row:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .db-dashboard-page .db-section-link,
+  .db-dashboard-page .db-section-link:hover,
+  .db-dashboard-page .db-section-link:active,
+  .db-dashboard-page .db-list-row,
+  .db-dashboard-page .db-list-row:hover,
+  .db-dashboard-page .db-list-row:active,
+  .db-dashboard-page .kpi-card:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

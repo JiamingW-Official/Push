@@ -48,7 +48,7 @@ export function RecentApplications({ applications }: RecentApplicationsProps) {
         </Link>
       </div>
 
-      <div className="db-list-surface">
+      <div className="db-list-surface anim-stagger">
         {recentApplications.length === 0 ? (
           <EmptyState
             title="No applications yet"

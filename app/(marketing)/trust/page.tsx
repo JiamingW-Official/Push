@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import "./trust.css";
 
 export const metadata: Metadata = {
   title: "How We Verify | Push",
@@ -55,7 +56,10 @@ const COMPLIANCE_ROWS = [
 
 export default function TrustPage() {
   return (
-    <main style={{ background: "var(--surface)", minHeight: "100vh" }}>
+    <main
+      className="trust-page-uplift"
+      style={{ background: "var(--surface)", minHeight: "100vh" }}
+    >
       {/* ═══ 01 — HERO (dark ink, bottom-left anchored) ═══ */}
       <section
         style={{
@@ -189,6 +193,7 @@ export default function TrustPage() {
           </span>
           <h2
             id="trust-verify-heading"
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -289,6 +294,7 @@ export default function TrustPage() {
           </span>
           <h2
             id="trust-fraud-heading"
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -309,13 +315,12 @@ export default function TrustPage() {
               gap: 24,
             }}
           >
-            {STAT_CARDS.map((card) => (
+            {STAT_CARDS.map((card, i) => (
               <div
                 key={card.label}
+                className="lg-tile"
+                data-accent={i === 0 ? "red" : i === 1 ? "blue" : "champagne"}
                 style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--hairline)",
-                  borderRadius: 10,
                   padding: "40px 32px",
                 }}
               >
@@ -386,6 +391,7 @@ export default function TrustPage() {
               </span>
               <h2
                 id="trust-ftc-heading"
+                className="uplift-h uplift-h--dark"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: 40,

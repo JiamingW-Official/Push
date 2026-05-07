@@ -532,3 +532,27 @@
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .cl-row (was 1/2 → 2/3) */
+.cl-page .cl-row {
+  transition:
+    transform 240ms var(--spring),
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+.cl-page .cl-row:hover  { transform: translate(2px, 2px); }
+.cl-page .cl-row:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-page .cl-row,
+  .cl-page .cl-row:hover,
+  .cl-page .cl-row:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

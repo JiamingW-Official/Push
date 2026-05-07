@@ -273,7 +273,7 @@ export default function ForCreatorsPage() {
   const rootRef = useRevealOnScroll();
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="fc-page">
       {/* ════════════════════════════════════════════════════
           HERO — Full-Bleed Pattern A (border-radius: 0 allowed)
           Dark ink with radial accent glow · Magvix corner-anchored

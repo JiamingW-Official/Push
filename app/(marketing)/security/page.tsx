@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import "./security.css";
 
 export const metadata: Metadata = {
   title: "Security | Push",
@@ -101,7 +102,10 @@ const SECURITY_PILLARS = [
 
 export default function SecurityPage() {
   return (
-    <main style={{ background: "var(--surface)", minHeight: "100vh" }}>
+    <main
+      className="sec-page-uplift"
+      style={{ background: "var(--surface)", minHeight: "100vh" }}
+    >
       {/* ═══ 01 — HERO (dark ink, bottom-left anchored) ═══ */}
       <section
         style={{
@@ -234,6 +238,7 @@ export default function SecurityPage() {
           </span>
           <h2
             id="sec-pillars-heading"
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -334,6 +339,7 @@ export default function SecurityPage() {
           </span>
           <h2
             id="sec-infra-heading"
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -354,13 +360,12 @@ export default function SecurityPage() {
               gap: 24,
             }}
           >
-            {INFRA_CARDS.map((card) => (
+            {INFRA_CARDS.map((card, i) => (
               <div
                 key={card.name}
+                className="lg-tile"
+                data-accent={i === 0 ? "red" : i === 1 ? "blue" : "champagne"}
                 style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--hairline)",
-                  borderRadius: 10,
                   padding: 32,
                   display: "flex",
                   flexDirection: "column",
@@ -451,6 +456,7 @@ export default function SecurityPage() {
           </span>
           <h2
             id="sec-data-heading"
+            className="uplift-h"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 40,
@@ -660,6 +666,7 @@ export default function SecurityPage() {
               </span>
               <h2
                 id="sec-disclosure-heading"
+                className="uplift-h uplift-h--dark"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: 40,

@@ -524,3 +524,49 @@
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .apd-close (was 1/2 → 2/3) */
+.apd-close {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease;
+}
+.apd-close:hover  { transform: translate(2px, 2px); }
+.apd-close:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .apd-sample (was 1/2 → 2/3) */
+.apd-sample {
+  transition:
+    transform 240ms var(--spring),
+    box-shadow 240ms ease;
+}
+.apd-sample:hover  { transform: translate(2px, 2px); }
+.apd-sample:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .apd-message-btn (was 1/2 → 2/3) */
+.apd-message-btn {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease;
+}
+.apd-message-btn:hover  { transform: translate(2px, 2px); }
+.apd-message-btn:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .apd-close,
+  .apd-close:hover,
+  .apd-close:active,
+  .apd-sample:hover,
+  .apd-sample:active,
+  .apd-message-btn,
+  .apd-message-btn:hover,
+  .apd-message-btn:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

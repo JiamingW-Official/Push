@@ -11,6 +11,7 @@ import {
 } from "@/components/merchant/shared";
 import LocationsMap from "./LocationsMap";
 import "./locations.css";
+import "../_anim/anim.css";
 
 type StatusFilter = "all" | "active" | "closed";
 type LocationRecord = {
@@ -116,7 +117,7 @@ export default function LocationsPageClient({
   );
 
   return (
-    <section className="locations-page">
+    <section className="locations-page anim-page">
       <PageHeader
         eyebrow="LOCATIONS"
         title="Locations"

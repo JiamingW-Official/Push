@@ -302,7 +302,7 @@ export default function LeaderboardPage() {
   }, [currentUser]);
 
   return (
-    <div className="cw-page">
+    <div className="cw-page lb-page">
       <header className="cw-header">
         <div className="cw-header__left">
           <p className="cw-eyebrow cw-eyebrow--live">CREATOR RANKINGS · NYC</p>

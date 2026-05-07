@@ -114,7 +114,7 @@ export default function ForMerchantsPage() {
   const rootRef = useRevealOnScroll();
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="mn-page">
       {/* ════════════════════════════════════════════════════
           01 — HERO  ·  Full-Bleed Pattern A (§ 4.2 border-radius:0)
           Dark ink + radial accents · Magvix corner-anchored

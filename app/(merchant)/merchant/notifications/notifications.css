@@ -708,3 +708,20 @@
     border-radius: 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Adds :active state (was hover-only).
+   Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .notif-item (had hover only — add :active for parity) */
+.notif-page .notif-item:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notif-page .notif-item:active {
+    transform: none !important;
+  }
+}

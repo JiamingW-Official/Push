@@ -392,3 +392,20 @@
     flex: 1 1 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Adds :active state (was hover-only).
+   Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .mdisp-card (had hover only — add :active for parity with rest of suite) */
+.disp-page .mdisp-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disp-page .mdisp-card:active {
+    transform: none !important;
+  }
+}

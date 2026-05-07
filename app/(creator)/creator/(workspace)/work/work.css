@@ -155,3 +155,146 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Work Uplift v2 (2026-05-07) — Liquid Glass · Atmospheric · Colorful
+   hub-shell.css already supplies surface tokens, the L/R escape margin,
+   the 2-ellipse atmosphere and the > * stacking lift — this section
+   adds the missing blur tokens, upgrades the backdrop to the dashboard
+   5-layer haze (visual continuity), and adds two page-specific accents.
+   APPENDED ONLY — does not modify hub-shell.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.work-hub {
+  /* Blur tokens not in hub-shell — required for backdrop-filter on glass.
+     Surface alphas, shadows and specular insets are inherited from
+     hub-shell.css unchanged. */
+  --lg-blur-hero: blur(32px) saturate(1.55);
+  --lg-blur-std:  blur(24px) saturate(1.4);
+  --lg-blur-soft: blur(16px) saturate(1.2);
+
+  position: relative;
+  isolation: isolate;
+}
+
+/* Upgrade the hub-shell 2-ellipse backdrop to the 5-layer dashboard
+   haze, GA-orange weighted (work hub identity = execution layer). */
+.work-hub::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(255, 94, 43, 0.10),   transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(176, 133, 96, 0.08),  transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+
+/* ── Section heads — colorful gradient underline + status dot ───────────
+   Layered on top of hub-shell's hairline border so we keep the editorial
+   rhythm but add the chromatic horizon used across dashboard + analytics. */
+.work-hub .hub-section {
+  position: relative;
+}
+.work-hub .hub-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 94, 43, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+.work-hub .hub-section__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.work-hub .hub-section__title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ga-orange, #ff5e2b);
+  box-shadow: 0 0 0 4px rgba(255, 94, 43, 0.10);
+  flex-shrink: 0;
+}
+
+/* ── Pipeline kanban cells — liquid glass + status-rotating top accent ──
+   The Pipeline module is the work hub's anchor surface (span 12, hero).
+   Glassify the 4 phase cells and rotate the top accent so accept → shoot
+   → submit → closed reads as a colorful timeline at a glance. */
+.work-hub .work-pipeline-row .work-pipeline-cell {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-soft);
+          backdrop-filter: var(--lg-blur-soft);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.work-hub .work-pipeline-row .work-pipeline-cell::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1;
+  border-radius: 12px 12px 0 0;
+}
+/* Outreach (1st) → red, Shooting (2nd) → orange, Submitted (3rd) →
+   champagne, Closed (4th) → blue. Each cell is wrapped in a divider
+   span between phases, so use nth-of-type to pick only the cells. */
+.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(1)::before {
+  background: linear-gradient(90deg, var(--brand-red, #c1121f), rgba(193, 18, 31, 0.4));
+}
+.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(2)::before {
+  background: linear-gradient(90deg, var(--ga-orange, #ff5e2b), rgba(255, 94, 43, 0.4));
+}
+.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(3)::before {
+  background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45));
+}
+.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(4)::before {
+  background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4));
+}
+.work-hub .work-pipeline-row .work-pipeline-cell:hover {
+  transform: translate(2px, 2px);
+  background: var(--lg-bg-light);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .work-hub .work-pipeline-row .work-pipeline-cell {
+    transition: none;
+  }
+  .work-hub .work-pipeline-row .work-pipeline-cell:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .work-hub .work-pipeline-row .work-pipeline-cell {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

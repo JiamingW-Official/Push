@@ -32,6 +32,8 @@ import {
   DEMO_MERCHANT_USER_ID,
 } from "@/lib/messaging/merchant-mock-threads";
 import "./messages.css";
+import "../_anim/anim.css";
+import "@/components/loading/Skeleton.css";
 
 type ThreadWithMessages = Thread & { messages: Message[] };
 type FilterKey = "all" | "unread" | "needs-reply";
@@ -584,7 +586,7 @@ export default function MessagesClient({
   const groupedMessages = useMemo(() => groupMessages(messages), [messages]);
 
   return (
-    <section className="msg-page">
+    <section className="msg-page anim-page">
       <PageHeader
         eyebrow="LINKS · DIRECT"
         title="Messages"
@@ -669,7 +671,7 @@ export default function MessagesClient({
               </div>
             </header>
 
-            <div ref={listRef} className="mm-list-body">
+            <div ref={listRef} className="mm-list-body anim-stagger">
               {grouped.length === 0 ? (
                 <div className="mm-list-empty">
                   {query ? (
@@ -912,8 +914,50 @@ export default function MessagesClient({
                 </header>
 
                 {isLoadingMessages ? (
-                  <div className="mm-thread-loading" role="status">
-                    Loading conversation…
+                  <div
+                    className="mm-thread-loading"
+                    role="status"
+                    aria-live="polite"
+                    aria-busy="true"
+                    aria-label="Loading conversation"
+                    style={{
+                      flexDirection: "column",
+                      alignItems: "stretch",
+                      justifyContent: "flex-start",
+                      padding: "24px 0",
+                    }}
+                  >
+                    {[
+                      { side: "left", w: "62%" },
+                      { side: "right", w: "44%" },
+                      { side: "left", w: "78%" },
+                      { side: "right", w: "52%" },
+                    ].map((b, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          justifyContent:
+                            b.side === "right" ? "flex-end" : "flex-start",
+                          padding: "0 16px",
+                          marginBottom: 8,
+                          animation:
+                            "skelCardFadeIn 320ms cubic-bezier(0.22,1,0.36,1) both",
+                          animationDelay: `${i * 60}ms`,
+                        }}
+                      >
+                        <div
+                          className="skel-shimmer"
+                          style={{
+                            width: b.w,
+                            height: 36,
+                            borderRadius: 18,
+                          }}
+                          aria-hidden="true"
+                        />
+                      </div>
+                    ))}
+                    <span className="sr-only">Loading conversation…</span>
                   </div>
                 ) : groupedMessages.length === 0 ? (
                   <div className="mm-thread-empty-bubbles">

@@ -845,3 +845,80 @@
     min-width: 0;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .pay-method-card (was 1/2 → 2/3) */
+.pay-page .pay-method-card {
+  transition:
+    transform 240ms var(--spring),
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+.pay-page .pay-method-card:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-method-card:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-link-btn (was 1/2 → 2/3) */
+.pay-page .pay-link-btn {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease;
+}
+.pay-page .pay-link-btn:not(:disabled):hover  { transform: translate(2px, 2px); }
+.pay-page .pay-link-btn:not(:disabled):active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-method-add (was 1/2 → 2/3) */
+.pay-page .pay-method-add {
+  transition:
+    transform 240ms var(--spring),
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.pay-page .pay-method-add:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-method-add:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-preset-btn (was 1/2 → 2/3) */
+.pay-page .pay-preset-btn {
+  transition:
+    transform 240ms var(--spring),
+    border-color 240ms ease,
+    color 240ms ease,
+    background 240ms ease;
+}
+.pay-page .pay-preset-btn:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-preset-btn:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .pay-history-row — hover background only (table row); add canonical
+   shift for visual consistency with rest of suite. */
+.pay-page .pay-history-row {
+  transition:
+    background 240ms ease,
+    transform 240ms var(--spring);
+}
+.pay-page .pay-history-row:hover  { transform: translate(2px, 2px); }
+.pay-page .pay-history-row:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pay-page .pay-method-card,
+  .pay-page .pay-method-card:hover,
+  .pay-page .pay-method-card:active,
+  .pay-page .pay-link-btn,
+  .pay-page .pay-link-btn:hover,
+  .pay-page .pay-link-btn:active,
+  .pay-page .pay-method-add,
+  .pay-page .pay-method-add:hover,
+  .pay-page .pay-method-add:active,
+  .pay-page .pay-preset-btn,
+  .pay-page .pay-preset-btn:hover,
+  .pay-page .pay-preset-btn:active,
+  .pay-page .pay-history-row,
+  .pay-page .pay-history-row:hover,
+  .pay-page .pay-history-row:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

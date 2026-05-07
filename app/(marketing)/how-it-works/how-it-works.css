@@ -631,3 +631,182 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   How-It-Works Uplift v2 (2026-05-07) — Liquid Glass + Atmosphere + Color
+   Layered on top of v11 Marketing register. Mirrors merchant dashboard /
+   analytics atmospheric backdrop + glass section cards. CSS-only.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.hiw-root {
+  --lg-bg-std:   rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-blur-std: blur(24px) saturate(1.4);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
+                 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
+                 0 16px 48px rgba(60, 45, 30, 0.10);
+  position: relative;
+  isolation: isolate;
+}
+
+/* 5-layer atmospheric backdrop — same recipe as merchant dashboard */
+.hiw-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+.hiw-root > * { position: relative; z-index: 1; }
+
+/* Colorful section dividers — red dot before each H2, gradient under */
+.hiw-root .hiw-section-h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+.hiw-root .hiw-section-h2::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  flex-shrink: 0;
+}
+.hiw-root .hiw-section-h2::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -10px;
+  height: 2px; width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(193, 18, 31, 0.55) 0%,
+    rgba(191, 161, 112, 0.55) 35%,
+    rgba(0, 133, 255, 0.45) 70%,
+    rgba(191, 161, 112, 0) 100%
+  );
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Glass step cards — merchant flow with numbered red dots + connecting line */
+.hiw-root .hiw-step-row {
+  position: relative;
+}
+@media (min-width: 961px) {
+  .hiw-root .hiw-merchant .hiw-step-row::before {
+    content: "";
+    position: absolute;
+    top: 56px;
+    left: 8%; right: 8%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      rgba(193, 18, 31, 0) 0%,
+      rgba(193, 18, 31, 0.45) 20%,
+      rgba(191, 161, 112, 0.45) 60%,
+      rgba(0, 133, 255, 0) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+}
+
+.hiw-root .hiw-step-card {
+  position: relative;
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 1;
+}
+.hiw-root .hiw-step-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 1;
+  border-radius: 20px 20px 0 0;
+}
+.hiw-root .hiw-merchant .hiw-step-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
+.hiw-root .hiw-merchant .hiw-step-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
+.hiw-root .hiw-merchant .hiw-step-card:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
+.hiw-root .hiw-step-card:hover {
+  background: var(--lg-bg-light);
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+/* Numbered red dot — circular badge instead of plain numeral */
+.hiw-root .hiw-step-card .hiw-step-num--red {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  color: var(--snow);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0;
+  box-shadow:
+    0 0 0 6px rgba(193, 18, 31, 0.10),
+    0 4px 12px rgba(193, 18, 31, 0.18);
+}
+
+/* Creator photo cards — glass surround */
+.hiw-root .hiw-creator-card {
+  background: var(--lg-bg-std);
+  -webkit-backdrop-filter: var(--lg-blur-std);
+          backdrop-filter: var(--lg-blur-std);
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-1);
+  overflow: hidden;
+}
+.hiw-root .hiw-creator-card:hover {
+  box-shadow:
+    var(--lg-spec-top),
+    var(--lg-spec-bot),
+    var(--lg-edge),
+    var(--lg-shadow-2);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .hiw-root::before {
+    background: var(--surface-2) !important;
+    opacity: 0.6 !important;
+  }
+  .hiw-root .hiw-step-card,
+  .hiw-root .hiw-creator-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}

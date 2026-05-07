@@ -20,6 +20,7 @@ import AttributionPulse from "./components/AttributionPulse";
 import YesterdayRecap from "./components/YesterdayRecap";
 import NextOpportunities from "./components/NextOpportunities";
 import "./today.css";
+import "@/app/(merchant)/merchant/_anim/anim.css";
 
 export default function TodayPage() {
   /* Data: invites/threads/notifications/attribution come from the SWR cache
@@ -115,7 +116,7 @@ export default function TodayPage() {
      hydrates, the real components mount in place. */
   if (isLoading || !today) {
     return (
-      <main className="today-page" aria-label="Today (loading)">
+      <main className="today-page anim-page" aria-label="Today (loading)">
         <div className="today-skel-hero">
           <SkeletonPanel />
         </div>
@@ -130,7 +131,7 @@ export default function TodayPage() {
   }
 
   return (
-    <main className="today-page" aria-label="Today">
+    <main className="today-page anim-page" aria-label="Today">
       <HeroBrief
         greeting={now == null ? "" : greetingFor(now, "Maya")}
         dateLine={now == null ? "" : dateLineFor(now)}

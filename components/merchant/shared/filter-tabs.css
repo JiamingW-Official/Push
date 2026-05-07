@@ -52,3 +52,20 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   The active-state filter chip should still feel pressable. Note the
+   inactive .btn-pill base lives in globals.css (§ 9 of Design.md).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ms-filter-tabs-btn--active:hover  { transform: translate(2px, 2px); }
+.ms-filter-tabs-btn--active:active { transform: translate(3px, 3px) scale(0.98); background: var(--char); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-filter-tabs-btn--active:hover,
+  .ms-filter-tabs-btn--active:active {
+    transform: none !important;
+  }
+}

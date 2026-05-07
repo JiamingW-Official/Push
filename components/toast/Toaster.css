@@ -158,3 +158,39 @@
     width: auto;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+
+   Note: The toast container itself is in the documented-exception list —
+   it already animates in/out via `toast-in` keyframes (entry/exit), so
+   adding hover/active transforms to `.toast` would conflict. We only
+   apply the canonical signature to the interactive *children*: action
+   button + close button.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .toast__action — already had hover→2/2, add :active for parity */
+.toast__action:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* .toast__close — was no transform, add canonical hover/active */
+.toast__close {
+  transition:
+    color 240ms ease,
+    background 240ms ease,
+    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toast__close:hover  { transform: translate(2px, 2px); }
+.toast__close:active { transform: translate(3px, 3px) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast__action:active,
+  .toast__close,
+  .toast__close:hover,
+  .toast__close:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

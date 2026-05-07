@@ -513,3 +513,20 @@
     padding: 6px 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Adds :active for parity. Most QR surfaces already
+   use 2/3 hover values from earlier waves; this just patches gaps.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .qr-preview-size-btn (had hover only — add :active) */
+.qr-preview-size-btn:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qr-preview-size-btn:active {
+    transform: none !important;
+  }
+}

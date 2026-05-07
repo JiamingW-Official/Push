@@ -911,3 +911,55 @@
     max-width: calc(100vw - 32px);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave-8 — Interaction Consistency Pass (2026-05-07)
+   APPENDED ONLY. Canonical hover→2/2, active→3/3 scale 0.98.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* .int-subnav__back (was 1px hover, no active → 2/3) */
+.int-shell .int-subnav__back {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease;
+}
+.int-shell .int-subnav__back:hover  { transform: translate(2px, 2px); }
+.int-shell .int-subnav__back:active { transform: translate(3px, 3px) scale(0.98); }
+
+/* .int-tab (was 1/2 → 2/3) */
+.int-shell .int-tab {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease,
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.int-shell .int-tab:hover  { transform: translate(2px, 2px); }
+.int-shell .int-tab:active { transform: translate(3px, 3px) scale(0.98); background: var(--mist); }
+.int-shell .int-tab[aria-pressed="true"]:active { background: var(--char); }
+
+/* .int-card__disconnect (was 1/2 → 2/3) */
+.int-shell .int-card__disconnect {
+  transition:
+    transform 240ms var(--spring),
+    color 240ms ease,
+    border-color 240ms ease,
+    background 240ms ease;
+}
+.int-shell .int-card__disconnect:hover  { transform: translate(2px, 2px); }
+.int-shell .int-card__disconnect:active { transform: translate(3px, 3px) scale(0.98); background: var(--brand-red-tint); }
+
+@media (prefers-reduced-motion: reduce) {
+  .int-shell .int-subnav__back,
+  .int-shell .int-subnav__back:hover,
+  .int-shell .int-subnav__back:active,
+  .int-shell .int-tab,
+  .int-shell .int-tab:hover,
+  .int-shell .int-tab:active,
+  .int-shell .int-card__disconnect,
+  .int-shell .int-card__disconnect:hover,
+  .int-shell .int-card__disconnect:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}

@@ -16,6 +16,7 @@ import {
 import { useToast } from "@/components/toast/Toaster";
 import { ApplicantDetailDialog } from "./ApplicantDetailDialog";
 import "./applicants.css";
+import "../_anim/anim.css";
 
 type ApplicantsTab = "all" | "pending" | "approved" | "rejected" | "shortlist";
 type Decision = "accept" | "decline" | "shortlist";
@@ -287,7 +288,7 @@ export default function ApplicantsPageClient({
   const pendingCount = tabCounts.pending;
 
   return (
-    <div className="ap-page">
+    <div className="ap-page anim-page">
       <PageHeader
         eyebrow="LINKS · TALENT PIPELINE"
         title="Applicants"
@@ -393,7 +394,7 @@ export default function ApplicantsPageClient({
               );
             })()
           ) : (
-            <div className="ap-card-grid">
+            <div className="ap-card-grid anim-stagger">
               {filteredApplicants.map((applicant, idx) => {
                 const mappedStatus = toSharedStatus(applicant.status);
                 const isPending = pendingIds.includes(applicant.id);

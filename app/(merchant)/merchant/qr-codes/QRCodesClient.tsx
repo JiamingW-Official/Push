@@ -13,6 +13,7 @@ import PosterPreview from "@/components/merchant/qr/PosterPreview";
 import type { PosterType } from "@/lib/attribution/mock-qr-codes-extended";
 import { useToast } from "@/components/toast/Toaster";
 import "./qr-codes.css";
+import "../_anim/anim.css";
 
 type PosterFilterType =
   | "all"
@@ -157,7 +158,7 @@ export default function QRCodesClient({
     .reduce((sum, item) => sum + Math.min(item.scan_count, 8), 0);
 
   return (
-    <section className="qr-page">
+    <section className="qr-page anim-page">
       <PageHeader
         eyebrow="CREATIVE"
         title="QR Codes & Posters"
@@ -230,7 +231,10 @@ export default function QRCodesClient({
               />
             </div>
           ) : (
-            <div className="qr-poster-grid" aria-label="Poster template grid">
+            <div
+              className="qr-poster-grid anim-stagger"
+              aria-label="Poster template grid"
+            >
               {filtered.map((item: QRCodeRecord) => (
                 <article key={item.id} className="qr-poster-card">
                   <header className="qr-poster-head">
