@@ -1,10 +1,23 @@
 "use client";
 
+/* ============================================================
+   Merchant Messages — v11 iMessage Two-Pane Layout
+   Mirror of /creator/inbox/messages, role-swapped: merchant is
+   the "self" / outgoing side; creator is the "other" / left
+   bubble side. Authority: Design.md § 9 (Filled Secondary N2W
+   Blue for outgoing self-bubbles), § 6 (negative-space tokens),
+   § 16 (Product UI eyebrow LINKS · DIRECT — no parens).
+   Layout: PageHeader on top, then 2-pane (360px thread list +
+   flex-1 conversation) inside the existing .msg-page
+   atmospheric backdrop.
+   ============================================================ */
+
 import {
   FormEvent,
   KeyboardEvent,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -12,19 +25,22 @@ import {
 import { EmptyState, PageHeader } from "@/components/merchant/shared";
 import type { Message, Thread, ThreadParticipant } from "@/lib/messaging/types";
 import { useThreadStream } from "@/lib/realtime/use-thread-stream";
+import {
+  buildMerchantMockMessages,
+  buildMerchantMockThreads,
+  DEMO_MERCHANT_USER_ID,
+} from "@/lib/messaging/merchant-mock-threads";
 import "./messages.css";
 
 type ThreadWithMessages = Thread & { messages: Message[] };
+type FilterKey = "all" | "unread" | "needs-reply";
+type GroupLabel = "TODAY" | "THIS WEEK" | "EARLIER";
+
+const GROUP_ORDER: GroupLabel[] = ["TODAY", "THIS WEEK", "EARLIER"];
 
 /* ──────────────────────────────────────────────────────────────────
-   Time formatting — bubble timestamps stay clock-style; thread list
-   uses relative ago for scannability (parity with creator messages). */
-function formatClock(iso: string) {
-  return new Date(iso).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
+   Time helpers — clock for bubble stamps, relative ago for the
+   thread list, full bubble stamp every ~30 min in the conversation. */
 
 function timeAgo(iso: string): string {
   const diffMs = Date.now() - new Date(iso).getTime();
@@ -41,20 +57,33 @@ function timeAgo(iso: string): string {
   });
 }
 
+function formatBubbleStamp(iso: string) {
+  const d = new Date(iso);
+  const wd = d.toLocaleDateString(undefined, { weekday: "short" });
+  const md = d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+  const hm = d.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  return `${wd}, ${md} at ${hm}`;
+}
+
+function groupOf(iso: string): GroupLabel {
+  const ms = Date.now() - new Date(iso).getTime();
+  const day = 24 * 60 * 60 * 1000;
+  if (ms < day) return "TODAY";
+  if (ms < 7 * day) return "THIS WEEK";
+  return "EARLIER";
+}
+
 /* ──────────────────────────────────────────────────────────────────
-   Avatar — colored initial tile; merchant view sees creators / Push
-   platform / payments roles. Closed token list compliant.            */
-const ROLE_LABEL: Record<
-  NonNullable<ThreadParticipant["role"]> | "platform",
-  string
-> = {
-  creator: "CREATOR",
-  merchant: "MERCHANT",
-  platform: "PLATFORM",
-};
+   Avatar — colored initial tile; closed-token list compliant.        */
 
 function avatarTone(name: string): string {
-  // Deterministic hash → one of 4 allowed tones (closed token list).
   const tones = [
     "var(--brand-red)",
     "var(--accent-blue)",
@@ -71,13 +100,117 @@ function initialOf(name: string): string {
   return name.trim().charAt(0).toUpperCase() || "?";
 }
 
-/* ──────────────────────────────────────────────────────────────────
-   Truncate at render (CSS already handles single-line ellipsis, but
-   we cap at ~140 chars to bound DOM weight for chatty payloads).     */
 function preview(content: string): string {
   if (content.length <= 140) return content;
   return `${content.slice(0, 137)}…`;
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   Other-party resolver — merchant view excludes the merchant's own
+   participant. Falls back to a sensible default if missing.          */
+
+function otherParty(thread: Thread): ThreadParticipant {
+  return (
+    thread.participants.find((p) => p.role !== "merchant") ?? {
+      userId: "unknown",
+      role: "creator",
+      name: "Unknown creator",
+      avatar: "",
+    }
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Bubble grouping — mirrors creator inbox: collapses consecutive
+   same-sender messages within a 5-min window so tails can trim;
+   shows a date stamp on the first message and after any 30-min gap. */
+
+type GroupedMsg = Message & {
+  position: "single" | "top" | "mid" | "bottom";
+  showStamp: boolean;
+};
+
+function groupMessages(msgs: Message[]): GroupedMsg[] {
+  const out: GroupedMsg[] = [];
+  for (let i = 0; i < msgs.length; i += 1) {
+    const m = msgs[i];
+    const prev = msgs[i - 1];
+    const next = msgs[i + 1];
+    const samePrev =
+      prev &&
+      prev.senderRole === m.senderRole &&
+      new Date(m.createdAt).getTime() - new Date(prev.createdAt).getTime() <
+        5 * 60_000;
+    const sameNext =
+      next &&
+      next.senderRole === m.senderRole &&
+      new Date(next.createdAt).getTime() - new Date(m.createdAt).getTime() <
+        5 * 60_000;
+
+    let position: GroupedMsg["position"];
+    if (!samePrev && !sameNext) position = "single";
+    else if (!samePrev && sameNext) position = "top";
+    else if (samePrev && sameNext) position = "mid";
+    else position = "bottom";
+
+    const gap = prev
+      ? new Date(m.createdAt).getTime() - new Date(prev.createdAt).getTime()
+      : Infinity;
+    const showStamp = !samePrev || gap > 30 * 60_000;
+
+    out.push({ ...m, position, showStamp });
+  }
+  return out;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Inline icons — sized to match the iMessage register (12-16px). */
+
+function SearchIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4" />
+      <path
+        d="M10 10L13 13"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+function ChevronLeft() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path
+        d="M9 3L5 7l4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+function SendIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <path
+        d="M2 7l10-5-3.5 5L12 12 2 7z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Thread fetch — when the active thread is a real DB-backed row,
+   we hit the API; when it's a demo thread (id starts with "mt-"),
+   we hydrate from the local mock file so the page works without
+   a session.                                                        */
 
 async function fetchThread(threadId: string): Promise<ThreadWithMessages> {
   const response = await fetch(`/api/merchant/messages/threads/${threadId}`, {
@@ -91,18 +224,8 @@ async function fetchThread(threadId: string): Promise<ThreadWithMessages> {
   return response.json();
 }
 
-/* ──────────────────────────────────────────────────────────────────
-   Other-party resolver — merchant view excludes the merchant's own
-   participant; falls back to a sensible default if missing.          */
-function otherParty(thread: Thread): ThreadParticipant {
-  return (
-    thread.participants.find((p) => p.role !== "merchant") ?? {
-      userId: "unknown",
-      role: "creator",
-      name: "Unknown creator",
-      avatar: "",
-    }
-  );
+function isDemoThread(threadId: string): boolean {
+  return threadId.startsWith("mt-");
 }
 
 export default function MessagesClient({
@@ -110,19 +233,31 @@ export default function MessagesClient({
 }: {
   initialThreads: Thread[];
 }) {
-  const [threads, setThreads] = useState<Thread[]>(initialThreads);
+  /* When the server returns no threads (demo / no-session), fall back
+     to the merchant-mock seeds so the page is never empty. */
+  const seedThreads = useMemo<Thread[]>(
+    () =>
+      initialThreads.length > 0 ? initialThreads : buildMerchantMockThreads(),
+    [initialThreads],
+  );
+
+  const [threads, setThreads] = useState<Thread[]>(seedThreads);
   const [activeThreadId, setActiveThreadId] = useState<string | null>(
-    initialThreads[0]?.id ?? null,
+    seedThreads[0]?.id ?? null,
   );
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoadingMessages, setIsLoadingMessages] = useState(
-    initialThreads.length > 0,
+    seedThreads.length > 0,
   );
+
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<FilterKey>("all");
 
   /* ── Realtime stream — appends only new INSERTs from Supabase Realtime.
      Deduplicates against `messages` so optimistic-send entries are not
-     doubled (both the HTTP response and the Realtime event carry the same id). */
+     doubled. Demo threads never emit events (no DB row), so the hook
+     stays idle for them — wiring is preserved verbatim. */
   const { messages: liveMessages, status: streamStatus } =
     useThreadStream(activeThreadId);
 
@@ -140,9 +275,10 @@ export default function MessagesClient({
 
   const listRef = useRef<HTMLDivElement | null>(null);
   const bubblesRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
-  /* Load + mark-read whenever active thread changes. */
+  /* Load + mark-read whenever active thread changes. Demo threads
+     resolve from the local mock file; real threads hit the API. */
   useEffect(() => {
     if (!activeThreadId) {
       setMessages([]);
@@ -152,6 +288,18 @@ export default function MessagesClient({
 
     let cancelled = false;
     setIsLoadingMessages(true);
+
+    if (isDemoThread(activeThreadId)) {
+      const mockMsgs = buildMerchantMockMessages(activeThreadId) ?? [];
+      setMessages(mockMsgs);
+      setThreads((prev) =>
+        prev.map((t) =>
+          t.id === activeThreadId ? { ...t, unreadCount: 0 } : t,
+        ),
+      );
+      setIsLoadingMessages(false);
+      return;
+    }
 
     fetchThread(activeThreadId)
       .then((thread) => {
@@ -196,11 +344,11 @@ export default function MessagesClient({
     };
   }, [activeThreadId]);
 
-  /* Auto-scroll to newest bubble whenever message list changes. */
-  useEffect(() => {
+  /* Auto-scroll to newest bubble whenever the message list changes. */
+  useLayoutEffect(() => {
     if (!bubblesRef.current) return;
     bubblesRef.current.scrollTop = bubblesRef.current.scrollHeight;
-  }, [messages]);
+  }, [messages, activeThreadId]);
 
   const activeThread = useMemo(
     () => threads.find((thread) => thread.id === activeThreadId) ?? null,
@@ -209,28 +357,100 @@ export default function MessagesClient({
 
   const activeOther = activeThread ? otherParty(activeThread) : null;
 
-  const totalUnread = useMemo(
-    () => threads.reduce((sum, t) => sum + (t.unreadCount ?? 0), 0),
+  const unreadCount = useMemo(
+    () => threads.filter((t) => (t.unreadCount ?? 0) > 0).length,
     [threads],
   );
 
-  /* Pinned: highest-priority thread = first unread, else first thread.
-     Single liquid-glass tile (≤1 per viewport) when unread > 0.       */
-  const pinned = useMemo(
-    () => threads.find((t) => (t.unreadCount ?? 0) > 0) ?? null,
-    [threads],
-  );
+  const needsReplyCount = useMemo(() => {
+    const now = Date.now();
+    return threads.filter((t) => {
+      const last = t.lastMessage;
+      if (!last) return false;
+      // "Needs reply" = unread OR last incoming msg older than 12h with no
+      // outgoing follow-up. We approximate by checking unreadCount > 0 OR
+      // updatedAt > 12h with the last sender being the creator.
+      if ((t.unreadCount ?? 0) > 0) return true;
+      const isFromOther = (last.senderId !== otherParty(t).userId) === false;
+      if (!isFromOther) return false;
+      return now - new Date(last.createdAt).getTime() > 12 * 60 * 60 * 1000;
+    }).length;
+  }, [threads]);
 
-  /* Keyboard navigation — J/K cycle through visible threads, Enter
-     opens the focused row. Disabled while typing in the input.        */
-  const orderedIds = useMemo(() => threads.map((t) => t.id), [threads]);
+  /* Filter + search pipeline. */
+  const filtered = useMemo(() => {
+    let result = threads;
+    if (filter === "unread") {
+      result = result.filter((t) => (t.unreadCount ?? 0) > 0);
+    } else if (filter === "needs-reply") {
+      const now = Date.now();
+      result = result.filter((t) => {
+        if ((t.unreadCount ?? 0) > 0) return true;
+        return now - new Date(t.updatedAt).getTime() > 12 * 60 * 60 * 1000;
+      });
+    }
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      result = result.filter((t) => {
+        const other = otherParty(t);
+        return (
+          other.name.toLowerCase().includes(q) ||
+          t.lastMessage.content.toLowerCase().includes(q) ||
+          (t.campaignTitle?.toLowerCase().includes(q) ?? false)
+        );
+      });
+    }
+    return result;
+  }, [threads, filter, query]);
+
+  /* Group filtered threads by recency: TODAY · THIS WEEK · EARLIER. */
+  const grouped = useMemo(() => {
+    return GROUP_ORDER.map((label) => ({
+      label,
+      threads: filtered.filter((t) => groupOf(t.updatedAt) === label),
+    })).filter((g) => g.threads.length > 0);
+  }, [filtered]);
+
+  const orderedIds = useMemo(() => filtered.map((t) => t.id), [filtered]);
 
   const handleSend = useCallback(
-    async (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+    async (event?: FormEvent<HTMLFormElement>) => {
+      event?.preventDefault();
 
       const trimmed = inputValue.trim();
       if (!trimmed || !activeThreadId) return;
+
+      // Demo threads — append locally and bail (no API).
+      if (isDemoThread(activeThreadId)) {
+        const newMsg: Message = {
+          id: `mm-local-${Date.now()}`,
+          threadId: activeThreadId,
+          senderId: DEMO_MERCHANT_USER_ID,
+          senderRole: "merchant",
+          content: trimmed,
+          contentType: "text",
+          attachments: [],
+          createdAt: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, newMsg]);
+        setThreads((prev) =>
+          prev.map((t) =>
+            t.id === activeThreadId
+              ? {
+                  ...t,
+                  lastMessage: {
+                    content: trimmed,
+                    senderId: DEMO_MERCHANT_USER_ID,
+                    createdAt: newMsg.createdAt,
+                  },
+                  updatedAt: newMsg.createdAt,
+                }
+              : t,
+          ),
+        );
+        setInputValue("");
+        return;
+      }
 
       const response = await fetch(
         `/api/merchant/messages/threads/${activeThreadId}/messages`,
@@ -288,7 +508,7 @@ export default function MessagesClient({
         if (next) setActiveThreadId(next);
       } else if (e.key === "r" && activeThreadId) {
         e.preventDefault();
-        inputRef.current?.focus();
+        composerRef.current?.focus();
       }
     };
     window.addEventListener("keydown", handler);
@@ -314,6 +534,15 @@ export default function MessagesClient({
     [],
   );
 
+  const handleComposerKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      void handleSend();
+    }
+  };
+
+  const groupedMessages = useMemo(() => groupMessages(messages), [messages]);
+
   return (
     <section className="msg-page">
       <PageHeader
@@ -335,230 +564,327 @@ export default function MessagesClient({
           />
         </div>
       ) : (
-        <>
-          {/* ── Pinned (≤1 liquid-glass tile per viewport) ───────────
-             Surfaces a single unread thread as a focus magnet. Click
-             selects + scrolls to the thread; does not navigate away. */}
-          {pinned ? (
-            <button
-              type="button"
-              className="msg-pinned"
-              onClick={() => setActiveThreadId(pinned.id)}
-              aria-label={`Open conversation with ${otherParty(pinned).name}`}
-            >
-              <span className="msg-pinned-eyebrow">
-                ACTIVE · UNREAD {totalUnread}
-              </span>
-              <span className="msg-pinned-row">
-                <span
-                  className="msg-pinned-avatar"
-                  style={{ background: avatarTone(otherParty(pinned).name) }}
-                  aria-hidden
-                >
-                  {initialOf(otherParty(pinned).name)}
+        <div
+          className={`mm-pane-layout${activeThread ? " has-active" : ""}`}
+          aria-label="Messages"
+        >
+          {/* ── Left pane: thread list ──────────────────────────── */}
+          <aside className="mm-list-pane" aria-label="Conversations">
+            <header className="mm-list-pane-head">
+              <div className="mm-list-pane-title-row">
+                <span className="mm-list-pane-eyebrow">
+                  THREADS · {threads.length}
                 </span>
-                <span className="msg-pinned-body">
-                  <span className="msg-pinned-name">
-                    {otherParty(pinned).name}
-                  </span>
-                  <span className="msg-pinned-preview">
-                    {preview(pinned.lastMessage.content)}
-                  </span>
-                </span>
-                <span className="msg-pinned-meta">
-                  <span className="msg-pinned-time">
-                    {timeAgo(pinned.updatedAt)}
-                  </span>
-                  <span className="msg-pinned-cta">Open</span>
-                </span>
-              </span>
-            </button>
-          ) : null}
-
-          <div className="msg-layout">
-            <aside className="msg-sidebar" aria-label="Conversation list">
-              <div className="msg-sidebar-head" aria-hidden>
-                <span className="msg-sidebar-eyebrow">THREADS</span>
-                <span className="msg-sidebar-count">{threads.length}</span>
               </div>
 
-              <div ref={listRef} className="msg-sidebar-list" role="list">
-                {threads.map((thread) => {
-                  const other = otherParty(thread);
-                  const active = thread.id === activeThreadId;
-                  const unread = (thread.unreadCount ?? 0) > 0;
+              <label className="mm-list-search">
+                <span className="mm-list-search-icon" aria-hidden>
+                  <SearchIcon />
+                </span>
+                <input
+                  type="search"
+                  placeholder="Search creators, campaigns…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  aria-label="Search conversations"
+                />
+              </label>
 
-                  return (
-                    <button
-                      key={thread.id}
-                      data-thread-id={thread.id}
-                      role="listitem"
-                      type="button"
-                      onClick={() => setActiveThreadId(thread.id)}
-                      onKeyDown={(e) => handleRowKey(e, thread.id)}
-                      aria-current={active ? "true" : undefined}
-                      aria-label={`${other.name}${unread ? " (unread)" : ""}`}
-                      className={[
-                        "msg-thread",
-                        active ? "msg-thread--active" : "",
-                        unread ? "msg-thread--unread" : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                    >
-                      <span
-                        className="msg-avatar"
-                        style={{ background: avatarTone(other.name) }}
-                        aria-hidden
-                      >
-                        {other.avatar ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={other.avatar} alt="" />
-                        ) : (
-                          initialOf(other.name)
-                        )}
-                      </span>
+              <div
+                className="mm-list-filters"
+                role="tablist"
+                aria-label="Filter"
+              >
+                {(
+                  [
+                    { value: "all", label: "All", count: 0 },
+                    { value: "unread", label: "Unread", count: unreadCount },
+                    {
+                      value: "needs-reply",
+                      label: "Needs reply",
+                      count: needsReplyCount,
+                    },
+                  ] as Array<{
+                    value: FilterKey;
+                    label: string;
+                    count: number;
+                  }>
+                ).map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    role="tab"
+                    aria-selected={filter === opt.value}
+                    className={`mm-list-filter-chip${filter === opt.value ? " is-active" : ""}`}
+                    onClick={() => setFilter(opt.value)}
+                  >
+                    <span>{opt.label}</span>
+                    {opt.count > 0 && (
+                      <span className="mm-list-filter-badge">{opt.count}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </header>
 
-                      <span className="msg-thread-body">
-                        <span className="msg-thread-top">
-                          <span className="msg-name">{other.name}</span>
+            <div ref={listRef} className="mm-list-body">
+              {grouped.length === 0 ? (
+                <div className="mm-list-empty">
+                  <p>
+                    {query ? `Nothing matches "${query}".` : "Quiet for now."}
+                  </p>
+                </div>
+              ) : (
+                grouped.map((g) => (
+                  <div key={g.label} className="mm-list-group">
+                    <p className="mm-list-group-label">{g.label}</p>
+                    {g.threads.map((thread) => {
+                      const other = otherParty(thread);
+                      const active = thread.id === activeThreadId;
+                      const unread = (thread.unreadCount ?? 0) > 0;
+
+                      return (
+                        <button
+                          key={thread.id}
+                          data-thread-id={thread.id}
+                          type="button"
+                          onClick={() => setActiveThreadId(thread.id)}
+                          onKeyDown={(e) => handleRowKey(e, thread.id)}
+                          aria-current={active ? "true" : undefined}
+                          aria-label={`${other.name}${unread ? " (unread)" : ""}`}
+                          className={[
+                            "mm-list-row",
+                            active ? "is-active" : "",
+                            unread ? "is-unread" : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          {unread && (
+                            <span className="mm-list-row-dot" aria-hidden />
+                          )}
                           <span
-                            className="msg-time"
-                            title={new Date(thread.updatedAt).toLocaleString()}
+                            className="mm-list-row-avatar"
+                            style={{ background: avatarTone(other.name) }}
+                            aria-hidden
                           >
-                            {timeAgo(thread.updatedAt)}
+                            {other.avatar ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={other.avatar} alt="" />
+                            ) : (
+                              initialOf(other.name)
+                            )}
                           </span>
-                        </span>
-                        <span className="msg-thread-bottom">
-                          <span className="msg-preview">
-                            {preview(thread.lastMessage.content)}
-                          </span>
-                          {unread ? (
-                            <span
-                              className="msg-unread"
-                              aria-label={`${thread.unreadCount} unread`}
-                            >
-                              {thread.unreadCount}
+                          <span className="mm-list-row-body">
+                            <span className="mm-list-row-top">
+                              <span className="mm-list-row-name">
+                                {other.name}
+                              </span>
+                              <span
+                                className="mm-list-row-time"
+                                title={new Date(
+                                  thread.updatedAt,
+                                ).toLocaleString()}
+                              >
+                                {timeAgo(thread.updatedAt)}
+                              </span>
                             </span>
-                          ) : null}
-                        </span>
-                        {thread.campaignTitle ? (
-                          <span className="msg-thread-tag">
-                            {thread.campaignTitle}
+                            <span className="mm-list-row-bottom">
+                              <span className="mm-list-row-preview">
+                                {preview(thread.lastMessage.content)}
+                              </span>
+                              {unread ? (
+                                <span
+                                  className="mm-list-row-unread"
+                                  aria-label={`${thread.unreadCount} unread`}
+                                >
+                                  {thread.unreadCount}
+                                </span>
+                              ) : null}
+                            </span>
+                            {thread.campaignTitle ? (
+                              <span className="mm-list-row-tag">
+                                {thread.campaignTitle}
+                              </span>
+                            ) : null}
                           </span>
-                        ) : null}
-                      </span>
-                    </button>
-                  );
-                })}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))
+              )}
+            </div>
+
+            <p className="mm-list-hint" aria-hidden>
+              <kbd>J</kbd> <kbd>K</kbd> nav · <kbd>R</kbd> reply
+            </p>
+          </aside>
+
+          {/* ── Right pane: active conversation ─────────────────── */}
+          <section
+            className="mm-thread-pane"
+            aria-label="Conversation"
+            aria-live="polite"
+          >
+            {!activeThread ? (
+              <div className="mm-thread-empty">
+                <span className="mm-thread-empty-icon" aria-hidden>
+                  <SearchIcon />
+                </span>
+                <h3 className="mm-thread-empty-title">Pick a conversation.</h3>
+                <p className="mm-thread-empty-body">
+                  Tap any thread on the left to read it here. Use J / K to
+                  cycle.
+                </p>
               </div>
-
-              <p className="msg-hint" aria-hidden>
-                <kbd>J</kbd> <kbd>K</kbd> nav · <kbd>R</kbd> reply
-              </p>
-            </aside>
-
-            <section
-              className="msg-chat"
-              aria-label="Chat window"
-              aria-live="polite"
-            >
-              <header className="msg-chat-head">
-                <div className="msg-chat-id">
+            ) : (
+              <>
+                <header className="mm-thread-head">
+                  <button
+                    type="button"
+                    className="mm-thread-back"
+                    onClick={() => setActiveThreadId(null)}
+                    aria-label="Back to list"
+                  >
+                    <ChevronLeft />
+                  </button>
                   {activeOther ? (
                     <span
-                      className="msg-chat-avatar"
+                      className="mm-thread-head-avatar"
                       style={{ background: avatarTone(activeOther.name) }}
                       aria-hidden
                     >
                       {initialOf(activeOther.name)}
                     </span>
                   ) : null}
-                  <div className="msg-chat-id-text">
-                    <h2>{activeOther?.name ?? "Conversation"}</h2>
-                    {activeOther ? (
-                      <span className="msg-chat-role">
-                        {ROLE_LABEL[activeOther.role] ??
-                          activeOther.role.toUpperCase()}
-                        {activeThread?.campaignTitle
-                          ? ` · ${activeThread.campaignTitle}`
-                          : ""}
-                      </span>
-                    ) : null}
+                  <div className="mm-thread-head-info">
+                    <p className="mm-thread-head-name">
+                      {activeOther?.name ?? "Conversation"}
+                    </p>
+                    <p className="mm-thread-head-meta">
+                      CREATOR
+                      {activeThread.campaignTitle
+                        ? ` · ${activeThread.campaignTitle.toUpperCase()}`
+                        : ""}
+                    </p>
                   </div>
-                </div>
-                {/* Live/offline stream status pill — shown only when open or degraded */}
-                {streamStatus === "open" ? (
-                  <span
-                    className="msg-live-pill"
-                    aria-label="Live updates active"
+                  {/* Live/offline pill — preserved from Wave C realtime wiring */}
+                  {streamStatus === "open" ? (
+                    <span
+                      className="msg-live-pill"
+                      aria-label="Live updates active"
+                    >
+                      <span className="msg-live-dot" aria-hidden />
+                      live
+                    </span>
+                  ) : streamStatus === "closed" || streamStatus === "error" ? (
+                    <span
+                      className="msg-live-pill msg-live-pill--offline"
+                      aria-label="Offline"
+                    >
+                      offline
+                    </span>
+                  ) : null}
+                </header>
+
+                {isLoadingMessages ? (
+                  <div className="mm-thread-loading" role="status">
+                    Loading conversation…
+                  </div>
+                ) : groupedMessages.length === 0 ? (
+                  <div className="mm-thread-empty-bubbles">
+                    <p>No messages yet — say hi to get the thread moving.</p>
+                  </div>
+                ) : (
+                  <div className="mm-thread-body" ref={bubblesRef}>
+                    {groupedMessages.map((m) => {
+                      const isSelf = m.senderRole === "merchant";
+                      const groupedClass =
+                        m.position === "top"
+                          ? "is-grouped-top"
+                          : m.position === "mid"
+                            ? "is-grouped-mid"
+                            : m.position === "bottom"
+                              ? "is-grouped-bottom"
+                              : "is-single";
+                      const showAvatar =
+                        !isSelf &&
+                        (m.position === "single" || m.position === "bottom") &&
+                        activeOther;
+                      return (
+                        <div key={m.id}>
+                          {m.showStamp && (
+                            <p
+                              className="mm-bubble-stamp"
+                              suppressHydrationWarning
+                            >
+                              {formatBubbleStamp(m.createdAt)}
+                            </p>
+                          )}
+                          <div
+                            className={[
+                              "mm-bubble-row",
+                              isSelf ? "is-self" : "",
+                              groupedClass,
+                              showAvatar ? "show-avatar" : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                          >
+                            {!isSelf && activeOther ? (
+                              <span
+                                className="mm-bubble-avatar"
+                                style={{
+                                  background: avatarTone(activeOther.name),
+                                }}
+                                aria-hidden
+                              >
+                                {initialOf(activeOther.name)}
+                              </span>
+                            ) : null}
+                            <div
+                              className={`mm-bubble mm-bubble--${isSelf ? "out" : "in"}`}
+                            >
+                              {m.content}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <form className="mm-composer" onSubmit={handleSend}>
+                  <textarea
+                    ref={composerRef}
+                    className="mm-composer-input"
+                    value={inputValue}
+                    onChange={(event) => setInputValue(event.target.value)}
+                    onKeyDown={handleComposerKey}
+                    placeholder={
+                      activeOther
+                        ? `Message ${activeOther.name} · Enter to send`
+                        : "Select a conversation"
+                    }
+                    aria-label="Message input"
+                    rows={1}
+                    disabled={!activeThreadId}
+                  />
+                  <button
+                    type="submit"
+                    className="mm-composer-send"
+                    disabled={!activeThreadId || !inputValue.trim()}
+                    aria-label="Send"
+                    title="Send (Enter)"
                   >
-                    <span className="msg-live-dot" aria-hidden />
-                    live
-                  </span>
-                ) : streamStatus === "closed" || streamStatus === "error" ? (
-                  <span
-                    className="msg-live-pill msg-live-pill--offline"
-                    aria-label="Offline"
-                  >
-                    offline
-                  </span>
-                ) : null}
-              </header>
-
-              {isLoadingMessages ? (
-                <div className="msg-loading" role="status">
-                  Loading conversation…
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="msg-bubbles-empty">
-                  <p>No messages yet — say hi to get the thread moving.</p>
-                </div>
-              ) : (
-                <div ref={bubblesRef} className="msg-bubbles">
-                  {messages.map((message) => {
-                    const own = message.senderRole === "merchant";
-
-                    return (
-                      <article
-                        key={message.id}
-                        className={`msg-bubble ${own ? "msg-bubble--own" : "msg-bubble--other"}`}
-                      >
-                        <p>{message.content}</p>
-                        <time
-                          dateTime={message.createdAt}
-                          title={new Date(message.createdAt).toLocaleString()}
-                        >
-                          {formatClock(message.createdAt)}
-                        </time>
-                      </article>
-                    );
-                  })}
-                </div>
-              )}
-
-              <form className="msg-input-row" onSubmit={handleSend}>
-                <input
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={(event) => setInputValue(event.target.value)}
-                  placeholder={
-                    activeThread ? "Type a message…" : "Select a conversation"
-                  }
-                  aria-label="Message input"
-                  disabled={!activeThreadId}
-                />
-                <button
-                  type="submit"
-                  className="msg-send"
-                  disabled={!activeThreadId || !inputValue.trim()}
-                >
-                  Send
-                </button>
-              </form>
-            </section>
-          </div>
-        </>
+                    <SendIcon />
+                  </button>
+                </form>
+              </>
+            )}
+          </section>
+        </div>
       )}
     </section>
   );

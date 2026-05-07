@@ -939,3 +939,246 @@
             backdrop-filter: none !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   MERCHANT MAP — CartoDB Voyager basemap + status-driven SVG pins
+   Ported from creator /discover MapView design language and
+   adapted for the merchant register (warm grays + brand red,
+   no playful 6-color category palette).
+   ══════════════════════════════════════════════════════════════ */
+
+/* Tile + container chrome — soften saturation, kill default border */
+.merchant-leaflet-wrap .leaflet-tile-pane {
+  filter: saturate(0.94) brightness(1.01);
+}
+.merchant-leaflet-wrap .leaflet-container {
+  font-family: inherit;
+  border-radius: inherit;
+  background: var(--surface, #f8f4e8);
+}
+.merchant-leaflet-wrap .leaflet-control-attribution {
+  display: none;
+}
+
+/* Zoom control — Liquid Glass micro-pill */
+.merchant-leaflet-wrap .leaflet-bar {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(16px);
+  box-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90);
+}
+.merchant-leaflet-wrap .leaflet-bar a {
+  border-radius: 0;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+  background: transparent;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 32px;
+  width: 32px;
+  height: 32px;
+  font-weight: 300;
+}
+.merchant-leaflet-wrap .leaflet-bar a:last-child {
+  border-bottom: none;
+}
+.merchant-leaflet-wrap .leaflet-bar a:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Popup chrome — clean white card, premium shadow, no tail tip */
+.merchant-leaflet-wrap .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  background: var(--snow, #fff);
+  border: none;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.14),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0;
+}
+.merchant-leaflet-wrap .leaflet-popup-tip-container {
+  display: none;
+}
+.merchant-leaflet-wrap .leaflet-popup-close-button {
+  color: var(--ink-4);
+  font-size: 18px;
+  top: 10px;
+  right: 12px;
+  font-weight: 300;
+  line-height: 1;
+}
+.merchant-leaflet-wrap .leaflet-popup-close-button:hover {
+  color: var(--ink);
+}
+.merchant-leaflet-wrap .leaflet-popup-content {
+  margin: 0;
+  width: auto;
+}
+
+/* ── Pin — store-front SVG inside circular ring, status-tinted ── */
+.merchant-loc-pin {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  padding: 0;
+  background: #ffffff;
+  border: 1.5px solid var(--pin-accent, currentColor);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.10);
+  transition:
+    background 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    color 200ms ease,
+    transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
+  cursor: pointer;
+}
+.merchant-loc-pin svg {
+  display: block;
+  flex: none;
+}
+.merchant-loc-pin:hover,
+.merchant-loc-pin--active {
+  background: var(--pin-accent);
+  color: #ffffff;
+  transform: scale(1.20);
+}
+.merchant-loc-pin--active {
+  z-index: 1000;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    0 0 0 3px rgba(193, 18, 31, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.18),
+    0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+/* Closed venues — softer neutral, never recruit attention */
+.merchant-loc-pin--closed {
+  opacity: 0.78;
+  border-color: #c4c7ca;
+  color: #9aa0a6;
+}
+.merchant-loc-pin--closed:hover {
+  background: #9aa0a6;
+  color: #ffffff;
+  opacity: 1;
+}
+.merchant-loc-pin--closed.merchant-loc-pin--active {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    0 0 0 3px rgba(154, 160, 166, 0.22),
+    0 2px 6px rgba(0, 0, 0, 0.16),
+    0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+/* ── Popup body — merchant register typography ── */
+.merchant-map-popup {
+  width: 240px;
+  padding: 16px;
+  font-family: var(--font-body);
+}
+.merchant-map-popup-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display, var(--font-body));
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+.merchant-map-popup-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.merchant-map-popup-title {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+.merchant-map-popup-address {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.merchant-map-popup-stats {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  margin-bottom: 12px;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+.merchant-map-popup-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.merchant-map-popup-stat-value {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.merchant-map-popup-stat-label {
+  font-family: var(--font-display, var(--font-body));
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.merchant-map-popup-cta {
+  display: block;
+  width: 100%;
+  padding: 9px 0;
+  font-family: var(--font-display, var(--font-body));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  background: var(--brand-red, #c1121f);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.merchant-map-popup-cta:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+/* Reduced motion — strip the bottom-right hover shift */
+@media (prefers-reduced-motion: reduce) {
+  .merchant-loc-pin,
+  .merchant-loc-pin:hover,
+  .merchant-loc-pin--active,
+  .merchant-map-popup-cta,
+  .merchant-map-popup-cta:hover {
+    transition: none;
+    transform: none;
+  }
+}
