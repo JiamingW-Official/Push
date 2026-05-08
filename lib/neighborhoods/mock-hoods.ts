@@ -73,17 +73,17 @@ export interface Neighborhood {
 // ---------------------------------------------------------------------------
 
 const CREATORS: Record<string, FeaturedCreator> = {
-  maya: {
-    id: "cr-maya",
-    name: "Maya Chen",
-    handle: "maya.eats.nyc",
+  alex: {
+    id: "cr-alex",
+    name: "Alex Chen",
+    handle: "alex.eats.nyc",
     tier: "proven",
     pushScore: 847,
     campaignsCompleted: 34,
     topCategory: "Food & Drink",
   },
-  alex: {
-    id: "cr-alex",
+  alex_rivera: {
+    id: "cr-alex-rivera",
     name: "Alex Rivera",
     handle: "alex_nyc_lens",
     tier: "operator",
@@ -157,7 +157,7 @@ function makeVisits(
   campaigns: string[],
 ): RecentVisit[] {
   const handles = [
-    "maya.eats.nyc",
+    "alex.eats.nyc",
     "brooklyn_bites",
     "nycfoodie_",
     "jasmine.style",
@@ -228,7 +228,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       },
     ],
     featuredCreators: [
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.marco,
       CREATORS.jasmine,
       CREATORS.dev,
@@ -285,7 +285,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.alex,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.james,
       CREATORS.sara,
     ],
@@ -396,7 +396,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       },
     ],
     featuredCreators: [
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.alex,
       CREATORS.dev,
       CREATORS.marco,
@@ -571,7 +571,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       CREATORS.dev,
       CREATORS.alex,
       CREATORS.priya,
-      CREATORS.maya,
+      CREATORS.alex,
     ],
     recentVisits: makeVisits(
       "flatiron",
@@ -625,7 +625,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.priya,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.dev,
       CREATORS.alex,
     ],
@@ -681,7 +681,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.marco,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.james,
       CREATORS.priya,
     ],
@@ -745,7 +745,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       CREATORS.alex,
       CREATORS.dev,
       CREATORS.marco,
-      CREATORS.maya,
+      CREATORS.alex,
     ],
     recentVisits: makeVisits(
       "greenpoint",
@@ -855,7 +855,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.priya,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.sara,
       CREATORS.marco,
     ],
@@ -969,7 +969,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       CREATORS.marco,
       CREATORS.james,
       CREATORS.priya,
-      CREATORS.maya,
+      CREATORS.alex,
     ],
     recentVisits: makeVisits(
       "bedford-stuyvesant",
@@ -1081,7 +1081,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.alex,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.marco,
       CREATORS.dev,
     ],
@@ -1192,7 +1192,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       },
     ],
     featuredCreators: [
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.alex,
       CREATORS.priya,
       CREATORS.james,
@@ -1532,7 +1532,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
       },
     ],
     featuredCreators: [
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.alex,
       CREATORS.priya,
       CREATORS.marco,
@@ -1645,7 +1645,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.james,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.jasmine,
       CREATORS.sara,
     ],
@@ -1703,7 +1703,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     ],
     featuredCreators: [
       CREATORS.marco,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.priya,
       CREATORS.alex,
     ],
@@ -2044,7 +2044,7 @@ export const NEIGHBORHOODS: Neighborhood[] = [
     featuredCreators: [
       CREATORS.marco,
       CREATORS.priya,
-      CREATORS.maya,
+      CREATORS.alex,
       CREATORS.alex,
     ],
     recentVisits: makeVisits(

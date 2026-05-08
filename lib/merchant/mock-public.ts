@@ -129,8 +129,8 @@ export const MERCHANTS: MerchantPublic[] = [
     creators: [
       {
         id: "c1",
-        handle: "@maya.eats.nyc",
-        avatar_url: av("maya"),
+        handle: "@alex.eats.nyc",
+        avatar_url: av("alex"),
         tier: "Operator",
       },
       {
@@ -187,8 +187,8 @@ export const MERCHANTS: MerchantPublic[] = [
     reviews: [
       {
         id: "r1",
-        creator_handle: "@maya.eats.nyc",
-        avatar_url: av("maya"),
+        creator_handle: "@alex.eats.nyc",
+        avatar_url: av("alex"),
         quote:
           "The brief was tight, the product was great, and the payout landed in my wallet the same afternoon. This is how brand collabs should feel.",
         campaign_title: "Spring Matcha Launch",

@@ -327,7 +327,7 @@ export const MOCK_MESSAGES: Record<string, Message[]> = {
       senderId: "demo-merchant-001",
       senderRole: "merchant",
       content:
-        "Thursday at 9am works perfectly. Ask for Maya at the counter — she'll set you up.",
+        "Thursday at 9am works perfectly. Ask for Alex at the counter — she'll set you up.",
       contentType: "text",
       attachments: [],
       createdAt: "2026-04-14T10:35:00Z",

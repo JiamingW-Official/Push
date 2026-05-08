@@ -915,18 +915,7 @@
 }
 .an2-detail > * { position: relative; z-index: 1; }
 
-.an2-back {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-body);
-  font-size: 12px; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink-4); text-decoration: none;
-  padding: 8px 0;
-  margin-bottom: 24px;
-  transition: gap 220ms var(--spring), color 220ms ease, transform 220ms var(--spring);
-}
-.an2-back:hover { gap: 12px; color: var(--ink); transform: translate(-2px, 0); }
-.an2-back::before { content: "←"; font-family: var(--font-display); font-weight: 700; }
+/* Back-button styling lives in lumin-shell.css → .hub-back (unified). */
 
 .an2-detail__head {
   display: grid; grid-template-columns: 1fr auto;

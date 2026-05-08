@@ -1,1220 +1,407 @@
-/* ───────────────────────────────────────────────────────────────
-   Merchant Dashboard — Push v11 Product UI register
-   Command-center surface: KPIs read at a glance, rows scan top-to-
-   bottom, primary action is unmistakable. Strict 8px grid; closed
-   color list; bottom-right hover shift signature; iOS 26 spring.
-   ─────────────────────────────────────────────────────────────── */
-
-.db-dashboard-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6); /* 48px between major sections — Product UI rhythm */
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding-bottom: var(--space-10);
-  color: var(--ink);
-  font-family: var(--font-body);
-}
-
-/* ─── Page header — tighten for Product UI register ───────────── */
-
-.db-dashboard-page .ms-page-header {
-  padding-bottom: var(--space-5); /* 40px */
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.db-dashboard-page .ms-page-header-eyebrow {
-  /* Canonical Product-UI eyebrow — no parenthetical (per § 8.5 register split) */
-  color: var(--ink-3);
-  letter-spacing: 0.12em;
-}
-
-.db-dashboard-page .ms-page-header-title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 64px); /* H1 — sits below KPI numerals so they read first */
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1;
-}
-
-.db-dashboard-page .ms-page-header-subtitle {
-  font-family: var(--font-body);
-  font-size: var(--text-body-sm);
-  color: var(--ink-3);
-  line-height: 1.45;
-  margin-top: var(--space-2); /* 16px — H1 → body */
-}
-
-/* Primary CTA receives a slightly heavier hover lift in dashboard
-   context; respects globals.css btn-primary spec (no override of
-   color / radius / padding — only optional micro-shadow). */
-.db-dashboard-page .ms-page-header-action .btn-primary {
-  box-shadow: 0 1px 2px rgba(193, 18, 31, 0.18);
-}
-
-/* ─── Major sections ──────────────────────────────────────────── */
-
-.db-major-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3); /* 24px — section title → content */
-}
-
-.db-section-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-2);
-  padding-bottom: var(--space-2); /* 16px above hairline */
-  border-bottom: 1px solid var(--hairline);
-}
-
-.db-section-title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-h2); /* 40px — Darky H2 lock (Design.md § 3.1) */
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  color: var(--ink);
-}
-
-.db-section-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1); /* 8px — text → trailing arrow */
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 2px solid var(--brand-red);
-  padding-bottom: var(--space-1);
-  transition:
-    color 180ms var(--spring),
-    transform 180ms var(--spring),
-    border-color 180ms ease;
-}
-
-.db-section-link::after {
-  content: "→";
-  font-family: var(--font-body);
-  font-size: 14px;
-  transition: transform 180ms var(--spring);
-}
-
-.db-section-link:hover {
-  color: var(--brand-red);
-  transform: translate(1px, 1px);
-}
-
-.db-section-link:hover::after {
-  transform: translateX(2px);
-}
-
-.db-section-link:active {
-  transform: translate(2px, 2px) scale(0.98);
-}
-
-.db-section-link:focus-visible {
-  outline: 4px solid var(--brand-red-focus);
-  outline-offset: 4px;
-  border-radius: var(--r-xs);
-}
-
-/* ─── KPI Grid — 4 cards, snap to 8px ─────────────────────────── */
-
-.db-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-3); /* 24px card-grid gap */
-}
-
-/* Override shared KPICard typography to v11 spec (clamp 40-72px).
-   Scoped under .db-dashboard-page so this never bleeds to other
-   surfaces still on the v10 64px ceiling. */
-.db-dashboard-page .kpi-card {
-  border-radius: var(--r-md); /* 10px — standard card per Design.md § 4 */
-  background: var(--surface-2);
-  box-shadow: var(--shadow-1);
-  padding: var(--space-3); /* 24px — standard card */
-  transition:
-    transform 220ms var(--spring),
-    box-shadow 220ms ease,
-    border-color 220ms ease;
-}
-
-.db-dashboard-page .kpi-card:hover {
-  transform: translate(1px, 1px);
-  box-shadow: var(--shadow-2);
-}
-
-.db-dashboard-page .kpi-card:focus-visible,
-.db-dashboard-page .kpi-card:focus-within {
-  outline: 4px solid var(--brand-red-focus);
-  outline-offset: 2px;
-}
-
-.db-dashboard-page .kpi-card__numeral {
-  font-size: var(--text-kpi-numeral); /* clamp(40px, 5vw, 72px) — v11 lock */
-  letter-spacing: -0.02em;
-  margin: 0 0 var(--space-2); /* 16px — stat → caption per § 6.2 */
-}
-
-.db-dashboard-page .kpi-card__eyebrow {
-  font-size: var(--text-eyebrow); /* 12px floor */
-  margin-bottom: var(--space-1);
-}
-
-.db-dashboard-page .kpi-card__delta {
-  font-size: var(--text-caption); /* 12px */
-  letter-spacing: 0.02em;
-}
-
-.db-dashboard-page .kpi-card__delta--up {
-  color: var(--success-dark);
-}
-
-.db-dashboard-page .kpi-card__delta--down {
-  color: var(--brand-red);
-}
-
-.db-dashboard-page .kpi-card__delta--flat {
-  color: var(--ink-4);
-}
-
-.db-dashboard-page .kpi-card__delta-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-/* ─── List surface (Active Campaigns + Recent Applications) ───── */
-
-.db-list-surface {
-  background: var(--surface-2);
-  border-radius: var(--r-md); /* 10px */
-  overflow: hidden;
-  box-shadow: var(--shadow-1);
-}
-
-.db-list-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3); /* 24px standard card padding */
-  border-bottom: 1px solid var(--hairline);
-  position: relative;
-  transition:
-    transform 200ms var(--spring),
-    background 180ms ease;
-  cursor: pointer;
-  outline: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.db-list-row:last-child {
-  border-bottom: 0;
-}
-
-/* Left-edge color rail — fades in on hover so the row reads as
-   actionable without crowding the resting state. Brand-red for
-   campaigns; ink for applications (neutral until reviewed). */
-.db-list-row::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background: transparent;
-  transition: background 180ms ease;
-}
-
-.db-campaign-row:hover::before,
-.db-campaign-row:focus-visible::before {
-  background: var(--brand-red);
-}
-
-.db-application-row:hover::before,
-.db-application-row:focus-visible::before {
-  background: var(--ink);
-}
-
-.db-list-row:hover {
-  background: var(--surface-3);
-  transform: translate(1px, 1px);
-}
-
-.db-list-row:active {
-  transform: translate(2px, 2px) scale(0.99);
-}
-
-.db-list-row:focus-visible {
-  outline: 4px solid var(--brand-red-focus);
-  outline-offset: -4px;
-  background: var(--surface-3);
-}
-
-.db-row-main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1); /* 8px — title → meta tightened from card title→body 12px to row-density 8px */
-  min-width: 0;
-}
-
-.db-row-title {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: var(--text-h5); /* 20px */
-  font-weight: 700;
-  letter-spacing: -0.005em;
-  line-height: 1.3;
-  color: var(--ink);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.db-row-meta {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  line-height: 1.4;
-  color: var(--ink-3);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.db-row-side {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  justify-self: end;
-}
-
-.db-row-side--application {
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.db-row-metric {
-  font-family: var(--font-body);
-  font-size: var(--text-eyebrow); /* 12px floor */
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  white-space: nowrap;
-}
-
-/* ─── Empty state copy fallback ───────────────────────────────── */
-
-.db-empty-copy {
-  margin: 0;
-  padding: var(--space-6);
-  font-family: var(--font-body);
-  font-size: var(--text-body-sm);
-  line-height: 1.45;
-  color: var(--ink-3);
-  text-align: left;
-}
-
-/* The shared <EmptyState> renders inside .db-list-surface; tighten
-   its border so it visually reads as a quiet tray, not a card-on-card. */
-.db-list-surface > .ms-empty-state,
-.db-list-surface > [class*="empty"] {
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-/* ─── Loading shimmer (utility, opt-in via .db-loading) ────────── */
-
-@keyframes db-shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-.db-loading {
-  background: linear-gradient(
-    90deg,
-    var(--surface-2) 0%,
-    var(--surface-3) 50%,
-    var(--surface-2) 100%
-  );
-  background-size: 200px 100%;
-  animation: db-shimmer 1.4s ease-in-out infinite;
-  color: transparent;
-  user-select: none;
-  pointer-events: none;
-}
-
-/* ─── Responsive — naturally adaptive (Design.md § 14) ────────── */
-
-@media (max-width: 1240px) {
-  .db-kpi-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-}
-
-@media (max-width: 900px) {
-  .db-dashboard-page {
-    gap: var(--space-5); /* 40px between sections — iPad rhythm */
-  }
-
-  .db-dashboard-page .ms-page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-    padding-bottom: var(--space-4); /* 32px */
-  }
-
-  .db-section-head {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .db-list-row {
-    grid-template-columns: 1fr;
-    align-items: flex-start;
-    padding: var(--space-2) var(--space-3); /* 16px V / 24px H — denser on iPad */
-  }
-
-  .db-row-side {
-    justify-self: start;
-  }
-}
-
-@media (max-width: 768px) {
-  .db-dashboard-page {
-    gap: var(--space-4); /* 32px between sections — mobile */
-    padding-bottom: var(--space-7); /* 56px */
-  }
-
-  .db-kpi-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-2); /* 16px — mobile card-grid gap per § 6.6 */
-  }
-
-  .db-section-title {
-    font-size: var(--text-h3); /* 28px */
-  }
-
-  .db-row-title {
-    font-size: var(--text-body-sm); /* 16px */
-    white-space: normal;
-  }
-
-  .db-row-meta {
-    white-space: normal;
-  }
-
-  .db-list-row {
-    padding: var(--space-2);
-    gap: var(--space-1);
-  }
-
-  .db-dashboard-page .kpi-card {
-    padding: var(--space-2) var(--space-3);
-  }
-}
-
-/* ─── Accessibility — reduced-motion / reduced-transparency ───── */
-
-@media (prefers-reduced-motion: reduce) {
-  .db-section-link,
-  .db-section-link::after,
-  .db-list-row,
-  .db-list-row::before,
-  .db-dashboard-page .kpi-card,
-  .db-loading {
-    transition: none !important;
-    animation: none !important;
-  }
-  .db-section-link:hover,
-  .db-section-link:hover::after,
-  .db-list-row:hover,
-  .db-list-row:active,
-  .db-section-link:active,
-  .db-dashboard-page .kpi-card:hover {
-    transform: none !important;
-  }
-}
-
-@media (forced-colors: active) {
-  .db-list-row:focus-visible,
-  .db-section-link:focus-visible,
-  .db-dashboard-page .kpi-card:focus-visible {
-    outline: 2px solid CanvasText;
-    outline-offset: 2px;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Dashboard Uplift v2 (2026-05-07) — Bento · Liquid Glass · Colorful · iOS 26
-   Layered on top of the v11 Product UI baseline above. Mirrors analytics
-   .an2-* atmosphere so dashboard ↔ analytics ↔ creator-side share a single
-   continuous visual register. Pure CSS — no JSX changes.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.db-dashboard-page {
-  /* Liquid Glass tokens (scoped — same values as analytics.an2) */
-  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
-  --lg-bg-std:   rgba(255, 255, 255, 0.62);
-  --lg-bg-light: rgba(255, 255, 255, 0.74);
-  --lg-blur-hero: blur(32px) saturate(1.55);
-  --lg-blur-std:  blur(24px) saturate(1.4);
-  --lg-blur-soft: blur(16px) saturate(1.2);
-  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
-  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
-  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
-                 0 8px 24px rgba(60, 45, 30, 0.06);
-  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
-                 0 16px 48px rgba(60, 45, 30, 0.10);
-
+/* ============================================================
+   /merchant/dashboard — MERCHANT hub. v2 (2026-05-08)
+   Mirrors /creator/work template. Ink-solid hero · brand-red
+   never used (user-facing brand cue), N2W blue / champagne
+   restricted to specific accents.
+   ============================================================ */
+
+.md-hub {
+  padding-top: 24px;
+  padding-bottom: 8px;
+  margin-bottom: -88px;
+  background: var(--snow, #fff);
   position: relative;
   isolation: isolate;
-  /* Escape MerchantShell horizontal padding so atmosphere bleeds full-bleed
-     on wide viewports (mirrors .an2 escape logic — desktop only). */
 }
 
-@media (min-width: 1024px) {
-  .db-dashboard-page {
-    margin: 0 calc(-1 * (10vw - 48px));
-    padding-left: calc(10vw - 48px);
-    padding-right: calc(10vw - 48px);
-  }
-}
-
-/* ── Atmospheric backdrop — 5-layer radial-gradient haze ─────────────────
-   Matches analytics exactly so transitioning between Dashboard and
-   Analytics feels continuous (same atmosphere rotates around different
-   focal points).
-*/
-.db-dashboard-page::before {
+.md-hub::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
-    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
-    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
-    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
-    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+    radial-gradient(ellipse 70vw 60vh at 78% 18%, rgba(20, 19, 15, 0.05), transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%, rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%);
 }
-.db-dashboard-page > * { position: relative; z-index: 1; }
+.md-hub > * { position: relative; z-index: 1; }
 
-/* ── Page header — colorful live indicator + display title gradient ──── */
+/* ── Hero ──────────────────────────────────────────────────── */
 
-.db-dashboard-page .ms-page-header {
-  border-bottom: none;          /* atmosphere now owns the top horizon */
-  padding-bottom: var(--space-4);
-  /* Belt-and-suspenders against flex squeeze under the new atmospheric
-     stacking context — without these, .ms-page-header-action grows to
-     fill 100% and collapses .ms-page-header-left + the H1 to width 0. */
-  align-items: flex-start;
-}
-.db-dashboard-page .ms-page-header-left {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.db-dashboard-page .ms-page-header-action {
-  flex: 0 0 auto;
-  width: auto;
-  margin-left: auto;
+.md-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  column-gap: 32px;
+  padding: 16px 0 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--mist, #d8d4c8);
 }
 
-.db-dashboard-page .ms-page-header-eyebrow {
+.md-hero__left { min-width: 0; }
+
+.md-hero__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #61605c);
+  margin: 0 0 12px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  position: relative;
 }
-.db-dashboard-page .ms-page-header-eyebrow::before {
+
+.md-hero__eyebrow::before {
   content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #34c759;
-  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18);
-  animation: db-pulse 2.4s ease-in-out infinite;
-  flex-shrink: 0;
-}
-@keyframes db-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18); }
-  50%      { box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.06); }
+  background: var(--ink, #14130f);
+  box-shadow: 0 0 0 3px rgba(20, 19, 15, 0.16);
 }
 
-.db-dashboard-page .ms-page-header-title {
-  font-size: clamp(48px, 5.6vw, 80px);
-  color: var(--ink);
-  /* Atmospheric backdrop already supplies chromatic interest; keep H1 ink
-     for legibility — gradient-text over backdrop-filter regions is fragile
-     across browsers (Safari clips against ::before, Chromium loses width). */
+.md-hero__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--ink, #111);
+  margin: 0;
 }
 
-/* ── Section heads — colorful gradient underline + pulsing dot ─────────── */
-
-.db-section-head {
-  border-bottom: none;
-  padding-bottom: 0;
-  position: relative;
-}
-.db-section-head::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(193, 18, 31, 0.55) 0%,
-    rgba(191, 161, 112, 0.55) 35%,
-    rgba(0, 133, 255, 0.45) 70%,
-    rgba(191, 161, 112, 0) 100%
-  );
-  border-radius: 2px;
-  pointer-events: none;
+.md-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-4, #61605c);
+  margin: 12px 0 0;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.db-section-title {
-  display: inline-flex;
+/* ── Bento ─────────────────────────────────────────────────── */
+
+.md-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(272px, auto);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .md-hub { padding-top: 16px; padding-bottom: 96px; }
+}
+
+@media (max-width: 640px) {
+  .md-bento { grid-template-columns: 1fr; }
+}
+
+/* ── Revenue (ink solid hero) ──────────────────────────────── */
+
+.md-revenue {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.md-revenue__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(56px, 6vw, 88px);
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  line-height: 0.92;
+  color: var(--snow, #fff);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.md-revenue__delta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+  margin: 0;
+}
+
+.md-revenue__split {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.md-revenue__split-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+}
+
+.md-revenue__split-row span:first-child {
+  color: rgba(255, 255, 255, 0.66);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.md-revenue__split-row span:last-child {
+  color: var(--snow, #fff);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Applicants (champagne accent) ─────────────────────────── */
+
+.md-applicants__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(56px, 6vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 0.92;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.md-applicants__lbl {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+  margin: 4px 0 12px;
+}
+
+.md-applicants__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.md-applicants__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 12px;
-}
-.db-section-title::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--brand-red);
-  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
+  padding: 6px 0;
+  border-top: 1px dotted rgba(191, 161, 112, 0.40);
 }
 
-/* ── KPI grid — colorful bento with liquid glass surface ───────────────── */
-
-.db-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-@media (max-width: 960px) {
-  .db-kpi-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 520px) {
-  .db-kpi-grid { grid-template-columns: 1fr; }
+.md-applicants__name {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #111);
 }
 
-/* Apply liquid-glass treatment + 4-color top accent strip to each KPICard.
-   nth-child rotates: brand-red → accent-blue → champagne → champagne-deep
-   so the KPI row reads as a colorful bento at-a-glance. */
-.db-dashboard-page .db-kpi-grid .kpi-card {
-  position: relative;
-  background: var(--lg-bg-std);
-  -webkit-backdrop-filter: var(--lg-blur-std);
-          backdrop-filter: var(--lg-blur-std);
-  border: none;
-  border-radius: 24px;
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-1);
-  overflow: hidden;
-  isolation: isolate;
-  transition:
-    transform 320ms var(--spring),
-    box-shadow 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
-    background 320ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
-}
-.db-dashboard-page .db-kpi-grid .kpi-card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  z-index: 1;
-  border-radius: 24px 24px 0 0;
-}
-.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--brand-red), rgba(193, 18, 31, 0.4)); }
-.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4)); }
-.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45)); }
-.db-dashboard-page .db-kpi-grid .kpi-card:nth-child(4)::before { background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45)); }
-
-.db-dashboard-page .db-kpi-grid .kpi-card:hover {
-  transform: translate(2px, 2px);
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-2);
-  background: var(--lg-bg-light);
-}
-
-/* Numeral overflow guard — values like "$114,800" need to fit in the
-   ~200px card body without ellipsis. Clamp the size + enable tabular-nums
-   so digit columns stay aligned across the row. */
-.db-dashboard-page .db-kpi-grid .kpi-card .kpi-card__numeral {
-  font-size: clamp(28px, 2.4vw, 44px);
+.md-applicants__tier {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  overflow: visible;
-  min-width: 0;
 }
 
-/* ── Active Campaigns + Recent Applications — glass card surface ──────── */
+/* ── Generic list rows (campaigns) ─────────────────────────── */
 
-.db-major-section {
-  position: relative;
-}
-
-/* Wrap the inner list/table area in a glass surface — Push's existing
-   markup uses tables/rows directly inside the section; we target the
-   first-of-type table-or-list child after the section head. */
-.db-dashboard-page .db-major-section > .db-table-wrap,
-.db-dashboard-page .db-major-section > .db-list-wrap,
-.db-dashboard-page .db-major-section > [class*="-list-wrap"],
-.db-dashboard-page .db-major-section > [class*="-table-wrap"] {
-  background: var(--lg-bg-std);
-  -webkit-backdrop-filter: var(--lg-blur-std);
-          backdrop-filter: var(--lg-blur-std);
-  border: none;
-  border-radius: 20px;
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-1);
-  overflow: hidden;
-  isolation: isolate;
+.md-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* List rows on glass — preserve hairlines but soften since glass already
-   has the spec-top edge above. */
-.db-dashboard-page .db-list-row {
-  background: transparent;
-  border-bottom: 1px solid rgba(20, 19, 15, 0.06);
-}
-.db-dashboard-page .db-list-row:last-child {
-  border-bottom: none;
-}
-.db-dashboard-page .db-list-row:hover {
+.md-list__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition: background 200ms ease;
 }
 
-/* ── Section "View all" link — glass pill instead of underline ────────── */
+.md-list__row:hover { background: rgba(255, 255, 255, 0.78); }
 
-.db-dashboard-page .db-section-link {
-  border-bottom: none;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.62);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
-          backdrop-filter: blur(16px) saturate(1.3);
-  box-shadow:
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
-    0 1px 2px rgba(60, 45, 30, 0.04),
-    0 6px 16px rgba(60, 45, 30, 0.06);
-}
-.db-dashboard-page .db-section-link:hover {
-  transform: translate(2px, 2px);
-  background: rgba(255, 255, 255, 0.88);
-}
-.db-dashboard-page .db-section-link::after {
-  content: "→";
-  margin-left: 6px;
+.md-list__name {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .db-dashboard-page .ms-page-header-eyebrow::before,
-  .db-section-title::before {
-    animation: none;
-  }
-  .db-dashboard-page .db-kpi-grid .kpi-card {
-    transition: none !important;
-  }
-  .db-dashboard-page .db-kpi-grid .kpi-card:hover {
-    transform: none !important;
-  }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .db-dashboard-page::before {
-    background: var(--surface-2);
-    opacity: 0.6;
-  }
-  .db-dashboard-page .db-kpi-grid .kpi-card,
-  .db-dashboard-page .db-major-section > [class*="-list-wrap"],
-  .db-dashboard-page .db-major-section > [class*="-table-wrap"],
-  .db-dashboard-page .db-section-link {
-    background: var(--snow);
-    -webkit-backdrop-filter: none;
-            backdrop-filter: none;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave-7 Mobile Pass (2026-05-07) — Phone-playable patches
-   APPENDED ONLY. Do not modify the v2 uplift rules above.
-   Targets: 768px (phone) and 768-1023 tablet refinements.
-   ═══════════════════════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  /* Title + section heads — soften clamp floor so H1 doesn't crush */
-  .db-dashboard-page .ms-page-header-title {
-    font-size: clamp(32px, 7vw, 48px);
-  }
-
-  /* KPI numerals — smaller floor so $114,800 fits without ellipsis */
-  .db-dashboard-page .db-kpi-grid .kpi-card .kpi-card__numeral {
-    font-size: clamp(24px, 6vw, 36px);
-  }
-
-  /* Section "View all" pill — full-tap target on mobile */
-  .db-dashboard-page .db-section-link {
-    padding: 10px 16px;
-  }
-
-  /* List rows — let title and meta wrap; keep dense padding */
-  .db-dashboard-page .db-list-row {
-    padding: 12px 16px;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave-8 — Interaction Consistency Pass (2026-05-07)
-   APPENDED ONLY — overrides existing 1px hover values to canonical 2/3px.
-   Push interaction signature (Design.md):
-     hover  → translate(2px, 2px)
-     active → translate(3px, 3px) scale(0.98)
-   timing → 240ms var(--spring), specific properties (no `all`)
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* .db-section-link (was 1/2 → 2/3) */
-.db-dashboard-page .db-section-link {
-  transition:
-    transform 240ms var(--spring),
-    color 240ms ease,
-    background 240ms ease,
-    border-color 240ms ease,
-    box-shadow 240ms ease;
-}
-.db-dashboard-page .db-section-link:hover  { transform: translate(2px, 2px); }
-.db-dashboard-page .db-section-link:active { transform: translate(3px, 3px) scale(0.98); }
-
-/* .kpi-card (was 1px hover, no active → 2/3) */
-.db-dashboard-page .kpi-card {
-  transition:
-    transform 240ms var(--spring),
-    box-shadow 240ms ease,
-    background 240ms ease,
-    border-color 240ms ease;
-}
-.db-dashboard-page .kpi-card:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-/* .db-list-row (was 1/2 → 2/3) */
-.db-dashboard-page .db-list-row {
-  transition:
-    transform 240ms var(--spring),
-    background 240ms ease,
-    box-shadow 240ms ease;
-}
-.db-dashboard-page .db-list-row:hover  { transform: translate(2px, 2px); }
-.db-dashboard-page .db-list-row:active { transform: translate(3px, 3px) scale(0.98); }
-
-@media (prefers-reduced-motion: reduce) {
-  .db-dashboard-page .db-section-link,
-  .db-dashboard-page .db-section-link:hover,
-  .db-dashboard-page .db-section-link:active,
-  .db-dashboard-page .db-list-row,
-  .db-dashboard-page .db-list-row:hover,
-  .db-dashboard-page .db-list-row:active,
-  .db-dashboard-page .kpi-card:active {
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Typography Readability (2026-05-07)
-   APPENDED ONLY. Caps body width at 72ch, raises mobile heading floors,
-   tightens hero subtitle to 56ch, expands eyebrow tracking, and gives
-   stacked paragraphs visual rhythm. No Liquid Glass / atmospheric /
-   colorful divider rules touched.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* Body text gets a comfortable 72ch line + generous leading */
-.db-dashboard-page p,
-.db-dashboard-page .db-list-row__meta,
-.db-dashboard-page .db-empty-state-description,
-.db-dashboard-page .ms-empty-state__description {
-  max-width: 72ch;
-  line-height: 1.6;
-}
-
-/* Hero / page subtitle is shorter — eye picks up the next line faster */
-.db-dashboard-page .ms-page-header-subtitle {
-  max-width: 56ch;
-  font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.55;
-}
-
-/* All-caps eyebrows need extra letter-spacing for legibility */
-.db-dashboard-page .ms-page-header-eyebrow,
-.db-dashboard-page .db-section-link {
+.md-list__tag {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.06);
+  white-space: nowrap;
 }
 
-/* H1 — raise mobile floor from 40 → 40 (already locked), bump line-height a hair */
-.db-dashboard-page .ms-page-header-title {
-  font-size: clamp(40px, 5.6vw, 72px);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+.md-list__tag--live {
+  background: rgba(52, 199, 89, 0.14);
+  color: #2d6e4a;
 }
 
-/* H2 — section titles get readable mobile floor */
-.db-dashboard-page .db-section-title {
-  font-size: clamp(28px, 3.5vw, 40px);
+/* ── Action queue (messages panel) ─────────────────────────── */
+
+.md-queue {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.md-queue__row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 200ms ease;
+}
+
+.md-queue__row--reply { background: rgba(0, 133, 255, 0.08); }
+.md-queue__row--reply:hover { background: rgba(0, 133, 255, 0.13); }
+.md-queue__row--review { background: rgba(191, 161, 112, 0.10); }
+.md-queue__row--review:hover { background: rgba(191, 161, 112, 0.16); }
+.md-queue__row--ack { background: rgba(20, 19, 15, 0.04); }
+.md-queue__row--ack:hover { background: rgba(20, 19, 15, 0.07); }
+
+.md-queue__tile {
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  color: var(--snow, #fff);
+}
+
+.md-queue__row--reply .md-queue__tile { background: var(--accent-blue, #0085ff); }
+.md-queue__row--review .md-queue__tile { background: var(--champagne-deep, #8a704a); }
+.md-queue__row--ack .md-queue__tile { background: var(--ink-3, #3a3835); }
+
+.md-queue__copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+.md-queue__verb {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
   line-height: 1.1;
 }
 
-/* Stacked paragraphs in body content get rhythm */
-.db-dashboard-page p + p {
-  margin-top: 12px;
+.md-queue__row--reply .md-queue__verb { color: var(--accent-blue, #0085ff); }
+.md-queue__row--review .md-queue__verb { color: var(--champagne-deep, #8a704a); }
+.md-queue__row--ack .md-queue__verb { color: var(--ink-3, #3a3835); }
+
+.md-queue__target {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
-/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
-
-@media (min-width: 1024px) {
-  .db-dashboard-page {
-    gap: 96px;
-    padding-top: 48px;
-    padding-bottom: 96px;
-  }
-
-  .db-dashboard-page > .ms-page-header,
-  .db-dashboard-page > [class*="page-header"] {
-    margin-bottom: 24px;
-  }
-
-  .db-dashboard-page > .db-major-section,
-  .db-dashboard-page > section,
-  .db-dashboard-page > [class*="-section"] {
-    margin-top: 24px;
-  }
-
-  .db-dashboard-page > .db-major-section + .db-major-section,
-  .db-dashboard-page > section + section {
-    margin-top: 0;
-  }
-
-  .db-dashboard-page .db-section-head,
-  .db-dashboard-page [class*="section-head"]:not([class*="card"]) {
-    margin-bottom: 32px;
-  }
-
-  /* Per-page tuning: KPI Grid → Active Campaigns → Recent Applications */
-  .db-dashboard-page > .db-major-section + .db-major-section {
-    margin-top: 0;
-  }
+.md-queue__when {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  white-space: nowrap;
 }
 
-@media (max-width: 1023px) and (min-width: 768px) {
-  .db-dashboard-page {
-    gap: 64px;
-    padding-top: 32px;
-    padding-bottom: 64px;
-  }
+.md-row-status { display: inline-flex; margin-top: 8px; }
+
+/* ── Funnel chart (Campaigns panel) — 4-stage conversion viz ── */
+
+.md-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
 }
 
-@media (max-width: 767px) {
-  .db-dashboard-page {
-    gap: 40px;
-    padding-top: 24px;
-    padding-bottom: 48px;
-  }
+.md-funnel__row {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  align-items: center;
+  gap: 12px;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Horizontal Breathing (2026-05-07)
-   APPENDED ONLY. Caps content max-width on ultra-wide so KPI cards don't
-   stretch to 600px; enforces page padding ladder (16/32/48/64); overrides
-   the Wave B negative-margin escape only at 1440+ where centered max-width
-   wins. !important is required on margin-left/right because the existing
-   `@media (min-width:1024px)` rule sets a negative margin to escape the
-   shell gutter; without !important the cascade order would still leave
-   the negative margin in effect on 1440+. Atmospheric backdrop is
-   position:fixed so it remains full-bleed; only the content layer is
-   capped.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1440px) {
-  .db-dashboard-page {
-    max-width: 1440px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 64px;
-    padding-right: 64px;
-  }
+.md-funnel__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
 }
 
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .db-dashboard-page {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
+.md-funnel__track {
+  position: relative;
+  height: 22px;
+  background: rgba(20, 19, 15, 0.04);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .db-dashboard-page {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
+.md-funnel__bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (max-width: 767px) {
-  .db-dashboard-page {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
+.md-funnel__bar--ink-5 { background: var(--ink-5, #888); }
+.md-funnel__bar--champagne { background: var(--champagne, #bfa170); }
+.md-funnel__bar--blue { background: var(--accent-blue, #0085ff); }
+.md-funnel__bar--ink { background: var(--ink, #14130f); }
+
+.md-funnel__value {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Inner content max-width for very wide bento / dense grids */
-.db-dashboard-page .db-kpi-grid,
-.db-dashboard-page .db-list-surface,
-.db-dashboard-page [class*="kpi-row"],
-.db-dashboard-page [class*="bento"] {
-  max-width: 1320px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Glass Inputs (2026-05-07)
-   APPENDED ONLY. Applies Liquid-Glass surface treatment to every text-
-   entry field on the merchant dashboard so inputs match the page's
-   overall glass register. Uses --lg-* tokens defined upstream with
-   inline rgba() fallbacks; no new tokens introduced.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.db-dashboard-page input[type="text"],
-.db-dashboard-page input[type="email"],
-.db-dashboard-page input[type="number"],
-.db-dashboard-page input[type="tel"],
-.db-dashboard-page input[type="url"],
-.db-dashboard-page input[type="search"],
-.db-dashboard-page input[type="password"],
-.db-dashboard-page select,
-.db-dashboard-page textarea {
-  background: var(--lg-bg-std, rgba(255, 255, 255, 0.62));
-  -webkit-backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
-          backdrop-filter: var(--lg-blur-std, blur(24px) saturate(1.4));
-  border: none;
-  border-radius: 8px;
-  box-shadow:
-    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-    var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
-    0 1px 2px rgba(60, 45, 30, 0.04);
-  padding: 12px 14px;
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--ink);
-  transition:
-    background 240ms ease,
-    box-shadow 240ms ease,
-    transform 240ms var(--spring);
-}
-
-.db-dashboard-page input:focus,
-.db-dashboard-page input:focus-visible,
-.db-dashboard-page select:focus,
-.db-dashboard-page textarea:focus,
-.db-dashboard-page textarea:focus-visible {
-  outline: none;
-  background: var(--lg-bg-light, rgba(255, 255, 255, 0.74));
-  box-shadow:
-    var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-    inset 0 0 0 1px var(--brand-red),
-    0 0 0 4px rgba(193, 18, 31, 0.12);
-}
-
-.db-dashboard-page input::placeholder,
-.db-dashboard-page textarea::placeholder {
-  color: var(--ink-4);
-  opacity: 0.7;
-}
-
-.db-dashboard-page input:disabled,
-.db-dashboard-page select:disabled,
-.db-dashboard-page textarea:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Glass Contrast Pass (2026-05-07)
-   APPENDED ONLY. Targets small text on Liquid Glass surfaces (eyebrows,
-   captions, empty-state copy, filter-pill labels) where the white-at-0.62
-   glass over atmospheric haze can drop body text below WCAG AA 4.5:1.
-   Strategy A (boost glass opacity on the card) is preferred over Strategy
-   B (scrim) so the glass quality is preserved while small text gets a
-   denser background to sit on. Color floor for ≤14px copy is `--ink-3`
-   (`#61605c`), never `--ink-4` or lighter, on white-glass surfaces.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* KPI cards hold 14px eyebrows + delta lines — bump glass to denser tier */
-.db-dashboard-page .kpi-card {
-  background: var(--lg-bg-light, rgba(255, 255, 255, 0.78));
-}
-
-/* Eyebrow color floor: ink-3 minimum for small uppercase copy on glass */
-.db-dashboard-page .kpi-card__eyebrow,
-.db-dashboard-page [class*="-eyebrow"]:not([class*="hero-eyebrow"]) {
-  color: var(--ink-3);
-}
-
-/* KPI delta — flat variant must read on light glass */
-.db-dashboard-page .kpi-card__delta--flat {
-  color: var(--ink-3);
-}
-
-/* Empty-state description floor — anything ink-4 or lighter raises to ink-3 */
-.db-dashboard-page .db-empty-state-description,
-.db-dashboard-page .ms-empty-state__description,
-.db-dashboard-page [class*="empty-state-description"],
-.db-dashboard-page [class*="empty-state__description"] {
-  color: var(--ink-3);
-}
-
-/* List-row meta on glass — keep readable at 13-14px */
-.db-dashboard-page .db-list-row__meta {
-  color: var(--ink-3);
-}
-
-/* Atmospheric subtitle floor */
-.db-dashboard-page .ms-page-header-subtitle {
-  color: var(--ink-3);
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Ultra-Wide Polish (2026-05-07)
-   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the dashboard
-   feels iOS 26 native instead of jammed-against-sidebar on huge displays.
-   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
-   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
-   - Holds KPI gap to 24px so cards do not balloon.
-   - Adds a soft third-layer halo shadow to KPI / hero / bento surfaces
-     at 1440+ for liquid-glass depth (uses inline rgba; no new tokens).
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1920px) {
-  .db-dashboard-page {
-    padding-left: 80px;
-    padding-right: 80px;
-    max-width: 1480px;
-  }
-  .db-dashboard-page .db-kpi-grid,
-  .db-dashboard-page [class*="kpi-row"] {
-    gap: 24px;
-  }
-}
-
-@media (min-width: 2560px) {
-  .db-dashboard-page {
-    padding-left: 96px;
-    padding-right: 96px;
-    max-width: 1600px;
-  }
-}
-
-/* Liquid-glass depth lift on the largest desktop class — KPI / hero / bento
-   tiles get a soft third-layer halo so they do not feel flat. */
-@media (min-width: 1440px) {
-  .db-dashboard-page .db-kpi-grid .kpi-card,
-  .db-dashboard-page [class*="hero-card"],
-  .db-dashboard-page [class*="bento-tile"] {
-    box-shadow:
-      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
-      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
-      0 2px 4px rgba(60, 45, 30, 0.06),
-      0 16px 48px rgba(60, 45, 30, 0.10),
-      0 32px 80px rgba(60, 45, 30, 0.06);
-  }
-}
-
-
-/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────
-   Touch targets, text overflow, modal sizing, safe-area insets.
-   Targets only the merchant dashboard surface. Wave 1-9 untouched. */
-
-@media (max-width: 767px) {
-  /* Touch target minimum — buttons / clickable cards / nav items */
-  .db-dashboard-page button:not([class*="icon-only"]),
-  .db-dashboard-page a[role="button"],
-  .db-dashboard-page [role="button"],
-  .db-dashboard-page [class*="kpi-card"],
-  .db-dashboard-page [class*="bento-tile"][role="link"] {
-    min-height: 44px;
-  }
-  .db-dashboard-page button[class*="icon-only"],
-  .db-dashboard-page [class*="icon-btn"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Long campaign / venue / thread titles ellipsis on single-line previews */
-  .db-dashboard-page [class*="campaign-name"],
-  .db-dashboard-page [class*="venue-name"],
-  .db-dashboard-page [class*="merchant-name"],
-  .db-dashboard-page [class*="thread-preview"],
-  .db-dashboard-page [class*="row-title"] {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-
-  /* URLs / IDs / monospace fields wrap */
-  .db-dashboard-page [class*="-url"],
-  .db-dashboard-page [class*="-id"]:not([class*="grid"]):not([class*="page"]),
-  .db-dashboard-page code,
-  .db-dashboard-page [class*="-mono"] {
-    word-break: break-all;
-  }
-
-  /* Prevent rogue horizontal scroll from negative-margin escapes */
-  .db-dashboard-page {
-    overflow-x: hidden;
-  }
-
-  /* Safe-area inset for notched devices */
-  .db-dashboard-page {
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
-  }
+@media (prefers-reduced-transparency: reduce) {
+  .md-hub::before { display: none; }
 }

@@ -16,7 +16,7 @@ import {
 } from "@/lib/tier-config";
 import "./portfolio.css";
 
-// Use maya-eats-nyc as the demo "logged-in" creator
+// Use alex-eats-nyc as the demo "logged-in" creator
 const DEMO_PROFILE: CreatorProfile = MOCK_PROFILES[0];
 
 type EditableHeader = {

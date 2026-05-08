@@ -249,7 +249,7 @@ const MERCHANT_IDS = [
 // Mock creator portfolio pages
 const CREATOR_IDS = [
   "alex-chen-nyc",
-  "maya-rodriguez",
+  "alex-chenodriguez",
   "jordan-kim",
   "priya-patel-eats",
   "marcus-bk",

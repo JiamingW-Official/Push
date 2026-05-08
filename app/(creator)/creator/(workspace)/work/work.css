@@ -1,5 +1,18 @@
 /* ============================================================
-   /creator/work — WORK hub. v12.2. Bento via shared primitives.
+   /creator/work — WORK hub. v13 (2026-05-07)
+   Authority: Design.md v11 + /creator/analytics layout.
+
+   Goals:
+     · Mirror analytics: full-bleed bento (escape padding trick
+       inherited from hub-shell.css), no inner max-width caps.
+     · Title in Darky 800 (delivered by hub-shell.css update).
+     · Drop section divider colorful decoration — analytics has
+       a single bento, no section heads. Work follows the same
+       discipline; if a hub legitimately needs section grouping,
+       the analytics-style hairline in hub-shell.css applies.
+     · Pipeline kanban cells keep their colorful top accent —
+       it doubles as the only colorful UI cue on this page,
+       balancing the ink solid hero panel.
    ============================================================ */
 
 /* Hero, eyebrow, title, subtitle styles live in components/shared/hub-shell.css.
@@ -7,16 +20,59 @@
 
 .work-hub {
   /* Horizontal padding + symmetric 10% L/R bleed are owned by
-     components/shared/hub-shell.css. */
+     components/shared/hub-shell.css. We KEEP dh-main's 56px top pad
+     (so hero sits ~80px from viewport top, matching analytics rhythm)
+     and only mildly absorb the bottom — leaving ~70px visual bleed. */
   padding-top: 24px;
-  padding-bottom: 120px;
+  padding-bottom: 8px;
+  margin-bottom: -88px;
   background: var(--snow, #fff);
+
+  /* Liquid Glass blur tokens used by .work-pipeline-cell glass treatment.
+     Surface alphas, shadows, specular insets are inherited from hub-shell. */
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-bg-std:    rgba(255, 255, 255, 0.62);
+  --lg-bg-light:  rgba(255, 255, 255, 0.74);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1:  0 1px 2px rgba(60, 45, 30, 0.05),
+                  0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2:  0 2px 4px rgba(60, 45, 30, 0.06),
+                  0 16px 48px rgba(60, 45, 30, 0.10);
+
+  position: relative;
+  isolation: isolate;
 }
+
+/* Atmosphere — GA-orange weighted (work hub identity = execution layer),
+   matches the dashboard 5-layer haze for cross-page visual continuity. */
+.work-hub::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(255, 94, 43, 0.10),   transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(176, 133, 96, 0.08),  transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+
+/* ── Bento — 12-col asymmetric, mirrors analytics ────────────
+   Mixed spans (4 / 5 / 7) give the page rhythm: wide hero panels,
+   narrow data panels, no two adjacent the same width. BentoModule.css
+   already owns the responsive collapse (span 4-6 → 6 / span 7-8 → 12
+   at <1024px, all → 12 at <640px), so this hub keeps the override
+   minimal. */
 
 .work-bento {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
+  /* Floor heights, not hard-cap — content can extend if a panel needs
+     more room (e.g. extra rows in the action queue, longer chip rows
+     in stats). Page may scroll a touch on shorter viewports — that's
+     OK per latest direction; no more compressing content into a fixed
+     row to fit the viewport edge. */
+  grid-auto-rows: minmax(272px, auto);
+  gap: 16px;
 }
 
 @media (max-width: 768px) {
@@ -33,67 +89,80 @@
   .work-bento { grid-template-columns: 1fr; gap: 16px; }
 }
 
-/* ── Pipeline kanban row ──────────────────────────────────── */
+/* ── Pipeline kanban — vertical phase list ─────────────────
+   Renders 4 phases stacked vertically inside a span-4 panel. Each
+   row shows a phase color dot + label + tabular count, with the
+   urgent (current-active) phase highlighted via background.
+   Replaces the horizontal kanban row (only worked at span 12). */
 
-.work-pipeline-row {
-  display: grid;
-  grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr;
-  gap: 12px;
-  align-items: center;
-  margin-top: 8px;
-}
-
-@media (max-width: 768px) {
-  .work-pipeline-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .work-pipeline-divider { display: none; }
-}
-
-.work-pipeline-cell {
+.work-pipeline-vlist {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 4px;
-  padding: 12px 8px;
-  background: var(--surface-2, #f5f3ee);
-  border-radius: 12px;
+  margin-top: 4px;
 }
 
-.work-pipeline-cell__count {
+.work-pipeline-vrow {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition: background 200ms ease;
+}
+
+.work-pipeline-vrow:hover {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.work-pipeline-vrow__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.work-pipeline-vrow:nth-child(1) .work-pipeline-vrow__dot { background: var(--brand-red, #c1121f); }
+.work-pipeline-vrow:nth-child(2) .work-pipeline-vrow__dot { background: var(--ga-orange, #ff5e2b); }
+.work-pipeline-vrow:nth-child(3) .work-pipeline-vrow__dot { background: var(--champagne, #bfa170); }
+.work-pipeline-vrow:nth-child(4) .work-pipeline-vrow__dot { background: var(--accent-blue, #0085ff); }
+
+.work-pipeline-vrow__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink, #111);
+}
+
+.work-pipeline-vrow__count {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
-  letter-spacing: -0.024em;
+  letter-spacing: -0.018em;
+  line-height: 1;
   color: var(--ink, #111);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
 }
 
-.work-pipeline-cell__label {
-  font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  color: var(--ink-4, #61605c);
-  text-transform: uppercase;
+/* Active/urgent phase — boldened, opaque white surface, faint hairline
+   matching the phase color. The "you are here" cue. */
+.work-pipeline-vrow--active {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.10),
+    0 1px 2px rgba(60, 45, 30, 0.06);
 }
 
-.work-pipeline-divider {
-  text-align: center;
-  font-family: var(--font-body, "Open Sans");
-  font-size: 18px;
-  color: var(--ink-5, #888);
-  font-weight: 400;
-}
-
-/* ── Timeline list ────────────────────────────────────────── */
+/* ── Timeline / list rows ─────────────────────────────────── */
 
 .work-timeline-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 4px;
 }
 
@@ -115,8 +184,6 @@
   text-overflow: ellipsis;
 }
 
-/* ── Generic list rows (calendar, drafts, etc.) ───────────── */
-
 .work-row-status {
   display: inline-flex;
   margin-top: 6px;
@@ -125,7 +192,7 @@
 .work-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 4px;
 }
 
@@ -136,12 +203,323 @@
   align-items: center;
 }
 
-.work-list-row__date {
-  font-family: var(--font-mono, monospace);
+/* ── Action queue (Needs-you panel) — premium iconic 3-row queue.
+   Each row: 28×28 colored icon tile + verb + target + when. The
+   icon tile carries the color (red/champagne/grey by urgency); the
+   row background picks up a faint matching tint so the panel reads
+   as a colorful action stack, not a text list. */
+
+.work-queue {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.work-queue__row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-queue__row:hover {
+  transform: translate(1px, 1px);
+}
+
+/* iOS 26 row tint — soft full-fill wash, no left-edge accent line.
+   The colored icon tile carries the urgency cue; the row background
+   is just a faint matching warmth so the page reads as 3 layered
+   tints not 3 hard-edged callouts. */
+.work-queue__row--submit {
+  background: rgba(193, 18, 31, 0.06);
+}
+.work-queue__row--submit:hover {
+  background: rgba(193, 18, 31, 0.10);
+}
+
+.work-queue__row--review {
+  background: rgba(191, 161, 112, 0.10);
+}
+.work-queue__row--review:hover {
+  background: rgba(191, 161, 112, 0.16);
+}
+
+.work-queue__row--verify {
+  background: rgba(20, 19, 15, 0.04);
+}
+.work-queue__row--verify:hover {
+  background: rgba(20, 19, 15, 0.07);
+}
+
+/* Icon tile — 28×28 rounded with saturated bg + snow icon. */
+.work-queue__tile {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--snow, #fff);
+  flex-shrink: 0;
+}
+.work-queue__tile svg { display: block; }
+
+.work-queue__row--submit .work-queue__tile { background: var(--brand-red, #c1121f); }
+.work-queue__row--review .work-queue__tile { background: var(--champagne-deep, #8a704a); }
+.work-queue__row--verify .work-queue__tile { background: var(--ink-3, #3a3835); }
+
+/* Two-line copy — tiny verb above, target name below. */
+.work-queue__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.work-queue__verb {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.work-queue__row--submit .work-queue__verb { color: var(--brand-red, #c1121f); }
+.work-queue__row--review .work-queue__verb { color: var(--champagne-deep, #8a704a); }
+.work-queue__row--verify .work-queue__verb { color: var(--ink-3, #3a3835); }
+
+.work-queue__target {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.work-queue__when {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Segmented progress (legacy, may be reused in another page)
+   — visual phase track */
+.work-segments {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.work-segments__step {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  text-align: center;
+  padding: 10px 4px;
+  border-radius: 8px;
+  background: var(--surface-2, #f5f3ee);
+  position: relative;
+}
+
+/* States distinguished by background fill alone — no top border line. */
+.work-segments__step.is-done {
+  color: var(--ink, #111);
+  background: rgba(20, 19, 15, 0.10);
+}
+
+.work-segments__step.is-current {
+  color: var(--snow, #fff);
+  background: var(--ink, #14130f);
+}
+
+/* ── Countdown rail (Today panel) — replaces "Next in 47 min · X" sub.
+   Pulsing champagne dot + big numeral + "min until" label + arrow + target.
+   Compact 1-line element that anchors the panel's bottom with a designed
+   feel, not a paragraph. */
+
+.work-countdown {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(191, 161, 112, 0.14),
+    rgba(191, 161, 112, 0.04) 80%
+  );
+  box-shadow: inset 2px 0 0 var(--champagne, #bfa170);
+  position: relative;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.work-countdown__pulse {
+  position: relative;
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--champagne, #bfa170);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(191, 161, 112, 0.55);
+  animation: work-countdown-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes work-countdown-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(191, 161, 112, 0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(191, 161, 112, 0); }
+}
+
+.work-countdown__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  color: var(--champagne-deep, #8a704a);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-countdown__unit {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+}
+
+.work-countdown__arrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-4, #61605c);
+}
+
+.work-countdown__target {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #111);
+}
+
+/* ── Stat chips (Next-7-days panel) — 3 icon-tile + count + label.
+   Replaces "3 shoots · 2 deadlines · 0 conflicts" with a designed
+   chip row. Each chip carries its own subtle background + colored
+   icon tile so counts read at a glance, not as text. */
+
+.work-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.work-stats__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.04);
+  white-space: nowrap;
+}
+
+.work-stats__icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--snow, #fff);
+  flex-shrink: 0;
+}
+
+.work-stats__chip--shoots .work-stats__icon { background: var(--brand-red, #c1121f); }
+.work-stats__chip--deadlines .work-stats__icon { background: var(--champagne-deep, #8a704a); }
+.work-stats__chip--conflicts .work-stats__icon { background: var(--ink-3, #3a3835); }
+
+.work-stats__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.014em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-stats__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+
+/* ── Champagne progress (Drafts panel) — milestone-style fill */
+.work-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.work-progress__track {
+  height: 8px;
+  background: rgba(191, 161, 112, 0.18);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.work-progress__fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--champagne, #bfa170) 0%,
+    var(--champagne-deep, #8a704a) 100%
+  );
+  border-radius: 4px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-progress__meta {
+  font-family: var(--font-body, "Open Sans");
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--ink-4, #61605c);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+}
+
+.work-list-row__date {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--ink-3, #3a3835);
   text-transform: uppercase;
 }
 
@@ -156,382 +534,129 @@
   text-overflow: ellipsis;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   Work Uplift v2 (2026-05-07) — Liquid Glass · Atmospheric · Colorful
-   hub-shell.css already supplies surface tokens, the L/R escape margin,
-   the 2-ellipse atmosphere and the > * stacking lift — this section
-   adds the missing blur tokens, upgrades the backdrop to the dashboard
-   5-layer haze (visual continuity), and adds two page-specific accents.
-   APPENDED ONLY — does not modify hub-shell.
-   ═══════════════════════════════════════════════════════════════════════ */
+/* ── "Next move" ink solid panel — the executive register ─────
+   macOS-26-widget feel: one massive time numeral anchors the panel.
+   Time fills the visual mass, everything else hugs it. Square-ish
+   span-4 tile, content centered vertically by the parent .bento__body
+   flex justify-content. */
 
-.work-hub {
-  /* Blur tokens not in hub-shell — required for backdrop-filter on glass.
-     Surface alphas, shadows and specular insets are inherited from
-     hub-shell.css unchanged. */
-  --lg-blur-hero: blur(32px) saturate(1.55);
-  --lg-blur-std:  blur(24px) saturate(1.4);
-  --lg-blur-soft: blur(16px) saturate(1.2);
-
-  position: relative;
-  isolation: isolate;
+.work-next {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* Upgrade the hub-shell 2-ellipse backdrop to the 5-layer dashboard
-   haze, GA-orange weighted (work hub identity = execution layer). */
-.work-hub::before {
-  background:
-    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(255, 94, 43, 0.10),   transparent 62%),
-    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
-    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(176, 133, 96, 0.08),  transparent 65%),
-    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
-    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+.work-next__time {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(56px, 6vw, 88px);
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  line-height: 0.92;
+  color: var(--snow, #fff);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
 }
 
-/* ── Section heads — colorful gradient underline + status dot ───────────
-   Layered on top of hub-shell's hairline border so we keep the editorial
-   rhythm but add the chromatic horizon used across dashboard + analytics. */
-.work-hub .hub-section {
-  position: relative;
+.work-next__time-meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+  margin: 0;
 }
-.work-hub .hub-section::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 94, 43, 0.55) 0%,
-    rgba(191, 161, 112, 0.55) 35%,
-    rgba(0, 133, 255, 0.45) 70%,
-    rgba(191, 161, 112, 0) 100%
-  );
-  border-radius: 2px;
-  pointer-events: none;
+
+.work-next__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(18px, 1.7vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.014em;
+  color: var(--snow, #fff);
+  margin: 14px 0 0;
+  line-height: 1.15;
 }
-.work-hub .hub-section__title {
+
+.work-next__caption {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+/* Icon chips — replaces the bullet list. Each chip is one fact
+   surfaced as a visual atom: 14px lucide icon + label, packed in a
+   subtle dark pill. Champagne icon picks the eye to the chip group,
+   the row reads as 3 visual atoms not as a paragraph. */
+.work-next__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.work-next__chip {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 0.5px rgba(191, 161, 112, 0.30);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
 }
-.work-hub .hub-section__title::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ga-orange, #ff5e2b);
-  box-shadow: 0 0 0 4px rgba(255, 94, 43, 0.10);
+
+.work-next__chip svg {
+  color: var(--champagne, #bfa170);
   flex-shrink: 0;
 }
 
-/* ── Pipeline kanban cells — liquid glass + status-rotating top accent ──
-   The Pipeline module is the work hub's anchor surface (span 12, hero).
-   Glassify the 4 phase cells and rotate the top accent so accept → shoot
-   → submit → closed reads as a colorful timeline at a glance. */
-.work-hub .work-pipeline-row .work-pipeline-cell {
-  position: relative;
-  background: var(--lg-bg-std);
-  -webkit-backdrop-filter: var(--lg-blur-soft);
-          backdrop-filter: var(--lg-blur-soft);
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-1);
-  overflow: hidden;
-  isolation: isolate;
-  transition:
-    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 320ms cubic-bezier(0.22, 1, 0.36, 1);
+/* ── KPI override inside Work bento — secondary scale.
+   The hero (NEXT MOVE 9:00 at 88px) carries the heaviest typographic
+   weight on the page. Other KPIs (2 / 6 / etc.) sit one tier below at
+   ~64px so the contrast doesn't read as "page of giant high-contrast
+   numbers". Bumped eyebrow + sub to fix the awkward extreme contrast. */
+
+.work-bento .kpb__value {
+  font-size: clamp(48px, 4.6vw, 68px) !important;
+  letter-spacing: -0.028em;
+  line-height: 0.92;
 }
-.work-hub .work-pipeline-row .work-pipeline-cell::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  z-index: 1;
-  border-radius: 12px 12px 0 0;
+
+.work-bento .kpb--compact .kpb__value {
+  font-size: clamp(48px, 4.6vw, 68px) !important;
 }
-/* Outreach (1st) → red, Shooting (2nd) → orange, Submitted (3rd) →
-   champagne, Closed (4th) → blue. Each cell is wrapped in a divider
-   span between phases, so use nth-of-type to pick only the cells. */
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(1)::before {
-  background: linear-gradient(90deg, var(--brand-red, #c1121f), rgba(193, 18, 31, 0.4));
+
+.work-bento .kpb__eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.08em;
 }
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(2)::before {
-  background: linear-gradient(90deg, var(--ga-orange, #ff5e2b), rgba(255, 94, 43, 0.4));
-}
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(3)::before {
-  background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45));
-}
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(4)::before {
-  background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4));
-}
-.work-hub .work-pipeline-row .work-pipeline-cell:hover {
-  transform: translate(2px, 2px);
-  background: var(--lg-bg-light);
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-2);
+
+.work-bento .kpb {
+  gap: 8px;
 }
 
 /* ── Reduced motion / transparency fallbacks ──────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .work-hub .work-pipeline-row .work-pipeline-cell {
+  .work-pipeline-cell {
     transition: none;
   }
-  .work-hub .work-pipeline-row .work-pipeline-cell:hover {
+  .work-pipeline-cell:hover {
     transform: none;
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .work-hub .work-pipeline-row .work-pipeline-cell {
-    background: var(--snow) !important;
+  .work-pipeline-cell {
+    background: var(--snow, #fff) !important;
     -webkit-backdrop-filter: none !important;
             backdrop-filter: none !important;
-  }
-}
-
-
-/* ============================================================
-   Wave 9 — Typography Readability
-   Cap measure on long-form text so it doesn't cram left-to-right
-   on wide screens. Hero/section titles get fluid scaling, paragraph
-   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
-   Does not modify Liquid Glass surfaces, atmospheric backdrops,
-   colorful section dividers, or Wave 1-8 uplifts.
-   ============================================================ */
-
-.work-hub p,
-.work-hub .body-text,
-.work-hub .description,
-.work-hub .ms-page-header-subtitle,
-.work-hub [class*="empty-state"] p,
-.work-hub [class*="subtitle"]:not(h1):not(h2):not(h3) {
-  max-width: 72ch;
-  line-height: 1.6;
-}
-
-.work-hub .ms-page-header-subtitle,
-.work-hub [class*="hero-sub"] {
-  max-width: 56ch;
-  font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.55;
-}
-
-.work-hub [class*="eyebrow"]:not([class*="card__eyebrow"]) {
-  letter-spacing: 0.08em;
-}
-
-.work-hub h1,
-.work-hub .ms-page-header-title,
-.work-hub [class*="page-title"]:not([class*="card"]) {
-  font-size: clamp(40px, 5.6vw, 80px);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-}
-
-.work-hub h2,
-.work-hub .db-section-title,
-.work-hub [class*="section-title"]:not([class*="card"]) {
-  font-size: clamp(28px, 3.5vw, 48px);
-  line-height: 1.1;
-}
-
-.work-hub p + p {
-  margin-top: 12px;
-}
-
-/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
-
-@media (min-width: 1024px) {
-  .work-hub {
-    gap: 96px;
-    padding-top: 48px;
-    padding-bottom: 96px;
-  }
-
-  .work-hub > .ms-page-header,
-  .work-hub > [class*="page-header"] {
-    margin-bottom: 24px;
-  }
-
-  .work-hub > section,
-  .work-hub > [class*="-section"] {
-    margin-top: 24px;
-  }
-
-  .work-hub > section + section {
-    margin-top: 0;
-  }
-
-  .work-hub [class*="section-head"]:not([class*="card"]) {
-    margin-bottom: 32px;
-  }
-}
-
-@media (max-width: 1023px) and (min-width: 768px) {
-  .work-hub {
-    gap: 64px;
-    padding-top: 32px;
-    padding-bottom: 64px;
-  }
-}
-
-@media (max-width: 767px) {
-  .work-hub {
-    gap: 48px;
-    padding-top: 24px;
-    padding-bottom: 48px;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Horizontal Breathing (2026-05-07)
-   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
-   16/32/48/64 across breakpoints. No prior negative-escape rule exists
-   on .work-hub, so !important is NOT required here — auto margins apply
-   cleanly. Atmospheric ::before backdrop is position:fixed and stays
-   full-bleed.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1440px) {
-  .work-hub {
-    max-width: 1440px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 64px;
-    padding-right: 64px;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .work-hub {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .work-hub {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
-}
-
-@media (max-width: 767px) {
-  .work-hub {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-}
-
-/* Inner content cap for pipeline rows + bento */
-.work-hub .db-kpi-grid,
-.work-hub .db-list-surface,
-.work-hub [class*="kpi-row"],
-.work-hub [class*="bento"] {
-  max-width: 1320px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Ultra-Wide Polish (2026-05-07)
-   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the creator work hub feels iOS
-   26 native instead of jammed-against-sidebar on huge displays.
-   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
-   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
-   - Holds KPI gap to 24px so cards do not balloon.
-   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
-     (inline rgba fallback; no new tokens introduced).
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1920px) {
-  .work-hub {
-    padding-left: 80px;
-    padding-right: 80px;
-    max-width: 1480px;
-  }
-  .work-hub .db-kpi-grid,
-  .work-hub [class*="kpi-row"] {
-    gap: 24px;
-  }
-}
-
-@media (min-width: 2560px) {
-  .work-hub {
-    padding-left: 96px;
-    padding-right: 96px;
-    max-width: 1600px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .work-hub .db-kpi-grid .kpi-card,
-  .work-hub [class*="hero-card"],
-  .work-hub [class*="bento-tile"] {
-    box-shadow:
-      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
-      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
-      0 2px 4px rgba(60, 45, 30, 0.06),
-      0 16px 48px rgba(60, 45, 30, 0.10),
-      0 32px 80px rgba(60, 45, 30, 0.06);
-  }
-}
-
-/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
-
-@media (max-width: 767px) {
-  .work-hub button:not([class*="icon-only"]),
-  .work-hub a[role="button"],
-  .work-hub [role="button"] {
-    min-height: 44px;
-  }
-  .work-hub button[class*="icon-only"],
-  .work-hub [class*="icon-btn"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Pipeline campaign titles ellipsis */
-  .work-hub [class*="campaign-name"],
-  .work-hub [class*="merchant-name"],
-  .work-hub [class*="row-title"] {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-
-  /* Brief / requirement 3-line clamp on bento tiles */
-  .work-hub [class*="brief-text"],
-  .work-hub [class*="requirements-text"] {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Submission URLs / IDs wrap */
-  .work-hub [class*="-url"],
-  .work-hub [class*="-mono"],
-  .work-hub code {
-    word-break: break-all;
-    overflow-wrap: break-word;
-  }
-
-  .work-hub {
-    overflow-x: hidden;
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
   }
 }

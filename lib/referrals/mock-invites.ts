@@ -21,8 +21,8 @@ export interface MockInvite {
 const MOCK_INVITES: Record<string, MockInvite> = {
   MAYA25: {
     code: "MAYA25",
-    inviterName: "Maya Chen",
-    inviterHandle: "@maya.eats.nyc",
+    inviterName: "Alex Chen",
+    inviterHandle: "@alex.eats.nyc",
     inviterAvatar: "MC",
     inviterTier: "Gold Creator",
     inviterNeighborhood: "Williamsburg",
@@ -62,15 +62,15 @@ const MOCK_INVITES: Record<string, MockInvite> = {
 
 /**
  * Resolve invite code to inviter data.
- * Falls back to default Maya Chen if code is unknown.
+ * Falls back to default Alex Chen if code is unknown.
  */
 export function resolveInvite(code: string): MockInvite {
   const normalized = code.toUpperCase();
   return (
     MOCK_INVITES[normalized] ?? {
       code: normalized,
-      inviterName: "Maya Chen",
-      inviterHandle: "@maya.eats.nyc",
+      inviterName: "Alex Chen",
+      inviterHandle: "@alex.eats.nyc",
       inviterAvatar: "MC",
       inviterTier: "Gold Creator",
       inviterNeighborhood: "Williamsburg",

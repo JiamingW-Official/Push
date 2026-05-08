@@ -1,197 +1,215 @@
 "use client";
 
 /* ============================================================
-   /creator/me — IDENTITY domain hub. Audit § 5.6 bento spec.
+   /creator/me — IDENTITY hub. v2 (2026-05-08, Work-template parity)
 
-   Collapses 6 fragmented pages into one anchor:
-     - /profile (basics) → IDENTITY: Profile module
-     - /analytics/tier (progression) → IDENTITY: Tier module
-     - /leaderboard (rank) → IDENTITY: Rank module
-     - /portfolio (work) → IDENTITY: Portfolio module
-     - /settings (preferences) → IDENTITY: Settings module
-     - /public/[id] (shared view) → IDENTITY: Public link module
-
-   Bento (audit § 5.6):
-     [─ PROFILE PHOTO + BADGES (7) ─] [─ TIER (5×2) ─]
-     [─ LEADERBOARD RANK (7) ──────]
-     [─ PORTFOLIO grid (7) ──] [─ SETTINGS link (5) ──]
-     [──── PUBLIC LINK preview (12) ───────────────────]
+   Champagne accent — identity is ceremonial, warm. ONE champagne
+   solid hero (Profile anchor) + 1 ink solid (Public link). Each panel
+   surfaces a different identity sub-surface (profile / tier / rank /
+   portfolio / settings / public link).
    ============================================================ */
 
 import {
   BentoModule,
   KpiBlock,
-  ProgressBar,
   StatusPill,
 } from "@/components/shared/primitives";
+import {
+  User,
+  TrendingUp,
+  Trophy,
+  ImageIcon,
+  Settings,
+  Share2,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
 import "@/components/shared/hub-shell.css";
 import "./me.css";
 
+const ICON_PROPS = { size: 18, strokeWidth: 1.75 } as const;
+
 export default function IdentityHub() {
+  // Mock identity data — replace with real session/profile fetch when wired.
+  const me = {
+    name: "Alex Chen",
+    handle: "@alexc.nyc",
+    tier: "Operator",
+    tierIdx: 3,
+    score: 60,
+    nextTier: "Proven",
+    nextScore: 65,
+    rank: 14,
+    rankCity: "Williamsburg",
+    rankCityTotal: 142,
+    portfolioCount: 18,
+    publicLink: "push.nyc/c/alex-chen",
+  };
+  const pct = Math.round((me.score / me.nextScore) * 100);
+
   return (
     <main className="me-hub" aria-label="Identity">
       <header className="me-hero">
-        <p className="me-hero__eyebrow">IDENTITY · WHO YOU ARE ON PUSH</p>
-        <h1 className="me-hero__title">Me</h1>
-        <p className="me-hero__sub">
-          Six surfaces for the creator-side identity — profile that brands see,
-          tier you've earned, rank in your neighborhood, portfolio of best work,
-          settings that govern everything, and the public link that packages it
-          all.
-        </p>
-      </header>
-
-      <header className="hub-section">
-        <h2 className="hub-section__title">Identity anchor</h2>
-        <span className="hub-section__count">01 · profile + tier</span>
+        <div className="me-hero__left">
+          <h1 className="me-hero__title">Me</h1>
+          <p className="me-hero__sub">
+            Profile · tier · rank · portfolio · settings · public link — six
+            surfaces, one identity.
+          </p>
+        </div>
       </header>
 
       <section className="me-bento" aria-label="Identity modules">
-        {/* ── PROFILE PHOTO + BADGES (span 7) — anchor ── */}
+        {/* ── Row 1 ── */}
+
+        {/* PROFILE — champagne solid hero */}
         <BentoModule
           href="/creator/profile"
-          eyebrow="PROFILE · YOUR ANCHOR"
-          span={7}
-          live="off"
-          priority="hero"
-          sub="Edit name, bio, photo, niches, neighborhoods"
+          eyebrow="Profile · who you are"
+          icon={<User {...ICON_PROPS} />}
+          span={5}
+          tone="champagne"
         >
-          <div className="me-profile-row">
+          <div className="me-profile">
             <span className="me-avatar" aria-hidden>
-              M
+              {me.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
             </span>
-            <div className="me-profile-text">
-              <span className="me-profile-name">Maya</span>
-              <span className="me-profile-handle">
-                @maya · Williamsburg, BK
-              </span>
-              <div className="me-profile-badges">
-                <StatusPill variant="ink" label="Operator tier" />
-                <StatusPill variant="green" label="Verified" dot />
-                <StatusPill variant="amber" label="FTC-ready" />
-              </div>
+            <div className="me-profile__copy">
+              <h2 className="me-profile__name">{me.name}</h2>
+              <p className="me-profile__handle">{me.handle}</p>
+              <p className="me-profile__meta">
+                {me.tier} · score {me.score} · {me.rankCity}
+              </p>
             </div>
           </div>
+          <div className="me-badges">
+            <span className="me-badge me-badge--gold">Operator</span>
+            <span className="me-badge">Verified</span>
+            <span className="me-badge">Brooklyn local</span>
+          </div>
         </BentoModule>
 
-        {/* ── TIER (span 5) ── */}
+        {/* TIER — 6-tier ladder visualization w/ score progression */}
         <BentoModule
           href="/creator/analytics/tier"
-          eyebrow="TIER · OPERATOR · 67% TO PROVEN"
-          span={5}
-          live="live"
-          sub="Score · 67/100 · 33 pts to next tier"
+          eyebrow={`Tier · ${me.tier}`}
+          icon={<TrendingUp {...ICON_PROPS} />}
+          span={4}
         >
-          <KpiBlock
-            eyebrow=""
-            value="67"
-            tone="ink"
-            delta={{ direction: "up", label: "+4 this month" }}
-            compact
-          />
-          <ProgressBar
-            mode="milestone"
-            value={67}
-            milestones={[
-              { atPct: 0, label: "Seed" },
-              { atPct: 25, label: "Explorer" },
-              { atPct: 50, label: "Operator" },
-              { atPct: 75, label: "Proven" },
-              { atPct: 100, label: "Closer" },
-            ]}
-            tone="champagne"
-          />
+          <p className="me-tier__score">{me.score}</p>
+          <p className="me-tier__score-lbl">Push score</p>
+          <ol className="me-tier-ladder" aria-label="6-tier ladder">
+            {[
+              { name: "Seed", floor: 0 },
+              { name: "Explorer", floor: 10 },
+              { name: "Operator", floor: 30 },
+              { name: "Proven", floor: 65 },
+              { name: "Closer", floor: 85 },
+              { name: "Obsidian", floor: 95 },
+            ].map((t, i) => {
+              const reached = me.score >= t.floor;
+              const current = me.tierIdx === i;
+              return (
+                <li
+                  key={t.name}
+                  className={
+                    "me-tier-ladder__step" +
+                    (reached ? " is-reached" : "") +
+                    (current ? " is-current" : "")
+                  }
+                >
+                  <span className="me-tier-ladder__bar" />
+                  <span className="me-tier-ladder__lbl">{t.name}</span>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="me-tier__track" aria-label="Tier progress">
+            <div className="me-tier__fill" style={{ width: `${pct}%` }} />
+          </div>
+          <p className="me-tier__meta">
+            <strong>{me.nextScore - me.score} pts</strong> to {me.nextTier}
+          </p>
         </BentoModule>
 
-        {/* ── LEADERBOARD RANK (span 7) ── */}
+        {/* RANK — leaderboard */}
         <BentoModule
           href="/creator/leaderboard"
-          eyebrow="RANK · WILLIAMSBURG · 30D"
-          span={7}
-          live="off"
-          sub="Cohort · 24 creators · 1 of 3 you outranked this week"
+          eyebrow="Rank · neighborhood"
+          icon={<Trophy {...ICON_PROPS} />}
+          span={3}
         >
-          <div className="me-rank-row">
-            <KpiBlock eyebrow="" value="#7" tone="ink" />
-            <span className="me-rank-context">
-              of <strong>24</strong> creators in your neighborhood ·{" "}
-              <strong>↑3</strong> spots vs last week
-            </span>
-          </div>
+          <KpiBlock
+            eyebrow={me.rankCity.toUpperCase()}
+            value={`#${me.rank}`}
+            tone="ink"
+          />
+          <span className="me-row-status">
+            <StatusPill
+              variant="green"
+              label={`Top ${Math.round((me.rank / me.rankCityTotal) * 100)}%`}
+              dot
+            />
+          </span>
         </BentoModule>
-      </section>
 
-      <header className="hub-section">
-        <h2 className="hub-section__title">Public surface</h2>
-        <span className="hub-section__count">02 · portfolio + link</span>
-      </header>
+        {/* ── Row 2 ── */}
 
-      <section className="me-bento" aria-label="Public-facing modules">
-        {/* ── PORTFOLIO (span 7) ── */}
+        {/* PORTFOLIO — 3-image strip */}
         <BentoModule
           href="/creator/portfolio"
-          eyebrow="PORTFOLIO · BEST-OF WORK"
-          span={7}
-          live="off"
-          sub="14 pieces · 4 featured · what brands see first"
+          eyebrow={`Portfolio · ${me.portfolioCount} works`}
+          icon={<ImageIcon {...ICON_PROPS} />}
+          span={5}
         >
-          <div className="me-portfolio-strip">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <span
-                key={i}
-                className={`me-portfolio-tile me-portfolio-tile--${i % 3}`}
-                aria-hidden
-              />
-            ))}
-            <span className="me-portfolio-more">+9</span>
+          <div className="me-portfolio" aria-label="Portfolio preview">
+            <span className="me-portfolio__tile me-portfolio__tile--1" />
+            <span className="me-portfolio__tile me-portfolio__tile--2" />
+            <span className="me-portfolio__tile me-portfolio__tile--3" />
+            <span className="me-portfolio__more">+15</span>
           </div>
+          <p className="me-portfolio__meta">
+            <Sparkles size={12} strokeWidth={2.25} /> 3 most-engaged this month
+          </p>
         </BentoModule>
 
-        {/* ── SETTINGS (span 5) ── */}
+        {/* SETTINGS — link tile */}
         <BentoModule
           href="/creator/settings"
-          eyebrow="SETTINGS · 9 SECTIONS"
-          span={5}
-          live="off"
-          sub="Account · Payments · Verification · Notifications · Privacy · ..."
+          eyebrow="Settings"
+          icon={<Settings {...ICON_PROPS} />}
+          span={4}
         >
-          <div className="me-settings-list">
-            <span className="me-settings-row">
-              <StatusPill variant="green" label="ID verified" dot />
-            </span>
-            <span className="me-settings-row">
-              <StatusPill variant="green" label="Bank linked" dot />
-            </span>
-            <span className="me-settings-row">
-              <StatusPill variant="amber" label="2FA off" />
-            </span>
-          </div>
+          <ul className="me-list">
+            <li className="me-list__row">
+              <span className="me-list__name">Notifications</span>
+              <span className="me-list__count">3</span>
+            </li>
+            <li className="me-list__row">
+              <span className="me-list__name">Payouts &amp; tax</span>
+              <span className="me-list__count">W-9</span>
+            </li>
+            <li className="me-list__row">
+              <span className="me-list__name">Privacy &amp; data</span>
+              <ArrowRight size={14} strokeWidth={2.25} />
+            </li>
+          </ul>
         </BentoModule>
 
-        {/* ── PUBLIC LINK PREVIEW (span 12) ── */}
+        {/* PUBLIC LINK — ink solid */}
         <BentoModule
-          href="/creator/public/me"
-          eyebrow="PUBLIC LINK · WHAT MERCHANTS SEE"
-          span={12}
-          live="off"
-          sub="push.app/c/maya · share with brands when pitching renewals"
+          href={`/creator/public/alex-chen`}
+          eyebrow="Public link · share"
+          icon={<Share2 {...ICON_PROPS} />}
+          span={3}
+          tone="ink"
         >
-          <div className="me-public-row">
-            <KpiBlock eyebrow="REACH" value="14.2K" tone="ink" compact />
-            <KpiBlock eyebrow="COMPLETION" value="98%" tone="ink" compact />
-            <KpiBlock
-              eyebrow="AVG STORY"
-              value="$42"
-              tone="champagne"
-              compact
-            />
-            <span className="me-public-cta">
-              <span className="me-public-handle">push.app/c/maya</span>
-              <span className="me-public-action" aria-hidden>
-                Preview public profile →
-              </span>
-            </span>
-          </div>
+          <p className="me-link__url">{me.publicLink}</p>
+          <p className="me-link__meta">142 views · last 30d</p>
+          <span className="me-link__btn">Copy link →</span>
         </BentoModule>
       </section>
     </main>

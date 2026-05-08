@@ -31,7 +31,7 @@ export const MOCK_MERCHANT_NOTIFICATIONS: Notification[] = [
     id: "notif-001",
     recipient_user_id: RECIPIENT,
     kind: "applicant_pending",
-    title: "Maya Rodriguez applied to Summer Menu Launch",
+    title: "Alex Chen applied to Summer Menu Launch",
     body: "Tier: Operator · Push Score 71 · 4.2k followers. Cover letter attached.",
     link: "/merchant/applicants?campaignId=camp-006",
     read_at: null,

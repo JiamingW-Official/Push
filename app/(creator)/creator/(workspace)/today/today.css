@@ -1,895 +1,402 @@
-/* today-page: standard page scroll (NOT viewport-locked) */
-.today-page {
-  padding: 0;
-  max-width: 960px;
-  margin: 0 auto;
-  padding-bottom: 80px;
-}
+/* ============================================================
+   /creator/today — TODAY hub. v2 (2026-05-08)
+   Mirrors /creator/work template: hub-shell hero, 12-col bento,
+   minmax(272, auto) rows, ~70px bottom bleed, GA-orange page accent.
+   ============================================================ */
 
-/* Hero block */
-.hero-block {
-  padding: 64px 64px 0;
-  border-bottom: 1px solid var(--hairline, rgba(10, 10, 10, 0.08));
-  padding-bottom: 32px;
-  margin-bottom: 40px;
-}
-
-.hero-eyebrow {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-4, #9b9994);
-  margin: 0 0 8px;
-}
-
-.hero-greeting {
-  font-family: var(--font-display, "Darky");
-  font-size: clamp(32px, 4vw, 40px);
-  font-weight: 800;
-  color: var(--ink, #0a0a0a);
-  line-height: 1.1;
-  margin: 0 0 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hero-line {
-  font-family: var(--font-display, "Darky");
-  font-size: clamp(18px, 1.6vw, 22px);
-  font-weight: 500;
-  color: var(--ink-3, #61605c);
-  max-width: 56ch;
-  line-height: 1.4;
-  margin: 0 0 24px;
-}
-
-.hero-divider {
-  border: none;
-  border-top: 1px solid var(--hairline, rgba(10, 10, 10, 0.08));
-  margin: 0;
-}
-
-/* Grid */
-.today-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  padding: 0 64px;
-}
-
-@media (min-width: 768px) {
-  .today-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .today-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-/* Action cards */
-.action-card {
-  display: grid;
-  grid-template-columns: 40px 1fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
+.today-hub {
+  padding-top: 24px;
+  padding-bottom: 8px;
+  margin-bottom: -88px;
   background: var(--snow, #fff);
-  border-radius: var(--r-card, 10px);
-  box-shadow: var(--shadow-1);
-  transition: transform 160ms ease;
-}
-.action-card:hover {
-  transform: translate(2px, 2px);
-}
-.action-card:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-.action-card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-lg, 12px);
-  background: var(--surface-2, #f5f3ee);
-  color: var(--ink-4, #9b9994);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.action-card-title {
-  font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 4px;
-}
-
-.action-card-meta {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0;
-}
-
-.action-card-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.action-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* Pulse */
-.pulse-section {
-  /* section wrapper */
-}
-.pulse-row {
-  display: grid;
-  grid-template-columns: 12px 1fr auto auto;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--hairline, rgba(10, 10, 10, 0.08));
-}
-.pulse-row:last-child {
-  border-bottom: none;
-}
-
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.pulse-dot--verified {
-  background: var(--ga-green, #4ade80);
-}
-.pulse-dot--pending {
-  background: transparent;
-  box-shadow: inset 0 0 0 1.5px var(--ink-5, #c8c4be);
-}
-.pulse-dot--rejected {
-  background: var(--brand-red, #c1121f);
-}
-
-.pulse-time {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink-4);
-  flex-shrink: 0;
-}
-
-.pulse-label {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink-2, #3a3835);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 32ch;
-}
-
-.pulse-payout {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  flex-shrink: 0;
-}
-.pulse-payout--muted {
-  color: var(--ink-5);
-}
-
-/* Opportunities — always single-column; opp-cards stack vertically
-   (this section lives inside a narrow 1/3 column on desktop) */
-.opps-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.opp-card {
-  padding: 20px;
-  background: var(--snow, #fff);
-  border-radius: var(--r-card, 10px);
-  box-shadow: var(--shadow-2);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  transition: transform 160ms ease;
-}
-.opp-card:hover {
-  transform: translate(2px, 2px);
-}
-.opp-card:active {
-  transform: translate(3px, 3px) scale(0.98);
-}
-
-.opp-watch {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  background: var(--ink, #0a0a0a);
-  color: var(--snow, #fff);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: 999px;
-  width: fit-content;
-  margin-bottom: 12px;
-}
-
-.opp-brand {
-  font-family: var(--font-body);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 4px;
-}
-
-.opp-category {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0 0 16px;
-}
-
-.opp-countdown {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink-4);
-  margin: 0 0 16px;
-}
-
-/* Yesterday recap — spans all grid columns on desktop */
-.today-recap-wrap {
-  grid-column: 1 / -1;
-}
-
-.recap-details {
-  background: var(--snow, #fff);
-  border-radius: var(--r-card, 10px);
-  box-shadow: var(--shadow-1);
-  overflow: hidden;
-}
-
-.recap-summary {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
-  cursor: pointer;
-  list-style: none;
-  height: 56px;
-  min-height: 56px;
-}
-.recap-summary::-webkit-details-marker {
-  display: none;
-}
-
-.recap-eyebrow {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  flex-shrink: 0;
-}
-
-.recap-stats {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink-3);
-}
-
-.recap-chevron {
-  width: 16px;
-  height: 16px;
-  color: var(--ink-5);
-  transition: transform 200ms ease;
-  flex-shrink: 0;
-}
-.recap-details[open] .recap-chevron {
-  transform: rotate(90deg);
-}
-
-.recap-body {
-  padding: 0 20px 16px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  border-top: 1px solid var(--hairline);
-}
-
-.recap-stat-row {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink-3);
-}
-
-/* Responsive padding */
-@media (max-width: 768px) {
-  .hero-block {
-    padding: 32px 24px 0;
-    padding-bottom: 24px;
-  }
-  .today-grid {
-    padding: 0 24px;
-  }
-}
-@media (max-width: 1024px) {
-  .hero-block {
-    padding: 48px 48px 0;
-    padding-bottom: 28px;
-  }
-  .today-grid {
-    padding: 0 48px;
-  }
-}
-
-
-/* ────────────────────────────────────────────────────────────
-   v12.2 ADDITIONS — Today Pulse Strip (§ 20.6)
-   Tier ☆ Tertiary · ambient daily metrics, sits between hero and grid
-   Authority: Design.md § 20 Product UI Tier System
-   ──────────────────────────────────────────────────────────── */
-
-.today-pulse-wrap {
-  padding: 0 64px;
-  margin: 0 0 32px;
-}
-@media (max-width: 1024px) {
-  .today-pulse-wrap { padding: 0 48px; }
-}
-@media (max-width: 768px) {
-  .today-pulse-wrap { padding: 0 24px; }
-}
-
-.today-pulse-strip {
-  background: var(--snow);
-  border: 1px solid rgba(10, 10, 10, 0.06);
-  border-radius: 12px;
-  padding: 14px 8px;
-  display: flex;
-  align-items: stretch;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.today-pulse-strip::-webkit-scrollbar { display: none; }
-
-.today-pulse-strip__title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-4);
-  padding: 0 18px 0 14px;
-  border-right: 1px dashed rgba(10, 10, 10, 0.08);
-  white-space: nowrap;
-}
-.today-pulse-strip__title__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--ink-3);
-}
-
-.today-pulse-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 0 20px;
-  border-right: 1px dashed rgba(10, 10, 10, 0.08);
-  white-space: nowrap;
-  cursor: pointer;
-  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.today-pulse-stat:last-child { border-right: 0; }
-.today-pulse-stat:hover { transform: translate(2px, 0); }
-
-.today-pulse-stat__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--ink-5);
-  align-self: center;
-  flex-shrink: 0;
-}
-.today-pulse-stat--invites .today-pulse-stat__dot  { background: var(--editorial-pink, #e8447d); }
-.today-pulse-stat--active  .today-pulse-stat__dot  { background: var(--accent-blue,    #0085ff); }
-.today-pulse-stat--scans   .today-pulse-stat__dot  { background: var(--champagne,      #bfa170); }
-.today-pulse-stat--actions .today-pulse-stat__dot  { background: var(--ga-orange,      #ff5e2b); }
-.today-pulse-stat--brand   .today-pulse-stat__dot  { background: var(--brand-red,      #c1121f); }
-
-.today-pulse-stat__label {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-4);
-}
-.today-pulse-stat__value {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-}
-.today-pulse-stat__delta {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-4);
-}
-.today-pulse-stat__delta--up    { color: var(--champagne, #bfa170); }
-.today-pulse-stat__delta--alert { color: var(--editorial-pink, #e8447d); }
-
-.today-pulse-stat__spark {
-  align-self: center;
-  margin: 0 4px;
-}
-
-@media (max-width: 768px) {
-  .today-pulse-strip { padding: 10px 4px; }
-  .today-pulse-stat { padding: 0 14px; }
-  .today-pulse-stat__value { font-size: 16px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .today-pulse-stat { transition: none; }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Today Uplift v2 (2026-05-07) — Liquid Glass · Atmospheric · Colorful
-   Mirrors merchant dashboard.css line 465+ + creator analytics.an2 so
-   today ↔ analytics ↔ dashboard share one continuous visual register.
-   APPENDED ONLY. Pure CSS, no JSX changes. Today does NOT use hub-shell
-   so the full primitive stack lives here.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.today-page {
-  /* Liquid Glass tokens — identical to dashboard + analytics. */
-  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
-  --lg-bg-std:   rgba(255, 255, 255, 0.62);
-  --lg-bg-light: rgba(255, 255, 255, 0.74);
-  --lg-blur-hero: blur(32px) saturate(1.55);
-  --lg-blur-std:  blur(24px) saturate(1.4);
-  --lg-blur-soft: blur(16px) saturate(1.2);
-  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
-  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
-  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
-                 0 8px 24px rgba(60, 45, 30, 0.06);
-  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
-                 0 16px 48px rgba(60, 45, 30, 0.10);
-
   position: relative;
   isolation: isolate;
-  /* Skip the desktop escape margin: today already owns its width via
-     max-width:960px centered. Atmosphere paints fixed inset:0 anyway. */
+  --lg-bg-std: rgba(255, 255, 255, 0.62);
+  --lg-bg-light: rgba(255, 255, 255, 0.74);
+  --lg-spec-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot: inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge: inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1:
+    0 1px 2px rgba(60, 45, 30, 0.05), 0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2:
+    0 2px 4px rgba(60, 45, 30, 0.06), 0 16px 48px rgba(60, 45, 30, 0.10);
 }
 
-/* ── Atmospheric backdrop — 5-layer radial-gradient haze ─────────────────
-   Same chromatic story as dashboard so navigating today → analytics →
-   dashboard reads as one continuous atmosphere rotating around different
-   focal points. */
-.today-page::before {
+/* GA-orange weighted atmospheric backdrop. */
+.today-hub::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
-    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
-    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
-    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
-    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+    radial-gradient(ellipse 70vw 60vh at 78% 18%, rgba(255, 94, 43, 0.10), transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%, rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%, rgba(176, 133, 96, 0.08), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%);
 }
-.today-page > * { position: relative; z-index: 1; }
+.today-hub > * { position: relative; z-index: 1; }
 
-/* ── Hero greeting — colorful gradient underline + pulse dot ─────────────
-   Promotes the existing hero-block divider into a 4-stop gradient horizon
-   so the eye lands on the same chromatic mark as dashboard's H1. */
-.today-page .hero-block {
-  position: relative;
-  border-bottom: none;
-}
-.today-page .hero-block::after {
-  content: "";
-  position: absolute;
-  left: 64px;
-  right: 64px;
-  bottom: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    rgba(193, 18, 31, 0.55) 0%,
-    rgba(191, 161, 112, 0.55) 35%,
-    rgba(0, 133, 255, 0.45) 70%,
-    rgba(191, 161, 112, 0) 100%
-  );
-  border-radius: 2px;
-  pointer-events: none;
-}
-@media (max-width: 768px) {
-  .today-page .hero-block::after { left: 24px; right: 24px; }
+/* ── Hero ──────────────────────────────────────────────────── */
+
+.today-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  column-gap: 32px;
+  padding: 16px 0 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--mist, #d8d4c8);
 }
 
-/* Live indicator dot on hero eyebrow (matches dashboard.ms-page-header). */
-.today-page .hero-eyebrow {
+.today-hero__left { min-width: 0; }
+
+.today-hero__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #61605c);
+  margin: 0 0 12px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
-.today-page .hero-eyebrow::before {
+
+.today-hero__eyebrow::before {
   content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #34c759;
-  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18);
-  animation: today-pulse 2.4s ease-in-out infinite;
+  background: var(--ga-orange, #ff5e2b);
+  box-shadow: 0 0 0 3px rgba(255, 94, 43, 0.18);
+}
+
+.today-hero__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.today-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-4, #61605c);
+  margin: 12px 0 0;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Bento grid ────────────────────────────────────────────── */
+
+.today-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(272px, auto);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .today-hub { padding-top: 16px; padding-bottom: 96px; }
+  .today-bento { gap: 16px; }
+}
+
+@media (max-width: 640px) {
+  .today-bento { grid-template-columns: 1fr; }
+}
+
+/* ── ON NOW (orange solid) ─────────────────────────────────── */
+
+.today-now {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.today-now__time {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(56px, 6vw, 88px);
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  line-height: 0.92;
+  color: var(--snow, #fff);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.today-now__time-meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0;
+}
+
+.today-now__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(20px, 1.9vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.016em;
+  color: var(--snow, #fff);
+  margin: 14px 0 0;
+  line-height: 1.15;
+}
+
+.today-now__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.today-now__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.22);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--snow, #fff);
+  white-space: nowrap;
+}
+
+.today-now__chip svg {
+  color: rgba(255, 255, 255, 0.88);
   flex-shrink: 0;
 }
-@keyframes today-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18); }
-  50%      { box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.06); }
+
+/* ── Live context strip (countdown + weather + ETA) ────── */
+
+.today-now__context {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-/* ── Action cards — liquid glass + urgency-rotating left accent ─────────
-   Action queue is the single most-glanced surface on today. Glassify it
-   and rotate red → blue → champagne via nth-of-type so the queue reads
-   as a colorful triage stack at a glance (mirrors dashboard KPI bento). */
-.today-page .action-list .action-card {
-  position: relative;
-  background: var(--lg-bg-std);
-  -webkit-backdrop-filter: var(--lg-blur-std);
-          backdrop-filter: var(--lg-blur-std);
-  border: none;
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-1);
+.today-now__countdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.today-now__countdown-bar {
+  display: block;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 2px;
   overflow: hidden;
-  isolation: isolate;
-  transition:
-    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 320ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.today-page .action-list .action-card::before {
-  content: "";
-  position: absolute;
-  top: 0; bottom: 0; left: 0;
-  width: 3px;
-  z-index: 1;
-  border-radius: var(--r-card, 10px) 0 0 var(--r-card, 10px);
-}
-.today-page .action-list .action-card:nth-of-type(3n+1)::before {
-  background: linear-gradient(180deg, var(--brand-red, #c1121f), rgba(193, 18, 31, 0.4));
-}
-.today-page .action-list .action-card:nth-of-type(3n+2)::before {
-  background: linear-gradient(180deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4));
-}
-.today-page .action-list .action-card:nth-of-type(3n+3)::before {
-  background: linear-gradient(180deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45));
-}
-.today-page .action-list .action-card:hover {
-  background: var(--lg-bg-light);
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-2);
 }
 
-/* ── Reduced motion / transparency fallbacks ──────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .today-page .hero-eyebrow::before { animation: none; }
-  .today-page .action-list .action-card {
-    transition: none;
-  }
+.today-now__countdown-fill {
+  display: block;
+  height: 100%;
+  background: var(--champagne, #bfa170);
+  border-radius: 2px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  .today-page::before {
-    background: var(--surface-2) !important;
-    opacity: 0.6 !important;
-  }
-  .today-page .action-list .action-card {
-    background: var(--snow) !important;
-    -webkit-backdrop-filter: none !important;
-            backdrop-filter: none !important;
-  }
-}
-
-
-/* ============================================================
-   Wave 9 — Typography Readability
-   Cap measure on long-form text so it doesn't cram left-to-right
-   on wide screens. Hero/section titles get fluid scaling, paragraph
-   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
-   Does not modify Liquid Glass surfaces, atmospheric backdrops,
-   colorful section dividers, or Wave 1-8 uplifts.
-   ============================================================ */
-
-.today-page p,
-.today-page .body-text,
-.today-page .description,
-.today-page .ms-page-header-subtitle,
-.today-page [class*="empty-state"] p,
-.today-page [class*="subtitle"]:not(h1):not(h2):not(h3) {
-  max-width: 72ch;
-  line-height: 1.6;
-}
-
-.today-page .ms-page-header-subtitle,
-.today-page [class*="hero-sub"] {
-  max-width: 56ch;
-  font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.55;
-}
-
-.today-page [class*="eyebrow"]:not([class*="card__eyebrow"]) {
+.today-now__countdown-meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.today-page h1,
-.today-page .ms-page-header-title,
-.today-page [class*="page-title"]:not([class*="card"]) {
-  font-size: clamp(40px, 5.6vw, 80px);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+.today-now__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
 }
 
-.today-page h2,
-.today-page .db-section-title,
-.today-page [class*="section-title"]:not([class*="card"]) {
-  font-size: clamp(28px, 3.5vw, 48px);
+.today-now__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.today-now__meta svg { color: var(--champagne, #bfa170); }
+
+/* ── Action queue ──────────────────────────────────────────── */
+
+.today-queue {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.today-queue__row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 200ms ease;
+}
+
+.today-queue__row--submit { background: rgba(193, 18, 31, 0.06); }
+.today-queue__row--submit:hover { background: rgba(193, 18, 31, 0.10); }
+.today-queue__row--review { background: rgba(191, 161, 112, 0.10); }
+.today-queue__row--review:hover { background: rgba(191, 161, 112, 0.16); }
+.today-queue__row--verify { background: rgba(20, 19, 15, 0.04); }
+.today-queue__row--verify:hover { background: rgba(20, 19, 15, 0.07); }
+
+.today-queue__tile {
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  color: var(--snow, #fff);
+  flex-shrink: 0;
+}
+
+.today-queue__row--submit .today-queue__tile { background: var(--brand-red, #c1121f); }
+.today-queue__row--review .today-queue__tile { background: var(--champagne-deep, #8a704a); }
+.today-queue__row--verify .today-queue__tile { background: var(--ink-3, #3a3835); }
+
+.today-queue__copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+.today-queue__verb {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
   line-height: 1.1;
 }
 
-.today-page p + p {
-  margin-top: 12px;
+.today-queue__row--submit .today-queue__verb { color: var(--brand-red, #c1121f); }
+.today-queue__row--review .today-queue__verb { color: var(--champagne-deep, #8a704a); }
+.today-queue__row--verify .today-queue__verb { color: var(--ink-3, #3a3835); }
+
+.today-queue__target {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px; font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
-/* Per-page override: hero greeting + subtitle tightened to 64ch */
-.today-page .hero-block [class*="greeting"],
-.today-page .hero-block [class*="hero-sub"],
-.today-page .hero-block .ms-page-header-subtitle {
-  max-width: 64ch;
+.today-queue__when {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
-
-@media (min-width: 1024px) {
-  .today-page {
-    gap: 80px;
-    padding-top: 48px;
-    padding-bottom: 96px;
-  }
-
-  .today-page > .ms-page-header,
-  .today-page > [class*="page-header"] {
-    margin-bottom: 24px;
-  }
-
-  .today-page > section,
-  .today-page > [class*="-section"] {
-    margin-top: 24px;
-  }
-
-  .today-page > section + section {
-    margin-top: 0;
-  }
-
-  .today-page [class*="section-head"]:not([class*="card"]) {
-    margin-bottom: 32px;
-  }
-
-  /* Per-page tuning: hero greeting → KPI tiles 32px */
-  .today-page .hero-block {
-    margin-bottom: 32px;
-  }
+.today-row-status {
+  display: inline-flex;
+  margin-top: 8px;
 }
 
-@media (max-width: 1023px) and (min-width: 768px) {
-  .today-page {
-    gap: 64px;
-    padding-top: 32px;
-    padding-bottom: 64px;
-  }
+/* ── Schedule / timeline rows ──────────────────────────────── */
 
-  .today-page .hero-block {
-    margin-bottom: 24px;
-  }
+.today-timeline {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
 }
 
-@media (max-width: 767px) {
-  .today-page {
-    gap: 48px;
-    padding-top: 24px;
-    padding-bottom: 48px;
-  }
-
-  .today-page .hero-block {
-    margin-bottom: 16px;
-  }
+.today-timeline__row {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: 12px; align-items: center;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Horizontal Breathing (2026-05-07)
-   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
-   16/32/48/64 across breakpoints. No prior negative-escape rule exists
-   on .today-page, so !important is NOT required here — auto margins
-   apply cleanly. Atmospheric ::before backdrop is position:fixed and
-   stays full-bleed.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1440px) {
-  .today-page {
-    max-width: 1440px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 64px;
-    padding-right: 64px;
-  }
+.today-timeline__text {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 15px; font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink, #111);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .today-page {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
+/* ── This week champagne panel ─────────────────────────────── */
+
+.today-bonus { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+
+.today-bonus__track {
+  height: 8px;
+  background: rgba(191, 161, 112, 0.18);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .today-page {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
+.today-bonus__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--champagne, #bfa170) 0%, var(--champagne-deep, #8a704a) 100%);
+  border-radius: 4px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (max-width: 767px) {
-  .today-page {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
+.today-bonus__meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
 }
 
-/* Inner content cap for hero block + bento grids */
-.today-page .db-kpi-grid,
-.today-page .db-list-surface,
-.today-page [class*="kpi-row"],
-.today-page [class*="bento"] {
-  max-width: 1320px;
-  margin-left: auto;
-  margin-right: auto;
+/* ── Opportunities list ────────────────────────────────────── */
+
+.today-opps {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex; flex-direction: column;
+  gap: 8px;
 }
 
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Ultra-Wide Polish (2026-05-07)
-   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the creator today page feels iOS
-   26 native instead of jammed-against-sidebar on huge displays.
-   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
-   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
-   - Holds KPI gap to 24px so cards do not balloon.
-   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
-     (inline rgba fallback; no new tokens introduced).
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1920px) {
-  .today-page {
-    padding-left: 80px;
-    padding-right: 80px;
-    max-width: 1480px;
-  }
-  .today-page .db-kpi-grid,
-  .today-page [class*="kpi-row"] {
-    gap: 24px;
-  }
+.today-opps__row {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition: background 200ms ease;
 }
 
-@media (min-width: 2560px) {
-  .today-page {
-    padding-left: 96px;
-    padding-right: 96px;
-    max-width: 1600px;
-  }
+.today-opps__row:hover { background: rgba(255, 255, 255, 0.78); }
+
+.today-opps__name {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px; font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-@media (min-width: 1440px) {
-  .today-page .db-kpi-grid .kpi-card,
-  .today-page [class*="hero-card"],
-  .today-page [class*="bento-tile"] {
-    box-shadow:
-      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
-      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
-      0 2px 4px rgba(60, 45, 30, 0.06),
-      0 16px 48px rgba(60, 45, 30, 0.10),
-      0 32px 80px rgba(60, 45, 30, 0.06);
-  }
+.today-opps__match {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent-blue, #0085ff);
+  white-space: nowrap;
 }
 
-/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
-
-@media (max-width: 767px) {
-  .today-page button:not([class*="icon-only"]),
-  .today-page a[role="button"],
-  .today-page [role="button"] {
-    min-height: 44px;
-  }
-  .today-page button[class*="icon-only"],
-  .today-page [class*="icon-btn"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Long campaign / merchant labels ellipsis */
-  .today-page [class*="campaign-name"],
-  .today-page [class*="merchant-name"],
-  .today-page [class*="venue-name"],
-  .today-page [class*="row-title"] {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-
-  /* Task / comment 2-line clamp */
-  .today-page [class*="task-text"],
-  .today-page [class*="thread-preview"],
-  .today-page [class*="card-body"] p {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Submission URL / IDs wrap */
-  .today-page [class*="-url"],
-  .today-page [class*="-mono"],
-  .today-page code {
-    word-break: break-all;
-    overflow-wrap: break-word;
-  }
-
-  .today-page {
-    overflow-x: hidden;
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
-  }
+@media (prefers-reduced-transparency: reduce) {
+  .today-hub::before { display: none; }
 }

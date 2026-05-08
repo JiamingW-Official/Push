@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import "./calendar.css";
 import {
   MOCK_EVENTS,
@@ -697,6 +698,48 @@ export default function CreatorCalendarPage() {
     [events, todayStr],
   );
 
+  // ── 7-day-window KPIs for command bar ──────────────────────
+  const weekKpis = useMemo(() => {
+    const weekEndDate = new Date();
+    weekEndDate.setDate(weekEndDate.getDate() + 7);
+    const weekEnd = toYMD(weekEndDate);
+
+    const inWindow = (e: CalendarEvent) =>
+      e.date >= todayStr && e.date <= weekEnd && !e.done;
+
+    const due = events.filter(
+      (e) => e.type === "deadline" && inWindow(e),
+    ).length;
+    const reviews = events.filter(
+      (e) => e.type === "review" && inWindow(e),
+    ).length;
+    const milestones = events.filter(
+      (e) => e.type === "milestone" && inWindow(e),
+    ).length;
+    const earnings = events
+      .filter((e) => inWindow(e) && e.payout)
+      .reduce((sum, e) => sum + (e.payout ?? 0), 0);
+
+    // Streak: how many of the most-recent past deadlines were completed on time
+    const pastDeadlines = events
+      .filter((e) => e.type === "deadline" && e.date < todayStr)
+      .sort((a, b) => b.date.localeCompare(a.date));
+    let streak = 0;
+    for (const e of pastDeadlines) {
+      if (e.done) streak++;
+      else break;
+    }
+    return { due, reviews, milestones, earnings, streak };
+  }, [events, todayStr]);
+
+  // Today's friendly date pill — "Wed · May 7"
+  const todayPill = useMemo(() => {
+    const d = new Date();
+    const dow = d.toLocaleDateString("en-US", { weekday: "short" });
+    const mo = MONTH_ABBR[d.getMonth()];
+    return `${dow} · ${mo} ${d.getDate()}`;
+  }, [todayStr]);
+
   /* ── Handlers ────────────────────────────────────────── */
 
   const prevPeriod = useCallback(() => {
@@ -854,6 +897,74 @@ export default function CreatorCalendarPage() {
 
   return (
     <div className="cw-page cal">
+      {/* ── Command bar — back + title + colorful KPI pills ── */}
+      <header className="cal-cmdbar" aria-label="Calendar overview">
+        <div className="cal-cmdbar__left">
+          <Link href="/creator/work" className="hub-back">
+            <ArrowLeft size={14} strokeWidth={2.25} />
+            Work
+          </Link>
+          <h1 className="cal-cmdbar__title">Calendar</h1>
+          <span className="cal-cmdbar__date" aria-label="Today">
+            <span className="cal-cmdbar__date-dot" aria-hidden />
+            {todayPill}
+          </span>
+        </div>
+        <div className="cal-cmdbar__kpis" aria-label="Next 7 days at a glance">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveFilters(new Set(["deadline"]));
+            }}
+            className="cal-kpi cal-kpi--red"
+            title="Filter to deadlines"
+          >
+            <span className="cal-kpi__num">{weekKpis.due}</span>
+            <span className="cal-kpi__lbl">
+              Due
+              <span className="cal-kpi__sub">7d</span>
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveFilters(new Set(["review"]));
+            }}
+            className="cal-kpi cal-kpi--blue"
+            title="Filter to reviews"
+          >
+            <span className="cal-kpi__num">{weekKpis.reviews}</span>
+            <span className="cal-kpi__lbl">
+              Reviews
+              <span className="cal-kpi__sub">7d</span>
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveFilters(new Set(["milestone"]));
+            }}
+            className="cal-kpi cal-kpi--gold"
+            title="Filter to milestones"
+          >
+            <span className="cal-kpi__num">${weekKpis.earnings}</span>
+            <span className="cal-kpi__lbl">
+              Inbound
+              <span className="cal-kpi__sub">7d</span>
+            </span>
+          </button>
+          <div
+            className="cal-kpi cal-kpi--green cal-kpi--static"
+            title={`${weekKpis.streak} on-time deadlines in a row`}
+          >
+            <span className="cal-kpi__num">{weekKpis.streak}</span>
+            <span className="cal-kpi__lbl">
+              Streak
+              <span className="cal-kpi__sub">on time</span>
+            </span>
+          </div>
+        </div>
+      </header>
       <div className="cal-three-col">
         {/* ── Left panel — blocking + next actions ── */}
         <aside className="cal-panel cal-panel-left">

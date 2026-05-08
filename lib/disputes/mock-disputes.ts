@@ -367,10 +367,10 @@ export const MOCK_DISPUTES: Dispute[] = [
     campaignId: "demo-campaign-007",
     campaignTitle: "Sneaker Drop Coverage — Limited Edition",
     merchantName: "KITH Soho",
-    creatorName: "Maya Torres",
+    creatorName: "Alex Torres",
     filedBy: "KITH Soho",
     filedByRole: "merchant",
-    otherPartyName: "Maya Torres",
+    otherPartyName: "Alex Torres",
     otherPartyRole: "creator",
     reason: "no_show_scan",
     description:

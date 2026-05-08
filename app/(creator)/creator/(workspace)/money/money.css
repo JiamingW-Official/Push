@@ -1,267 +1,17 @@
 /* ============================================================
-   /creator/money — domain hub. v12.2 tokens. Bento via shared
-   <BentoModule> primitive (audit § 5.3 spec).
+   /creator/money — MONEY hub. v2 (2026-05-08)
+   Mirrors /creator/work template. N2W-blue page accent.
    ============================================================ */
 
-/* Hero, eyebrow, title, subtitle styles live in components/shared/hub-shell.css.
-   This file owns local module styling only. */
-
 .money-hub {
-  /* Horizontal padding + symmetric 10% L/R bleed are owned by
-     components/shared/hub-shell.css (negative margin-left
-     compensates the dh-shell rail column). */
   padding-top: 24px;
-  padding-bottom: 120px;
+  padding-bottom: 8px;
+  margin-bottom: -88px;
   background: var(--snow, #fff);
-}
-
-/* ── Bento grid — 12-col asymmetric ──────────────────────── */
-
-.money-bento {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
-}
-
-@media (max-width: 768px) {
-  .money-hub {
-    padding-top: 16px;
-    padding-bottom: 96px;
-  }
-  .money-bento {
-    gap: 16px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .money-bento {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .money-bento {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-/* ── Module-specific child styling (only what bento can't own) ── */
-
-.money-empty {
-  font-family: var(--font-body, "Open Sans");
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--ink-4, #61605c);
-  font-style: italic;
-}
-
-.money-milestone-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.money-milestone-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.money-milestone-row__brand {
-  font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ink, #111);
-  letter-spacing: -0.018em;
-}
-
-.money-row-status {
-  display: inline-flex;
-  margin-top: 4px;
-}
-
-.money-methods-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.money-methods-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.money-methods-row__hint {
-  font-family: var(--font-mono, monospace);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-4, #61605c);
-  letter-spacing: 0.04em;
-}
-
-/* ── TAX module: horizontal stat row ──────────────────────── */
-
-.money-tax-row {
-  display: grid;
-  grid-template-columns: repeat(3, auto) 1fr;
-  gap: 32px;
-  align-items: center;
-  margin-top: 4px;
-}
-
-@media (max-width: 768px) {
-  .money-tax-row {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.money-tax-cta {
-  text-align: right;
-}
-
-.money-tax-cta__link {
-  font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--ink, #111);
-  text-decoration: none;
-  transition: color 200ms ease;
-}
-
-.bento:hover .money-tax-cta__link {
-  color: var(--accent-blue, #0085ff);
-}
-
-/* ── Sub-route shell (shared by 6 sub-pages) ─────────────── */
-
-.money-sub {
-  padding: 48px 10vw 96px;
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.money-sub__back {
-  display: inline-block;
-  font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--ink-4, #61605c);
-  text-transform: uppercase;
-  text-decoration: none;
-  margin-bottom: 16px;
-}
-
-.money-sub__back:hover {
-  color: var(--ink, #111);
-}
-
-.money-sub__title {
-  font-family: "Magvix", Georgia, serif;
-  font-style: italic;
-  font-size: clamp(40px, 5vw, 64px);
-  font-weight: 400;
-  letter-spacing: -0.022em;
-  margin: 0 0 16px;
-}
-
-.money-sub__body {
-  font-family: var(--font-body, "Open Sans");
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--graphite, #3a3835);
-  margin: 0 0 32px;
-  max-width: 60ch;
-}
-
-.money-sub__cta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.money-sub__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 20px;
-  border-radius: 8px;
-  font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.money-sub__cta--primary {
-  background: var(--ink, #111);
-  color: var(--snow, #fff);
-}
-
-.money-sub__cta--ghost {
-  background: transparent;
-  color: var(--ink, #111);
-  border: 1px solid var(--ink, #111);
-}
-
-.money-sub__cta:hover {
-  transform: translate(2px, 2px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .money-sub__cta {
-    transition: none;
-  }
-  .money-sub__cta:hover {
-    transform: none;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Money Uplift v2 (2026-05-07) — Liquid Glass + atmospheric backdrop
-   Mirrors merchant /dashboard/dashboard.css line 465+ so creator workspace
-   shares one continuous visual register with the merchant interior.
-   Pure CSS — no JSX changes. Only adds; never overrides hub-shell tokens.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.money-hub {
-  /* Liquid Glass tokens (scoped — same values as merchant dashboard) */
-  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
-  --lg-bg-std:   rgba(255, 255, 255, 0.62);
-  --lg-bg-light: rgba(255, 255, 255, 0.74);
-  --lg-blur-hero: blur(32px) saturate(1.55);
-  --lg-blur-std:  blur(24px) saturate(1.4);
-  --lg-blur-soft: blur(16px) saturate(1.2);
-  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
-  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
-  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
-                 0 8px 24px rgba(60, 45, 30, 0.06);
-  --lg-shadow-2: 0 2px 4px rgba(60, 45, 30, 0.06),
-                 0 16px 48px rgba(60, 45, 30, 0.10);
-
   position: relative;
   isolation: isolate;
 }
 
-@media (min-width: 1024px) {
-  .money-hub {
-    margin: 0 calc(-1 * (10vw - 48px));
-    padding-left: calc(10vw - 48px);
-    padding-right: calc(10vw - 48px);
-  }
-}
-
-/* 5-layer atmospheric backdrop — identical chromatic palette to the
-   merchant dashboard so transitioning between portals feels continuous. */
 .money-hub::before {
   content: "";
   position: fixed;
@@ -269,426 +19,343 @@
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(0, 133, 255, 0.10),  transparent 62%),
-    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
-    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.08), transparent 65%),
-    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
-    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+    radial-gradient(ellipse 70vw 60vh at 78% 18%, rgba(0, 133, 255, 0.10), transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%, rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%);
 }
 .money-hub > * { position: relative; z-index: 1; }
 
-/* ── Section heads — colorful gradient underline + pulsing red dot ───── */
+/* ── Hero ──────────────────────────────────────────────────── */
 
-.money-hub .hub-section {
-  position: relative;
-  border-bottom: none;
+.money-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  column-gap: 32px;
+  padding: 16px 0 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--mist, #d8d4c8);
 }
-.money-hub .hub-section::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(193, 18, 31, 0.55) 0%,
-    rgba(191, 161, 112, 0.55) 35%,
-    rgba(0, 133, 255, 0.45) 70%,
-    rgba(191, 161, 112, 0) 100%
-  );
-  border-radius: 2px;
-  pointer-events: none;
-}
-.money-hub .hub-section__title {
+
+.money-hero__left { min-width: 0; }
+
+.money-hero__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #61605c);
+  margin: 0 0 12px;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
-.money-hub .hub-section__title::before {
+
+.money-hero__eyebrow::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--brand-red, #c1121f);
-  box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.10);
-  flex-shrink: 0;
+  background: var(--accent-blue, #0085ff);
+  box-shadow: 0 0 0 3px rgba(0, 133, 255, 0.18);
 }
 
-/* ── Bento glass surface — applies to first (hero) tile only ─────────── */
-
-.money-hub .money-bento .bento--priority-hero,
-.money-hub .money-bento .bento--span-7:first-child {
-  background: var(--lg-bg-hero);
-  -webkit-backdrop-filter: var(--lg-blur-hero);
-          backdrop-filter: var(--lg-blur-hero);
-  border: none;
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-2);
+.money-hero__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--ink, #111);
+  margin: 0;
 }
 
-/* Colorful top accent strip on bento tiles — rotates red → blue → champagne. */
-.money-hub .money-bento > .bento {
-  position: relative;
-  isolation: isolate;
-}
-.money-hub .money-bento > .bento::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  z-index: 1;
-  border-radius: inherit;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  pointer-events: none;
-}
-.money-hub .money-bento > .bento:nth-child(1)::after {
-  background: linear-gradient(90deg, var(--brand-red, #c1121f), rgba(193, 18, 31, 0.4));
-}
-.money-hub .money-bento > .bento:nth-child(2)::after {
-  background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4));
-}
-.money-hub .money-bento > .bento:nth-child(3)::after {
-  background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45));
-}
-.money-hub .money-bento > .bento:nth-child(4)::after {
-  background: linear-gradient(90deg, var(--champagne-deep, #8d7245), rgba(141, 114, 69, 0.45));
-}
-.money-hub .money-bento > .bento:nth-child(5)::after {
-  background: linear-gradient(90deg, var(--brand-red, #c1121f), rgba(193, 18, 31, 0.35));
-}
-.money-hub .money-bento > .bento:nth-child(6)::after {
-  background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.35));
+.money-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-4, #61605c);
+  margin: 12px 0 0;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Reduced motion / transparency fallbacks ─────────────────────────── */
+/* ── Bento ─────────────────────────────────────────────────── */
 
-@media (prefers-reduced-motion: reduce) {
-  .money-hub .hub-section__title::before {
-    animation: none;
-  }
+.money-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(272px, auto);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .money-hub { padding-top: 16px; padding-bottom: 96px; }
+}
+
+@media (max-width: 640px) {
+  .money-bento { grid-template-columns: 1fr; }
+}
+
+/* ── Balance (blue solid hero) ─────────────────────────────── */
+
+.money-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.money-balance__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(56px, 6vw, 88px);
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  line-height: 0.92;
+  color: var(--snow, #fff);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.money-balance__delta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0;
+}
+
+.money-balance__split {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.money-balance__split-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.money-balance__split-lbl {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.money-balance__split-val {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--snow, #fff);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Milestone (champagne accent) ──────────────────────────── */
+
+.money-milestone__title {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+  margin: 0;
+}
+
+.money-milestone__count {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(48px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.026em;
+  line-height: 1;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  margin: 6px 0 0;
+}
+.money-milestone__count span {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--champagne-deep, #8a704a);
+  margin-left: 4px;
+}
+
+.money-milestone__track {
+  height: 8px;
+  background: rgba(191, 161, 112, 0.22);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.money-milestone__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--champagne, #bfa170) 0%, var(--champagne-deep, #8a704a) 100%);
+  border-radius: 4px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.money-milestone__meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+  margin: 8px 0 0;
+}
+
+/* ── Generic list rows (methods / history) ─────────────────── */
+
+.money-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.money-list__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition: background 200ms ease;
+}
+
+.money-list__row:hover { background: rgba(255, 255, 255, 0.78); }
+
+.money-list__name {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.money-list__tag {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.06);
+  white-space: nowrap;
+}
+
+.money-list__tag--default {
+  background: rgba(0, 133, 255, 0.12);
+  color: var(--accent-blue, #0085ff);
+}
+
+.money-list__amt {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+}
+
+.money-list__amt--gold {
+  color: var(--champagne-deep, #8a704a);
+}
+
+.money-row-status {
+  display: inline-flex;
+  margin-top: 8px;
+}
+
+/* ── Bar chart (History panel) — 12-week earnings visualization
+   Replaces the old transactions list with a chart register so the
+   bento has 1 chart panel + 1 list panel + KPI panels = visual variety. */
+
+.money-chart__sum {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-3, #3a3835);
+  margin: 0 0 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.money-chart {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-items: end;
+  gap: 6px;
+  height: 80px;
+  margin: 4px 0 12px;
+}
+
+.money-chart__bar {
+  background: linear-gradient(
+    180deg,
+    var(--accent-blue, #0085ff) 0%,
+    rgba(0, 133, 255, 0.55) 100%
+  );
+  border-radius: 4px 4px 1px 1px;
+  min-height: 4px;
+  opacity: 0.55;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.money-chart__bar:hover {
+  opacity: 1;
+  transform: scaleY(1.02);
+  transform-origin: bottom;
+}
+
+.money-chart__bar--current {
+  background: linear-gradient(
+    180deg,
+    var(--ink, #14130f) 0%,
+    var(--graphite, #3a3835) 100%
+  );
+  opacity: 1;
+}
+
+.money-chart__legend {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.money-chart__legend-delta {
+  color: #2d6e4a;
+}
+
+.money-chart__legend-current {
+  color: var(--ink-4, #61605c);
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .money-hub::before {
-    display: none !important;
-  }
-  .money-hub .money-bento .bento--priority-hero,
-  .money-hub .money-bento .bento--span-7:first-child {
-    background: var(--surface-2, #f5f3ee) !important;
-    -webkit-backdrop-filter: none !important;
-            backdrop-filter: none !important;
-  }
-}
-
-/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
-
-@media (min-width: 1024px) {
-  .money-hub {
-    gap: 96px;
-    padding-top: 48px;
-    padding-bottom: 96px;
-  }
-
-  .money-hub > .ms-page-header,
-  .money-hub > [class*="page-header"] {
-    margin-bottom: 24px;
-  }
-
-  .money-hub > section,
-  .money-hub > [class*="-section"] {
-    margin-top: 24px;
-  }
-
-  .money-hub > section + section {
-    margin-top: 0;
-  }
-
-  .money-hub [class*="section-head"]:not([class*="card"]) {
-    margin-bottom: 32px;
-  }
-}
-
-@media (max-width: 1023px) and (min-width: 768px) {
-  .money-hub {
-    gap: 64px;
-    padding-top: 32px;
-    padding-bottom: 64px;
-  }
-}
-
-@media (max-width: 767px) {
-  .money-hub {
-    gap: 48px;
-    padding-top: 24px;
-    padding-bottom: 48px;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Horizontal Breathing (2026-05-07)
-   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
-   16/32/48/64 across breakpoints; overrides the existing 1024+ negative
-   escape margin via !important on margin-left/right (the prior rule
-   uses margin: 0 calc(-1 * (10vw - 48px)) to bleed into the shell
-   gutter, so cascade order requires !important to win on 1440+).
-   Atmospheric ::before backdrop is position:fixed and stays full-bleed.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1440px) {
-  .money-hub {
-    max-width: 1440px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 64px;
-    padding-right: 64px;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .money-hub {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .money-hub {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
-}
-
-@media (max-width: 767px) {
-  .money-hub {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-}
-
-/* Inner content cap for KPI rows + payout bento */
-.money-hub .db-kpi-grid,
-.money-hub .db-list-surface,
-.money-hub [class*="kpi-row"],
-.money-hub [class*="bento"] {
-  max-width: 1320px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Ultra-Wide Polish (2026-05-07)
-   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the creator money hub feels iOS
-   26 native instead of jammed-against-sidebar on huge displays.
-   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
-   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
-   - Holds KPI gap to 24px so cards do not balloon.
-   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
-     (inline rgba fallback; no new tokens introduced).
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1920px) {
-  .money-hub {
-    padding-left: 80px;
-    padding-right: 80px;
-    max-width: 1480px;
-  }
-  .money-hub .db-kpi-grid,
-  .money-hub [class*="kpi-row"] {
-    gap: 24px;
-  }
-}
-
-@media (min-width: 2560px) {
-  .money-hub {
-    padding-left: 96px;
-    padding-right: 96px;
-    max-width: 1600px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .money-hub .db-kpi-grid .kpi-card,
-  .money-hub [class*="hero-card"],
-  .money-hub [class*="bento-tile"] {
-    box-shadow:
-      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
-      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
-      0 2px 4px rgba(60, 45, 30, 0.06),
-      0 16px 48px rgba(60, 45, 30, 0.10),
-      0 32px 80px rgba(60, 45, 30, 0.06);
-  }
-}
-
-/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
-
-@media (max-width: 767px) {
-  .money-hub button:not([class*="icon-only"]),
-  .money-hub a[role="button"],
-  .money-hub [role="button"] {
-    min-height: 44px;
-  }
-  .money-hub button[class*="icon-only"],
-  .money-hub [class*="icon-btn"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Payout source / campaign label ellipsis */
-  .money-hub [class*="campaign-name"],
-  .money-hub [class*="payout-source"],
-  .money-hub [class*="row-title"] {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-
-  /* Stripe payout IDs / hosted invoice URLs wrap */
-  .money-hub [class*="-url"],
-  .money-hub [class*="-id"]:not([class*="grid"]):not([class*="page"]),
-  .money-hub [class*="-mono"],
-  .money-hub code {
-    word-break: break-all;
-    overflow-wrap: break-word;
-  }
-
-  .money-hub {
-    overflow-x: hidden;
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 10 — Creator Deep · Money Sub-routes (2026-05-07)
-   APPENDED ONLY. The .money-hub already carries the full Wave 9/10
-   atmosphere + Liquid Glass + horizontal breathing pass above. This
-   block extends the same register to /creator/money/<sub> sub-routes
-   (methods, tax, earnings, history, milestones, pending) which all
-   render the .money-sub shell. Kept lighter than the hub: no full
-   atmospheric backdrop, only:
-     · Wave 9 typography (72ch / clamp / line-height 1.6)
-     · Colorful section divider beneath the Magvix sub-route title
-     · Glass treatment on the title's hero band
-     · Wave 9 horizontal breathing for ultra-wide displays
-   No JSX changes. No new global tokens.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.money-sub {
-  /* Reuse the same Liquid Glass tokens declared on .money-hub above so
-     descendant content tiles can pull from them without re-declaring. */
-  --lg-bg-hero:  rgba(255, 255, 255, 0.55);
-  --lg-bg-std:   rgba(255, 255, 255, 0.62);
-  --lg-bg-light: rgba(255, 255, 255, 0.74);
-  --lg-blur-hero: blur(32px) saturate(1.55);
-  --lg-blur-std:  blur(24px) saturate(1.4);
-  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
-  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
-  --lg-shadow-1: 0 1px 2px rgba(60, 45, 30, 0.05),
-                 0 8px 24px rgba(60, 45, 30, 0.06);
-
-  position: relative;
-  isolation: isolate;
-}
-
-/* Colorful section divider beneath the sub-route title — same gradient
-   signature as merchant dashboard / money hub / settings sub-routes. */
-.money-sub__title {
-  position: relative;
-  padding-bottom: 12px;
-}
-.money-sub__title::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 2px;
-  width: min(320px, 60%);
-  background: linear-gradient(
-    90deg,
-    rgba(193, 18, 31, 0.55) 0%,
-    rgba(191, 161, 112, 0.55) 35%,
-    rgba(0, 133, 255, 0.45) 70%,
-    rgba(191, 161, 112, 0) 100%
-  );
-  border-radius: 2px;
-  pointer-events: none;
-}
-
-/* Wave 9 typography — readable measure on long-form copy in sub-routes. */
-.money-sub p,
-.money-sub__body {
-  max-width: 72ch;
-  line-height: 1.6;
-}
-.money-sub__body {
-  max-width: 64ch;
-  font-size: clamp(15px, 1.2vw, 17px);
-}
-.money-sub__title {
-  font-size: clamp(40px, 5vw, 72px);
-  line-height: 1.05;
-  letter-spacing: -0.022em;
-}
-
-/* Vertical rhythm ladder. */
-@media (min-width: 1024px) {
-  .money-sub {
-    padding-top: 48px;
-    padding-bottom: 96px;
-  }
-  .money-sub__back { margin-bottom: 24px; }
-  .money-sub__title { margin-bottom: 24px; }
-  .money-sub__body { margin-bottom: 32px; }
-}
-
-@media (max-width: 1023px) and (min-width: 768px) {
-  .money-sub {
-    padding-top: 32px;
-    padding-bottom: 64px;
-  }
-}
-
-@media (max-width: 767px) {
-  .money-sub {
-    padding-top: 24px;
-    padding-bottom: 48px;
-  }
-  .money-sub__back { margin-bottom: 16px; }
-  .money-sub__title { margin-bottom: 16px; }
-  .money-sub__body { margin-bottom: 24px; }
-}
-
-/* Horizontal breathing — ultra-wide cap. */
-@media (min-width: 1440px) {
-  .money-sub {
-    max-width: 1440px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 64px;
-    padding-right: 64px;
-  }
-}
-
-@media (min-width: 1920px) {
-  .money-sub {
-    max-width: 1480px;
-    padding-left: 80px;
-    padding-right: 80px;
-  }
-}
-
-@media (min-width: 2560px) {
-  .money-sub {
-    max-width: 1600px;
-    padding-left: 96px;
-    padding-right: 96px;
-  }
+  .money-hub::before { display: none; }
 }

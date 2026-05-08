@@ -221,12 +221,12 @@ const CREATOR_ITEMS: SearchItem[] = [
   },
   {
     type: "creator",
-    id: "creator-maya-rodriguez",
-    title: "Maya Rodriguez",
-    subtitle: "Closer · @mayaeatsnYC · Brooklyn",
+    id: "creator-alex-chenodriguez",
+    title: "Alex Chen",
+    subtitle: "Closer · @alexeatsnYC · Brooklyn",
     url: "/explore",
     score: 84,
-    keywords: ["maya rodriguez", "mayaeatsnYC", "brooklyn", "food"],
+    keywords: ["alex rodriguez", "alexeatsnYC", "brooklyn", "food"],
   },
   {
     type: "creator",

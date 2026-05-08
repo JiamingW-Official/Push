@@ -170,8 +170,8 @@ const CREATOR_POOL: CreatorSeed[] = [
     lastActive: "2026-04-17T07:45:00Z",
   },
   {
-    name: "Maya Johnson",
-    handle: "@mayaj.creates",
+    name: "Alex Johnson",
+    handle: "@alexj.creates",
     tier: "seed",
     pushScore: 31,
     followers: 890,

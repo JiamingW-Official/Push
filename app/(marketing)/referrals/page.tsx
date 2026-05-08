@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const LEADERBOARD = [
-  { rank: 1, handle: "@maya.eats.nyc", tier: "Elite", earned: 1_320 },
+  { rank: 1, handle: "@alex.eats.nyc", tier: "Elite", earned: 1_320 },
   { rank: 2, handle: "@brooklyn_bites", tier: "Pro", earned: 1_090 },
   { rank: 3, handle: "@nycfoodie_", tier: "Elite", earned: 950 },
   { rank: 4, handle: "@williamsburg.eats", tier: "Pro", earned: 780 },

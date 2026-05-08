@@ -186,3 +186,71 @@ body:has(.dh-shell) .dh-main:has(.disc) {
     }
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   UNIFIED BACK BUTTON · .hub-back
+   ────────────────────────────────────────────────────────────
+   Single source of truth for every creator subpage's back-to-hub
+   pill. Pill shape + ink-ladder background + arrow icon that
+   slides left on hover (gap also expands for tactile feedback).
+   Always lives top-left of the hero, 24px above the H1.
+   ════════════════════════════════════════════════════════════ */
+
+.hub-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 9px 18px 9px 14px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.06);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 0 24px;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    gap 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms ease;
+}
+
+.hub-back > svg {
+  flex-shrink: 0;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hub-back:hover {
+  background: rgba(20, 19, 15, 0.10);
+  color: var(--ink, #111);
+  gap: 10px;
+  box-shadow: 0 1px 2px rgba(20, 19, 15, 0.06);
+}
+
+.hub-back:hover > svg {
+  transform: translateX(-3px);
+}
+
+.hub-back:active {
+  background: rgba(20, 19, 15, 0.14);
+  transition-duration: 80ms;
+}
+
+.hub-back:focus-visible {
+  outline: 2px solid var(--accent-blue, #0085ff);
+  outline-offset: 3px;
+}
+
+/* When the hub-back uses an ::before arrow (legacy text-only links),
+   keep parity with the SVG slide. */
+.hub-back::before {
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hub-back:hover::before {
+  transform: translateX(-3px);
+}

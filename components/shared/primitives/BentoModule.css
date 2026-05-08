@@ -9,28 +9,32 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 28px 28px 64px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.68);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  backdrop-filter: blur(24px) saturate(1.4);
+  gap: 8px;
+  /* Padding-bottom 48 reserves clearance for absolute drill icon button
+     (28×28 at bottom:14/right:14 = 14+28+6 = 48). Equal spacing 14px
+     around the drill on every panel — no shift across panel sizes. */
+  padding: 18px 20px 48px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  backdrop-filter: blur(28px) saturate(1.4);
   text-decoration: none;
   color: var(--ink, #111);
   cursor: pointer;
-  /* 4-layer Liquid Glass system — specular top, bot inset, edge hairline,
-     warm-tinted soft shadow. */
+  /* macOS 26 Liquid Glass — stronger top inset (1.0) + warmer shadow */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.6),
-    0 1px 2px rgba(60, 45, 30, 0.05),
-    0 8px 24px rgba(60, 45, 30, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.05),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(60, 45, 30, 0.05),
+    0 12px 28px rgba(60, 45, 30, 0.06);
   transition:
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 200ms ease,
-    background 200ms ease;
-  min-height: 184px;
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    background 220ms ease;
+  /* min-height removed — let grid-auto-rows + content drive height.
+     Panels in the same row auto-balance; sparse panels sit short, dense
+     panels sit tall, no more enforced floor leaving empty space. */
   isolation: isolate;
   overflow: hidden;
 }
@@ -58,19 +62,21 @@
 }
 
 .bento:hover {
-  transform: translate(2px, 2px) scale(1.006);
-  background: rgba(255, 255, 255, 0.78);
+  /* Subtle hover — Apple widget feel: nudge 1px, no scale. The shadow
+     deepening is what does the lift work, motion stays barely perceptible. */
+  transform: translate(1px, 1px);
+  background: rgba(255, 255, 255, 0.76);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
     inset 0 -1px 0 rgba(20, 19, 15, 0.05),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.7),
-    0 2px 4px rgba(60, 45, 30, 0.06),
-    0 16px 48px rgba(60, 45, 30, 0.10);
+    0 2px 6px rgba(60, 45, 30, 0.07),
+    0 14px 36px rgba(60, 45, 30, 0.09);
 }
 
 .bento:active {
-  transform: translate(3px, 3px) scale(0.992);
-  transition-duration: 140ms;
+  transform: translate(1.5px, 1.5px);
+  transition-duration: 120ms;
 }
 
 .bento:focus-visible {
@@ -84,8 +90,10 @@
    Don't promote more than one .bento--hero per viewport. */
 
 .bento--hero {
-  min-height: 280px;
-  padding: 36px 36px 72px;
+  /* Hero priority — slightly more emphatic shadow + larger padding,
+     but NO top champagne stripe (was distracting + non-uniform across
+     a page mixing hero + standard tiles). */
+  padding: 26px 28px 60px;
   background: rgba(255, 255, 255, 0.78);
   -webkit-backdrop-filter: blur(32px) saturate(1.55);
   backdrop-filter: blur(32px) saturate(1.55);
@@ -93,27 +101,23 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
     inset 0 -1px 0 rgba(20, 19, 15, 0.05),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.7),
-    inset 0 4px 0 rgba(191, 161, 112, 0.85),
     0 2px 4px rgba(60, 45, 30, 0.06),
     0 16px 48px rgba(60, 45, 30, 0.10);
 }
 
 .bento--hero:hover {
-  background: rgba(255, 255, 255, 0.86);
-  transform: translate(2px, 2px) scale(1.004);
+  background: rgba(255, 255, 255, 0.84);
+  transform: translate(1px, 1px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.98),
     inset 0 -1px 0 rgba(20, 19, 15, 0.06),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.8),
-    inset 0 4px 0 rgba(191, 161, 112, 1),
-    0 4px 8px rgba(60, 45, 30, 0.08),
-    0 32px 80px rgba(60, 45, 30, 0.14);
+    0 3px 6px rgba(60, 45, 30, 0.08),
+    0 22px 56px rgba(60, 45, 30, 0.12);
 }
 
 .bento--hero .bento__eyebrow {
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  color: #8a704a;
+  color: var(--ink-3, #61605c);
 }
 
 .bento--quiet {
@@ -127,6 +131,133 @@
     0 4px 12px rgba(60, 45, 30, 0.04);
 }
 
+/* ── Solid panel variants — saturated background, snow text ─
+   The "executive panel": flipped color register that makes ONE
+   tile per viewport carry the page's headline message. Use the
+   `tone` prop on <BentoModule>. Max 2 per page, ideal is 1.
+   Internal copy/numbers/icons all read snow; the diagonal
+   135° sheen is removed (would muddy the saturated bg) and a
+   subtle radial highlight + champagne hairline replace it. */
+
+.bento--solid {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.08),
+    0 1px 2px rgba(20, 19, 15, 0.18),
+    0 12px 32px rgba(20, 19, 15, 0.22);
+}
+
+.bento--solid::before {
+  /* Replace diagonal sheen with a soft top-left radial highlight,
+     subtle enough not to muddy the saturated bg. */
+  background: radial-gradient(
+    ellipse 80% 60% at 18% 12%,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+}
+
+.bento--solid-ink    { background: #14130f; }
+.bento--solid-red    { background: var(--brand-red, #c1121f); }
+.bento--solid-blue   { background: var(--accent-blue, #0085ff); }
+.bento--solid-orange { background: var(--ga-orange, #ff5e2b); }
+
+/* ── Accent tone — Analytics-milestone-style warm cream tint.
+   Surface picks up champagne warmth (not saturated brand color),
+   ink text stays for legibility. The "ceremonial" panel — use ≤1
+   per page for a single hero/highlight tile. */
+.bento--accent-champagne {
+  background: linear-gradient(
+    135deg,
+    rgba(248, 244, 232, 0.92) 0%,
+    rgba(245, 232, 210, 0.88) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(191, 161, 112, 0.32),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 8px 24px rgba(60, 45, 30, 0.06);
+}
+
+.bento--accent-champagne:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(252, 248, 238, 0.96) 0%,
+    rgba(248, 236, 216, 0.92) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.05),
+    inset 0 0 0 0.5px rgba(191, 161, 112, 0.50),
+    0 2px 6px rgba(60, 45, 30, 0.08),
+    0 14px 36px rgba(60, 45, 30, 0.10);
+}
+
+.bento--accent-champagne .bento__icon,
+.bento--accent-champagne .bento__eyebrow {
+  color: var(--champagne-deep, #8a704a);
+}
+
+/* Hover — slightly lift saturation, NOT change opacity (no glass).
+   Keep the 1px nudge inherited from .bento:hover; only deepen shadow. */
+.bento--solid:hover {
+  background: #1d1c17;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.10),
+    0 3px 6px rgba(20, 19, 15, 0.22),
+    0 18px 44px rgba(20, 19, 15, 0.26);
+}
+.bento--solid-red:hover    { background: #d11724; }
+.bento--solid-blue:hover   { background: #1e93ff; }
+.bento--solid-orange:hover { background: #ff7549; }
+
+/* Solid-panel typography — eyebrow goes champagne (cream brand mark
+   on dark surface, an FT/Bloomberg cue), body & sub go snow/mist. */
+.bento--solid .bento__eyebrow {
+  color: var(--champagne, #bfa170);
+}
+.bento--solid .bento__sub {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Solid-panel drill — invert pill: dark champagne-edged disc on the
+   saturated bg. Hover swaps to champagne fill so the affordance remains
+   visible against the dark surface. */
+.bento--solid .bento__drill {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(191, 161, 112, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.bento--solid:hover .bento__drill {
+  background: var(--champagne, #bfa170);
+  color: #14130f;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(191, 161, 112, 0.85),
+    0 3px 8px rgba(0, 0, 0, 0.30);
+}
+
+/* Reduced-transparency a11y — solid is already opaque, just keep it. */
+@media (prefers-reduced-transparency: reduce) {
+  .bento--solid {
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.25),
+      0 1px 2px rgba(0, 0, 0, 0.18),
+      0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+  .bento--solid::before {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .bento--hero,
   .bento--quiet {
@@ -137,7 +268,6 @@
   .bento--hero {
     box-shadow:
       0 0 0 0.5px rgba(0, 0, 0, 0.08),
-      inset 0 4px 0 rgba(191, 161, 112, 0.85),
       0 1px 2px rgba(0, 0, 0, 0.03),
       0 8px 24px rgba(0, 0, 0, 0.06);
   }
@@ -176,27 +306,48 @@
     grid-column: span 12;
   }
   .bento {
-    padding: 24px 22px 56px;
-    border-radius: 20px;
+    padding: 20px 20px 52px;
+    border-radius: 18px;
   }
 }
 
-/* ── Head: eyebrow + live indicator ──────────────────────── */
+/* ── Head: icon + eyebrow + live indicator ────────────────── */
 
 .bento__head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+/* Apple-style leading icon — naked stroke icon, sits to the left of
+   the eyebrow at the same baseline. 18×18 lucide icons inherit
+   currentColor and pick up the eyebrow ink-4 color, so the head reads
+   as one cohesive caption strip. Solid-tone panels override to champagne. */
+.bento__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-3, #3a3835);
+}
+.bento__icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.bento--solid .bento__icon {
+  color: var(--champagne, #bfa170);
 }
 
 .bento__eyebrow {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 13px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
-  color: var(--ink-4, #61605c);
+  letter-spacing: 0.08em;
+  color: var(--ink-3, #3a3835);
   text-transform: uppercase;
   flex: 1;
   min-width: 0;
@@ -240,55 +391,66 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 64px;
+  flex: 1 1 auto;
+  /* flex:1 makes the body grow to fill the panel's available vertical
+     space when grid-auto-rows balances same-row panels. macOS-26-style:
+     the BIG numeral inside the body absorbs the extra height instead of
+     leaving an empty gap above the drill. */
+  justify-content: center;
 }
 
-/* ── Sub-line ────────────────────────────────────────────── */
+/* ── Sub-line — sits just below body, just above drill ───── */
 
 .bento__sub {
   font-family: var(--font-body, "Open Sans");
   font-size: 15px;
-  line-height: 1.6;
-  color: var(--graphite, #3a3835);
-  margin-top: auto;
-  padding-top: 12px;
+  line-height: 1.5;
+  color: var(--ink-3, #3a3835);
+  margin: 0;
   max-width: 60ch;
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Drill arrow ─────────────────────────────────────────── */
+/* ── Drill arrow — small unlabeled icon button anchored bottom-right.
+   28×28 circular, equal 16px spacing from panel right + bottom edges
+   so every panel reads identically regardless of size. Hover: deepens
+   to ink fill, faintly slides right. The Push wide-spread visual cue
+   that EVERYTHING in this layout drills somewhere. */
 
 .bento__drill {
   position: absolute;
-  bottom: 22px;
-  right: 24px;
-  width: 32px;
-  height: 32px;
-  display: flex;
+  bottom: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: var(--ink-4, #61605c);
-  background: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-3, #3a3835);
+  background: rgba(255, 255, 255, 0.62);
   border-radius: 50%;
   box-shadow:
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.6),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    0 1px 2px rgba(60, 45, 30, 0.06);
+    0 1px 2px rgba(60, 45, 30, 0.05);
   transition:
     background 200ms ease,
     color 200ms ease,
-    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1;
+    box-shadow 200ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 2;
 }
 
 .bento:hover .bento__drill {
   background: var(--ink, #111);
   color: var(--snow, #fff);
   box-shadow:
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.1),
-    0 2px 6px rgba(60, 45, 30, 0.18);
-  transform: rotate(8deg) translateX(2px);
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.10),
+    0 3px 8px rgba(20, 19, 15, 0.22);
+  transform: translateX(2px);
 }
 
 /* ── Loading skeleton ────────────────────────────────────── */
@@ -320,9 +482,10 @@
 
 .bento__empty {
   font-family: var(--font-body, "Open Sans");
-  font-size: 13px;
-  color: var(--ink-4, #61605c);
+  font-size: 14px;
+  color: var(--ink-3, #3a3835);
   font-style: italic;
+  font-weight: 500;
 }
 
 /* ── Reduced-transparency a11y fallback ──────────────────── */

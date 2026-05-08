@@ -34,6 +34,10 @@ type Props = {
   href: string;
   /** Eyebrow line — typically "DOMAIN · SUBTYPE". Mono uppercase. */
   eyebrow: string;
+  /** Optional Apple-style leading icon — pass a lucide-react element
+   *  (e.g. <Briefcase size={18} strokeWidth={1.75} />). Renders inline
+   *  next to the eyebrow at 18px so the panel reads as an iconic widget. */
+  icon?: ReactNode;
   /** Optional live-indicator dot (orange = live, red = urgent). */
   live?: "off" | "live" | "urgent";
   /** Module content — big numeral, state visual, progress, etc. */
@@ -51,11 +55,22 @@ type Props = {
   /** Visual priority. "hero" = champagne-bordered anchor (one per hub).
    *  "quiet" = de-emphasized supporting tile. Default unranked. */
   priority?: "hero" | "quiet";
+  /** Solid panel variant — flips background to a saturated brand surface
+   *  with snow text. ≤2 per page total, most pages should use only 1.
+   *  "ink"       = #14130f near-black · default high-end "executive panel"
+   *  "red"       = brand-red · use for severity / action-driving callouts
+   *  "blue"      = N2W blue · use for affirmative status / system-healthy
+   *  "orange"    = GA-orange · use for live / time-of-day execution feel
+   *  "champagne" = warm cream tint (NOT solid) · ceremonial accent like
+   *                Analytics' milestone-hit panel. Internal text stays
+   *                ink for legibility — only the surface gets warmth. */
+  tone?: "ink" | "red" | "blue" | "orange" | "champagne";
 };
 
 export function BentoModule({
   href,
   eyebrow,
+  icon,
   live = "off",
   children,
   sub,
@@ -64,15 +79,28 @@ export function BentoModule({
   emptyMessage,
   ariaLabel,
   priority,
+  tone,
 }: Props) {
   const priorityClass = priority ? ` bento--${priority}` : "";
+  const isSolidTone =
+    tone === "ink" || tone === "red" || tone === "blue" || tone === "orange";
+  const toneClass = tone
+    ? isSolidTone
+      ? ` bento--solid bento--solid-${tone}`
+      : ` bento--accent bento--accent-${tone}`
+    : "";
   return (
     <Link
       href={href}
-      className={`bento bento--span-${span} bento--state-${state}${priorityClass}`}
+      className={`bento bento--span-${span} bento--state-${state}${priorityClass}${toneClass}`}
       aria-label={ariaLabel ?? eyebrow}
     >
       <div className="bento__head">
+        {icon ? (
+          <span className="bento__icon" aria-hidden>
+            {icon}
+          </span>
+        ) : null}
         <span className="bento__eyebrow">{eyebrow}</span>
         {live !== "off" ? (
           <span className={`bento__live bento__live--${live}`} aria-hidden />
@@ -93,9 +121,11 @@ export function BentoModule({
         <div className="bento__sub">{sub}</div>
       ) : null}
 
-      <span className="bento__drill" aria-hidden>
-        →
-      </span>
+      {state === "ready" ? (
+        <span className="bento__drill" aria-hidden>
+          →
+        </span>
+      ) : null}
     </Link>
   );
 }

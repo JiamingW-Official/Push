@@ -14,6 +14,8 @@
   background: var(--snow, #fff);
 }
 
+/* Back-button styling lives in lumin-shell.css → .hub-back (unified). */
+
 .set-pulse {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

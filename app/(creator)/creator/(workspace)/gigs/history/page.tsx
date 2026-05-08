@@ -1,48 +1,40 @@
 "use client";
 
 /* ============================================================
-   /creator/gigs/history — v12.2 SaaS canonical
-   Audit § P1-8: Hero · Pulse Strip · Toolbar · Two-column workspace
-   (grouped list left, sticky detail panel right) · Kbd footer.
+   /creator/gigs/history — Closed gig ledger.
+   v2 (2026-05-08, modular rewrite, macOS 26 visuals)
+
+   Layout:
+     1. HERO              ← Gigs · "History" + sub
+     2. KPI STRIP         lifetime · paid count · avg payout · hit rate
+     3. FILTER + SEARCH   All / Paid / Declined  +  search box
+     4. MONTH GROUPS      grouped list with HistoryRow cards
    ============================================================ */
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useHistory } from "@/lib/data/hooks";
-import { SkeletonRow, SkeletonPanel } from "@/components/loading/Skeleton";
-import { TabBar } from "@/components/shared/primitives";
-import "../gigs.css";
-import "./history.css";
+import {
+  ArrowLeft,
+  Search,
+  Archive,
+  CheckCircle2,
+  XCircle,
+  Sparkles,
+  TrendingUp,
+  Trophy,
+  Wallet,
+} from "lucide-react";
+import { useHistory, type HistoryRow } from "@/lib/data/hooks";
+import "@/components/creator/gigs/gig-modules.css";
+import "./history-v2.css";
 
-const MERCHANT_IDENTITY: Record<string, string> = {
-  Devoción: "aubergine",
-  "Sunday in Brooklyn": "terracotta",
-  "Cha Cha Matcha": "sage",
-  "Superiority Burger": "clay",
-  "Roberta's Pizza": "cobalt",
-  "Roberta's": "cobalt",
-  "Flamingo Estate": "rose",
-  "Saint Bagel": "mustard",
-  "Blank Street Coffee": "mustard",
-  "Brow Theory": "charcoal",
-  "Fort Greene Coffee": "aubergine",
-  "Bed-Stuy Eats": "terracotta",
-};
-
-function merchantIdentity(name: string): string {
-  return MERCHANT_IDENTITY[name] ?? "charcoal";
-}
-
-function fmtMoney(n: number): string {
-  return n.toLocaleString("en-US", { minimumFractionDigits: 0 });
-}
+type StatusFilter = "all" | "paid" | "declined" | "completed";
 
 function fmtDate(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    year: "numeric",
   });
 }
 
@@ -51,278 +43,298 @@ function monthKey(iso: string): string {
   return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
-type StatusFilter = "all" | "paid" | "declined";
+const TIER_COLORS: Record<HistoryRow["outcomeTier"], string> = {
+  Guaranteed: "#2d6e4a",
+  Target: "#0085ff",
+  Stretch: "#8a704a",
+};
 
 export default function HistoryPage() {
-  const { data, error, isLoading } = useHistory();
+  const { data, isLoading, error } = useHistory();
   if (error) throw error;
 
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<StatusFilter>("all");
+  const [query, setQuery] = useState("");
 
-  const filtered = useMemo(() => {
-    if (!data) return [];
-    return data.filter((r) =>
-      statusFilter === "all" ? true : r.status === statusFilter,
-    );
-  }, [data, statusFilter]);
+  const all = data ?? [];
+  const paidRows = all.filter((r) => r.status === "paid");
+
+  const lifetimeEarned = paidRows.reduce((sum, r) => sum + r.finalPayout, 0);
+  const avgPayout = paidRows.length
+    ? Math.round(lifetimeEarned / paidRows.length)
+    : 0;
+  const stretchHits = paidRows.filter(
+    (r) => r.outcomeTier === "Stretch",
+  ).length;
+  const targetHits = paidRows.filter((r) => r.outcomeTier === "Target").length;
+  const hitRate = paidRows.length
+    ? Math.round(((stretchHits + targetHits) / paidRows.length) * 100)
+    : 0;
+
+  const visible = useMemo(() => {
+    let list = all;
+    if (filter !== "all") list = list.filter((r) => r.status === filter);
+    const q = query.trim().toLowerCase();
+    if (q) {
+      list = list.filter(
+        (r) =>
+          r.brand.toLowerCase().includes(q) ||
+          r.campaign.toLowerCase().includes(q) ||
+          r.category.toLowerCase().includes(q),
+      );
+    }
+    return [...list].sort((a, b) => b.paidAt.localeCompare(a.paidAt));
+  }, [all, filter, query]);
 
   const grouped = useMemo(() => {
-    const groups = new Map<string, typeof filtered>();
-    for (const row of filtered) {
-      const key = monthKey(row.paidAt);
-      const arr = groups.get(key) ?? [];
-      arr.push(row);
-      groups.set(key, arr);
+    const map: Record<string, HistoryRow[]> = {};
+    for (const r of visible) {
+      const k = monthKey(r.paidAt);
+      if (!map[k]) map[k] = [];
+      map[k].push(r);
     }
-    return Array.from(groups.entries());
-  }, [filtered]);
+    return Object.entries(map);
+  }, [visible]);
 
-  const lifetime = useMemo(
-    () =>
-      (data ?? []).reduce(
-        (s, r) => s + (r.status === "paid" ? r.finalPayout : 0),
-        0,
-      ),
-    [data],
-  );
-
-  const completionRate = useMemo(() => {
-    if (!data || data.length === 0) return 0;
-    const paid = data.filter((r) => r.status === "paid").length;
-    return Math.round((paid / data.length) * 100);
-  }, [data]);
-
-  const active = filtered.find((r) => r.id === activeId) ?? filtered[0] ?? null;
-
-  if (isLoading && (!data || data.length === 0)) {
-    return (
-      <section className="ib-content gigs-pane" aria-label="History (loading)">
-        <header className="giv-hero">
-          <div>
-            <h1 className="giv-hero__title">History</h1>
-            <p className="giv-hero__sub">Loading your past gigs…</p>
-          </div>
-        </header>
-        <div className="hist-shell">
-          <SkeletonRow count={5} />
-          <SkeletonPanel />
-        </div>
-      </section>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <section className="ib-content gigs-pane" aria-label="History (empty)">
-        <header className="giv-hero">
-          <div>
-            <h1 className="giv-hero__title">History</h1>
-            <p className="giv-hero__sub">No history yet.</p>
-          </div>
-        </header>
-        <div className="hist-empty">
-          <p>Accept your first gig to start building it.</p>
-          <Link href="/creator/gigs/invites" className="hist-empty__cta">
-            View invites →
-          </Link>
-        </div>
-      </section>
-    );
-  }
+  const counts = {
+    all: all.length,
+    paid: all.filter((r) => r.status === "paid").length,
+    declined: all.filter((r) => r.status === "declined").length,
+    completed: all.filter((r) => r.status === "completed").length,
+  };
 
   return (
-    <section className="ib-content gigs-pane">
-      {/* ★★ Hero */}
-      <header className="giv-hero">
-        <div>
-          <h1 className="giv-hero__title">History</h1>
-          <p className="giv-hero__sub">
-            <strong>{data.length}</strong> completed ·{" "}
-            <strong>${fmtMoney(lifetime)}</strong> lifetime
-          </p>
+    <main className="hst" aria-label="Gig history">
+      <header className="hst__hero">
+        <Link href="/creator/gigs" className="hub-back">
+          <ArrowLeft size={14} strokeWidth={2.25} />
+          Gigs
+        </Link>
+        <div className="hst__hero-row">
+          <div>
+            <h1 className="hst__title">History</h1>
+            <p className="hst__sub">
+              <strong>{paidRows.length}</strong> paid · $
+              {lifetimeEarned.toLocaleString()} lifetime · {hitRate}% hit
+              Target+ tier
+            </p>
+          </div>
         </div>
       </header>
 
-      {/* ☆ Pulse Strip */}
-      <div className="hist-pulse" role="group" aria-label="History pulse">
-        <div className="hist-pulse__cell">
-          <span className="hist-pulse__label">Lifetime</span>
-          <span className="hist-pulse__value">${fmtMoney(lifetime)}</span>
-        </div>
-        <div className="hist-pulse__cell">
-          <span className="hist-pulse__label">Total gigs</span>
-          <span className="hist-pulse__value">{data.length}</span>
-        </div>
-        <div className="hist-pulse__cell">
-          <span className="hist-pulse__label">Avg per gig</span>
-          <span className="hist-pulse__value">
-            $
-            {fmtMoney(data.length > 0 ? Math.round(lifetime / data.length) : 0)}
+      {/* ── KPI Strip ───────────────────────────────── */}
+      <section className="hst__kpis" aria-label="Lifetime KPIs">
+        <article className="hst__kpi hst__kpi--ink">
+          <span className="hst__kpi-icon">
+            <Wallet size={16} strokeWidth={2.25} />
           </span>
-        </div>
-        <div className="hist-pulse__cell">
-          <span className="hist-pulse__label">Completion</span>
-          <span className="hist-pulse__value">{completionRate}%</span>
-        </div>
-      </div>
+          <span className="hst__kpi-num">
+            ${lifetimeEarned.toLocaleString()}
+          </span>
+          <span className="hst__kpi-lbl">
+            Lifetime earned
+            <span className="hst__kpi-sub">{paidRows.length} paid gigs</span>
+          </span>
+        </article>
+        <article className="hst__kpi hst__kpi--blue">
+          <span className="hst__kpi-icon">
+            <TrendingUp size={16} strokeWidth={2.25} />
+          </span>
+          <span className="hst__kpi-num">${avgPayout}</span>
+          <span className="hst__kpi-lbl">
+            Avg per gig
+            <span className="hst__kpi-sub">across all paid</span>
+          </span>
+        </article>
+        <article className="hst__kpi hst__kpi--gold">
+          <span className="hst__kpi-icon">
+            <Sparkles size={16} strokeWidth={2.25} />
+          </span>
+          <span className="hst__kpi-num">{stretchHits}</span>
+          <span className="hst__kpi-lbl">
+            Stretch hits
+            <span className="hst__kpi-sub">top tier unlocked</span>
+          </span>
+        </article>
+        <article className="hst__kpi hst__kpi--green">
+          <span className="hst__kpi-icon">
+            <Trophy size={16} strokeWidth={2.25} />
+          </span>
+          <span className="hst__kpi-num">{hitRate}%</span>
+          <span className="hst__kpi-lbl">
+            Target+ rate
+            <span className="hst__kpi-sub">
+              {targetHits + stretchHits} of {paidRows.length}
+            </span>
+          </span>
+        </article>
+      </section>
 
-      {/* ☆ Toolbar — uses canonical <TabBar> primitive (audit § P0). */}
-      <div className="hist-toolbar">
-        <TabBar<StatusFilter>
-          ariaLabel="Status filter"
-          tabs={[
-            { id: "all", label: "All" },
-            {
-              id: "paid",
-              label: "Paid",
-              count: data?.filter((r) => r.status === "paid").length,
-            },
-            {
-              id: "declined",
-              label: "Declined",
-              count: data?.filter((r) => r.status === "declined").length,
-            },
-          ]}
-          active={statusFilter}
-          onChange={setStatusFilter}
-        />
-      </div>
+      {/* ── Filter + Search ─────────────────────────── */}
+      <section className="hst__toolbar">
+        <div className="hst__filters" role="tablist" aria-label="Status filter">
+          {(["all", "paid", "completed", "declined"] as StatusFilter[]).map(
+            (f) => (
+              <button
+                key={f}
+                role="tab"
+                type="button"
+                aria-selected={filter === f}
+                className={
+                  "hst__filter-btn" + (filter === f ? " is-active" : "")
+                }
+                onClick={() => setFilter(f)}
+              >
+                {f === "all"
+                  ? "All"
+                  : f === "paid"
+                    ? "Paid"
+                    : f === "completed"
+                      ? "Completed"
+                      : "Declined"}
+                <span className="hst__filter-count">{counts[f]}</span>
+              </button>
+            ),
+          )}
+        </div>
+        <label className="hst__search">
+          <Search size={14} strokeWidth={2.25} />
+          <input
+            type="search"
+            placeholder="Search brand, campaign, or category"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search history"
+          />
+        </label>
+      </section>
 
-      {/* ★★★ Two-column workspace */}
-      <div className="hist-shell">
-        {/* Left: grouped by month */}
-        <div className="hist-list">
-          {grouped.map(([monthLabel, rows]) => {
-            const monthTotal = rows.reduce(
-              (s, r) => s + (r.status === "paid" ? r.finalPayout : 0),
-              0,
-            );
+      {/* ── Loading / empty ─────────────────────────── */}
+      {isLoading && (
+        <div className="hst__empty">
+          <p>Loading your history…</p>
+        </div>
+      )}
+
+      {!isLoading && grouped.length === 0 && (
+        <div className="hst__empty">
+          <Archive size={20} strokeWidth={1.75} />
+          <p>
+            No gigs match this filter.{" "}
+            {(filter !== "all" || query) && (
+              <button
+                type="button"
+                className="hst__empty-clear"
+                onClick={() => {
+                  setFilter("all");
+                  setQuery("");
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* ── Month-grouped list ──────────────────────── */}
+      {!isLoading && grouped.length > 0 && (
+        <section className="hst__groups" aria-label="Closed gigs by month">
+          {grouped.map(([month, rows]) => {
+            const monthSum = rows
+              .filter((r) => r.status === "paid")
+              .reduce((s, r) => s + r.finalPayout, 0);
             return (
-              <section key={monthLabel} className="hist-group">
-                <header className="hist-group__head">
-                  <span className="hist-group__title">{monthLabel}</span>
-                  <span className="hist-group__total">
-                    ${fmtMoney(monthTotal)}
+              <section key={month} className="hst__group">
+                <header className="hst__group-head">
+                  <h3 className="hst__group-title">{month}</h3>
+                  <span className="hst__group-meta">
+                    {rows.length} gig{rows.length === 1 ? "" : "s"}
+                    {monthSum > 0 && (
+                      <>
+                        <span className="hst__group-sep">·</span>
+                        <span className="hst__group-sum">
+                          ${monthSum.toLocaleString()}
+                        </span>
+                      </>
+                    )}
                   </span>
                 </header>
-                <ul className="hist-group__rows">
-                  {rows.map((r) => {
-                    const mc = merchantIdentity(r.brand);
-                    const isActive = active?.id === r.id;
-                    return (
-                      <li key={r.id}>
-                        <button
-                          type="button"
-                          className={`hist-row hist-row--mc-${mc}${isActive ? " is-active" : ""}`}
-                          onClick={() => setActiveId(r.id)}
-                          aria-current={isActive}
-                        >
-                          <span className="hist-row__strip" aria-hidden />
-                          <span className="hist-row__monogram" aria-hidden>
-                            {r.brandInitial}
-                          </span>
-                          <span className="hist-row__body">
-                            <span className="hist-row__brand">{r.brand}</span>
-                            <span className="hist-row__campaign">
-                              {r.campaign}
+                <ul className="hst__list">
+                  {rows.map((r) => (
+                    <li key={r.id}>
+                      <article className={"hst__row hst__row--" + r.status}>
+                        <span className="hst__row-avatar">
+                          {r.brandInitial}
+                        </span>
+                        <div className="hst__row-body">
+                          <div className="hst__row-line1">
+                            <span className="hst__row-brand">{r.brand}</span>
+                            {r.status === "paid" && (
+                              <span
+                                className="hst__row-tier"
+                                style={{
+                                  color: TIER_COLORS[r.outcomeTier],
+                                }}
+                              >
+                                {r.outcomeTier}
+                              </span>
+                            )}
+                          </div>
+                          <p className="hst__row-line2">
+                            {r.campaign}
+                            <span className="hst__row-sep">·</span>
+                            {r.category}
+                          </p>
+                          <p className="hst__row-line3">
+                            {fmtDate(r.paidAt)}
+                            {r.scansAchieved > 0 && (
+                              <>
+                                <span className="hst__row-sep">·</span>
+                                {r.scansAchieved} verified scans
+                              </>
+                            )}
+                          </p>
+                        </div>
+                        <div className="hst__row-amount">
+                          {r.status === "paid" && (
+                            <>
+                              <span className="hst__row-money">
+                                +${r.finalPayout}
+                              </span>
+                              <span className="hst__row-status hst__row-status--paid">
+                                <CheckCircle2 size={11} strokeWidth={2.5} />
+                                Paid
+                              </span>
+                            </>
+                          )}
+                          {r.status === "completed" && (
+                            <>
+                              <span className="hst__row-money hst__row-money--pending">
+                                ${r.finalPayout}
+                              </span>
+                              <span className="hst__row-status hst__row-status--completed">
+                                <CheckCircle2 size={11} strokeWidth={2.5} />
+                                Completed
+                              </span>
+                            </>
+                          )}
+                          {r.status === "declined" && (
+                            <span className="hst__row-status hst__row-status--declined">
+                              <XCircle size={11} strokeWidth={2.5} />
+                              Declined
                             </span>
-                            <span className="hist-row__meta">
-                              {fmtDate(r.paidAt)} · {r.scansAchieved} scans
-                            </span>
-                          </span>
-                          <span className="hist-row__right">
-                            <span className="hist-row__payout">
-                              ${fmtMoney(r.finalPayout)}
-                            </span>
-                            <span
-                              className={`hist-row__tier hist-row__tier--${r.outcomeTier.toLowerCase()}`}
-                            >
-                              {r.outcomeTier}
-                            </span>
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
+                          )}
+                        </div>
+                      </article>
+                    </li>
+                  ))}
                 </ul>
               </section>
             );
           })}
-        </div>
-
-        {/* Right: sticky detail panel */}
-        <aside className="hist-detail" aria-label="Selected gig details">
-          {active ? (
-            <div
-              className={`hist-detail__inner hist-detail__inner--mc-${merchantIdentity(active.brand)}`}
-            >
-              <div className="hist-detail__accent" aria-hidden />
-              <p className="hist-detail__eyebrow">
-                BRIEF · {active.category} · {fmtDate(active.paidAt)}
-              </p>
-              <h2 className="hist-detail__title">{active.brand}</h2>
-              <p className="hist-detail__sub">{active.campaign}</p>
-
-              <div className="hist-detail__quick">
-                <div>
-                  <span className="hist-detail__quick__label">
-                    Final payout
-                  </span>
-                  <span className="hist-detail__quick__value">
-                    ${fmtMoney(active.finalPayout)}
-                  </span>
-                </div>
-                <div>
-                  <span className="hist-detail__quick__label">Scans</span>
-                  <span className="hist-detail__quick__value">
-                    {active.scansAchieved}
-                  </span>
-                </div>
-                <div>
-                  <span className="hist-detail__quick__label">Outcome</span>
-                  <span className="hist-detail__quick__value">
-                    {active.outcomeTier}
-                  </span>
-                </div>
-              </div>
-
-              <div className="hist-detail__section">
-                <h3 className="hist-detail__h">Status timeline</h3>
-                <ol className="hist-detail__timeline">
-                  <li>
-                    <span className="hist-detail__dot is-done" /> Accepted
-                  </li>
-                  <li>
-                    <span className="hist-detail__dot is-done" /> Posted
-                  </li>
-                  <li>
-                    <span className="hist-detail__dot is-done" /> Verified
-                  </li>
-                  <li>
-                    <span className="hist-detail__dot is-done" /> Paid ·{" "}
-                    {fmtDate(active.paidAt)}
-                  </li>
-                </ol>
-              </div>
-
-              <div className="hist-detail__cta-row">
-                <a
-                  href={`/api/creator/receipts/${active.id}`}
-                  className="hist-detail__cta"
-                  download
-                >
-                  Download receipt PDF
-                </a>
-              </div>
-            </div>
-          ) : (
-            <div className="hist-detail__empty">
-              Pick a gig to see its details.
-            </div>
-          )}
-        </aside>
-      </div>
-    </section>
+        </section>
+      )}
+    </main>
   );
 }

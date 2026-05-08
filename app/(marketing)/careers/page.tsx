@@ -1,282 +1,176 @@
+/* ============================================================
+   /careers — values + open roles + apply CTA. v3 (2026-05-08)
+   GA-orange accent · 4 sections: hero / 4 values grid / open roles
+   list with role chips / apply CTA.
+   ============================================================ */
+
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Compass, Hammer, Heart, Sparkles, ArrowRight } from "lucide-react";
+import "../_styles/mkt.css";
 import "./careers.css";
 
 export const metadata: Metadata = {
-  title: "Careers — Push",
+  title: "Careers · Push",
   description:
-    "Build the walk-in economy. Five open roles in NYC. Pre-pilot, pre-scale — join before the first scan.",
+    "Join the Push team — NYC-based, remote-friendly, building the rails for verified physical attribution.",
 };
 
-/* ─── Values ───────────────────────────────────────────────── */
-type Value = {
-  num: string;
-  title: string;
-  desc: string;
-};
-
-const VALUES: Value[] = [
+const VALUES = [
   {
-    num: "01",
-    title: "Ship the whole thing.",
-    desc: "No half-features. If you build it, you own it end-to-end — the QR, the payout, the dispute resolution, the creator complaint at 11pm.",
+    icon: Compass,
+    title: "NYC-first",
+    desc: "We work in our own neighborhoods. The product gets better because we're customers.",
   },
   {
-    num: "02",
-    title: "Walk the block.",
-    desc: "The product lives on Mott Street and Doyers. You should too — at least once. The restaurant owner is the user. Act like it.",
+    icon: Hammer,
+    title: "Ship sober",
+    desc: "We over-index on integrity, audit trails, and getting payouts right. Move fast, don't break trust.",
   },
   {
-    num: "03",
-    title: "Equity over theater.",
-    desc: "Salaries are honest, not lavish. The cap table is clean and you'll see it before you sign. Ownership in something real beats a free lunch.",
+    icon: Heart,
+    title: "Pay creators",
+    desc: "Every product decision starts with: does this make creators more money or less?",
+  },
+  {
+    icon: Sparkles,
+    title: "Long horizon",
+    desc: "We're building rails for the next 20 years, not next quarter's growth dashboard.",
   },
 ];
 
-/* ─── Culture KPIs ─────────────────────────────────────────── */
-const CULTURE_KPIS = [
-  { num: "5", label: "Team members" },
-  { num: "100%", label: "Remote-friendly" },
-  { num: "NYC", label: "Based in lower Manhattan" },
-];
-
-/* ─── Open Roles ───────────────────────────────────────────── */
-type Role = {
-  num: string;
-  title: string;
-  team: string;
-  location: string;
-  slug: string;
-};
-
-const ROLES: Role[] = [
+const ROLES = [
   {
-    num: "01",
-    title: "Senior Full-Stack Engineer",
     team: "Engineering",
-    location: "NYC · Remote OK",
-    slug: "senior-fullstack-engineer",
+    title: "Senior full-stack engineer",
+    location: "NYC / Remote",
+    type: "Full-time",
   },
   {
-    num: "02",
-    title: "Product Designer — Creator Experience",
-    team: "Design",
-    location: "NYC",
-    slug: "product-designer-creator",
+    team: "Engineering",
+    title: "ML / vision engineer",
+    location: "NYC / Remote",
+    type: "Full-time",
   },
   {
-    num: "03",
-    title: "Creator Network Lead",
     team: "Operations",
+    title: "Trust & integrity ops lead",
     location: "NYC",
-    slug: "creator-network-lead",
+    type: "Full-time",
   },
   {
-    num: "04",
-    title: "Merchant Success Manager",
-    team: "Growth",
+    team: "Creator",
+    title: "Creator success manager",
     location: "NYC",
-    slug: "merchant-success-manager",
+    type: "Full-time",
   },
   {
-    num: "05",
-    title: "Data Engineer — Attribution",
-    team: "Data",
-    location: "NYC · Remote OK",
-    slug: "attribution-data-engineer",
+    team: "Merchant",
+    title: "Merchant success — Brooklyn",
+    location: "Brooklyn, NYC",
+    type: "Full-time",
+  },
+  {
+    team: "Design",
+    title: "Senior product designer",
+    location: "NYC / Remote",
+    type: "Contract → FT",
   },
 ];
 
-/* ─── Page ──────────────────────────────────────────────────── */
 export default function CareersPage() {
   return (
-    <main className="careers-page">
-      {/* ═══ 01 — HERO ═══ */}
-      <section className="careers-hero" aria-labelledby="careers-hero-h1">
-        {/* Ghost "JOIN" decoration */}
-        <span className="careers-hero-ghost" aria-hidden="true">
-          JOIN
-        </span>
-
-        <div className="careers-hero-inner">
-          {/* Bottom-left anchor: eyebrow + Darky 900 display */}
-          <div className="careers-hero-content">
-            <span className="eyebrow careers-hero-eyebrow">(JOIN US)</span>
-            <h1 id="careers-hero-h1" className="careers-hero-title">
-              Build the walk-in
-              <br />
-              economy.
-            </h1>
-          </div>
-
-          {/* Right: liquid-glass stat badge */}
-          <div
-            className="careers-hero-badge lg-surface--badge"
-            aria-label="NYC team, 5 people"
-          >
-            <span className="careers-badge-size">5</span>
-            <span className="careers-badge-stat">NYC team</span>
-          </div>
+    <main
+      className="mkt-page mkt-page--orange careers-page"
+      aria-label="Careers"
+    >
+      <header className="mkt-hero">
+        <p className="mkt-hero__eyebrow">Careers · NYC, remote-friendly</p>
+        <h1 className="mkt-hero__title">Build the rails for hyperlocal.</h1>
+        <p className="mkt-hero__sub">
+          Push is a small team based in NYC. We build the verification pipeline,
+          the creator app, and the merchant tooling that makes
+          physical-attribution-as-payment work. {ROLES.length} open roles.
+        </p>
+        <div className="mkt-hero__cta-row">
+          <a href="#open-roles" className="mkt-btn mkt-btn--primary">
+            See open roles ↓
+          </a>
+          <Link href="/about" className="mkt-btn mkt-btn--ghost">
+            Meet the team
+          </Link>
         </div>
-      </section>
+      </header>
 
-      {/* ═══ SIG DIVIDER ═══ */}
-      <div className="sig-divider careers-sig" aria-hidden="true">
-        Build · Ship · Walk the block ·
-      </div>
-
-      {/* ═══ 02 — VALUES (Candy Panel butter) ═══ */}
-      <section
-        className="candy-panel careers-values-section"
-        aria-labelledby="careers-values-h2"
-      >
-        <div className="careers-values-header">
-          <span className="eyebrow">(HOW WE WORK)</span>
-          <h2 id="careers-values-h2" className="careers-values-title">
-            Three things we mean.
-          </h2>
+      {/* ── 4 values · 4-up grid ── */}
+      <section className="mkt-section">
+        <div className="mkt-section__head">
+          <p className="mkt-section__eyebrow">How we work · 4 values</p>
+          <h2 className="mkt-section__title">What you sign up for.</h2>
         </div>
-
-        {/* Numbered editorial rows — large num | H3 title | body */}
-        <div className="careers-values-grid">
-          {VALUES.map((v) => (
-            <div key={v.num} className="careers-value-row">
-              <span className="careers-value-num" aria-hidden="true">
-                {v.num}
-              </span>
-              <h3 className="careers-value-title">{v.title}</h3>
-              <p className="careers-value-desc">{v.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ 03 — CULTURE (Candy Panel sky) ═══ */}
-      <section
-        className="candy-panel careers-culture-section"
-        aria-labelledby="careers-culture-h2"
-      >
-        <div className="careers-culture-inner">
-          <div className="careers-culture-header">
-            <span className="eyebrow">(THE TEAM)</span>
-            <h2 id="careers-culture-h2" className="careers-culture-title">
-              Small team.
-              <br />
-              Full ownership.
-            </h2>
-          </div>
-
-          <div className="careers-culture-kpis">
-            {CULTURE_KPIS.map((kpi) => (
-              <div key={kpi.label} className="careers-kpi-card">
-                <span className="careers-kpi-num">{kpi.num}</span>
-                <span className="careers-kpi-label">{kpi.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ SIG DIVIDER ═══ */}
-      <div className="sig-divider careers-sig" aria-hidden="true">
-        Five roles · Lower Manhattan · June 22 ·
-      </div>
-
-      {/* ═══ 04 — OPEN ROLES (dark char section) ═══ */}
-      <section
-        className="careers-roles-section"
-        id="open-roles"
-        aria-labelledby="careers-roles-h2"
-      >
-        <div className="careers-container">
-          <div className="careers-roles-header">
-            <span className="eyebrow careers-roles-eyebrow">(OPEN ROLES)</span>
-            <h2 id="careers-roles-h2" className="careers-roles-title">
-              Five seats.
-              <br />
-              <span className="careers-roles-title-ghost">
-                Pre-pilot. Pre-scale.
-              </span>
-            </h2>
-            <p className="careers-roles-sub">
-              Each role below is for someone who wants to be in the room when
-              the first QR scans on June 22. No management layer above you. No
-              platform team below you. Just the work.
-            </p>
-          </div>
-
-          <ol className="careers-roles-list" aria-label="Open positions">
-            {ROLES.map((role) => (
-              <li key={role.slug} className="careers-role-item">
-                <Link
-                  href={`/careers/${role.slug}`}
-                  className="careers-role-link"
-                  aria-label={`${role.title} — ${role.team}, ${role.location}`}
-                >
-                  <span className="careers-role-num" aria-hidden="true">
-                    {role.num}
-                  </span>
-                  <div className="careers-role-text">
-                    <span className="careers-role-title">{role.title}</span>
-                    <span className="careers-role-meta">
-                      {role.team} · {role.location}
-                    </span>
-                  </div>
-                  {/* Chips — team + location */}
-                  <div className="careers-role-tags" aria-hidden="true">
-                    <span className="careers-role-tag">{role.team}</span>
-                    <span className="careers-role-tag">{role.location}</span>
-                  </div>
-                  <span className="careers-role-arrow" aria-hidden="true">
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ═══ 05 — TICKET CTA ═══ */}
-      <section className="careers-ticket-section">
-        <div className="careers-container">
-          <div className="ticket-panel careers-ticket">
-            {/* Grommet circles */}
-            <span
-              className="ticket-grommet ticket-grommet--tl"
-              aria-hidden="true"
-            />
-            <span
-              className="ticket-grommet ticket-grommet--tr"
-              aria-hidden="true"
-            />
-            <span
-              className="ticket-grommet ticket-grommet--bl"
-              aria-hidden="true"
-            />
-            <span
-              className="ticket-grommet ticket-grommet--br"
-              aria-hidden="true"
-            />
-
-            <div className="careers-ticket-inner">
-              <span className="eyebrow careers-ticket-eyebrow">
-                (NO OPEN SEAT?)
-              </span>
-              <h2 className="careers-ticket-title">
-                Join the walk-in economy.
-              </h2>
-              <p className="careers-ticket-body">
-                Don&apos;t see the role? Write anyway — your work, the blocks
-                you walk, what you want to build. We read every note by hand.
-              </p>
-              <a
-                href="mailto:careers@push.nyc"
-                className="btn-ink careers-ticket-btn"
+        <div className="mkt-grid-4">
+          {VALUES.map((v, i) => {
+            const Icon = v.icon;
+            const isHero = i === 0;
+            return (
+              <article
+                key={v.title}
+                className={"mkt-panel" + (isHero ? " mkt-panel--orange" : "")}
               >
-                Email careers@push.nyc
-              </a>
-            </div>
+                <span className="careers-val__icon">
+                  <Icon size={20} strokeWidth={1.75} />
+                </span>
+                <h3 className="mkt-panel__title">{v.title}</h3>
+                <p className="mkt-panel__body">{v.desc}</p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Open roles list ── */}
+      <section className="mkt-section" id="open-roles">
+        <div className="mkt-section__head">
+          <p className="mkt-section__eyebrow">
+            {ROLES.length} open roles · Q2 2026
+          </p>
+          <h2 className="mkt-section__title">Pick yours.</h2>
+        </div>
+        <ul className="careers-roles">
+          {ROLES.map((r) => (
+            <li key={r.title} className="careers-role">
+              <div className="careers-role__head">
+                <span className="careers-role__team">{r.team}</span>
+                <span className="careers-role__type">{r.type}</span>
+              </div>
+              <h3 className="careers-role__title">{r.title}</h3>
+              <div className="careers-role__foot">
+                <span className="careers-role__loc">{r.location}</span>
+                <span className="careers-role__cta">
+                  Apply <ArrowRight size={14} strokeWidth={2.25} />
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ── Apply CTA ── */}
+      <section className="mkt-section">
+        <div className="mkt-panel mkt-panel--ink">
+          <p className="mkt-panel__eyebrow">Don&apos;t see your role?</p>
+          <h2 className="mkt-panel__title">Tell us what you&apos;d build.</h2>
+          <p className="mkt-panel__body">
+            We hire generalists. If you have an idea for what Push should be
+            doing and the skills to ship it — say so.
+          </p>
+          <div className="mkt-hero__cta-row" style={{ marginTop: 16 }}>
+            <a
+              href="mailto:careers@push.nyc"
+              className="mkt-btn mkt-btn--accent"
+            >
+              careers@push.nyc →
+            </a>
           </div>
         </div>
       </section>

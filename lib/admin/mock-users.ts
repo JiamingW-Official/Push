@@ -120,9 +120,9 @@ const neighborhoods = [
 export const mockUsers: AdminUser[] = [
   {
     id: "usr_001",
-    name: "Maya Chen",
-    handle: "@mayachen",
-    email: "maya@example.com",
+    name: "Alex Chen",
+    handle: "@alexchen",
+    email: "alex@example.com",
     phone: "+1 (917) 555-0101",
     avatar: "https://i.pravatar.cc/150?img=1",
     role: "creator",

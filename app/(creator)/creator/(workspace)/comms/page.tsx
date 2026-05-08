@@ -1,20 +1,8 @@
 "use client";
 
 /* ============================================================
-   /creator/comms — COMMS domain hub. Audit § 5.5 bento spec.
-
-   Collapses 3 fragmented surfaces into one anchor:
-     - /inbox/messages  → COMMS: Messages module
-     - /notifications   → COMMS: System module
-     - /disputes        → COMMS: Disputes module
-     - (new)            → COMMS: Daily digest module
-
-   Bento (audit § 5.5):
-     [─── MESSAGES two-pane (12) ─────────────────────]
-     [─ SYSTEM (4) ─] [─ DISPUTES (4) ─] [─ DIGEST (4) ─]
-
-   Notifications drawer in the topnav still owns the realtime
-   surface — this hub provides the deep-archive entry points.
+   /creator/comms — COMMS hub. v2 (2026-05-08, Work-template parity)
+   Brand-red accent · 6 panels w/ TimeChart bottom row.
    ============================================================ */
 
 import {
@@ -22,112 +10,213 @@ import {
   KpiBlock,
   StatusPill,
 } from "@/components/shared/primitives";
+import {
+  Inbox,
+  Bell,
+  MessageCircle,
+  Mail,
+  CheckCircle2,
+  Eye,
+  TrendingUp,
+} from "lucide-react";
+import TimeChart from "@/components/shared/charts/TimeChart";
 import "@/components/shared/hub-shell.css";
 import "./comms.css";
 
-export default function CommsHub() {
-  return (
-    <main className="comms-hub" aria-label="Communications">
-      <header className="comms-hero">
-        <p className="comms-hero__eyebrow">
-          COMMS · CONVERSATIONS, ALERTS, ESCALATIONS
-        </p>
-        <h1 className="comms-hero__title">Comms</h1>
-        <p className="comms-hero__sub">
-          Where everything anyone says to you converges. Brand chats up top (95%
-          of your reading time) — system alerts, dispute filings, and the daily
-          digest below.
-        </p>
-      </header>
+const ICON_PROPS = { size: 18, strokeWidth: 1.75 } as const;
 
-      <header className="hub-section">
-        <h2 className="hub-section__title">Brand threads</h2>
-        <span className="hub-section__count">01 · live messages</span>
+export default function CommsHub() {
+  const stats = {
+    unread: 4,
+    threadsToday: 7,
+    avgReply: "2h 14m",
+    notifications: 12,
+  };
+
+  return (
+    <main className="comms-hub" aria-label="Comms">
+      <header className="comms-hero">
+        <div className="comms-hero__left">
+          <h1 className="comms-hero__title">Inbox</h1>
+          <p className="comms-hero__sub">
+            {stats.unread} unread · {stats.threadsToday} new today · avg reply{" "}
+            {stats.avgReply}
+          </p>
+        </div>
       </header>
 
       <section className="comms-bento" aria-label="Comms modules">
-        {/* ── MESSAGES (span 12) — anchor ── */}
+        <BentoModule
+          href="/creator/inbox"
+          eyebrow="Unread · waiting"
+          icon={<Inbox {...ICON_PROPS} />}
+          span={4}
+          tone="red"
+          live="urgent"
+        >
+          <p className="comms-kpi__num">{stats.unread}</p>
+          <p className="comms-kpi__lbl">UNREAD MESSAGES</p>
+          <p className="comms-kpi__meta">2 from merchants · 2 system</p>
+        </BentoModule>
+
         <BentoModule
           href="/creator/inbox/messages"
-          eyebrow="MESSAGES · BRAND THREADS"
-          span={12}
-          live="live"
-          priority="hero"
-          sub="Realtime · 3 unread · last reply 12m ago"
+          eyebrow="Needs you · 3 actions"
+          icon={<MessageCircle {...ICON_PROPS} />}
+          span={5}
+          live="urgent"
         >
-          <div className="comms-msg-row">
-            <KpiBlock eyebrow="THREADS" value="14" tone="ink" compact />
-            <KpiBlock eyebrow="UNREAD" value="3" tone="red" compact />
-            <KpiBlock eyebrow="RESPONSE TIME" value="14m" tone="ink" compact />
-            <span className="comms-msg-status">
-              <StatusPill variant="green" label="Online" dot />
-            </span>
-          </div>
+          <ul className="comms-queue" aria-label="Message action queue">
+            <li className="comms-queue__row comms-queue__row--reply">
+              <span className="comms-queue__tile" aria-hidden>
+                <Mail size={14} strokeWidth={2.25} />
+              </span>
+              <span className="comms-queue__copy">
+                <span className="comms-queue__verb">Reply</span>
+                <span className="comms-queue__target">
+                  Roberta&apos;s · contract Q
+                </span>
+              </span>
+              <span className="comms-queue__when">2h</span>
+            </li>
+            <li className="comms-queue__row comms-queue__row--review">
+              <span className="comms-queue__tile" aria-hidden>
+                <Eye size={14} strokeWidth={2.25} />
+              </span>
+              <span className="comms-queue__copy">
+                <span className="comms-queue__verb">Review</span>
+                <span className="comms-queue__target">
+                  Devoción · brand brief
+                </span>
+              </span>
+              <span className="comms-queue__when">5h</span>
+            </li>
+            <li className="comms-queue__row comms-queue__row--ack">
+              <span className="comms-queue__tile" aria-hidden>
+                <CheckCircle2 size={14} strokeWidth={2.25} />
+              </span>
+              <span className="comms-queue__copy">
+                <span className="comms-queue__verb">Ack</span>
+                <span className="comms-queue__target">
+                  Brow Theory · accepted
+                </span>
+              </span>
+              <span className="comms-queue__when">1d</span>
+            </li>
+          </ul>
         </BentoModule>
-      </section>
 
-      <header className="hub-section">
-        <h2 className="hub-section__title">Auxiliary</h2>
-        <span className="hub-section__count">02 · system + digest</span>
-      </header>
+        <BentoModule
+          href="/creator/notifications"
+          eyebrow="System · 12 new"
+          icon={<Bell {...ICON_PROPS} />}
+          span={3}
+        >
+          <KpiBlock
+            eyebrow="ALERTS"
+            value={String(stats.notifications)}
+            tone="ink"
+          />
+          <span className="comms-row-status">
+            <StatusPill variant="amber" label="3 require action" dot />
+          </span>
+        </BentoModule>
 
-      <section className="comms-bento" aria-label="Auxiliary modules">
-        {/* ── SYSTEM (span 4) ── */}
         <BentoModule
           href="/creator/inbox/system"
-          eyebrow="SYSTEM · PUSH UPDATES"
-          span={4}
-          live="off"
-          sub="Last 24h · 2 alerts"
+          eyebrow="Threads · last 7d"
+          icon={<MessageCircle {...ICON_PROPS} />}
+          span={5}
         >
-          <div className="comms-list">
-            <span className="comms-list-row">
-              <StatusPill variant="blue" label="Tier change" dot />
-              <span className="comms-list-row__time">2h</span>
-            </span>
-            <span className="comms-list-row">
-              <StatusPill variant="amber" label="Payout cleared" dot />
-              <span className="comms-list-row__time">9h</span>
-            </span>
-          </div>
+          <ul className="comms-list">
+            <li className="comms-list__row">
+              <span className="comms-list__name">
+                Roberta&apos;s · contract
+              </span>
+              <span className="comms-list__meta">2h ago · 3 msgs</span>
+            </li>
+            <li className="comms-list__row">
+              <span className="comms-list__name">Devoción · brief</span>
+              <span className="comms-list__meta">5h ago · 1 msg</span>
+            </li>
+            <li className="comms-list__row">
+              <span className="comms-list__name">Brow Theory · invite</span>
+              <span className="comms-list__meta">1d ago · 6 msgs</span>
+            </li>
+          </ul>
         </BentoModule>
 
-        {/* ── DISPUTES (span 4) ── */}
         <BentoModule
-          href="/creator/disputes"
-          eyebrow="DISPUTES · ESCALATIONS"
+          href="/creator/analytics/fans"
+          eyebrow="Avg reply · 7d"
+          icon={<TrendingUp {...ICON_PROPS} />}
           span={4}
-          live="off"
-          sub="0 open · 2 resolved this quarter"
         >
-          <div className="comms-list">
-            <span className="comms-list-row">
-              <StatusPill variant="green" label="No open cases" dot />
-            </span>
-            <span className="comms-list-row__sub">
-              Avg resolution · 3.2 days
-            </span>
-          </div>
+          <KpiBlock eyebrow="RESPONSE" value={stats.avgReply} tone="ink" />
+          <span className="comms-row-status">
+            <StatusPill variant="green" label="↓ 18% vs prior" dot />
+          </span>
         </BentoModule>
 
-        {/* ── DIGEST (span 4) ── */}
         <BentoModule
-          href="/creator/settings/notifications"
-          eyebrow="DIGEST · DAILY EMAIL · 8AM ET"
-          span={4}
-          live="off"
-          sub="Yesterday's bundle delivered · settings to tweak frequency"
+          href="/creator/analytics"
+          eyebrow="Message volume · trend"
+          icon={<TrendingUp {...ICON_PROPS} />}
+          span={12}
         >
-          <div className="comms-list">
-            <span className="comms-list-row">
-              <StatusPill variant="ink" label="Daily" />
-              <span className="comms-list-row__time">on</span>
-            </span>
-            <span className="comms-list-row">
-              <StatusPill variant="neutral" label="Weekly recap" />
-              <span className="comms-list-row__time">off</span>
-            </span>
-          </div>
+          <TimeChart
+            mode="bar"
+            accent="red"
+            valueSuffix=" msgs"
+            defaultPeriod="30d"
+            data={{
+              "7d": [3, 5, 4, 7, 6, 8, 4],
+              "30d": Array.from({ length: 30 }, (_, i) =>
+                Math.max(2, Math.round(5 + Math.sin(i * 0.6) * 3 + i * 0.1)),
+              ),
+              "90d": Array.from({ length: 12 }, (_, i) =>
+                Math.max(8, Math.round(20 + Math.sin(i * 0.4) * 8 + i)),
+              ),
+              all: Array.from({ length: 12 }, (_, i) =>
+                Math.max(15, Math.round(30 + Math.cos(i * 0.5) * 10 + i * 2)),
+              ),
+            }}
+            labels={{
+              "7d": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+              "30d": Array.from({ length: 30 }, (_, i) =>
+                i % 5 === 0 ? `D${i + 1}` : "",
+              ),
+              "90d": [
+                "Wk1",
+                "Wk2",
+                "Wk3",
+                "Wk4",
+                "Wk5",
+                "Wk6",
+                "Wk7",
+                "Wk8",
+                "Wk9",
+                "Wk10",
+                "Wk11",
+                "Wk12",
+              ],
+              all: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ],
+            }}
+            ariaLabel="Message volume over time"
+          />
         </BentoModule>
       </section>
     </main>

@@ -14,6 +14,7 @@
  */
 
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { useWorkspaceState } from "@/lib/workspace/state";
 import { useToday } from "@/lib/data/hooks";
 import "@/components/shared/hub-shell.css";
@@ -119,7 +120,10 @@ export default function SettingsHub() {
   return (
     <main className="set-hub" aria-label="Settings">
       <header className="set-hero">
-        <p className="set-hero__eyebrow">SETTINGS · 9 SECTIONS</p>
+        <Link href="/creator/me" className="hub-back">
+          <ArrowLeft size={14} strokeWidth={2.25} />
+          Me
+        </Link>
         <h1 className="set-hero__title">Settings</h1>
         <p className="set-hero__sub">
           Everything that controls how you appear, get paid, and stay in the
