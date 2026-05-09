@@ -91,6 +91,12 @@ type Props = {
   /** Optional prior-period series — drawn as a faint dashed overlay
    *  so users can read trend vs prior period at a glance. */
   priorData?: TimeChartData;
+  /** Render the prior-period dashed overlay. Default true. Set false
+   *  for tiles where the comparison creates noise (e.g. 24h pulse). */
+  showPrior?: boolean;
+  /** Smooth the line via cardinal-spline interpolation (default true).
+   *  Set false for pixel-precise polyline rendering. */
+  smooth?: boolean;
   ariaLabel?: string;
 };
 
@@ -104,6 +110,8 @@ export default function TimeChart({
   showArea = true,
   mode = "line",
   priorData,
+  showPrior = true,
+  smooth = true,
   ariaLabel = "Time-series chart",
 }: Props) {
   const [period, setPeriod] = useState<ChartPeriod>(defaultPeriod);
@@ -126,26 +134,61 @@ export default function TimeChart({
   const c = ACCENTS[accent];
   const W = 100;
   const H = 36;
+  const isBar = mode === "bar";
 
+  /* v40: bar mode now slot-centers each x so the first/last bars are
+     fully inside the canvas (was: first bar at x=0 / last at x=W →
+     half of each got clipped by the SVG edge). Line mode keeps the
+     full-span layout so the curve still touches both panel edges. */
   const points = series.map((v, i) => {
-    const x = series.length === 1 ? W / 2 : (i / (series.length - 1)) * W;
+    const x =
+      series.length === 1
+        ? W / 2
+        : isBar
+          ? ((i + 0.5) / series.length) * W
+          : (i / (series.length - 1)) * W;
     const y = H - (v / max) * (H - 4) - 2;
     return { x, y, v };
   });
 
   const priorPoints = priorSeries.map((v, i) => {
     const x =
-      priorSeries.length === 1 ? W / 2 : (i / (priorSeries.length - 1)) * W;
+      priorSeries.length === 1
+        ? W / 2
+        : isBar
+          ? ((i + 0.5) / priorSeries.length) * W
+          : (i / (priorSeries.length - 1)) * W;
     const y = H - (v / max) * (H - 4) - 2;
     return { x, y, v };
   });
 
-  const linePath = points
-    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
-    .join(" ");
-  const priorPath = priorPoints
-    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
-    .join(" ");
+  /* v40 — pathFor builds either a straight polyline (smooth=false)
+     or a smooth cardinal-spline curve (smooth=true, default). The
+     spline uses tension 0.4 over 4-point neighborhoods, which gives
+     soft Apple-style curves without overshoot at endpoints. */
+  function pathFor(pts: Array<{ x: number; y: number }>) {
+    if (pts.length === 0) return "";
+    if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`;
+    if (!smooth || pts.length === 2) {
+      return pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+    }
+    const t = 0.4;
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(0, i - 1)];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[Math.min(pts.length - 1, i + 2)];
+      const cp1x = p1.x + ((p2.x - p0.x) * t) / 2;
+      const cp1y = p1.y + ((p2.y - p0.y) * t) / 2;
+      const cp2x = p2.x - ((p3.x - p1.x) * t) / 2;
+      const cp2y = p2.y - ((p3.y - p1.y) * t) / 2;
+      d += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)} ${cp2x.toFixed(2)} ${cp2y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+    }
+    return d;
+  }
+  const linePath = pathFor(points);
+  const priorPath = pathFor(priorPoints);
   const areaPath = `${linePath} L ${W} ${H} L 0 ${H} Z`;
   const barWidth = series.length > 0 ? (W / series.length) * 0.6 : 1;
 
@@ -210,8 +253,10 @@ export default function TimeChart({
           onMouseMove={onMouseMove}
           onMouseLeave={() => setHover(null)}
         >
-          {/* Prior-period faint dashed overlay (line mode only) */}
-          {mode === "line" && (
+          {/* Prior-period faint dashed overlay (line mode + opt-in via
+              showPrior). Hidden by default for tiles where the
+              comparison reads as visual noise (e.g. 24h Pulse). */}
+          {mode === "line" && showPrior && (
             <path
               d={priorPath}
               fill="none"
@@ -255,9 +300,9 @@ export default function TimeChart({
                   key={i}
                   cx={p.x}
                   cy={p.y}
-                  r={hover === i ? 1.4 : 0.6}
+                  r={hover === i ? 1.6 : 0.9}
                   fill={c.stroke}
-                  opacity={hover === i ? 1 : 0.4}
+                  opacity={hover === i ? 1 : 0.85}
                 />
               ))}
             </>
@@ -277,11 +322,13 @@ export default function TimeChart({
           )}
         </svg>
         {hover !== null && points[hover] && (
+          /* v36 — tooltip pinned to top of chart-wrap (CSS top:6px).
+             Only horizontal position follows the bar. Clamped 4-96%
+             so it can't escape left/right edges of the panel. */
           <div
             className="tc__tip"
             style={{
-              left: `${points[hover].x}%`,
-              top: `${(points[hover].y / H) * 100}%`,
+              left: `${Math.min(96, Math.max(4, points[hover].x))}%`,
             }}
           >
             <span className="tc__tip-val">{fmt(points[hover].v)}</span>

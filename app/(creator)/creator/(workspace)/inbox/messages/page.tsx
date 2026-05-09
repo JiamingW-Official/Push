@@ -18,7 +18,7 @@ import {
   useEffect,
   useLayoutEffect,
 } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { timeAgo } from "@/lib/notifications/useNotifications";
 import {
   avatarBg,
@@ -339,9 +339,38 @@ export default function InboxMessagesPage() {
   const { threads, markThreadRead, toggleStar, sendMessage, notifications } =
     useWorkspaceState();
 
-  const [activeId, setActiveId] = useState<string | null>(
-    threads[0]?.id ?? null,
-  );
+  // Campaign-scoped deep-link support: when GigCard or Work funnel sends
+  // ?campaign=<campaignId>, auto-select matching thread on mount.
+  const searchParams = useSearchParams();
+  const requestedCampaign = searchParams?.get("campaign") ?? null;
+
+  const initialActiveId = useMemo(() => {
+    if (requestedCampaign) {
+      const match = threads.find(
+        (t) =>
+          t.campaign === requestedCampaign ||
+          t.campaign?.toLowerCase().includes(requestedCampaign.toLowerCase()),
+      );
+      if (match) return match.id;
+    }
+    return threads[0]?.id ?? null;
+  }, [threads, requestedCampaign]);
+
+  const [activeId, setActiveId] = useState<string | null>(initialActiveId);
+
+  // If the URL changes (?campaign=) re-target the active thread + mark read.
+  useEffect(() => {
+    if (!requestedCampaign) return;
+    const match = threads.find(
+      (t) =>
+        t.campaign === requestedCampaign ||
+        t.campaign?.toLowerCase().includes(requestedCampaign.toLowerCase()),
+    );
+    if (match) {
+      setActiveId(match.id);
+    }
+  }, [requestedCampaign, threads]);
+
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [composer, setComposer] = useState("");

@@ -1393,12 +1393,16 @@ export default function DiscoverPage() {
 
   return (
     <div className="cw-page disc" data-cat={activeCategory} style={themeStyle}>
+      {/* v53 — hero header restyled to match /work + /money pattern:
+          Title first, then agent-prose sub line below (bold, sentence
+          case). Padding/margin/border mirror .money-hero so cross-page
+          chrome reads as one system. */}
       <header className="cw-header">
         <div className="cw-header__left">
+          <h1 className="cw-title">Find</h1>
           <p className="cw-eyebrow">
-            Discover · {filteredCampaigns.length} open · NYC
+            {filteredCampaigns.length} open campaigns near you · NYC
           </p>
-          <h1 className="cw-title">Find your next campaign</h1>
         </div>
       </header>
 

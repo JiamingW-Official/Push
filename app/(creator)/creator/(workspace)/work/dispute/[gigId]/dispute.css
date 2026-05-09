@@ -1,0 +1,157 @@
+/* ============================================================
+   /creator/work/dispute/[gigId] · Stage 08 — Disputed
+   Stage-specific only. Shell / banner / header / cards / rail
+   cards / buttons / elig / pay rows from Stage primitives.
+   This file holds claim quote, evidence list, dispute timeline,
+   response textarea, big-amount numeral.
+   ============================================================ */
+
+/* Merchant claim quote */
+.dis__claim {
+  margin: 0;
+  padding: 16px 20px;
+  background: var(--surface-2);
+  border-left: 4px solid var(--brand-red);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 16px; font-style: italic; line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.dis__claim-meta {
+  display: flex; flex-direction: column; gap: 6px;
+  margin: 8px 0 0; padding: 0;
+  list-style: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.dis__claim-meta strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Evidence list */
+.dis__evidence {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 0; padding: 0;
+  list-style: none;
+}
+.dis__evidence li {
+  padding: 12px 14px;
+  background: rgba(52, 199, 89, 0.06);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.55;
+  color: var(--ink-2);
+}
+.dis__evidence strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dis__help {
+  margin: 4px 0 0;
+  padding: 10px 12px;
+  background: var(--accent-blue-tint);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 13px; line-height: 1.5;
+  color: var(--ink-3);
+}
+.dis__help strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Dispute timeline (vertical with dots) */
+.dis__timeline {
+  display: flex; flex-direction: column; gap: 0;
+  margin: 0; padding: 0;
+  list-style: none;
+  position: relative;
+}
+.dis__timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--mist);
+}
+.dis__event {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 0;
+  position: relative;
+}
+.dis__event-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--snow);
+  border: 3px solid var(--mist);
+  margin-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+.dis__event--done .dis__event-dot { border-color: var(--success); background: var(--success); }
+.dis__event--current .dis__event-dot {
+  border-color: var(--warning);
+  background: var(--warning);
+  box-shadow: 0 0 0 4px rgba(255, 149, 0, 0.20);
+}
+.dis__event-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dis__event-time {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-4);
+}
+.dis__event-text {
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.5;
+  color: var(--ink-2);
+}
+.dis__event--current .dis__event-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Response textarea */
+.dis__response {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);
+  background: var(--snow);
+  font-family: var(--font-body);
+  font-size: 16px; line-height: 1.5;
+  color: var(--ink);
+  transition: border-color 180ms var(--ease-out-soft),
+              box-shadow 180ms var(--ease-out-soft);
+}
+.dis__response:focus {
+  outline: none;
+  border-color: var(--brand-red);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Big dispute amount on rail primary card */
+.dis__sum-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 56px; font-weight: 800;
+  color: var(--snow);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}

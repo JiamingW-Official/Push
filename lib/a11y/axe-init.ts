@@ -19,19 +19,23 @@ export function AxeInit() {
     (async () => {
       try {
         // Lazy import so prod bundle doesn't include axe-core.
-        const ReactModule = await import("react");
-        const ReactDOMModule = await import("react-dom");
+        // React 19 + Turbopack expose Module Namespace Objects with
+        // read-only getters; @axe-core/react monkey-patches createElement
+        // on the passed module, which throws "Cannot set property
+        // createElement of [object Module] which has only a getter".
+        // Workaround: spread into a plain object so the props are writable.
+        const ReactModule = { ...(await import("react")) };
+        const ReactDOMModule = { ...(await import("react-dom")) };
         const axe = (await import("@axe-core/react")).default;
         if (cancelled) return;
         // axe-core takes (React, ReactDOM, debounceMs).
         axe(ReactModule, ReactDOMModule, 1000);
-        // eslint-disable-next-line no-console
         console.info(
           "[a11y] axe-core attached — violations will print to the console",
         );
       } catch (err) {
-        // eslint-disable-next-line no-console
-        console.warn("[a11y] axe-core failed to attach", err);
+        // Soft-fail: dev-only a11y diagnostic; never block app.
+        console.debug("[a11y] axe-core skipped (dev-only diagnostic)", err);
       }
     })();
     return () => {

@@ -1,0 +1,208 @@
+/* ============================================================
+   /creator/discover/[id]/apply · Stage 03 — Apply
+   v21 · 2026-05-08 — full-width 2-col layout. Form (left) +
+   sticky rail (right). Stage primitives own shell, header,
+   step, two-col, rail card, buttons, elig, pay row. This file
+   holds Apply-specific UI: pitch textarea, date chips, confirm
+   checkboxes, FTC card, CTA row, rail summary.
+   ============================================================ */
+
+/* Form column gets a comfortable max-width inside the 2-col shell.
+   Without it, the form would expand to fill 60% of a 1920px screen
+   which makes form fields too wide. 720px is the form-readability
+   sweet spot. The right rail (360px) gets the rest of the space. */
+.apl__form { max-width: 720px; }
+
+/* ── Pitch textarea ─────────────────────────────────────── */
+.apl__pitch-wrap { position: relative; margin-top: 8px; }
+.apl__pitch {
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);
+  background: var(--snow);
+  font-family: var(--font-body);
+  font-size: 16px; line-height: 1.5;
+  color: var(--ink);
+  transition: border-color 180ms var(--ease-out-soft),
+              box-shadow 180ms var(--ease-out-soft);
+}
+.apl__pitch:focus {
+  outline: none;
+  border-color: var(--brand-red);
+  box-shadow: var(--shadow-focus);
+}
+.apl__pitch-counter {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-5);
+  text-align: right;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.apl__pitch-counter--warn { color: var(--warning); }
+.apl__pitch-counter--over { color: var(--brand-red); }
+
+/* ── Date chips (availability) ─────────────────────────── */
+.apl__dates {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+@media (min-width: 480px) {
+  .apl__dates { grid-template-columns: repeat(3, 1fr); }
+}
+.apl__date {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background 160ms var(--ease-out-soft),
+              border-color 160ms var(--ease-out-soft),
+              transform 160ms var(--ease-spring);
+  text-align: left;
+}
+.apl__date:hover { transform: translate(1px, 1px); }
+.apl__date.is-on {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.apl__date.is-on .apl__date-day,
+.apl__date.is-on .apl__date-time { color: var(--snow); }
+.apl__date-day {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.apl__date-time {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+}
+
+/* ── Confirm-deliverables checkbox row ─────────────────── */
+.apl__confirm {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  margin-top: 8px;
+}
+.apl__confirm input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--brand-red); }
+.apl__confirm-text {
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.5;
+  color: var(--ink-2);
+}
+.apl__confirm-text strong {
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── FTC disclosure ─────────────────────────────────────── */
+.apl__ftc {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 16px;
+  background: rgba(0, 133, 255, 0.06);
+  border-radius: var(--r-md);
+  margin-top: 8px;
+}
+.apl__ftc-h {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.apl__ftc p {
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0;
+}
+.apl__ftc-check {
+  display: flex; gap: 12px; align-items: flex-start;
+  cursor: pointer;
+  padding-top: 4px;
+}
+.apl__ftc-check input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--brand-red); }
+
+/* ── CTA row ────────────────────────────────────────────── */
+.apl__cta-row {
+  display: flex; gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+}
+@media (max-width: 480px) { .apl__cta-row { flex-direction: column-reverse; } }
+
+.apl__cta-meta {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-5);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* ── Rail summary card content (campaign re-affirm) ──── */
+.apl__rail-summary {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.apl__rail-img {
+  width: 56px; height: 56px;
+  border-radius: var(--r-md);
+  object-fit: cover;
+  background: rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+.apl__rail-summary-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.apl__rail-merchant {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+.apl__rail-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800;
+  color: var(--snow);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.apl__rail-loc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Timeline list (right rail) ──────────────────────── */
+.apl__timeline {
+  display: flex; flex-direction: column; gap: 4px;
+  margin: 0; padding: 0;
+  list-style: none;
+}
+.apl__timeline li {
+  font-family: var(--font-body);
+  font-size: 13px; line-height: 1.5;
+  color: var(--ink-3);
+  padding: 6px 0;
+  border-top: 1px solid var(--hairline);
+}
+.apl__timeline li:first-child { border-top: none; padding-top: 0; }
+.apl__timeline strong {
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--ink);
+}

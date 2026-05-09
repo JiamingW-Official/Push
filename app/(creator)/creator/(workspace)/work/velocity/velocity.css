@@ -1,0 +1,72 @@
+/* ============================================================
+   /creator/work/velocity · Stage-specific styles
+   Layout / cards / stats come from .stg__*. This file holds the
+   horizontal stage-hours bar pattern unique to Velocity.
+   ============================================================ */
+
+.vel__stages { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+.vel__stage {
+  display: grid;
+  grid-template-columns: 180px 1fr 64px 48px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+}
+@media (max-width: 640px) {
+  .vel__stage { grid-template-columns: 1fr 56px; gap: 8px; }
+  .vel__stage-track, .vel__stage-pct { display: none; }
+}
+
+.vel__stage-label {
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 600;
+  color: var(--ink-2);
+}
+
+.vel__stage-track {
+  height: 8px;
+  background: var(--mist);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.vel__stage-fill {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  border-radius: var(--r-pill);
+  transition: width 360ms var(--ease-spring);
+}
+
+.vel__stage-num {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700;
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.vel__stage-pct {
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 600;
+  color: var(--ink-5);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.vel__note {
+  margin: 8px 0 0;
+  padding: 12px 14px;
+  background: var(--accent-blue-tint);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.5;
+  color: var(--ink-2);
+}
+.vel__note strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}

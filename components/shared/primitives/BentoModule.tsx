@@ -105,6 +105,11 @@ export function BentoModule({
         {live !== "off" ? (
           <span className={`bento__live bento__live--${live}`} aria-hidden />
         ) : null}
+        {state === "ready" ? (
+          <span className="bento__drill" aria-hidden>
+            ↗
+          </span>
+        ) : null}
       </div>
 
       <div className="bento__body">
@@ -119,12 +124,6 @@ export function BentoModule({
 
       {sub && state === "ready" ? (
         <div className="bento__sub">{sub}</div>
-      ) : null}
-
-      {state === "ready" ? (
-        <span className="bento__drill" aria-hidden>
-          →
-        </span>
       ) : null}
     </Link>
   );

@@ -48,16 +48,11 @@ const nextConfig: NextConfig = {
         destination: "/creator/today",
         permanent: true,
       },
-      {
-        source: "/creator/work/pipeline",
-        destination: "/creator/gigs/active",
-        permanent: true,
-      },
-      {
-        source: "/creator/work/drafts",
-        destination: "/creator/gigs/invites",
-        permanent: true,
-      },
+      // /creator/work/pipeline + /creator/work/drafts — REVIVED (2026-05-08).
+      // Earlier collapse pointed them at /gigs/active + /gigs/invites; v3
+      // funnel rewrite gives them dedicated pages (Kanban + content WIP) so
+      // the redirects below are removed. Keep /work/today + /work/campaign
+      // collapses since those remain duplicates.
       {
         source: "/creator/work/campaign/:id",
         destination: "/creator/campaigns/:id",

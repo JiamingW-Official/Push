@@ -70,14 +70,15 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
     profileHref: "/admin",
   },
   creator: {
-    homeHref: "/creator/dashboard",
+    homeHref: "/creator/work",
     primary: [
       // Short captions (≤5 chars): live under each icon, no hover needed.
       // Full route name kept in href so analytics/aria still read clean.
-      // 7-domain canonical IA per architectural audit § 3.1.
-      // Today · Work · Money · Find · Comms · Me · Stats
-      { label: "Today", href: "/creator/today", icon: "home", exact: true },
-      { label: "Work", href: "/creator/work", icon: "work" },
+      // v23: Today merged into Work (Today's NEXT MOVE / NEEDS YOU /
+      // SCHEDULE / OPPS were 80% redundant with Work panels;
+      // Today-unique milestone + pulse folded into Work).
+      // 6-domain IA: Work · Find · Pay · Comms · Me · Stats
+      { label: "Work", href: "/creator/work", icon: "work", exact: true },
       { label: "Find", href: "/creator/discover", icon: "discover" },
       { label: "Pay", href: "/creator/money", icon: "earnings" },
       { label: "Comms", href: "/creator/comms", icon: "inbox" },
@@ -140,7 +141,6 @@ export interface UnifiedSidebarProps {
 
 export function UnifiedSidebar({
   role,
-  notificationCount = 0,
   inboxUnread = 0,
   userInitial,
   avatarUrl,
@@ -156,9 +156,6 @@ export function UnifiedSidebar({
     if (exact) return pathname === href;
     return pathname === href || pathname.startsWith(href + "/");
   };
-
-  const showBadge = notificationCount > 0;
-  const badgeText = notificationCount > 99 ? "99+" : String(notificationCount);
 
   const ws = useOptionalWorkspaceState();
   const now = useNow();

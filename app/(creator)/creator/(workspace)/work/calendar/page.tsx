@@ -870,14 +870,17 @@ export default function CreatorCalendarPage() {
     setNoteValue("");
   }, []);
 
-  const saveNote = useCallback(() => {
+  /* React Compiler memoizes — useCallback here tripped
+     react-hooks/preserve-manual-memoization (cannot reason about
+     captured `noteValue` across re-renders). Plain function is fine. */
+  const saveNote = () => {
     if (!noteTarget) return;
     setEvents((prev) =>
       prev.map((e) => (e.id === noteTarget ? { ...e, note: noteValue } : e)),
     );
     setNoteTarget(null);
     setNoteValue("");
-  }, [noteTarget, noteValue]);
+  };
 
   /* ── Period label ────────────────────────────────────── */
 
@@ -1251,9 +1254,9 @@ export default function CreatorCalendarPage() {
                 {monthGrid[monthGrid.length - 1] === null && (
                   <div className="cal-ghost-row" aria-hidden>
                     Nothing scheduled&nbsp;·&nbsp;
-                    <a href="/creator/discover" className="cal-ghost-row__link">
+                    <Link href="/creator/discover" className="cal-ghost-row__link">
                       browse Discover →
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
