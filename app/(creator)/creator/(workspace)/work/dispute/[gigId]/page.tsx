@@ -83,7 +83,7 @@ export default function DisputePage({
       />
 
       <StageHeader
-        eyebrow={`Stage 08 · Disputed · ${c.merchantName}`}
+        eyebrow={`In dispute · ${c.merchantName}`}
         title={c.title}
         sub={`${c.merchantName} flagged ${disputedScans} of ${totalScans} verified scans. Below is their claim, your evidence, and a textarea to respond. Push mediates if both sides disagree — 78% resolve in the creator's favor when evidence is strong.`}
       />

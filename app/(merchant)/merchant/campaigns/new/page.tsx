@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { CategoryPicker } from "@/components/merchant/campaign-wizard/CategoryPicker";
 import { TierSelector } from "@/components/merchant/campaign-wizard/TierSelector";
 import type { CreatorTier } from "@/components/merchant/campaign-wizard/TierSelector";
+import { MerchantAgent } from "@/components/merchant/campaign-wizard/MerchantAgent";
+import { AIBriefHelper } from "@/components/merchant/campaign-wizard/AIBriefHelper";
 import { useToast } from "@/components/toast/Toaster";
 import { api, type CampaignCreatePayload } from "@/lib/data/api-client";
 import { CampaignStatus } from "@/lib/data/types";
@@ -904,6 +906,21 @@ export default function CampaignNewPage() {
 
         <StepIndicator current={step} />
 
+        {/* v25 — Push AI agent strip mirrors the creator-side
+            ApplyModal v15. Sits between the step indicator and
+            the wizard layout. Auto-fill button (Step 1 only) drafts
+            campaign name + description from category + neighborhood. */}
+        <MerchantAgent
+          step={step}
+          form={{
+            name: form.name,
+            category: form.category,
+            description: form.description,
+            budget: form.budget,
+          }}
+          setField={(key, value) => setField(key, value)}
+        />
+
         {formError && (
           <div className="cn-form-error" role="alert">
             <span>{formError}</span>
@@ -1001,6 +1018,14 @@ export default function CampaignNewPage() {
                     {form.description.length}/400
                   </span>
                 </div>
+                {/* v25 — AI brief helper. Suggest / Polish / 4-dim
+                    strength meter. Mirrors the creator-side ApplyModal
+                    angle helper for consistent agentic UX. */}
+                <AIBriefHelper
+                  description={form.description}
+                  category={form.category}
+                  onChange={(next) => setField("description", next)}
+                />
               </div>
 
               <div className="cn-nav cn-nav--end">

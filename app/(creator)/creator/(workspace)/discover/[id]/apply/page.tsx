@@ -134,7 +134,7 @@ export default function ApplyPage({
 
   return (
     <StageShell
-      backHref={`/creator/discover/${c.id}`}
+      backHref={`/creator/campaign/${c.id}`}
       backLabel="← Back to brief"
       ariaLabel="Apply to campaign"
     >

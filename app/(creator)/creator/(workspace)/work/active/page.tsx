@@ -32,10 +32,12 @@ const ACTIVE = MOCK_CAMPAIGNS.slice(0, 3).map((c, i) => ({
   urgency: (["warn", "ok", "info"] as ("ok" | "warn" | "info")[])[i],
 }));
 
+/* v10 — engineering "Stage 04/05/06" labels removed in favor of
+   user-facing verbs. Internal stage data unchanged. */
 const STAGE_PILL: Record<Stage, string> = {
-  confirmed: "Stage 04 · Confirmed",
-  shoot: "Stage 05 · Shooting",
-  submit: "Stage 06 · Submitted",
+  confirmed: "Confirmed · prep",
+  shoot: "Shooting",
+  submit: "Submitted",
 };
 const STAGE_PILL_TONE: Record<Stage, "info" | "warn" | "champagne"> = {
   confirmed: "champagne",
@@ -149,7 +151,10 @@ export default function ActiveListPage() {
                 variant="primary"
                 href={`/creator/work/${STAGE_HREF[mostUrgent.stage]}/${mostUrgent.id}`}
               >
-                Open {STAGE_PILL[mostUrgent.stage].split("·")[1].trim()}
+                {/* v10 — was "Open " + STAGE_PILL split which depended
+                    on "Stage 04 · Confirmed" format. Now uses pill
+                    label directly (e.g. "Open Shooting"). */}
+                Open {STAGE_PILL[mostUrgent.stage].split("·")[0].trim()}
               </StageButton>
             </StageRailCard>
           )}
@@ -159,7 +164,10 @@ export default function ActiveListPage() {
             label="Need help?"
             help="Stuck on a brief or need to reschedule? Open the merchant thread — they reply within an hour on average."
           >
-            <StageButton variant="secondary" href="/creator/comms">
+            {/* v10 — was variant="secondary" (N2W blue filled) which
+                competed with the red primary "Open shooting" CTA above.
+                Demoted to ghost so the page has a single clear primary. */}
+            <StageButton variant="ghost" href="/creator/comms">
               Open inbox
             </StageButton>
           </StageRailCard>

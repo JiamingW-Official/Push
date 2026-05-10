@@ -117,26 +117,20 @@ export const COMMAND_REGISTRY: CommandItem[] = [
   },
 
   // ── Creator Pages ─────────────────────────────────────────────────
-  {
-    id: "c-today",
-    label: "Today",
-    keywords: ["briefing", "home"],
-    group: "Pages",
-    href: "/creator/today",
-    audience: "creator",
-  },
+  /* v10.1 — 6-item creator nav (Today / Find / Money / Inbox / Me / Stats).
+     Inbox + Stats restored per user feedback. */
   {
     id: "c-work",
-    label: "Work",
-    keywords: ["pipeline", "active gigs", "drafts"],
+    label: "Today",
+    keywords: ["home", "in flight", "now", "needs you", "pipeline", "briefing"],
     group: "Pages",
     href: "/creator/work",
     audience: "creator",
   },
   {
     id: "c-discover",
-    label: "Discover",
-    keywords: ["browse", "find", "explore"],
+    label: "Find",
+    keywords: ["discover", "browse", "explore", "new gigs", "merchants"],
     group: "Pages",
     href: "/creator/discover",
     audience: "creator",
@@ -144,23 +138,23 @@ export const COMMAND_REGISTRY: CommandItem[] = [
   {
     id: "c-money",
     label: "Money",
-    keywords: ["earnings", "payouts", "wallet"],
+    keywords: ["earnings", "payouts", "wallet", "cash out", "tax", "methods"],
     group: "Pages",
     href: "/creator/money",
     audience: "creator",
   },
   {
-    id: "c-comms",
-    label: "Comms",
-    keywords: ["messages", "inbox", "notifications"],
+    id: "c-inbox",
+    label: "Inbox",
+    keywords: ["messages", "comms", "merchant thread", "notifications"],
     group: "Pages",
-    href: "/creator/comms",
+    href: "/creator/inbox",
     audience: "creator",
   },
   {
     id: "c-me",
     label: "Me",
-    keywords: ["profile", "tier", "portfolio"],
+    keywords: ["profile", "tier", "portfolio", "settings"],
     group: "Pages",
     href: "/creator/me",
     audience: "creator",
@@ -168,7 +162,7 @@ export const COMMAND_REGISTRY: CommandItem[] = [
   {
     id: "c-stats",
     label: "Stats",
-    keywords: ["analytics", "performance"],
+    keywords: ["analytics", "performance", "scans", "engagement"],
     group: "Pages",
     href: "/creator/analytics",
     audience: "creator",

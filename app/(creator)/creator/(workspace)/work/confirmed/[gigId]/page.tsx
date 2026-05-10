@@ -78,7 +78,7 @@ export default function ConfirmedPage({
       />
 
       <StageHeader
-        eyebrow={`Stage 04 · Confirmed · ${c.merchantName}`}
+        eyebrow={`Confirmed · ${c.merchantName}`}
         title={c.title}
         sub={`${c.merchantName} locked in ${acceptedDay} at ${acceptedTime}. Below is everything you need before the shoot — brief, references, your QR, and the live thread. Open the thread to confirm details.`}
       />

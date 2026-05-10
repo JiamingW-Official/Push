@@ -108,14 +108,18 @@ export function StageShell({
   className,
   children,
   ariaLabel,
-  showJourney = true,
+  showJourney = false,
 }: {
   backHref: string;
   backLabel?: string;
   className?: string;
   children: ReactNode;
   ariaLabel?: string;
-  /** Render the 9-stage funnel journey strip at top. Default true. */
+  /** v10 — 9-stage stepper deprecated per nav audit (overwhelming +
+   *  exposes engineering view of state, not user mental model).
+   *  Default flipped to false. Pages may pass true for explicit
+   *  funnel views (admin / debug only). User-facing pages should
+   *  use <StageStatus> inline badge for current stage indication. */
   showJourney?: boolean;
 }) {
   return (
@@ -129,6 +133,64 @@ export function StageShell({
       {showJourney && <StageJourney />}
       {children}
     </article>
+  );
+}
+
+/* ── Stage status badge (replaces 9-stage stepper) ──────────
+   Single inline pill showing current stage + one optional
+   meta line (deadline / next action). Lives in the page
+   header area instead of a multi-stage breadcrumb. */
+
+type StageStatusKind =
+  | "discover"
+  | "qualify"
+  | "applied"
+  | "confirmed"
+  | "shooting"
+  | "submitted"
+  | "paid"
+  | "disputed"
+  | "promoted";
+
+const STAGE_STATUS_LABEL: Record<StageStatusKind, string> = {
+  discover: "Browsing",
+  qualify: "Qualify",
+  applied: "Applied · awaiting reply",
+  confirmed: "Confirmed · prep",
+  shooting: "Shooting",
+  submitted: "Submitted · awaiting verification",
+  paid: "Paid",
+  disputed: "In dispute",
+  promoted: "Promoted",
+};
+
+const STAGE_STATUS_TONE: Record<StageStatusKind, "blue" | "green" | "champagne" | "ink" | "red"> = {
+  discover: "ink",
+  qualify: "ink",
+  applied: "blue",
+  confirmed: "green",
+  shooting: "champagne",
+  submitted: "blue",
+  paid: "green",
+  disputed: "red",
+  promoted: "ink",
+};
+
+export function StageStatus({
+  kind,
+  meta,
+}: {
+  kind: StageStatusKind;
+  meta?: ReactNode;
+}) {
+  const tone = STAGE_STATUS_TONE[kind];
+  return (
+    <div className="stg__status" role="status">
+      <span className={`stg__status-pill stg__status-pill--${tone}`}>
+        {STAGE_STATUS_LABEL[kind]}
+      </span>
+      {meta && <span className="stg__status-meta">{meta}</span>}
+    </div>
   );
 }
 

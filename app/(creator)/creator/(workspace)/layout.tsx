@@ -15,6 +15,7 @@ import { MobileBottomNav } from "@/components/creator/workspace/MobileBottomNav"
 import { CommandPalette } from "@/components/cmdk/CommandPalette";
 import { GlobalKeybindings } from "@/components/keyboard/GlobalKeybindings";
 import { AxeInit } from "@/lib/a11y/axe-init";
+import { DemoResetHandler } from "@/components/demo/DemoResetHandler";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -63,6 +64,8 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
             <GlobalKeybindings />
             {/* Dev-only: axe-core a11y violations stream to the console. */}
             <AxeInit />
+            {/* Demo: ?reset=1 wipes localStorage and reloads. */}
+            <DemoResetHandler />
           </WorkspaceStateProvider>
         </CommandKProvider>
       </ToastProvider>

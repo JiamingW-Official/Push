@@ -16,6 +16,7 @@
 export {
   StageShell,
   StageJourney,
+  StageStatus,
   StageBanner,
   StageHeader,
   StageChip,

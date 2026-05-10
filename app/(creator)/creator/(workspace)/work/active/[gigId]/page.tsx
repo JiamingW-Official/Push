@@ -80,7 +80,7 @@ export default function ShootPage({
       />
 
       <StageHeader
-        eyebrow={`Stage 05 · Shoot · ${c.merchantName}`}
+        eyebrow={`Shooting · ${c.merchantName}`}
         title={c.title}
         sub={`Tick frames as you capture. Drafts auto-save to your gear roll. When required frames clear, the Submit step unlocks on the right.`}
       />

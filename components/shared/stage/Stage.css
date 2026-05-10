@@ -35,6 +35,54 @@ body:has(.dh-shell) .stg {
   padding-right: 0;
 }
 
+/* ── Stage status badge (v10 replacement for stepper) ─────
+   Single inline pill + optional meta line. Sits in the page
+   header area instead of the deprecated 9-stage breadcrumb. */
+.stg__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.stg__status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.stg__status-pill--blue {
+  background: rgba(0, 133, 255, 0.10);
+  color: var(--accent-blue, #0085ff);
+}
+.stg__status-pill--green {
+  background: rgba(45, 110, 74, 0.14);
+  color: #1f7a39;
+}
+.stg__status-pill--champagne {
+  background: rgba(191, 161, 112, 0.20);
+  color: var(--champagne-deep, #8a704a);
+}
+.stg__status-pill--red {
+  background: rgba(193, 18, 31, 0.10);
+  color: var(--brand-red, #c1121f);
+}
+.stg__status-pill--ink {
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink-3, #3a3835);
+}
+.stg__status-meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3, #3a3835);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ── Back link ─────────────────────────────────────────── */
 .stg__back {
   display: inline-flex; align-items: center; gap: 6px;
@@ -531,6 +579,13 @@ body:has(.dh-shell) .stg {
 .stg__rail-card--primary .stg__rail-help { color: rgba(255,255,255,0.7); }
 .stg__rail-card--primary .stg__pay-row { color: rgba(255,255,255,0.85); border-top-color: rgba(255,255,255,0.1); }
 .stg__rail-card--primary .stg__pay-row strong { color: var(--snow); }
+/* v10 — was missing override for .stg__stat-num inside primary
+   (ink-bg) rail card. Default color is var(--ink) = black, which
+   was invisible on the ink-black background. Total earned numbers
+   were rendering blank. */
+.stg__rail-card--primary .stg__stat-num { color: var(--snow, #fff); }
+.stg__rail-card--primary .stg__stat-label { color: rgba(255,255,255,0.65); }
+.stg__rail-card--primary .stg__stat-helper { color: rgba(255,255,255,0.65); }
 .stg__rail-card--primary .stg__btn--ghost {
   border-color: rgba(255,255,255,0.2); color: var(--snow);
 }

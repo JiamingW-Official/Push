@@ -1583,7 +1583,9 @@ const CampaignCard = memo(function CampaignCard({
 
   // Whole card is the click target → detail page. Save heart and carousel
   // arrows stop propagation so they don't trigger navigation.
-  const detailHref = `/creator/discover/${c.id}`;
+  // v15 (2026-05-09) — campaign moved into workspace for sidebar +
+  // shared SWR cache. Old /campaign/[id] still redirects here.
+  const detailHref = `/creator/campaign/${c.id}`;
 
   const cardClassName = [
     "disc-card",
@@ -1838,10 +1840,12 @@ const CampaignCard = memo(function CampaignCard({
     <Link
       href={detailHref}
       prefetch={false}
+      target="_blank"
+      rel="noopener"
       className="disc-card-link"
       onMouseEnter={handleCardEnter}
       onMouseLeave={() => onLeave?.()}
-      aria-label={`View ${c.title}`}
+      aria-label={`View ${c.title} (opens in new tab)`}
     >
       <article
         className={cardClassName}

@@ -19,6 +19,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useLiveApplicationsList } from "@/lib/data/live-applications";
 import {
   Zap,
   Inbox,
@@ -55,9 +56,45 @@ import "./work.css";
 const ICON_PROPS = { size: 18, strokeWidth: 1.75 } as const;
 const TOP_GIG_ID = "disc-001";
 
+const URGENCY_RANK: Record<string, number> = {
+  shoot_live: 0,
+  pre_shoot: 1,
+  pending_upload: 2,
+  revision_requested: 3,
+  accepted: 4,
+  reviewing: 5,
+  submitted: 6,
+  verified: 7,
+  paid: 8,
+};
+const CHIP_COLOR: Record<string, string> = {
+  shoot_live: "red",
+  pre_shoot: "amber",
+  pending_upload: "blue",
+  revision_requested: "amber",
+  accepted: "green",
+  reviewing: "gray",
+  submitted: "blue",
+  verified: "green",
+  paid: "champagne",
+};
+const CHIP_LABEL: Record<string, string> = {
+  shoot_live: "Live now",
+  pre_shoot: "Today",
+  pending_upload: "Upload",
+  revision_requested: "Revise",
+  accepted: "Confirmed",
+  reviewing: "In review",
+  submitted: "Submitted",
+  verified: "Verified",
+  paid: "Paid",
+};
+const TERMINAL_STATUS = new Set(["declined", "withdrawn"]);
+
 export default function WorkHub() {
   const { data: invites } = useInvites();
   const { data: actives } = useActiveGigs();
+  const liveApps = useLiveApplicationsList();
 
   const allItems: GigWithPriority[] = useMemo(() => {
     const merged = [...(invites ?? []), ...(actives ?? [])];
@@ -71,6 +108,17 @@ export default function WorkHub() {
   }, [invites, actives]);
 
   const buckets = useMemo(() => partitionByKind(allItems), [allItems]);
+
+  const activeGigs = useMemo(
+    () =>
+      liveApps
+        .filter((a) => !TERMINAL_STATUS.has(a.status))
+        .sort(
+          (a, b) =>
+            (URGENCY_RANK[a.status] ?? 99) - (URGENCY_RANK[b.status] ?? 99),
+        ),
+    [liveApps],
+  );
 
   const kpis = {
     applied: buckets.invites.length || 6,
@@ -195,6 +243,44 @@ export default function WorkHub() {
         <h1 className="work-hero__title">Work</h1>
         <p className="work-hero__sub">{workHint}</p>
       </header>
+
+      {/* ── Active gigs urgency strip — only when there are live apps ── */}
+      {activeGigs.length > 0 && (
+        <div className="work-urgency" aria-label="Active gigs">
+          {activeGigs.map((app) => (
+            <Link
+              key={app.id}
+              href={`/creator/applied/${app.id}`}
+              className="work-urgency__card"
+            >
+              {app.thumbnailUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  className="work-urgency__thumb"
+                  src={app.thumbnailUrl}
+                  alt=""
+                />
+              ) : (
+                <span className="work-urgency__thumb work-urgency__thumb--blank" />
+              )}
+              <span className="work-urgency__body">
+                <span className="work-urgency__name">{app.merchantName}</span>
+                <span className="work-urgency__status-row">
+                  <span
+                    className={`work-urgency__chip work-urgency__chip--${CHIP_COLOR[app.status] ?? "gray"}`}
+                  >
+                    {CHIP_LABEL[app.status] ?? app.status}
+                  </span>
+                  <span className="work-urgency__pay">${app.cashPay}</span>
+                </span>
+              </span>
+              <span className="work-urgency__arrow" aria-hidden>
+                ›
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* ── Bento ── v30: Pipeline strip removed (was redundant nav) ── */}
       <section className="work-bento" aria-label="Work modules">

@@ -94,7 +94,7 @@ function WrapPageInner({ params }: { params: Promise<{ gigId: string }> }) {
       )}
 
       <StageHeader
-        eyebrow={`Stage 07 · ${isFreshSubmit ? "Verifying" : "Paid"} · ${c.merchantName}`}
+        eyebrow={`${isFreshSubmit ? "Verifying" : "Paid"} · ${c.merchantName}`}
         title={c.title}
         sub={
           isFreshSubmit
@@ -245,7 +245,8 @@ function WrapPageInner({ params }: { params: Promise<{ gigId: string }> }) {
           {/* Repeat / close-out */}
           <StageRailCard label="What's next">
             <StageButtonStack>
-              <StageButton variant="secondary" href="/creator/discover">
+              {/* v10 — was secondary (blue) competing with rating CTA */}
+              <StageButton variant="ghost" href="/creator/discover">
                 Find next gig
               </StageButton>
               <StageButton variant="pink" href="/creator/portfolio">

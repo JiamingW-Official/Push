@@ -82,9 +82,11 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
       // /creator/inbox messages list (was a separate dashboard at
       // /creator/comms, now redirected). Skipping the dashboard removes
       // a meaningless intermediate — the messages list IS the inbox.
-      { label: "Work", href: "/creator/work", icon: "work", exact: true },
+      // v10.1 — Inbox + Stats restored per user feedback. Stats
+      // may be merged into Me later. 6-item IA preserved.
+      { label: "Today", href: "/creator/work", icon: "work", exact: true },
       { label: "Find", href: "/creator/discover", icon: "discover" },
-      { label: "Pay", href: "/creator/money", icon: "earnings" },
+      { label: "Money", href: "/creator/money", icon: "earnings" },
       { label: "Inbox", href: "/creator/inbox", icon: "inbox" },
       { label: "Me", href: "/creator/me", icon: "trophy" },
       { label: "Stats", href: "/creator/analytics", icon: "analytics" },

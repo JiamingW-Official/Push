@@ -211,7 +211,7 @@ function CampaignCard({ campaign: c }: { campaign: Campaign }) {
   };
   return (
     <Link
-      href={`/creator/login?next=/creator/discover/${c.id}`}
+      href={`/creator/login?next=/creator/campaign/${c.id}`}
       className="explore-card"
     >
       <div className="explore-card-img-wrap">

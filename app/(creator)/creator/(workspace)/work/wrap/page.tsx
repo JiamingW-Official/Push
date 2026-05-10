@@ -52,7 +52,7 @@ export default function WrapListPage() {
       ariaLabel="Paid and wrap list"
     >
       <StageHeader
-        eyebrow="Stage 07 · Paid & wrap"
+        eyebrow="Paid & wrap"
         title={`$${totalEarned.toLocaleString()} earned · last 7 gigs`}
         sub={`${toRate} merchants still need your rating. Tap any row for the wrap-up page — earnings breakdown, attribution timeline, cohort compare, and a one-tap promote-to-portfolio.`}
       />
@@ -62,6 +62,7 @@ export default function WrapListPage() {
           <StageCard
             eyebrow="Recent payouts"
             title="Most recent first"
+            full
           >
             <ul className="stg__list">
               {WRAPPED.map((w) => (
@@ -113,7 +114,10 @@ export default function WrapListPage() {
           )}
           <StageRailCard label="Next">
             <StageButtonStack>
-              <StageButton variant="secondary" href="/creator/discover">Find next gig</StageButton>
+              {/* v10 — was variant="secondary" (blue) competing with
+                  Rate first primary above. Now ghost so the red primary
+                  is the single clear action on the page. */}
+              <StageButton variant="ghost" href="/creator/discover">Find next gig</StageButton>
               <StageButton variant="ghost" href="/creator/portfolio">View portfolio</StageButton>
             </StageButtonStack>
           </StageRailCard>

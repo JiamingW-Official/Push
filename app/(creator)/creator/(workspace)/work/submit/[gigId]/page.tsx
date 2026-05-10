@@ -114,7 +114,7 @@ export default function SubmitPage({
       />
 
       <StageHeader
-        eyebrow={`Stage 06 · Submit · ${c.merchantName}`}
+        eyebrow={`Submitting · ${c.merchantName}`}
         title="Pre-flight check."
         sub="Once you push, ConversionOracle takes over — assets post on schedule, scans land, attribution counts. Fix any flag below before submit."
       />

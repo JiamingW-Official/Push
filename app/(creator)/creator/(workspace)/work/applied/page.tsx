@@ -30,23 +30,59 @@ import {
   useCreatorApplications,
   type ApplicationStatus,
 } from "@/lib/data/hooks/useCreatorApplications";
+import { STAGE_LABEL } from "@/lib/services/application-stage";
 
-const PILL_LABEL: Record<ApplicationStatus, string> = {
+/* v16 — list collapses 11 lifecycle states into 3 visible buckets:
+ *  reviewing / in-flight / complete. Filter still allows drilling
+ *  to the original three for legacy parity. */
+const STAGE_PILL_TONE: Record<ApplicationStatus, "info" | "ok" | "warn"> = {
+  reviewing: "info",
+  declined: "warn",
+  withdrawn: "warn",
+  accepted: "ok",
+  pre_shoot: "info",
+  shoot_live: "ok",
+  pending_upload: "warn",
+  submitted: "info",
+  revision_requested: "warn",
+  verified: "ok",
+  paid: "ok",
+};
+
+type FilterKey = "all" | "reviewing" | "in_flight" | "complete" | "declined";
+
+const FILTER_LABEL: Record<FilterKey, string> = {
+  all: "All",
   reviewing: "Reviewing",
-  accepted: "Accepted",
+  in_flight: "In flight",
+  complete: "Complete",
   declined: "Declined",
 };
-const PILL_TONE: Record<ApplicationStatus, "info" | "ok" | "warn"> = {
-  reviewing: "info",
-  accepted: "ok",
-  declined: "warn",
-};
 
-type FilterKey = "all" | ApplicationStatus;
+const IN_FLIGHT: ReadonlySet<ApplicationStatus> = new Set([
+  "accepted",
+  "pre_shoot",
+  "shoot_live",
+  "pending_upload",
+  "submitted",
+  "revision_requested",
+  "verified",
+]);
 
-function nextHref(campaignId: string, status: ApplicationStatus): string {
-  if (status === "accepted") return `/creator/work/confirmed/${campaignId}`;
-  return `/creator/discover/${campaignId}`;
+function matchesFilter(status: ApplicationStatus, filter: FilterKey): boolean {
+  if (filter === "all") return true;
+  if (filter === "reviewing") return status === "reviewing";
+  if (filter === "complete") return status === "paid";
+  if (filter === "declined")
+    return status === "declined" || status === "withdrawn";
+  if (filter === "in_flight") return IN_FLIGHT.has(status);
+  return false;
+}
+
+/** v16 — every non-terminal application drills into the new
+ *  stage-aware /creator/applied/[id] surface. */
+function nextHref(applicationId: string): string {
+  return `/creator/applied/${applicationId}`;
 }
 
 export default function AppliedListPage() {
@@ -54,12 +90,13 @@ export default function AppliedListPage() {
   const [filter, setFilter] = useState<FilterKey>("all");
 
   const reviewing = applications.filter((a) => a.status === "reviewing").length;
-  const accepted = applications.filter((a) => a.status === "accepted").length;
-  const declined = applications.filter((a) => a.status === "declined").length;
+  const inFlight = applications.filter((a) => IN_FLIGHT.has(a.status)).length;
+  const complete = applications.filter((a) => a.status === "paid").length;
+  const declined = applications.filter(
+    (a) => a.status === "declined" || a.status === "withdrawn",
+  ).length;
 
-  const filtered = applications.filter(
-    (a) => filter === "all" || a.status === filter,
-  );
+  const filtered = applications.filter((a) => matchesFilter(a.status, filter));
 
   return (
     <StageShell
@@ -68,7 +105,7 @@ export default function AppliedListPage() {
       ariaLabel="Applied applications list"
     >
       <StageHeader
-        eyebrow="Stage 03 · Applied"
+        eyebrow="Applied · awaiting reply"
         title={
           isLoading
             ? "Loading applications…"
@@ -77,19 +114,20 @@ export default function AppliedListPage() {
         sub={
           isLoading
             ? "Pulling your application status from the server."
-            : `${reviewing} reviewing · ${accepted} accepted · ${declined} declined. Merchants typically reply within 24 hours. Tap an accepted row to open Confirmed; tap a reviewing row to re-read the brief.`
+            : `${reviewing} reviewing · ${inFlight} in flight · ${complete} complete${declined > 0 ? ` · ${declined} declined` : ""}. Tap any row to drill into the stage-aware command surface.`
         }
       />
 
       <StageTwoCol>
         <StageMain className="stg__main--single">
           <StageCard
-            eyebrow={`${filter === "all" ? "All" : PILL_LABEL[filter]} · ${filtered.length} of ${applications.length}`}
+            eyebrow={`${FILTER_LABEL[filter]} · ${filtered.length} of ${applications.length}`}
             title="Most recent first"
           >
             {error ? (
               <p className="stg__empty">
-                Couldn&apos;t load applications. Pull-to-refresh or check back in a moment.
+                Couldn&apos;t load applications. Pull-to-refresh or check back
+                in a moment.
               </p>
             ) : isLoading ? (
               <p className="stg__empty">Loading…</p>
@@ -98,7 +136,10 @@ export default function AppliedListPage() {
                 {filter === "all" ? (
                   <>
                     No open applications. Browse{" "}
-                    <Link href="/creator/discover" style={{ color: "var(--accent-blue)", fontWeight: 600 }}>
+                    <Link
+                      href="/creator/discover"
+                      style={{ color: "var(--accent-blue)", fontWeight: 600 }}
+                    >
                       Discover
                     </Link>{" "}
                     to send your first.
@@ -111,24 +152,37 @@ export default function AppliedListPage() {
               <ul className="stg__list">
                 {filtered.map((a) => (
                   <li key={a.id} className="stg__row">
-                    <Link href={nextHref(a.campaignId, a.status)} className="stg__row-link">
+                    <Link href={nextHref(a.id)} className="stg__row-link">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img className="stg__row-img" src={a.thumbnailUrl} alt="" />
+                      <img
+                        className="stg__row-img"
+                        src={a.thumbnailUrl}
+                        alt=""
+                      />
                       <div className="stg__row-body">
-                        <span className="stg__row-title">{a.campaignTitle}</span>
+                        <span className="stg__row-title">
+                          {a.campaignTitle}
+                        </span>
                         <span className="stg__row-meta">
-                          {a.merchantName} · {a.neighborhood} · ${a.cashPay}/{a.payUnit}
+                          {a.merchantName} · {a.neighborhood} · ${a.cashPay}/
+                          {a.payUnit}
                         </span>
                       </div>
                       <div className="stg__row-right">
-                        <span className={`stg__row-pill stg__row-pill--${PILL_TONE[a.status]}`}>
-                          {PILL_LABEL[a.status]}
+                        <span
+                          className={`stg__row-pill stg__row-pill--${STAGE_PILL_TONE[a.status]}`}
+                        >
+                          {STAGE_LABEL[a.status]}
                         </span>
                         <span className="stg__row-time">
-                          {a.status === "reviewing" ? a.responseEta : a.appliedAgo}
+                          {a.status === "reviewing"
+                            ? a.responseEta
+                            : a.appliedAgo}
                         </span>
                       </div>
-                      <span className="stg__row-arrow" aria-hidden>→</span>
+                      <span className="stg__row-arrow" aria-hidden>
+                        →
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -148,7 +202,16 @@ export default function AppliedListPage() {
               <StagePayRow
                 label={
                   <>
-                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--accent-blue)", marginRight: 8 }} />
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "var(--accent-blue)",
+                        marginRight: 8,
+                      }}
+                    />
                     Reviewing
                   </>
                 }
@@ -157,16 +220,52 @@ export default function AppliedListPage() {
               <StagePayRow
                 label={
                   <>
-                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--success)", marginRight: 8 }} />
-                    Accepted
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "var(--success)",
+                        marginRight: 8,
+                      }}
+                    />
+                    In flight
                   </>
                 }
-                value={String(accepted)}
+                value={String(inFlight)}
               />
               <StagePayRow
                 label={
                   <>
-                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--warning)", marginRight: 8 }} />
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "var(--success)",
+                        marginRight: 8,
+                      }}
+                    />
+                    Complete
+                  </>
+                }
+                value={String(complete)}
+              />
+              <StagePayRow
+                label={
+                  <>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "var(--warning)",
+                        marginRight: 8,
+                      }}
+                    />
                     Declined
                   </>
                 }
@@ -178,7 +277,15 @@ export default function AppliedListPage() {
           {/* Quick filter */}
           <StageRailCard label="Filter" heading="Status">
             <div className="stg__filters" style={{ paddingBottom: 0 }}>
-              {(["all", "reviewing", "accepted", "declined"] as const).map((k) => (
+              {(
+                [
+                  "all",
+                  "reviewing",
+                  "in_flight",
+                  "complete",
+                  "declined",
+                ] as const
+              ).map((k) => (
                 <button
                   key={k}
                   type="button"
@@ -186,19 +293,25 @@ export default function AppliedListPage() {
                   onClick={() => setFilter(k)}
                   aria-pressed={filter === k}
                 >
-                  {k === "all" ? "All" : PILL_LABEL[k as ApplicationStatus]}
+                  {FILTER_LABEL[k]}
                 </button>
               ))}
             </div>
           </StageRailCard>
 
           {/* Quick stats */}
-          <StageRailCard label="Acceptance">
+          <StageRailCard label="Velocity">
             <StageStat
               size="lg"
-              num={`${accepted > 0 ? Math.round((accepted / applications.length) * 100) : 0}%`}
-              label="Accept rate · all-time"
-              helper={`${accepted} of ${applications.length}`}
+              num={`${
+                applications.length > 0
+                  ? Math.round(
+                      ((inFlight + complete) / applications.length) * 100,
+                    )
+                  : 0
+              }%`}
+              label="Move-forward rate"
+              helper={`${inFlight + complete} of ${applications.length} accepted`}
             />
           </StageRailCard>
 
