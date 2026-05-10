@@ -1,3 +1,9 @@
+// Fan-facing referral code page.
+// Fully SSR'd: code + secondsLeft come from the server so the page is
+// readable even before JS hydrates. CodeDisplay then takes over for
+// live polling every 5 s.
+// Mobile-safe: no CSS custom properties, no svh units, no space-between flex.
+
 import { notFound } from "next/navigation";
 import { getCampaignByToken } from "@/lib/code/demo-data";
 import { generateCode, secondsUntilNextCode } from "@/lib/code/totp";
@@ -20,22 +26,26 @@ export default async function ReferralPage({
   return (
     <main
       style={{
-        minHeight: "100svh",
-        background: "var(--ink, #1a1916)",
+        // Explicit hex instead of CSS var — works before globals.css loads
+        background: "#1a1916",
+        // Use vh with enough padding so it looks full-screen but doesn't clip
+        minHeight: "100vh",
+        width: "100%",
+        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-between",
-        padding: "48px 24px 40px",
-        maxWidth: 420,
+        padding: "56px 24px 48px",
+        maxWidth: 440,
         margin: "0 auto",
+        gap: 40,
       }}
     >
-      {/* Top: merchant info */}
+      {/* ── Merchant info ────────────────────────────────────────── */}
       <div style={{ width: "100%", textAlign: "center" }}>
         <p
           style={{
-            fontFamily: "var(--font-display, sans-serif)",
+            fontFamily: "'Helvetica Neue', Arial, sans-serif",
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: "0.12em",
@@ -48,20 +58,21 @@ export default async function ReferralPage({
         </p>
         <h1
           style={{
-            fontFamily: "var(--font-display, sans-serif)",
-            fontSize: 26,
+            fontFamily: "'Helvetica Neue', Arial, sans-serif",
+            fontSize: 28,
             fontWeight: 800,
-            color: "#fff",
-            margin: "0 0 4px",
+            color: "#ffffff",
+            margin: "0 0 6px",
             letterSpacing: "-0.02em",
+            lineHeight: 1.1,
           }}
         >
           {campaign.merchantName}
         </h1>
         <p
           style={{
-            fontFamily: "var(--font-body, 'Open Sans', sans-serif)",
-            fontSize: 14,
+            fontFamily: "'Helvetica Neue', Arial, sans-serif",
+            fontSize: 15,
             color: campaign.accent,
             margin: 0,
             fontWeight: 600,
@@ -71,18 +82,19 @@ export default async function ReferralPage({
         </p>
       </div>
 
-      {/* Middle: live code */}
+      {/* ── Live code ────────────────────────────────────────────── */}
       <div style={{ width: "100%" }}>
         <p
           style={{
             textAlign: "center",
-            fontFamily: "var(--font-display, sans-serif)",
-            fontSize: 12,
+            fontFamily: "'Helvetica Neue', Arial, sans-serif",
+            fontSize: 11,
             fontWeight: 700,
             letterSpacing: "0.10em",
             textTransform: "uppercase",
             color: "rgba(255,255,255,0.35)",
             marginBottom: 20,
+            marginTop: 0,
           }}
         >
           Your referral code
@@ -94,23 +106,23 @@ export default async function ReferralPage({
         />
       </div>
 
-      {/* Bottom: instruction + creator attribution */}
+      {/* ── Instruction ──────────────────────────────────────────── */}
       <div style={{ width: "100%", textAlign: "center" }}>
         <div
           style={{
-            background: "rgba(255,255,255,0.06)",
+            background: "rgba(255,255,255,0.07)",
             borderRadius: 12,
-            padding: "16px 20px",
-            marginBottom: 20,
+            padding: "18px 20px",
+            marginBottom: 16,
           }}
         >
           <p
             style={{
-              fontFamily: "var(--font-body, 'Open Sans', sans-serif)",
-              fontSize: 14,
-              color: "rgba(255,255,255,0.75)",
+              fontFamily: "'Helvetica Neue', Arial, sans-serif",
+              fontSize: 15,
+              color: "rgba(255,255,255,0.8)",
               margin: 0,
-              lineHeight: 1.5,
+              lineHeight: 1.55,
             }}
           >
             Show this code to the cashier to unlock your offer
@@ -118,7 +130,7 @@ export default async function ReferralPage({
         </div>
         <p
           style={{
-            fontFamily: "var(--font-display, sans-serif)",
+            fontFamily: "'Helvetica Neue', Arial, sans-serif",
             fontSize: 11,
             color: "rgba(255,255,255,0.25)",
             margin: 0,

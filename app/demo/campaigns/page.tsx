@@ -189,20 +189,24 @@ export default async function DemoCampaignsPage() {
                 </div>
               </div>
 
-              {/* Link */}
+              {/* Link — large enough to read at a glance */}
               <a
                 href={c.referralUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  fontFamily: "var(--font-display, sans-serif)",
-                  fontSize: 11,
-                  color: "var(--ink-4, #9a9792)",
-                  textDecoration: "none",
-                  letterSpacing: "0.04em",
+                  display: "inline-block",
+                  fontFamily: "var(--font-body, 'Open Sans', sans-serif)",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "var(--brand-red, #c1121f)",
+                  textDecoration: "underline",
+                  textUnderlineOffset: 3,
+                  letterSpacing: "0.01em",
+                  wordBreak: "break-all",
                 }}
               >
-                {c.referralUrl.replace("https://", "")}
+                {c.referralUrl}
               </a>
             </div>
           ))}
