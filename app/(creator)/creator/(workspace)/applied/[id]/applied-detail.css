@@ -5872,3 +5872,76 @@
 .ad-btn {
   letter-spacing: 0.01em !important;
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   v3.6 — Stage4 QR real pixel grid + scan overlay
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ── QR code: white background, SVG fills the space ──── */
+.ad-qr-v3__code {
+  background: #fff !important;
+  padding: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* remove the faint grid overlay (replaced by real SVG) */
+.ad-qr-v3__inner {
+  display: none !important;
+}
+
+/* ── Scan confirmation full-screen overlay ────────────── */
+@keyframes ad-scan-overlay-fade {
+  0%   { opacity: 0; transform: scale(0.98); }
+  12%  { opacity: 1; transform: scale(1); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.ad-scan-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(21, 128, 61, 0.95);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ad-scan-overlay-fade 2.5s ease-out forwards;
+  pointer-events: none;
+}
+
+.ad-scan-overlay__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #fff;
+  text-align: center;
+  padding: 0 32px;
+}
+
+.ad-scan-overlay__icon {
+  color: #fff;
+  opacity: 0.95;
+}
+
+.ad-scan-overlay__title {
+  font-family: var(--font-darky, sans-serif);
+  font-size: clamp(48px, 8vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0;
+  line-height: 1;
+  color: #fff;
+}
+
+.ad-scan-overlay__sub {
+  font-size: 16px;
+  opacity: 0.78;
+  margin: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-display, sans-serif);
+  font-weight: 600;
+}

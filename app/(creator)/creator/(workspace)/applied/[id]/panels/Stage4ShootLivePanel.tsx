@@ -2,11 +2,11 @@
 
 /* ============================================================
    <Stage4ShootLivePanel> — slot is active, shoot in progress
-   v3 · 2026-05-10 — two-column premium layout
+   v3.1 · 2026-05-10 — real QR pixel grid + scan overlay
    ============================================================ */
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, Circle, Sparkles, QrCode, Zap } from "lucide-react";
+import { CheckCircle2, Circle, Sparkles, Zap } from "lucide-react";
 import type { StagePanelProps } from "../StageRouter";
 
 function useElapsed(slotIso?: string): string {
@@ -36,6 +36,74 @@ function useElapsed(slotIso?: string): string {
   return elapsed;
 }
 
+// QR finder pattern (7x7)
+const FINDER = [
+  [1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 1],
+  [1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 1, 1, 1, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1],
+] as const;
+
+function seedBit(seed: string, x: number, y: number): boolean {
+  let h = 5381;
+  for (const c of seed) h = ((h << 5) + h + c.charCodeAt(0)) >>> 0;
+  h = (h ^ (x * 0x6b8b4567) ^ (y * 0x27220a95)) >>> 0;
+  return (h & 1) === 1;
+}
+
+function QrGrid({ id, scanned }: { id: string; scanned: boolean }) {
+  const SIZE = 21;
+  const CELL = 8; // 21 × 8 = 168px — fits 200px box with 16px padding
+
+  const cells: { x: number; y: number }[] = [];
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      let on: boolean;
+      if (x < 7 && y < 7) {
+        on = FINDER[y]![x] === 1;
+      } else if (x >= SIZE - 7 && y < 7) {
+        on = FINDER[y]![x - (SIZE - 7)] === 1;
+      } else if (x < 7 && y >= SIZE - 7) {
+        on = FINDER[y - (SIZE - 7)]![x] === 1;
+      } else if (x === 6 || y === 6) {
+        on = (x + y) % 2 === 0;
+      } else {
+        on = seedBit(id, x, y);
+      }
+      if (on) cells.push({ x, y });
+    }
+  }
+
+  const dim = SIZE * CELL;
+  const fill = scanned ? "#16a34a" : "#1a1916";
+
+  return (
+    <svg
+      width={dim}
+      height={dim}
+      viewBox={`0 0 ${dim} ${dim}`}
+      aria-hidden
+      style={{ display: "block" }}
+    >
+      {cells.map(({ x, y }) => (
+        <rect
+          key={`${x}-${y}`}
+          x={x * CELL}
+          y={y * CELL}
+          width={CELL - 1}
+          height={CELL - 1}
+          fill={fill}
+          rx={0.5}
+          style={{ transition: "fill 0.4s ease" }}
+        />
+      ))}
+    </svg>
+  );
+}
+
 const SHOT_LIST = [
   { id: 0, label: "Wide establishing shot", tag: "Exterior" },
   { id: 1, label: "Product hero close-up", tag: "Product" },
@@ -49,6 +117,7 @@ export function Stage4ShootLivePanel({
   const elapsed = useElapsed(application.slotIso);
   const [shotsDone, setShotsDone] = useState<Set<number>>(new Set());
   const [scanned, setScanned] = useState(false);
+  const [scanFlash, setScanFlash] = useState(false);
 
   function toggleShot(id: number) {
     setShotsDone((prev) => {
@@ -58,9 +127,14 @@ export function Stage4ShootLivePanel({
     });
   }
 
+  function handleScan() {
+    setScanFlash(true);
+    setScanned(true);
+    setTimeout(() => setScanFlash(false), 2500);
+  }
+
   const qrId = application.qrCodeId ?? `qr_${application.id.slice(-6)}`;
 
-  // Compute remaining window minutes (90 min slot)
   const elapsedMinutes = (() => {
     if (!application.slotIso) return 0;
     const ms = Date.now() - new Date(application.slotIso).getTime();
@@ -71,6 +145,21 @@ export function Stage4ShootLivePanel({
 
   return (
     <section className="ad-panel-v3" aria-label="Live shoot">
+      {/* ── Scan confirmation overlay ─────────────────────── */}
+      {scanFlash && (
+        <div className="ad-scan-overlay" role="alert" aria-live="assertive">
+          <div className="ad-scan-overlay__inner">
+            <div className="ad-scan-overlay__icon">
+              <CheckCircle2 size={64} strokeWidth={1.25} />
+            </div>
+            <p className="ad-scan-overlay__title">Visit logged!</p>
+            <p className="ad-scan-overlay__sub">
+              QR confirmed · attribution started
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="ad-layout">
         {/* ── LEFT COLUMN ─────────────────────────────────────── */}
         <div className="ad-col-main">
@@ -112,7 +201,6 @@ export function Stage4ShootLivePanel({
           <div className="ad-card">
             <div className="ad-card__body">
               <span className="ad-card__label">SHOT CHECKLIST</span>
-              <div className="ad-card__divider" aria-hidden />
               <ul className="ad-shots-v3" role="list">
                 {SHOT_LIST.map((shot) => {
                   const done = shotsDone.has(shot.id);
@@ -151,22 +239,14 @@ export function Stage4ShootLivePanel({
 
         {/* ── RIGHT COLUMN ────────────────────────────────────── */}
         <div className="ad-col-side">
-          {/* QR code — visual centerpiece in sidebar */}
-          <div
-            className="ad-qr-v3"
-            style={{ background: "var(--ink, #1a1916)" }}
-          >
+          {/* QR code — visual centerpiece */}
+          <div className="ad-qr-v3">
             <div
               className="ad-qr-v3__code"
               role="img"
               aria-label="QR code for merchant scan"
             >
-              <div className="ad-qr-v3__inner">
-                <div className="ad-qr-v3__corner ad-qr-v3__corner--tl" />
-                <div className="ad-qr-v3__corner ad-qr-v3__corner--tr" />
-                <div className="ad-qr-v3__corner ad-qr-v3__corner--bl" />
-                <div className="ad-qr-v3__corner ad-qr-v3__corner--br" />
-              </div>
+              <QrGrid id={qrId} scanned={scanned} />
             </div>
             <span className="ad-qr-v3__id">{qrId}</span>
             <span className="ad-qr-v3__hint">
@@ -182,7 +262,7 @@ export function Stage4ShootLivePanel({
               <button
                 type="button"
                 className="ad-qr-v3__sim"
-                onClick={() => setScanned(true)}
+                onClick={handleScan}
               >
                 Simulate scan (demo)
               </button>
@@ -193,21 +273,10 @@ export function Stage4ShootLivePanel({
           <div className="ad-card">
             <div className="ad-card__body">
               <span className="ad-card__label">TIME REMAINING</span>
-              <div className="ad-card__divider" aria-hidden />
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                }}
+                style={{ display: "flex", flexDirection: "column", gap: 12 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Zap
                     size={20}
                     strokeWidth={2}
@@ -229,8 +298,6 @@ export function Stage4ShootLivePanel({
                     {remainingMin} min
                   </span>
                 </div>
-
-                {/* Progress bar */}
                 <div
                   role="progressbar"
                   aria-valuenow={progressPct}
@@ -254,7 +321,6 @@ export function Stage4ShootLivePanel({
                     }}
                   />
                 </div>
-
                 <span
                   style={{
                     fontSize: 12,
