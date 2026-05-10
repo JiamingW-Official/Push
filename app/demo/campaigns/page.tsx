@@ -20,8 +20,8 @@ const DEMO_PUBLIC_URL = "https://push-six-flax.vercel.app";
 
 export default async function DemoCampaignsPage() {
   const baseUrl =
-    (process.env.DEMO_BASE_URL || null) ??
-    (process.env.NEXT_PUBLIC_RENDER_URL || null) ??
+    (process.env.DEMO_BASE_URL?.trim() || null) ??
+    (process.env.NEXT_PUBLIC_RENDER_URL?.trim() || null) ??
     DEMO_PUBLIC_URL;
 
   const campaigns = await Promise.all(
