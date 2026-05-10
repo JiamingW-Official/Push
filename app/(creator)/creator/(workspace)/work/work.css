@@ -1250,10 +1250,9 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 }
 
 .work-next__time {
-  /* v35 — slightly tighter cap (was 72) so the agent step list below
-     gets enough breathing room in the no-scroll layout. */
+  /* v31 — hero numeral, bigger than original 64px but safe for panel height */
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(44px, 4.4vw, 64px);
+  font-size: clamp(48px, 5vw, 76px);
   font-weight: 800;
   letter-spacing: -0.032em;
   line-height: 0.92;
@@ -2680,11 +2679,9 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 
 @keyframes wn-in {
   from {
-    opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -2692,6 +2689,11 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 @keyframes wn-progress {
   from { width: 0%; }
   to   { width: 100%; }
+}
+
+@keyframes ring-progress {
+  from { stroke-dashoffset: 69.12; }
+  to   { stroke-dashoffset: 0; }
 }
 
 /* ── Next Move container ──────────────────────────────────── */
@@ -2809,17 +2811,25 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   transform: translate(2px, 2px);
 }
 
-.work-nextmove__progress {
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+/* Ring + button grouped on the right of the nav */
+.work-nextmove__nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.work-nextmove__progress-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.45);
-  animation: wn-progress 20s linear both;
+
+/* Circular countdown ring — replaces horizontal progress bar */
+.work-nextmove__ring-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.work-nextmove__ring-fill {
+  /* Start from 12-o-clock, animate clockwise */
+  transform-origin: 14px 14px;
+  transform: rotate(-90deg);
+  animation: ring-progress 20s linear forwards;
 }
 
 /* ── Active gig rail ──────────────────────────────────────── */
@@ -2830,6 +2840,7 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%; /* fill the panel body's full width */
 }
 .work-gigrail__row {
   display: flex;
@@ -2904,20 +2915,25 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   flex-shrink: 0;
 }
 
+/* ── Local span-2 for compact Pulse panel ─────────────────── */
+.bento--span-2 { grid-column: span 2; }
+@media (max-width: 1024px) { .bento--span-2 { grid-column: span 4; } }
+@media (max-width: 640px)  { .bento--span-2 { grid-column: span 12; } }
+
 /* ── work-next carousel layout ────────────────────────────── */
 
 /* Merchant name eyebrow above the big time */
 .work-next__name {
   font-family: var(--font-darky, sans-serif);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--champagne, #bfa170);
   margin: 0;
 }
 
-/* One-sentence action line below the big time */
+/* One-sentence action line below the big time — matches agent item size */
 .work-next__action {
   font-family: var(--font-body, "Open Sans");
   font-size: 13.5px;
@@ -2927,49 +2943,49 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 }
 
 /* Slide: animated content block.
-   margin-top: -6px creates the bleed effect — the big number
-   visually presses up toward the bento head edge. */
+   gap: 9px — tighter than 12px so all items (incl. nav ring) fit the panel. */
 .work-next__slide {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
   animation: wn-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-  margin-top: -6px;
 }
 
-/* Tighten countdown since we removed the meta text below it */
-.work-next__slide .work-next__countdown {
-  margin-top: 4px;
+/* Reset all child margins — gap owns the spacing */
+.work-next__slide > * {
+  margin-top: 0;
 }
 
-/* Chips stay close to progress bar */
+/* Chips: slight lift above dashed agent line */
 .work-next__slide .work-next__chips {
   margin-top: 4px;
 }
 
-/* More breathing room above the agent section */
+/* Agent section: gap above dashed line + padding to AGENT label */
 .work-next__slide .work-next__agent-inline {
-  margin-top: 20px;
-  padding-top: 14px;
+  margin-top: 4px;  /* gap(9) + 4 = 13px above dashed line */
+  padding-top: 10px; /* space between dashed line and AGENT eyebrow */
 }
 
-/* Outer container: flex column, no stretch — prevents bottom gap */
+/* Outer container: natural flex column.
+   margin-top shifts the bento__body center point downward —
+   creates breathing room between "NEXT MOVE" header and first content. */
 .work-next {
   display: flex;
   flex-direction: column;
+  margin-top: 8px;
 }
 
-/* Nav row: fixed 16px gap after the slide */
+/* Nav pushed to bottom, slight top margin from slide */
 .work-next > .work-nextmove__nav {
-  margin-top: 16px;
-}
-.work-next > .work-nextmove__progress {
-  margin-top: 8px;
+  margin-top: 14px;
 }
 
 /* ── Active gig panel: top-align + scroll ─────────────────── */
 .bento--gigrail .bento__body {
-  align-items: flex-start;
+  /* justify-content: flex-start overrides base `center` → items stack from top
+     align-items stays at default `stretch` so each row fills full panel width */
+  justify-content: flex-start;
   overflow-y: auto;
   scrollbar-width: none;
   max-height: 260px;

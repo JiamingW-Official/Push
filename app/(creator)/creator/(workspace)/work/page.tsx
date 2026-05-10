@@ -541,7 +541,7 @@ export default function WorkHub() {
               </div>
             </div>
 
-            {/* Dots + Next → (outside slide so they don't re-animate) */}
+            {/* Dots · ring · Next → (outside slide — don't re-animate) */}
             <div className="work-nextmove__nav">
               <div className="work-nextmove__dots" aria-hidden>
                 {moves.map((_, i) => (
@@ -551,23 +551,56 @@ export default function WorkHub() {
                   />
                 ))}
               </div>
-              <button
-                type="button"
-                className="work-nextmove__btn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  advanceMove();
-                }}
-                aria-label="Next move"
-              >
-                Next →
-              </button>
-            </div>
-
-            {/* 20s progress bar — key restarts animation on each advance */}
-            <div className="work-nextmove__progress">
-              <div key={tick} className="work-nextmove__progress-fill" />
+              <div className="work-nextmove__nav-right">
+                {/* Circular 20s countdown — key restarts on each advance */}
+                <div
+                  key={tick}
+                  className="work-nextmove__ring-wrap"
+                  aria-hidden
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 28 28"
+                    style={{ display: "block" }}
+                  >
+                    {/* Track */}
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="11"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.12)"
+                      strokeWidth="2"
+                    />
+                    {/* Animated fill */}
+                    <circle
+                      className="work-nextmove__ring-fill"
+                      cx="14"
+                      cy="14"
+                      r="11"
+                      fill="none"
+                      stroke="rgba(191,161,112,0.85)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeDasharray="69.12"
+                      strokeDashoffset="69.12"
+                    />
+                  </svg>
+                </div>
+                <button
+                  type="button"
+                  className="work-nextmove__btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    advanceMove();
+                  }}
+                  aria-label="Next move"
+                >
+                  Next →
+                </button>
+              </div>
             </div>
           </div>
         </BentoModule>
