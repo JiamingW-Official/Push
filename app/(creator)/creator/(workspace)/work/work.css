@@ -2904,16 +2904,62 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   flex-shrink: 0;
 }
 
-/* ── work-next slide animation (for carousel cycling) ─────── */
+/* ── work-next carousel layout ────────────────────────────── */
+
+/* Merchant name eyebrow above the big time */
+.work-next__name {
+  font-family: var(--font-darky, sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+  margin: 0;
+}
+
+/* One-sentence action line below the big time */
+.work-next__action {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0;
+}
+
+/* Slide: animated content block.
+   margin-top: -6px creates the bleed effect — the big number
+   visually presses up toward the bento head edge. */
 .work-next__slide {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   animation: wn-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  margin-top: -6px;
 }
 
-/* Carousel nav + progress bar sit outside the slide so they
-   don't re-animate on every advance */
+/* Tighten countdown since we removed the meta text below it */
+.work-next__slide .work-next__countdown {
+  margin-top: 4px;
+}
+
+/* Chips stay close to progress bar */
+.work-next__slide .work-next__chips {
+  margin-top: 4px;
+}
+
+/* More breathing room above the agent section */
+.work-next__slide .work-next__agent-inline {
+  margin-top: 20px;
+  padding-top: 14px;
+}
+
+/* Outer container: flex column, no stretch — prevents bottom gap */
+.work-next {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nav row: fixed 16px gap after the slide */
 .work-next > .work-nextmove__nav {
   margin-top: 16px;
 }

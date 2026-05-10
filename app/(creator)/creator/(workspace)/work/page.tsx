@@ -132,6 +132,14 @@ const MOVE_COLOR: Record<string, string> = {
 
 const FALLBACK_MOVES = [
   {
+    id: "app-disc-004",
+    status: "pre_shoot",
+    merchantName: "Roberta's Pizza",
+    cashPay: 40,
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=480&h=600&fit=crop&q=72",
+  },
+  {
     id: "app-disc-001",
     status: "pending_upload",
     merchantName: "Blank Street Coffee",
@@ -148,16 +156,8 @@ const FALLBACK_MOVES = [
       "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=480&h=600&fit=crop&q=72",
   },
   {
-    id: "app-disc-004",
-    status: "pre_shoot",
-    merchantName: "Forma Pilates Chelsea",
-    cashPay: 40,
-    thumbnailUrl:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=480&h=600&fit=crop&q=72",
-  },
-  {
     id: "app-disc-165",
-    status: "reviewing",
+    status: "submitted",
     merchantName: "Violette_FR",
     cashPay: 67,
     thumbnailUrl:
@@ -166,46 +166,43 @@ const FALLBACK_MOVES = [
 ];
 
 /* ── Per-status rich display data ──────────────────────────
-   Each status maps to: a large time/status display, a meta line,
-   a progress bar %, a countdown meta string, context chips (icon
-   component + text), and 3 numbered agent micro-tasks.
+   time   = large display (clock, countdown, or status label)
+   action = one imperative sentence — what to do right now
+   pct    = progress bar fill %
+   chips  = max 2 context atoms (no repeat of action/time info)
+   tasks  = 3 agent micro-steps
    ────────────────────────────────────────────────────────── */
 type RichChip = { icon: LucideIcon; text: string };
 type RichTask = [string, string, string]; // [verb, bold-target, note]
 type RichEntry = {
   time: string;
-  meta: (name: string) => string;
+  action: string;
   pct: number;
-  cdMeta: string;
   chips: RichChip[];
   tasks: RichTask[];
 };
 const RICH: Record<string, RichEntry> = {
   shoot_live: {
     time: "LIVE",
-    meta: (n) => `Now · ${n} · Show QR at register`,
+    action: "Show QR at register — slot is active now",
     pct: 35,
-    cdMeta: "Slot active · ~55 min remaining",
     chips: [
       { icon: QrCode, text: "QR at register" },
-      { icon: Camera, text: "3 frames" },
-      { icon: Zap, text: "Live now" },
+      { icon: Camera, text: "3 frames · T+90" },
     ],
     tasks: [
       ["Show", "QR code", "at register to start attribution"],
       ["Capture", "wide shot", "storefront in natural light"],
-      ["Submit", "3 frames", "before slot closes at T+90"],
+      ["Submit", "3 frames", "before slot closes"],
     ],
   },
   pre_shoot: {
     time: "9:00",
-    meta: (n) => `AM · ${n} · Today`,
+    action: "Leave by 8:30 — 9 min on L train to arrive by 8:45",
     pct: 62,
-    cdMeta: "47:00 to go · arrive by 8:45",
     chips: [
       { icon: Cloud, text: "62°F · clear" },
       { icon: Navigation, text: "9 min · L train" },
-      { icon: Camera, text: "3 frames" },
     ],
     tasks: [
       ["Leave by", "8:30", "scout angle on the way"],
@@ -215,13 +212,11 @@ const RICH: Record<string, RichEntry> = {
   },
   pending_upload: {
     time: "6 PM",
-    meta: (n) => `Deadline · ${n} · 3 files due`,
+    action: "Upload 3 frames + caption before today's deadline",
     pct: 55,
-    cdMeta: "47h to go · upload by 6 PM today",
     chips: [
       { icon: Camera, text: "3 frames" },
       { icon: FileEdit, text: "Caption needed" },
-      { icon: Eye, text: "Review before submit" },
     ],
     tasks: [
       ["Upload", "3 frames", "wide + product + lifestyle"],
@@ -231,77 +226,67 @@ const RICH: Record<string, RichEntry> = {
   },
   revision_requested: {
     time: "48h",
-    meta: (n) => `Flagged · ${n} · reshoot window`,
+    action: "Reshoot the flagged frame — same location is fine",
     pct: 30,
-    cdMeta: "48h window · reshoot or caption fix",
     chips: [
-      { icon: Camera, text: "Reshoot needed" },
+      { icon: Camera, text: "Reshoot" },
       { icon: FileEdit, text: "Caption fix" },
-      { icon: Eye, text: "Merchant feedback" },
     ],
     tasks: [
-      ["Read", "feedback note", "from merchant"],
+      ["Read", "feedback note", "from merchant first"],
       ["Reshoot", "flagged frame", "same location OK"],
       ["Resubmit", "before 48h", "window closes"],
     ],
   },
   reviewing: {
     time: "~24h",
-    meta: (n) => `Pending · ${n} · awaiting decision`,
+    action: "Watch inbox — merchant typically replies within 24h",
     pct: 70,
-    cdMeta: "Typical reply within 24h · watch inbox",
     chips: [
       { icon: Eye, text: "Inbox alert on" },
-      { icon: Inbox, text: "No action needed" },
-      { icon: Calendar, text: "Slot TBD" },
+      { icon: Inbox, text: "No action yet" },
     ],
     tasks: [
-      ["Watch", "inbox", "reply comes here"],
+      ["Watch", "inbox", "reply notification comes here"],
       ["Browse", "new gigs", "while you wait"],
       ["Prep", "shot list", "for when it lands"],
     ],
   },
   submitted: {
     time: "72h",
-    meta: (n) => `Under review · ${n} · 72h window`,
+    action: "Content is under review — check inbox for revision requests",
     pct: 45,
-    cdMeta: "Content under merchant review · 72h window",
     chips: [
       { icon: Eye, text: "Merchant reviewing" },
-      { icon: Calendar, text: "72h window" },
-      { icon: Wallet, text: "Payout pending" },
+      { icon: Wallet, text: "Payout on approval" },
     ],
     tasks: [
       ["Wait", "72h window", "merchant reviewing content"],
-      ["Check", "inbox", "for revision request"],
+      ["Check", "inbox", "for any revision request"],
       ["Line up", "next gig", "keep momentum"],
     ],
   },
   verified: {
     time: "3 days",
-    meta: (n) => `Verified · ${n} · payout clearing`,
+    action: "Transfer initiated — payout clears in ~3 business days",
     pct: 80,
-    cdMeta: "Transfer initiated · clearing in ~3 days",
     chips: [
       { icon: Wallet, text: "Payout queued" },
       { icon: Sparkles, text: "Verified ✓" },
-      { icon: Calendar, text: "Fri payout" },
     ],
     tasks: [
-      ["Watch", "Pay panel", "transfer clears Fri"],
-      ["Rate", "experience", "helps your tier score"],
+      ["Watch", "Pay panel", "transfer clears Friday"],
+      ["Rate", "experience", "boosts your tier score"],
       ["Apply", "next campaign", "keep the streak"],
     ],
   },
   accepted: {
     time: "Fri",
-    meta: (n) => `Confirmed · ${n} · review brief`,
+    action: "Slot confirmed — read brief tonight and charge gear tomorrow",
     pct: 20,
-    cdMeta: "Slot confirmed · review brief before Friday",
     chips: [
       { icon: Calendar, text: "Fri slot" },
       { icon: Camera, text: "3 frames" },
-      { icon: Eye, text: "Review brief" },
     ],
     tasks: [
       ["Read", "shot brief", "tonight"],
@@ -311,13 +296,11 @@ const RICH: Record<string, RichEntry> = {
   },
   paid: {
     time: "Done",
-    meta: (n) => `Complete · ${n} · rate experience`,
+    action: "Payment received — rate your experience to earn tier points",
     pct: 100,
-    cdMeta: "Payment received · rate to boost your tier",
     chips: [
-      { icon: Wallet, text: "Paid ✓" },
       { icon: Sparkles, text: "Tier points +1" },
-      { icon: Eye, text: "Rate merchant" },
+      { icon: Wallet, text: "Paid ✓" },
     ],
     tasks: [
       ["Rate", "experience", "5 stars = tier boost"],
@@ -505,14 +488,20 @@ export default function WorkHub() {
           <div className="work-next">
             {/* Animated slide — key re-mounts on each advance */}
             <div key={tick} className="work-next__slide">
+              {/* Merchant name eyebrow — small champagne label above time */}
+              <p className="work-next__name">{currentMove.merchantName}</p>
+
+              {/* Big time / status display */}
               <p className="work-next__time">
                 {RICH[currentMove.status]?.time ?? "—"}
               </p>
-              <p className="work-next__time-meta">
-                {RICH[currentMove.status]?.meta(currentMove.merchantName) ??
-                  currentMove.merchantName}
+
+              {/* One-sentence action — what to do right now */}
+              <p className="work-next__action">
+                {RICH[currentMove.status]?.action ?? "Action needed"}
               </p>
 
+              {/* Progress bar — no meta text, just the visual */}
               <div className="work-next__countdown">
                 <div className="work-next__countdown-track">
                   <div
@@ -520,11 +509,9 @@ export default function WorkHub() {
                     style={{ width: `${RICH[currentMove.status]?.pct ?? 50}%` }}
                   />
                 </div>
-                <p className="work-next__countdown-meta">
-                  {RICH[currentMove.status]?.cdMeta ?? "Action needed"}
-                </p>
               </div>
 
+              {/* 2 context chips */}
               <div className="work-next__chips">
                 {(RICH[currentMove.status]?.chips ?? []).map(
                   ({ icon: Icon, text }, i) => (
@@ -536,6 +523,7 @@ export default function WorkHub() {
                 )}
               </div>
 
+              {/* Agent micro-tasks */}
               <div className="work-next__agent-inline">
                 <p className="work-next__agent-eyebrow">
                   <Lightbulb size={12} strokeWidth={2.25} />
