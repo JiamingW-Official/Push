@@ -32,6 +32,8 @@ import {
   Cloud,
   Navigation,
   FileEdit,
+  QrCode,
+  type LucideIcon,
 } from "lucide-react";
 import { BentoModule } from "@/components/shared/primitives";
 import TimeChart from "@/components/shared/charts/TimeChart";
@@ -162,6 +164,168 @@ const FALLBACK_MOVES = [
       "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=480&h=600&fit=crop&q=72",
   },
 ];
+
+/* ── Per-status rich display data ──────────────────────────
+   Each status maps to: a large time/status display, a meta line,
+   a progress bar %, a countdown meta string, context chips (icon
+   component + text), and 3 numbered agent micro-tasks.
+   ────────────────────────────────────────────────────────── */
+type RichChip = { icon: LucideIcon; text: string };
+type RichTask = [string, string, string]; // [verb, bold-target, note]
+type RichEntry = {
+  time: string;
+  meta: (name: string) => string;
+  pct: number;
+  cdMeta: string;
+  chips: RichChip[];
+  tasks: RichTask[];
+};
+const RICH: Record<string, RichEntry> = {
+  shoot_live: {
+    time: "LIVE",
+    meta: (n) => `Now · ${n} · Show QR at register`,
+    pct: 35,
+    cdMeta: "Slot active · ~55 min remaining",
+    chips: [
+      { icon: QrCode, text: "QR at register" },
+      { icon: Camera, text: "3 frames" },
+      { icon: Zap, text: "Live now" },
+    ],
+    tasks: [
+      ["Show", "QR code", "at register to start attribution"],
+      ["Capture", "wide shot", "storefront in natural light"],
+      ["Submit", "3 frames", "before slot closes at T+90"],
+    ],
+  },
+  pre_shoot: {
+    time: "9:00",
+    meta: (n) => `AM · ${n} · Today`,
+    pct: 62,
+    cdMeta: "47:00 to go · arrive by 8:45",
+    chips: [
+      { icon: Cloud, text: "62°F · clear" },
+      { icon: Navigation, text: "9 min · L train" },
+      { icon: Camera, text: "3 frames" },
+    ],
+    tasks: [
+      ["Leave by", "8:30", "scout angle on the way"],
+      ["Bring", "ring light", "counter is dim today"],
+      ["QR on", "table 4", "frame 1 lock"],
+    ],
+  },
+  pending_upload: {
+    time: "6 PM",
+    meta: (n) => `Deadline · ${n} · 3 files due`,
+    pct: 55,
+    cdMeta: "47h to go · upload by 6 PM today",
+    chips: [
+      { icon: Camera, text: "3 frames" },
+      { icon: FileEdit, text: "Caption needed" },
+      { icon: Eye, text: "Review before submit" },
+    ],
+    tasks: [
+      ["Upload", "3 frames", "wide + product + lifestyle"],
+      ["Write", "caption", "60–80 words · no hashtags"],
+      ["Submit", "before 6 PM", "late = slot penalty"],
+    ],
+  },
+  revision_requested: {
+    time: "48h",
+    meta: (n) => `Flagged · ${n} · reshoot window`,
+    pct: 30,
+    cdMeta: "48h window · reshoot or caption fix",
+    chips: [
+      { icon: Camera, text: "Reshoot needed" },
+      { icon: FileEdit, text: "Caption fix" },
+      { icon: Eye, text: "Merchant feedback" },
+    ],
+    tasks: [
+      ["Read", "feedback note", "from merchant"],
+      ["Reshoot", "flagged frame", "same location OK"],
+      ["Resubmit", "before 48h", "window closes"],
+    ],
+  },
+  reviewing: {
+    time: "~24h",
+    meta: (n) => `Pending · ${n} · awaiting decision`,
+    pct: 70,
+    cdMeta: "Typical reply within 24h · watch inbox",
+    chips: [
+      { icon: Eye, text: "Inbox alert on" },
+      { icon: Inbox, text: "No action needed" },
+      { icon: Calendar, text: "Slot TBD" },
+    ],
+    tasks: [
+      ["Watch", "inbox", "reply comes here"],
+      ["Browse", "new gigs", "while you wait"],
+      ["Prep", "shot list", "for when it lands"],
+    ],
+  },
+  submitted: {
+    time: "72h",
+    meta: (n) => `Under review · ${n} · 72h window`,
+    pct: 45,
+    cdMeta: "Content under merchant review · 72h window",
+    chips: [
+      { icon: Eye, text: "Merchant reviewing" },
+      { icon: Calendar, text: "72h window" },
+      { icon: Wallet, text: "Payout pending" },
+    ],
+    tasks: [
+      ["Wait", "72h window", "merchant reviewing content"],
+      ["Check", "inbox", "for revision request"],
+      ["Line up", "next gig", "keep momentum"],
+    ],
+  },
+  verified: {
+    time: "3 days",
+    meta: (n) => `Verified · ${n} · payout clearing`,
+    pct: 80,
+    cdMeta: "Transfer initiated · clearing in ~3 days",
+    chips: [
+      { icon: Wallet, text: "Payout queued" },
+      { icon: Sparkles, text: "Verified ✓" },
+      { icon: Calendar, text: "Fri payout" },
+    ],
+    tasks: [
+      ["Watch", "Pay panel", "transfer clears Fri"],
+      ["Rate", "experience", "helps your tier score"],
+      ["Apply", "next campaign", "keep the streak"],
+    ],
+  },
+  accepted: {
+    time: "Fri",
+    meta: (n) => `Confirmed · ${n} · review brief`,
+    pct: 20,
+    cdMeta: "Slot confirmed · review brief before Friday",
+    chips: [
+      { icon: Calendar, text: "Fri slot" },
+      { icon: Camera, text: "3 frames" },
+      { icon: Eye, text: "Review brief" },
+    ],
+    tasks: [
+      ["Read", "shot brief", "tonight"],
+      ["Charge", "gear", "day before"],
+      ["Set", "alarm", "15 min early for setup"],
+    ],
+  },
+  paid: {
+    time: "Done",
+    meta: (n) => `Complete · ${n} · rate experience`,
+    pct: 100,
+    cdMeta: "Payment received · rate to boost your tier",
+    chips: [
+      { icon: Wallet, text: "Paid ✓" },
+      { icon: Sparkles, text: "Tier points +1" },
+      { icon: Eye, text: "Rate merchant" },
+    ],
+    tasks: [
+      ["Rate", "experience", "5 stars = tier boost"],
+      ["Share", "to portfolio", "grows your profile"],
+      ["Apply", "next campaign", "momentum matters"],
+    ],
+  },
+};
 
 export default function WorkHub() {
   const { data: invites } = useInvites();
@@ -338,32 +502,58 @@ export default function WorkHub() {
           tone="ink"
           live="urgent"
         >
-          <div className="work-nextmove">
-            {/* Animated text block — key changes on each advance */}
-            <div key={tick} className="work-nextmove__body">
-              <span
-                className={`work-nextmove__verb work-nextmove__verb--${MOVE_COLOR[currentMove.status] ?? "snow50"}`}
-              >
-                {MOVE_VERB[currentMove.status] ?? "MOVE"}
-              </span>
-              <p className="work-nextmove__merchant">
-                {currentMove.merchantName}
+          <div className="work-next">
+            {/* Animated slide — key re-mounts on each advance */}
+            <div key={tick} className="work-next__slide">
+              <p className="work-next__time">
+                {RICH[currentMove.status]?.time ?? "—"}
               </p>
-              <p className="work-nextmove__detail">
-                {MOVE_DETAIL[currentMove.status] ?? "Action needed"}
+              <p className="work-next__time-meta">
+                {RICH[currentMove.status]?.meta(currentMove.merchantName) ??
+                  currentMove.merchantName}
               </p>
-              <div className="work-nextmove__meta">
-                <span className="work-nextmove__pay">
-                  ${currentMove.cashPay}
-                </span>
-                <span className="work-nextmove__sep">·</span>
-                <span className="work-nextmove__when">
-                  {MOVE_WHEN[currentMove.status] ?? "Now"}
-                </span>
+
+              <div className="work-next__countdown">
+                <div className="work-next__countdown-track">
+                  <div
+                    className="work-next__countdown-fill"
+                    style={{ width: `${RICH[currentMove.status]?.pct ?? 50}%` }}
+                  />
+                </div>
+                <p className="work-next__countdown-meta">
+                  {RICH[currentMove.status]?.cdMeta ?? "Action needed"}
+                </p>
+              </div>
+
+              <div className="work-next__chips">
+                {(RICH[currentMove.status]?.chips ?? []).map(
+                  ({ icon: Icon, text }, i) => (
+                    <span key={i} className="work-next__chip">
+                      <Icon size={14} strokeWidth={1.75} />
+                      {text}
+                    </span>
+                  ),
+                )}
+              </div>
+
+              <div className="work-next__agent-inline">
+                <p className="work-next__agent-eyebrow">
+                  <Lightbulb size={12} strokeWidth={2.25} />
+                  Agent
+                </p>
+                <ul className="work-next__agent-mini">
+                  {(RICH[currentMove.status]?.tasks ?? []).map(
+                    ([verb, target, note], i) => (
+                      <li key={i}>
+                        {verb} <strong>{target}</strong> · {note}
+                      </li>
+                    ),
+                  )}
+                </ul>
               </div>
             </div>
 
-            {/* Dots + Next button */}
+            {/* Dots + Next → (outside slide so they don't re-animate) */}
             <div className="work-nextmove__nav">
               <div className="work-nextmove__dots" aria-hidden>
                 {moves.map((_, i) => (
@@ -396,7 +586,7 @@ export default function WorkHub() {
 
         {/* ── Right: Active gigs (replaces Actions queue) ─────── */}
         {/* Custom div to avoid nested <Link> with <Link> rows */}
-        <div className="bento bento--span-3 bento--state-ready">
+        <div className="bento bento--span-3 bento--state-ready bento--gigrail">
           <div className="bento__head">
             <span className="bento__icon" aria-hidden>
               <Layers {...ICON_PROPS} />

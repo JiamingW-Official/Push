@@ -2903,3 +2903,31 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   color: var(--ink-4, #9a9792);
   flex-shrink: 0;
 }
+
+/* ── work-next slide animation (for carousel cycling) ─────── */
+.work-next__slide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: wn-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Carousel nav + progress bar sit outside the slide so they
+   don't re-animate on every advance */
+.work-next > .work-nextmove__nav {
+  margin-top: 16px;
+}
+.work-next > .work-nextmove__progress {
+  margin-top: 8px;
+}
+
+/* ── Active gig panel: top-align + scroll ─────────────────── */
+.bento--gigrail .bento__body {
+  align-items: flex-start;
+  overflow-y: auto;
+  scrollbar-width: none;
+  max-height: 260px;
+}
+.bento--gigrail .bento__body::-webkit-scrollbar {
+  display: none;
+}
