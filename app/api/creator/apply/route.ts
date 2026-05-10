@@ -7,6 +7,12 @@ import {
   notFound,
   serverError,
 } from "@/lib/api/responses";
+import { getDemoAudience } from "@/lib/api/demo-short-circuit";
+import {
+  playtestCampaigns,
+  playtestApplications,
+  type PlaytestApplication,
+} from "@/lib/playtest/store";
 
 // Mutates DB (campaign_applications) + reads auth session. Opt out of
 // Next's route-level cache so every request sees current state.
@@ -23,6 +29,33 @@ const TIER_RANK: Record<string, number> = {
 };
 
 export async function POST(request: NextRequest) {
+  // Demo mode: record application in playtest store without real auth
+  const isDemo = (await getDemoAudience()) === "creator";
+  if (isDemo) {
+    let body: { campaign_id?: string };
+    try {
+      body = await request.json();
+    } catch {
+      return badRequest("Invalid JSON body");
+    }
+    const { campaign_id } = body;
+    if (!campaign_id) return badRequest("campaign_id is required");
+
+    const campaign = playtestCampaigns.get(campaign_id);
+    const id = crypto.randomUUID();
+    const app: PlaytestApplication = {
+      id,
+      campaignId: campaign_id,
+      campaignTitle: campaign?.title ?? "Campaign",
+      merchantName: campaign?.merchantName ?? "Merchant",
+      creatorHandle: "@demo-creator",
+      status: "pending",
+      appliedAt: new Date().toISOString(),
+    };
+    playtestApplications.set(id, app);
+    return NextResponse.json({ application_id: id, success: true });
+  }
+
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

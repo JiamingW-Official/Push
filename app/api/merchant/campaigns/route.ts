@@ -9,8 +9,12 @@
 import { NextRequest } from "next/server";
 import { badRequest, serverError, success } from "@/lib/api/responses";
 import { requireMerchantSession } from "@/lib/api/merchant-auth";
-import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
+import {
+  demoShortCircuit,
+  getDemoAudience,
+} from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
+import { playtestCampaigns, type PlaytestCampaign } from "@/lib/playtest/store";
 
 const DEMO_CAMPAIGNS = [
   {
@@ -70,9 +74,21 @@ interface CreateBody {
 }
 
 export async function GET() {
-  const demo = await demoShortCircuit("merchant", () => ({
-    campaigns: DEMO_CAMPAIGNS,
-  }));
+  const demo = await demoShortCircuit("merchant", () => {
+    const live = Array.from(playtestCampaigns.values()).map((p) => ({
+      id: p.id,
+      title: p.title,
+      description: p.description,
+      payout: p.payout,
+      spots_total: p.spotsTotal,
+      spots_remaining: p.spotsRemaining,
+      deadline: p.deadline,
+      status: "active",
+      metadata: { category: p.category },
+      created_at: p.createdAt,
+    }));
+    return { campaigns: [...live, ...DEMO_CAMPAIGNS] };
+  });
   if (demo) return demo;
 
   const gate = await requireMerchantSession();
@@ -91,29 +107,96 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const demo = await demoShortCircuit("merchant", async () => {
+  // Demo mode: write campaign to playtest store so creator portal can discover it
+  const isDemo = (await getDemoAudience()) === "merchant";
+  if (isDemo) {
     const body = (await req.json().catch(() => ({}))) as Record<
       string,
       unknown
     >;
-    return {
-      campaign: {
-        id: `demo-campaign-${Date.now().toString(36)}`,
-        title: typeof body.name === "string" ? body.name : "Demo Campaign",
-        description:
-          typeof body.description === "string" ? body.description : "",
-        payout: typeof body.payout === "number" ? body.payout : 5,
-        spots_total:
-          typeof body.spots_total === "number" ? body.spots_total : 40,
-        deadline:
-          typeof body.dueDate === "string" ? body.dueDate : "2026-06-01",
-        status: "draft",
-        metadata: body,
-        created_at: new Date().toISOString(),
-      },
+
+    // The new-campaign form sends title/budget_total/reward_per_visit/end_date;
+    // the older API shape uses name/budget/dueDate — handle both.
+    const title =
+      typeof body.title === "string" && body.title
+        ? body.title
+        : typeof body.name === "string" && body.name
+          ? body.name
+          : "New Campaign";
+
+    const description =
+      typeof body.description === "string" ? body.description : "";
+
+    const payout =
+      typeof body.reward_per_visit === "number"
+        ? body.reward_per_visit
+        : typeof body.payout === "number"
+          ? body.payout
+          : 5;
+
+    const spotsTotal =
+      typeof body.max_creators === "number"
+        ? body.max_creators
+        : typeof body.spots_total === "number"
+          ? body.spots_total
+          : 10;
+
+    const deadline =
+      typeof body.end_date === "string" && body.end_date
+        ? body.end_date.slice(0, 10)
+        : typeof body.dueDate === "string" && body.dueDate
+          ? body.dueDate
+          : "2026-06-30";
+
+    const tags = Array.isArray(body.tags) ? (body.tags as string[]) : [];
+    const category = tags[0] ?? "food & drink";
+
+    // Extract offer from hero_offer if present
+    const heroOffer =
+      body.hero_offer &&
+      typeof body.hero_offer === "object" &&
+      !Array.isArray(body.hero_offer)
+        ? (body.hero_offer as Record<string, unknown>)
+        : null;
+    const offer = heroOffer?.description
+      ? String(heroOffer.description)
+      : `${title} offer`;
+
+    const id = crypto.randomUUID();
+    const campaign: PlaytestCampaign = {
+      id,
+      token: id,
+      merchantName: "Your Store",
+      merchantType: category.charAt(0).toUpperCase() + category.slice(1),
+      title,
+      description,
+      offer,
+      reward: `$${payout}`,
+      accent: "#c1121f",
+      payout,
+      spotsTotal,
+      spotsRemaining: spotsTotal,
+      deadline,
+      category,
+      createdAt: new Date().toISOString(),
     };
-  });
-  if (demo) return demo;
+    playtestCampaigns.set(id, campaign);
+
+    return success({
+      campaign: {
+        id,
+        title,
+        description,
+        payout,
+        spots_total: spotsTotal,
+        spots_remaining: spotsTotal,
+        deadline,
+        status: "active",
+        metadata: { category },
+        created_at: campaign.createdAt,
+      },
+    });
+  }
 
   const gate = await requireMerchantSession();
   if (!gate.ok) return gate.response;

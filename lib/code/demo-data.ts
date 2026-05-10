@@ -1,3 +1,5 @@
+import type { PlaytestCampaign } from "@/lib/playtest/store";
+
 export interface DemoCampaign {
   id: string;
   merchantName: string;
@@ -47,5 +49,25 @@ export const DEMO_CAMPAIGNS: DemoCampaign[] = [
 ];
 
 export function getCampaignByToken(token: string): DemoCampaign | undefined {
-  return DEMO_CAMPAIGNS.find((c) => c.token === token);
+  const d = DEMO_CAMPAIGNS.find((c) => c.token === token);
+  if (d) return d;
+
+  // Check playtest store (campaigns created live during demo sessions)
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { playtestCampaigns } = require("@/lib/playtest/store") as {
+    playtestCampaigns: Map<string, PlaytestCampaign>;
+  };
+  const p = playtestCampaigns.get(token);
+  if (!p) return undefined;
+  return {
+    id: p.id,
+    merchantName: p.merchantName,
+    merchantType: p.merchantType,
+    offer: p.offer,
+    reward: p.reward,
+    token: p.token,
+    creatorName: "Creator",
+    creatorHandle: "@creator",
+    accent: p.accent,
+  };
 }
