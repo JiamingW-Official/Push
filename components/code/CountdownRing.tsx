@@ -66,7 +66,7 @@ export function CountdownRing({
         textAnchor="middle"
         fill="rgba(255,255,255,0.7)"
         fontSize={13}
-        fontFamily="var(--font-darky, sans-serif)"
+        fontFamily="var(--font-display, sans-serif)"
         fontWeight={700}
       >
         {seconds}s

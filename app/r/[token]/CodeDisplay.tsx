@@ -74,7 +74,7 @@ export function CodeDisplay({
           style={{
             fontSize: 11,
             color: "rgba(255,255,255,0.4)",
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontWeight: 600,
             letterSpacing: "0.08em",
             textTransform: "uppercase",

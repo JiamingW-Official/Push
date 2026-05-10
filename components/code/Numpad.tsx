@@ -49,7 +49,7 @@ export function Numpad({ onVerify, loading = false }: NumpadProps) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontFamily: "var(--font-darky, sans-serif)",
+              fontFamily: "var(--font-display, sans-serif)",
               fontSize: 28,
               fontWeight: 800,
               color: "var(--ink, #1a1916)",
@@ -85,7 +85,7 @@ export function Numpad({ onVerify, loading = false }: NumpadProps) {
                     ? "transparent"
                     : "var(--surface, #f8f4e8)",
               color: k === "DEL" ? "#c1121f" : "var(--ink, #1a1916)",
-              fontFamily: "var(--font-darky, sans-serif)",
+              fontFamily: "var(--font-display, sans-serif)",
               fontSize: k === "DEL" ? 14 : 24,
               fontWeight: 700,
               cursor: k ? "pointer" : "default",
@@ -114,7 +114,7 @@ export function Numpad({ onVerify, loading = false }: NumpadProps) {
               ? "var(--brand-red, #c1121f)"
               : "var(--surface-3, #ece9e0)",
           color: input.length === 6 ? "#fff" : "var(--ink-4, #9a9792)",
-          fontFamily: "var(--font-darky, sans-serif)",
+          fontFamily: "var(--font-display, sans-serif)",
           fontSize: 15,
           fontWeight: 700,
           textTransform: "uppercase",

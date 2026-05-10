@@ -52,7 +52,7 @@ export default function TerminalPage() {
       <div style={{ textAlign: "center" }}>
         <p
           style={{
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: "0.12em",
@@ -65,7 +65,7 @@ export default function TerminalPage() {
         </p>
         <h1
           style={{
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 22,
             fontWeight: 800,
             color: "var(--ink, #1a1916)",
@@ -101,7 +101,7 @@ export default function TerminalPage() {
           )}
           <p
             style={{
-              fontFamily: "var(--font-darky, sans-serif)",
+              fontFamily: "var(--font-display, sans-serif)",
               fontSize: 16,
               fontWeight: 800,
               color: result.success ? "#16a34a" : "#c1121f",
@@ -125,7 +125,7 @@ export default function TerminalPage() {
               </p>
               <p
                 style={{
-                  fontFamily: "var(--font-darky, sans-serif)",
+                  fontFamily: "var(--font-display, sans-serif)",
                   fontSize: 11,
                   color: "rgba(0,0,0,0.35)",
                   margin: 0,

@@ -41,7 +41,7 @@ export default async function DemoCampaignsPage() {
         <div style={{ marginBottom: 40 }}>
           <p
             style={{
-              fontFamily: "var(--font-darky, sans-serif)",
+              fontFamily: "var(--font-display, sans-serif)",
               fontSize: 11,
               fontWeight: 700,
               letterSpacing: "0.12em",
@@ -54,7 +54,7 @@ export default async function DemoCampaignsPage() {
           </p>
           <h1
             style={{
-              fontFamily: "var(--font-darky, sans-serif)",
+              fontFamily: "var(--font-display, sans-serif)",
               fontSize: 36,
               fontWeight: 800,
               color: "var(--ink, #1a1916)",
@@ -126,7 +126,7 @@ export default async function DemoCampaignsPage() {
                 >
                   <span
                     style={{
-                      fontFamily: "var(--font-darky, sans-serif)",
+                      fontFamily: "var(--font-display, sans-serif)",
                       fontSize: 10,
                       fontWeight: 700,
                       letterSpacing: "0.08em",
@@ -139,7 +139,7 @@ export default async function DemoCampaignsPage() {
                 </div>
                 <h2
                   style={{
-                    fontFamily: "var(--font-darky, sans-serif)",
+                    fontFamily: "var(--font-display, sans-serif)",
                     fontSize: 18,
                     fontWeight: 800,
                     color: "var(--ink, #1a1916)",
@@ -171,7 +171,7 @@ export default async function DemoCampaignsPage() {
                   <span
                     style={{
                       color: "var(--ink-4, #9a9792)",
-                      fontFamily: "var(--font-darky, sans-serif)",
+                      fontFamily: "var(--font-display, sans-serif)",
                       fontWeight: 600,
                     }}
                   >
@@ -180,7 +180,7 @@ export default async function DemoCampaignsPage() {
                   <span
                     style={{
                       color: "var(--ink, #1a1916)",
-                      fontFamily: "var(--font-darky, sans-serif)",
+                      fontFamily: "var(--font-display, sans-serif)",
                       fontWeight: 700,
                     }}
                   >
@@ -195,7 +195,7 @@ export default async function DemoCampaignsPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  fontFamily: "var(--font-darky, sans-serif)",
+                  fontFamily: "var(--font-display, sans-serif)",
                   fontSize: 11,
                   color: "var(--ink-4, #9a9792)",
                   textDecoration: "none",
@@ -220,7 +220,7 @@ export default async function DemoCampaignsPage() {
               background: "var(--ink, #1a1916)",
               color: "#fff",
               borderRadius: 8,
-              fontFamily: "var(--font-darky, sans-serif)",
+              fontFamily: "var(--font-display, sans-serif)",
               fontSize: 14,
               fontWeight: 700,
               textDecoration: "none",

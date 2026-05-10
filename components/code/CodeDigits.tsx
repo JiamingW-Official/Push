@@ -26,7 +26,7 @@ export function CodeDigits({ code, accent = "#fff" }: CodeDigitsProps) {
             borderRadius: 10,
             background: "rgba(255,255,255,0.08)",
             border: "1px solid rgba(255,255,255,0.12)",
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 32,
             fontWeight: 800,
             color: accent,

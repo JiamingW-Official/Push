@@ -35,7 +35,7 @@ export default async function ReferralPage({
       <div style={{ width: "100%", textAlign: "center" }}>
         <p
           style={{
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: "0.12em",
@@ -48,7 +48,7 @@ export default async function ReferralPage({
         </p>
         <h1
           style={{
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 26,
             fontWeight: 800,
             color: "#fff",
@@ -76,7 +76,7 @@ export default async function ReferralPage({
         <p
           style={{
             textAlign: "center",
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 12,
             fontWeight: 700,
             letterSpacing: "0.10em",
@@ -118,7 +118,7 @@ export default async function ReferralPage({
         </div>
         <p
           style={{
-            fontFamily: "var(--font-darky, sans-serif)",
+            fontFamily: "var(--font-display, sans-serif)",
             fontSize: 11,
             color: "rgba(255,255,255,0.25)",
             margin: 0,
