@@ -1,46 +1,37 @@
 "use client";
 
 /* ============================================================
-   /creator/work — WORK domain hub. v30 (2026-05-09 afternoon)
+   /creator/work — WORK domain hub. v31 (2026-05-10)
 
-   v30 fixes 5 user complaints:
-   ① Pipeline strip questioned + "莫名其妙" → KILLED. Stage counts
-      were already in mini cards below; strip was just nav repeat.
-   ② Velocity span 12 too long → span 8 (chart breathes, balanced)
-   ③ This Week was Row 1 → moved to Row 2 (paired with chart)
-   ④ Each row dense: 3 panels per row instead of 2
-   ⑤ Bottom mini cards redesigned in v29 already, kept
-
-   Layout:
-     Row 1 (5+4+3): NEXT MOVE (ink) · ACTIONS (urgent) · PULSE 24h (live)
-     Row 2 (8+4):   VELOCITY chart · THIS WEEK milestone (champagne)
-     Row 3 (3+3+3+3): Applied · Paid · Disputes · Pipeline (4 mini nav)
+   v31 changes:
+   ① Remove horizontal gig urgency rail (was redundant with bento)
+   ② Left bento: "Next Move" becomes a 20s cycling carousel —
+      cycles through all active gigs, text-only transitions,
+      progress bar restarts on each advance, "Next →" button
+      manually skips
+   ③ Right bento: renamed "Active · N gigs", now shows the gig
+      list that was in the urgency rail (with thumbnail + chip + pay)
    ============================================================ */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLiveApplicationsList } from "@/lib/data/live-applications";
 import {
   Zap,
   Inbox,
-  CheckSquare,
   TrendingUp,
   Wallet,
   Layers,
   Camera,
-  Upload,
   Eye,
-  CheckCircle2,
   Lightbulb,
   Activity,
   Sparkles,
   EyeOff,
-  MessageSquare,
   Calendar,
   Cloud,
   Navigation,
   FileEdit,
-  AlertTriangle,
 } from "lucide-react";
 import { BentoModule } from "@/components/shared/primitives";
 import TimeChart from "@/components/shared/charts/TimeChart";
@@ -54,8 +45,8 @@ import "@/components/shared/hub-shell.css";
 import "./work.css";
 
 const ICON_PROPS = { size: 18, strokeWidth: 1.75 } as const;
-const TOP_GIG_ID = "disc-001";
 
+/* ── Urgency / chip helpers ─────────────────────────────── */
 const URGENCY_RANK: Record<string, number> = {
   shoot_live: 0,
   pre_shoot: 1,
@@ -91,6 +82,87 @@ const CHIP_LABEL: Record<string, string> = {
 };
 const TERMINAL_STATUS = new Set(["declined", "withdrawn"]);
 
+/* ── Next Move carousel data ────────────────────────────── */
+const MOVE_VERB: Record<string, string> = {
+  shoot_live: "SHOOT",
+  pre_shoot: "HEAD OUT",
+  pending_upload: "UPLOAD",
+  revision_requested: "REVISE",
+  accepted: "PREP",
+  reviewing: "WATCH",
+  submitted: "WAIT",
+  verified: "COLLECT",
+  paid: "DONE",
+};
+const MOVE_DETAIL: Record<string, string> = {
+  shoot_live: "QR at register · slot active now",
+  pre_shoot: "Slot today · charge + QR ready",
+  pending_upload: "Content due · 3 files to submit",
+  revision_requested: "Flagged items · reshoot needed",
+  accepted: "Review shot brief + confirm slot",
+  reviewing: "Merchant reviewing your application",
+  submitted: "Content under 72h merchant review",
+  verified: "Transfer initiated · clearing soon",
+  paid: "All done — rate your experience",
+};
+const MOVE_WHEN: Record<string, string> = {
+  shoot_live: "Now",
+  pre_shoot: "Today",
+  pending_upload: "47h left",
+  revision_requested: "48h window",
+  accepted: "This week",
+  reviewing: "~24h ETA",
+  submitted: "72h window",
+  verified: "~72h",
+  paid: "Complete",
+};
+const MOVE_COLOR: Record<string, string> = {
+  shoot_live: "red",
+  pre_shoot: "amber",
+  pending_upload: "blue",
+  revision_requested: "amber",
+  accepted: "green",
+  reviewing: "snow50",
+  submitted: "snow50",
+  verified: "green",
+  paid: "champagne",
+};
+
+const FALLBACK_MOVES = [
+  {
+    id: "app-disc-001",
+    status: "pending_upload",
+    merchantName: "Blank Street Coffee",
+    cashPay: 32,
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=480&h=600&fit=crop&q=72",
+  },
+  {
+    id: "app-disc-002",
+    status: "revision_requested",
+    merchantName: "Chelsea Market",
+    cashPay: 45,
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=480&h=600&fit=crop&q=72",
+  },
+  {
+    id: "app-disc-004",
+    status: "pre_shoot",
+    merchantName: "Forma Pilates Chelsea",
+    cashPay: 40,
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=480&h=600&fit=crop&q=72",
+  },
+  {
+    id: "app-disc-165",
+    status: "reviewing",
+    merchantName: "Violette_FR",
+    cashPay: 67,
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=480&h=600&fit=crop&q=72",
+  },
+];
+
 export default function WorkHub() {
   const { data: invites } = useInvites();
   const { data: actives } = useActiveGigs();
@@ -120,31 +192,56 @@ export default function WorkHub() {
     [liveApps],
   );
 
+  /* ── Next Move carousel ─────────────────────────────────── */
+  type MoveItem = {
+    id: string;
+    status: string;
+    merchantName: string;
+    cashPay: number;
+    thumbnailUrl?: string;
+  };
+  const moves: MoveItem[] = activeGigs.length > 0 ? activeGigs : FALLBACK_MOVES;
+
+  const movesRef = useRef(moves);
+  useEffect(() => {
+    movesRef.current = moves;
+  });
+
+  const [rawIdx, setRawIdx] = useState(0);
+  const [tick, setTick] = useState(0);
+
+  const advanceMove = useCallback(() => {
+    setRawIdx((i) => i + 1);
+    setTick((t) => t + 1);
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(advanceMove, 20_000);
+    return () => clearInterval(id);
+  }, [advanceMove]);
+
+  const moveIdx = rawIdx % moves.length;
+  const currentMove = moves[moveIdx] ?? moves[0]!;
+
+  /* ── KPIs ───────────────────────────────────────────────── */
   const kpis = {
     applied: buckets.invites.length || 6,
     confirmed: buckets.active.filter((it) => it.stage === 2).length || 1,
     execute: buckets.active.filter((it) => it.stage === 3).length || 1,
   };
 
-  /* Pay panel data — Push-specific narrative.
-     Cleared = withdrawable RIGHT NOW (Stripe Connect instant).
-     Verifying = scanned + recorded but still inside the 72h
-     attribution decay window (per v5.4 Tier 0 architecture).
-     Empty = portion of cycle target still unearned.
-     Each verified QR scan has an avg rate determined by creator
-     tier — Steel ≈ $11.75/scan after platform cut. */
   const pay = {
-    cleared: 940, // ready to cash out instantly
-    verifying: 263, // 72h decay window — clears on Fri
-    cycleTarget: 1500, // weekly target this cycle
+    cleared: 940,
+    verifying: 263,
+    cycleTarget: 1500,
     paidThisMonth: 1840,
     nextPayoutDay: "Fri",
     clearsInDays: 3,
-    deltaPct: 22, // vs prior cycle
-    verifiedScans: 24, // unique attributed in-store scans
-    avgPerScan: 50.13, // 24 scans / $1,203 total this cycle
-    lastScanAgo: "2h", // recent attribution event
-    tier: "Steel", // creator tier (v3.0 6-tier system)
+    deltaPct: 22,
+    verifiedScans: 24,
+    avgPerScan: 50.13,
+    lastScanAgo: "2h",
+    tier: "Steel",
   };
   const cycleEarned = pay.cleared + pay.verifying;
   const cycleEmpty = Math.max(0, pay.cycleTarget - cycleEarned);
@@ -158,14 +255,6 @@ export default function WorkHub() {
     deltaVsAvg: 18,
   };
 
-  /* Pulse 6-metric array — past 7 DAYS (one value per day, M→S).
-     Numbers are internally consistent across the funnel:
-       VIEWS  (29.4k) = impressions on this week's posts
-       ENGAGE (2,180) = likes + comments + shares (ER = 7.4%)
-       SCANS  (84)    = QR/link touchpoints from those impressions
-       OK     (56)    = scans that verified in-store (verify ≈ 67%)
-       EARNED ($658)  = payout from the 56 verified scans (avg $11.75)
-       ER     (7.4%)  = ENGAGE / VIEWS — derived from the two columns */
   const PULSE_IMP = [3800, 4200, 3500, 4600, 4900, 4200, 4200];
   const PULSE_ENG = PULSE_IMP.map((v) => Math.round(v * 0.074));
   const PULSE_SCAN = [11, 13, 9, 14, 15, 12, 10];
@@ -224,17 +313,9 @@ export default function WorkHub() {
   const pulseActive =
     PULSE_METRICS.find((m) => m.key === pulseKey) ?? PULSE_METRICS[0];
 
-  /* Privacy toggle — when hideMoney is true, EVERY money string on
-     the page renders as **** (Pay panel + Pulse earn + Paid mini
-     card). Eye / EyeOff icon next to $940 is the single control
-     point; state is local to the work hub session. */
   const [hideMoney, setHideMoney] = useState(false);
   const m = (formatted: string) => (hideMoney ? "****" : formatted);
 
-  /* v47 — agent-style sub line under "Work" title (matches /money's
-     pattern). Picks the most pressing imperative right now: leaving
-     for the next confirmed shoot. Reads as a contextual hint, not a
-     timestamp. */
   const workHint = "Leave by 8:30 → Roberta's Pizza · 3 frames + ring light";
 
   return (
@@ -244,175 +325,140 @@ export default function WorkHub() {
         <p className="work-hero__sub">{workHint}</p>
       </header>
 
-      {/* ── Active gigs urgency strip — only when there are live apps ── */}
-      {activeGigs.length > 0 && (
-        <div className="work-urgency" aria-label="Active gigs">
-          {activeGigs.map((app) => (
-            <Link
-              key={app.id}
-              href={`/creator/applied/${app.id}`}
-              className="work-urgency__card"
-            >
-              {app.thumbnailUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  className="work-urgency__thumb"
-                  src={app.thumbnailUrl}
-                  alt=""
-                />
-              ) : (
-                <span className="work-urgency__thumb work-urgency__thumb--blank" />
-              )}
-              <span className="work-urgency__body">
-                <span className="work-urgency__name">{app.merchantName}</span>
-                <span className="work-urgency__status-row">
-                  <span
-                    className={`work-urgency__chip work-urgency__chip--${CHIP_COLOR[app.status] ?? "gray"}`}
-                  >
-                    {CHIP_LABEL[app.status] ?? app.status}
-                  </span>
-                  <span className="work-urgency__pay">${app.cashPay}</span>
-                </span>
-              </span>
-              <span className="work-urgency__arrow" aria-hidden>
-                ›
-              </span>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {/* ── Bento ── v30: Pipeline strip removed (was redundant nav) ── */}
+      {/* ── Bento grid ────────────────────────────────────────── */}
       <section className="work-bento" aria-label="Work modules">
-        {/* Row 1 (5+4+3): Next Move · Actions · Pulse 24h */}
+        {/* Row 1: Next Move (6) · Active Gigs (3) · Pulse (3) */}
 
+        {/* ── Left: Next Move cycling carousel ─────────────────── */}
         <BentoModule
-          href={`/creator/work/active/${TOP_GIG_ID}`}
-          eyebrow="Next move · in 47 min"
+          href={`/creator/applied/${currentMove.id}`}
+          eyebrow={`Next move · ${moveIdx + 1} / ${moves.length}`}
           icon={<Zap {...ICON_PROPS} />}
           span={6}
           tone="ink"
           live="urgent"
         >
-          <div className="work-next">
-            <p className="work-next__time">9:00</p>
-            <p className="work-next__time-meta">
-              AM · Roberta&apos;s Pizza · 261 Moore St
-            </p>
-
-            {/* Countdown rail — progress bar showing time-until-leave,
-                then meta line "47:00 to go · arrive by 8:45". */}
-            <div className="work-next__countdown" aria-label="Time until leave">
-              <div className="work-next__countdown-track">
-                <div
-                  className="work-next__countdown-fill"
-                  style={{ width: "62%" }}
-                />
+          <div className="work-nextmove">
+            {/* Animated text block — key changes on each advance */}
+            <div key={tick} className="work-nextmove__body">
+              <span
+                className={`work-nextmove__verb work-nextmove__verb--${MOVE_COLOR[currentMove.status] ?? "snow50"}`}
+              >
+                {MOVE_VERB[currentMove.status] ?? "MOVE"}
+              </span>
+              <p className="work-nextmove__merchant">
+                {currentMove.merchantName}
+              </p>
+              <p className="work-nextmove__detail">
+                {MOVE_DETAIL[currentMove.status] ?? "Action needed"}
+              </p>
+              <div className="work-nextmove__meta">
+                <span className="work-nextmove__pay">
+                  ${currentMove.cashPay}
+                </span>
+                <span className="work-nextmove__sep">·</span>
+                <span className="work-nextmove__when">
+                  {MOVE_WHEN[currentMove.status] ?? "Now"}
+                </span>
               </div>
-              <p className="work-next__countdown-meta">
-                47:00 to go · arrive by <strong>8:45</strong>
-              </p>
             </div>
 
-            {/* Trip chips — weather + transit + frames. Replaces the
-                old Williamsburg/3 frames/Tag merchant row. */}
-            <div className="work-next__chips">
-              <span className="work-next__chip">
-                <Cloud size={14} strokeWidth={1.75} />
-                62°F · clear
-              </span>
-              <span className="work-next__chip">
-                <Navigation size={14} strokeWidth={1.75} />9 min · L train
-              </span>
-              <span className="work-next__chip">
-                <Camera size={14} strokeWidth={1.75} />3 frames
-              </span>
+            {/* Dots + Next button */}
+            <div className="work-nextmove__nav">
+              <div className="work-nextmove__dots" aria-hidden>
+                {moves.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`work-nextmove__dot${i === moveIdx ? " is-active" : ""}`}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                className="work-nextmove__btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  advanceMove();
+                }}
+                aria-label="Next move"
+              >
+                Next →
+              </button>
             </div>
 
-            <div className="work-next__agent-inline">
-              <p className="work-next__agent-eyebrow">
-                <Lightbulb size={12} strokeWidth={2.25} />
-                Agent
-              </p>
-              <ul className="work-next__agent-mini">
-                <li>
-                  Leave by <strong>8:30</strong> · scout angle
-                </li>
-                <li>
-                  Bring <strong>ring light</strong> · counter dim
-                </li>
-                <li>
-                  QR on <strong>table 4</strong> · frame 1 lock
-                </li>
-              </ul>
+            {/* 20s progress bar — key restarts animation on each advance */}
+            <div className="work-nextmove__progress">
+              <div key={tick} className="work-nextmove__progress-fill" />
             </div>
           </div>
         </BentoModule>
 
-        <BentoModule
-          href="/creator/work/active"
-          eyebrow={`Actions · ${kpis.confirmed + kpis.execute + 1} due today`}
-          icon={<CheckSquare {...ICON_PROPS} />}
-          span={3}
-          live="urgent"
-        >
-          <ul className="work-queue" aria-label="Action queue">
-            <li className="work-queue__row work-queue__row--submit">
-              <span className="work-queue__tile" aria-hidden>
-                <Upload size={18} strokeWidth={1.75} />
-              </span>
-              <span className="work-queue__copy">
-                <span className="work-queue__verb">Submit</span>
-                <span className="work-queue__target">Devoción content</span>
-              </span>
-              <span className="work-queue__when">6 PM</span>
-            </li>
-            <li className="work-queue__row work-queue__row--reply">
-              <span className="work-queue__tile" aria-hidden>
-                <MessageSquare size={18} strokeWidth={1.75} />
-              </span>
-              <span className="work-queue__copy">
-                <span className="work-queue__verb">Reply</span>
-                <span className="work-queue__target">
-                  Roberta&apos;s — angles
-                </span>
-              </span>
-              <span className="work-queue__when">2h</span>
-            </li>
-            <li className="work-queue__row work-queue__row--review">
-              <span className="work-queue__tile" aria-hidden>
-                <Eye size={18} strokeWidth={1.75} />
-              </span>
-              <span className="work-queue__copy">
-                <span className="work-queue__verb">Review</span>
-                <span className="work-queue__target">Brow Theory invite</span>
-              </span>
-              <span className="work-queue__when">Today</span>
-            </li>
-            <li className="work-queue__row work-queue__row--confirm">
-              <span className="work-queue__tile" aria-hidden>
-                <Calendar size={18} strokeWidth={1.75} />
-              </span>
-              <span className="work-queue__copy">
-                <span className="work-queue__verb">Confirm</span>
-                <span className="work-queue__target">Maman shoot · Fri</span>
-              </span>
-              <span className="work-queue__when">EOD</span>
-            </li>
-          </ul>
-        </BentoModule>
+        {/* ── Right: Active gigs (replaces Actions queue) ─────── */}
+        {/* Custom div to avoid nested <Link> with <Link> rows */}
+        <div className="bento bento--span-3 bento--state-ready">
+          <div className="bento__head">
+            <span className="bento__icon" aria-hidden>
+              <Layers {...ICON_PROPS} />
+            </span>
+            <span className="bento__eyebrow">Active · {moves.length} gigs</span>
+            <span className="bento__live bento__live--urgent" aria-hidden />
+            <Link
+              href="/creator/work/applied"
+              className="bento__drill"
+              aria-label="View all active gigs"
+            >
+              ↗
+            </Link>
+          </div>
+          <div className="bento__body">
+            <ul className="work-gigrail" aria-label="Active gigs">
+              {moves.slice(0, 5).map((app) => (
+                <li key={app.id}>
+                  <Link
+                    href={`/creator/applied/${app.id}`}
+                    className="work-gigrail__row"
+                  >
+                    {app.thumbnailUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        className="work-gigrail__thumb"
+                        src={app.thumbnailUrl}
+                        alt=""
+                      />
+                    ) : (
+                      <span className="work-gigrail__thumb work-gigrail__thumb--blank" />
+                    )}
+                    <span className="work-gigrail__body">
+                      <span className="work-gigrail__name">
+                        {app.merchantName}
+                      </span>
+                      <span
+                        className={`work-gigrail__chip work-gigrail__chip--${CHIP_COLOR[app.status] ?? "gray"}`}
+                      >
+                        {CHIP_LABEL[app.status] ?? app.status}
+                      </span>
+                    </span>
+                    <span className="work-gigrail__pay">${app.cashPay}</span>
+                    <span className="work-gigrail__arrow" aria-hidden>
+                      ›
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-        {/* Pulse — custom panel (not BentoModule) so the inner stat
-            tiles can be <button> click targets without bubbling into
-            a Link nav. The drill ↗ in the head is its own <Link>. */}
+        {/* ── Pulse panel (unchanged) ───────────────────────────── */}
         <div className="bento bento--span-3 bento--state-ready work-pulse-panel">
           <div className="bento__head">
             <span className="bento__icon" aria-hidden>
               <Activity {...ICON_PROPS} />
             </span>
             <span className="bento__eyebrow">
-              Pulse · 7D · {pulseActive.delta >= 0 ? "+" : ""}
-              {pulseActive.delta}%
+              Pulse · 7D · {pulseActive!.delta >= 0 ? "+" : ""}
+              {pulseActive!.delta}%
             </span>
             <span className="bento__live bento__live--live" aria-hidden />
             <Link
@@ -423,7 +469,6 @@ export default function WorkHub() {
               ↗
             </Link>
           </div>
-
           <div className="bento__body">
             <div className="work-pulse">
               <div
@@ -450,36 +495,27 @@ export default function WorkHub() {
                 ))}
               </div>
               <div className="work-chart-bottom work-chart-bottom--pulse">
-                {/* Hover-interactive spark via TimeChart so each bucket
-                    shows value + time on hover (matches Velocity pattern).
-                    Period-switcher hidden via .work-pulse-panel CSS — only
-                    the 24h "7d" series exists. */}
-                {/* v45: 7-day fixed-period smooth-curve line chart.
-                    Period switcher hidden via CSS; only the 7d series
-                    renders. Day labels (M-S) under the chart. */}
                 <TimeChart
-                  key={pulseActive.key}
+                  key={pulseActive!.key}
                   mode="line"
                   accent="champagne"
                   defaultPeriod="7d"
                   smooth
                   showPrior={false}
-                  valuePrefix={pulseActive.key === "earn" ? "$" : ""}
-                  valueSuffix={pulseActive.key === "er" ? "%" : ""}
-                  data={{ "7d": pulseActive.spark }}
+                  valuePrefix={pulseActive!.key === "earn" ? "$" : ""}
+                  valueSuffix={pulseActive!.key === "er" ? "%" : ""}
+                  data={{ "7d": pulseActive!.spark }}
                   labels={{
                     "7d": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                   }}
-                  ariaLabel={`${pulseActive.label} 7-day pulse`}
+                  ariaLabel={`${pulseActive!.label} 7-day pulse`}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Row 2 (7+5): Velocity chart · Pay panel — slimmer Velocity
-            (was span 8) gives Pay 1 more col so the new KPI strip
-            has room. Default period 7D so the chart reads dense. */}
+        {/* Row 2 (7+5): Velocity · Pay */}
 
         <BentoModule
           href="/creator/work/velocity"
@@ -559,15 +595,6 @@ export default function WorkHub() {
           </div>
         </BentoModule>
 
-        {/* Pay panel — v49 premium Push redesign.
-            The earlier 3-KPI strip read as generic fintech. This
-            version tells the Push story: a creator earns money via
-            verified in-store scans (the unit of work), each cycle
-            closes on Friday with a payout. Three layers of info:
-              1. Hero: $940 instantly withdrawable + delta + tier badge
-              2. Segmented bar: cleared / verifying / unearned cycle
-              3. Attribution row: # of verified scans + avg/scan +
-                 most recent scan timestamp — Push DNA. */}
         <BentoModule
           href="/creator/money"
           eyebrow={`Pay · cycle close ${pay.nextPayoutDay}`}
@@ -576,10 +603,6 @@ export default function WorkHub() {
           tone="champagne"
         >
           <div className="work-pay">
-            {/* Hero row — big withdrawable number left, tier right.
-                Eye toggle sits inline next to the number; clicking it
-                hides every money string on the page (returns to ****
-                when EyeOff). preventDefault stops the parent Link nav. */}
             <div className="work-pay__hero">
               <div className="work-pay__hero-stack">
                 <div className="work-pay__hero-num-row">
@@ -595,7 +618,6 @@ export default function WorkHub() {
                       setHideMoney((v) => !v);
                     }}
                     aria-label={hideMoney ? "Show amounts" : "Hide amounts"}
-                    title={hideMoney ? "Show amounts" : "Hide amounts"}
                   >
                     {hideMoney ? (
                       <EyeOff size={16} strokeWidth={1.75} />
@@ -617,10 +639,6 @@ export default function WorkHub() {
                 {pay.tier}
               </span>
             </div>
-
-            {/* Segmented cycle bar — cleared / verifying / unearned.
-                Three flex segments scaled by their dollar amounts so
-                the bar visually represents this cycle's pay anatomy. */}
             <div className="work-pay__bar" aria-label="Cycle progress">
               <span
                 className="work-pay__seg work-pay__seg--cleared"
@@ -649,10 +667,6 @@ export default function WorkHub() {
                 {pay.clearsInDays}d
               </span>
             </div>
-
-            {/* Push-signature attribution row — what makes this panel
-                belong to Push and no one else: verified-scan unit
-                economics. */}
             <div className="work-pay__attr">
               <span className="work-pay__attr-dot" aria-hidden />
               <strong>{pay.verifiedScans}</strong> verified scans
@@ -664,7 +678,7 @@ export default function WorkHub() {
           </div>
         </BentoModule>
 
-        {/* Row 3 (3+3+3+3): 4 mini nav cards · v31 each gets own chart */}
+        {/* Row 3 (3+3+3+3): 4 mini nav cards */}
 
         <Link
           href="/creator/work/applied"
@@ -757,11 +771,6 @@ export default function WorkHub() {
           </div>
         </Link>
 
-        {/* v63 — replaced broken "Disputes · open" mini (href looped back to
-            /creator/work) with "Drafts · in progress" since /drafts was an
-            orphan page with NO inbound link. Drafts is core flow content
-            (WIP shoot prep / unposted reels), Disputes is rare-flow which
-            now lives in admin-strip footer + /wrap deep-link only. */}
         <Link
           href="/creator/work/drafts"
           className="work-mini work-mini--ok"
@@ -864,10 +873,6 @@ export default function WorkHub() {
         </Link>
       </section>
 
-      {/* v47/63 — admin link strip (matches /money pattern). Sub-page nav
-          for E-level deep dives. v63 added Calendar + Velocity + (conditional)
-          Disputes so EVERY work sub-page has at least one canonical entry
-          point from the hub — no more orphan pages. */}
       <nav className="work-admin-strip" aria-label="Work admin">
         <Link href="/creator/work/pipeline" className="work-admin-strip__link">
           <Layers size={14} strokeWidth={1.75} />
