@@ -12,13 +12,17 @@ async function getQrDataUrl(url: string): Promise<string> {
 
 export const dynamic = "force-dynamic";
 
+// Stable public URL for QR codes. Must be an absolute https:// URL so
+// iPhone Camera app recognises it as a tappable link.
+// ?? only guards null/undefined — if an env var is set to "" it would
+// slip through, so we also check for falsy with ||.
+const DEMO_PUBLIC_URL = "https://push-six-flax.vercel.app";
+
 export default async function DemoCampaignsPage() {
-  // Server-only: read at runtime, not baked at build time
   const baseUrl =
-    process.env.DEMO_BASE_URL ??
-    process.env.NEXT_PUBLIC_RENDER_URL ??
-    process.env.NEXT_PUBLIC_APP_URL ??
-    "http://localhost:3000";
+    (process.env.DEMO_BASE_URL || null) ??
+    (process.env.NEXT_PUBLIC_RENDER_URL || null) ??
+    DEMO_PUBLIC_URL;
 
   const campaigns = await Promise.all(
     DEMO_CAMPAIGNS.map(async (c) => ({
