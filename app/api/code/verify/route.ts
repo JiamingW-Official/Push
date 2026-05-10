@@ -1,15 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyCode } from "@/lib/code/totp";
 import { getCampaignByToken, DEMO_CAMPAIGNS } from "@/lib/code/demo-data";
-
-// In-memory redemption log for demo
-const redemptions: Array<{
-  token: string;
-  code: string;
-  merchantName: string;
-  creatorHandle: string;
-  redeemedAt: string;
-}> = [];
+import { redeemedTokens, redemptionLog } from "@/lib/code/redemption-store";
+import type { RedemptionEntry } from "@/lib/code/redemption-store";
 
 // Try all tokens if no specific token given
 function findMatchingToken(code: string): string | null {
@@ -44,14 +37,19 @@ export async function POST(req: Request) {
   }
 
   const campaign = getCampaignByToken(matchedToken)!;
-  const entry = {
+  const entry: RedemptionEntry = {
     token: matchedToken,
     code,
     merchantName: campaign.merchantName,
+    offer: campaign.offer,
     creatorHandle: campaign.creatorHandle,
+    reward: campaign.reward,
     redeemedAt: new Date().toISOString(),
   };
-  redemptions.push(entry);
+
+  // Write to shared store — fans polling /api/code/current/[token] will see redeemed: true
+  redeemedTokens.set(matchedToken, entry);
+  redemptionLog.push(entry);
 
   return NextResponse.json({
     success: true,
@@ -64,5 +62,5 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  return NextResponse.json({ redemptions });
+  return NextResponse.json({ redemptions: redemptionLog });
 }

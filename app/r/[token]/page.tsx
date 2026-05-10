@@ -26,12 +26,8 @@ export default async function ReferralPage({
   return (
     <main
       style={{
-        // Explicit hex instead of CSS var — works before globals.css loads
-        background: "#1a1916",
-        // Use vh with enough padding so it looks full-screen but doesn't clip
+        background: "#111110",
         minHeight: "100vh",
-        width: "100%",
-        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -39,60 +35,70 @@ export default async function ReferralPage({
         maxWidth: 440,
         margin: "0 auto",
         gap: 40,
+        boxSizing: "border-box",
+        width: "100%",
       }}
     >
-      {/* ── Merchant info ────────────────────────────────────────── */}
+      {/* TOP — merchant identity */}
       <div style={{ width: "100%", textAlign: "center" }}>
+        {/* eyebrow */}
         <p
           style={{
-            fontFamily: "'Helvetica Neue', Arial, sans-serif",
-            fontSize: 11,
+            fontFamily: "'Helvetica Neue',Arial,sans-serif",
+            fontSize: 10,
             fontWeight: 700,
-            letterSpacing: "0.12em",
+            letterSpacing: "0.14em",
             textTransform: "uppercase",
-            color: "rgba(255,255,255,0.4)",
-            margin: "0 0 8px",
+            color: "rgba(255,255,255,0.35)",
+            margin: "0 0 10px",
           }}
         >
           {campaign.merchantType}
         </p>
+        {/* name */}
         <h1
           style={{
-            fontFamily: "'Helvetica Neue', Arial, sans-serif",
-            fontSize: 28,
+            fontFamily: "'Helvetica Neue',Arial,sans-serif",
+            fontSize: 32,
             fontWeight: 800,
-            color: "#ffffff",
-            margin: "0 0 6px",
+            color: "#fff",
+            margin: "0 0 12px",
             letterSpacing: "-0.02em",
-            lineHeight: 1.1,
+            lineHeight: 1.05,
           }}
         >
           {campaign.merchantName}
         </h1>
-        <p
+        {/* offer pill */}
+        <span
           style={{
-            fontFamily: "'Helvetica Neue', Arial, sans-serif",
-            fontSize: 15,
-            color: campaign.accent,
-            margin: 0,
+            display: "inline-block",
+            padding: "5px 16px",
+            borderRadius: 999,
+            background: `${campaign.accent}22`,
+            border: `1px solid ${campaign.accent}55`,
+            fontFamily: "'Helvetica Neue',Arial,sans-serif",
+            fontSize: 13,
             fontWeight: 600,
+            color: campaign.accent,
+            letterSpacing: "0.01em",
           }}
         >
           {campaign.offer}
-        </p>
+        </span>
       </div>
 
-      {/* ── Live code ────────────────────────────────────────────── */}
+      {/* MIDDLE — code section */}
       <div style={{ width: "100%" }}>
         <p
           style={{
             textAlign: "center",
-            fontFamily: "'Helvetica Neue', Arial, sans-serif",
-            fontSize: 11,
+            fontFamily: "'Helvetica Neue',Arial,sans-serif",
+            fontSize: 10,
             fontWeight: 700,
-            letterSpacing: "0.10em",
+            letterSpacing: "0.14em",
             textTransform: "uppercase",
-            color: "rgba(255,255,255,0.35)",
+            color: "rgba(255,255,255,0.25)",
             marginBottom: 20,
             marginTop: 0,
           }}
@@ -106,35 +112,35 @@ export default async function ReferralPage({
         />
       </div>
 
-      {/* ── Instruction ──────────────────────────────────────────── */}
+      {/* BOTTOM — instruction */}
       <div style={{ width: "100%", textAlign: "center" }}>
         <div
           style={{
-            background: "rgba(255,255,255,0.07)",
-            borderRadius: 12,
-            padding: "18px 20px",
+            background: "rgba(255,255,255,0.05)",
+            borderRadius: 16,
+            padding: "20px 24px",
             marginBottom: 16,
           }}
         >
           <p
             style={{
-              fontFamily: "'Helvetica Neue', Arial, sans-serif",
+              fontFamily: "'Helvetica Neue',Arial,sans-serif",
               fontSize: 15,
-              color: "rgba(255,255,255,0.8)",
+              color: "rgba(255,255,255,0.75)",
               margin: 0,
-              lineHeight: 1.55,
+              lineHeight: 1.6,
             }}
           >
-            Show this code to the cashier to unlock your offer
+            Show this screen to the cashier to redeem your offer
           </p>
         </div>
         <p
           style={{
-            fontFamily: "'Helvetica Neue', Arial, sans-serif",
+            fontFamily: "'Helvetica Neue',Arial,sans-serif",
             fontSize: 11,
-            color: "rgba(255,255,255,0.25)",
+            color: "rgba(255,255,255,0.2)",
             margin: 0,
-            letterSpacing: "0.06em",
+            letterSpacing: "0.05em",
           }}
         >
           via {campaign.creatorHandle} · Powered by Push
