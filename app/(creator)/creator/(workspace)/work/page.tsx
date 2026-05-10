@@ -38,6 +38,8 @@ import {
   Calendar,
   Cloud,
   Navigation,
+  FileEdit,
+  AlertTriangle,
 } from "lucide-react";
 import { BentoModule } from "@/components/shared/primitives";
 import TimeChart from "@/components/shared/charts/TimeChart";
@@ -669,47 +671,60 @@ export default function WorkHub() {
           </div>
         </Link>
 
+        {/* v63 — replaced broken "Disputes · open" mini (href looped back to
+            /creator/work) with "Drafts · in progress" since /drafts was an
+            orphan page with NO inbound link. Drafts is core flow content
+            (WIP shoot prep / unposted reels), Disputes is rare-flow which
+            now lives in admin-strip footer + /wrap deep-link only. */}
         <Link
-          href="/creator/work"
+          href="/creator/work/drafts"
           className="work-mini work-mini--ok"
           prefetch={false}
         >
           <div className="work-mini__head">
             <span className="work-mini__icon-fill" aria-hidden>
-              <CheckCircle2 size={18} strokeWidth={1.75} />
+              <FileEdit size={18} strokeWidth={1.75} />
             </span>
             <span className="work-mini__arrow" aria-hidden>
               ↗
             </span>
           </div>
-          <span className="work-mini__num">0</span>
-          <span className="work-mini__lbl">Disputes · open</span>
+          <span className="work-mini__num">3</span>
+          <span className="work-mini__lbl">Drafts · in progress</span>
           <span className="work-mini__sub">
-            All clear · 14d streak · last resolved 14d ago
+            2 ready to post · 1 needs review
           </span>
           <div className="work-mini__viz" aria-hidden>
             <div className="work-mini__streak">
-              {Array.from({ length: 14 }).map((_, i) => (
+              {[
+                { state: "ready" },
+                { state: "ready" },
+                { state: "review" },
+              ].map((d, i) => (
                 <span
                   key={i}
                   className="work-mini__streak-dot work-mini__streak-dot--ok"
+                  style={{
+                    aspectRatio: "auto",
+                    width: "auto",
+                    height: 18,
+                    padding: "0 8px",
+                    borderRadius: 999,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                    color: "var(--snow)",
+                    background: "var(--ink, #111)",
+                  }}
                 >
-                  <svg
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="3,8 7,12 13,4" />
-                  </svg>
+                  {d.state}
                 </span>
               ))}
             </div>
             <div className="work-mini__viz-legend">
               <span>
-                <strong>14d</strong> safe streak · 0 issues
+                <strong>3</strong> drafts · oldest 2d
               </span>
             </div>
           </div>
@@ -763,12 +778,21 @@ export default function WorkHub() {
         </Link>
       </section>
 
-      {/* v47 — admin link strip (matches /money pattern). Sub-page nav
-          for E-level deep dives: full pipeline, history, applied list. */}
+      {/* v47/63 — admin link strip (matches /money pattern). Sub-page nav
+          for E-level deep dives. v63 added Calendar + Velocity + (conditional)
+          Disputes so EVERY work sub-page has at least one canonical entry
+          point from the hub — no more orphan pages. */}
       <nav className="work-admin-strip" aria-label="Work admin">
         <Link href="/creator/work/pipeline" className="work-admin-strip__link">
           <Layers size={14} strokeWidth={1.75} />
           Pipeline · 3 in flight
+        </Link>
+        <span className="work-admin-strip__sep" aria-hidden>
+          ·
+        </span>
+        <Link href="/creator/work/applied" className="work-admin-strip__link">
+          <Inbox size={14} strokeWidth={1.75} />
+          Applied · {kpis.applied} waiting
         </Link>
         <span className="work-admin-strip__sep" aria-hidden>
           ·
@@ -780,9 +804,16 @@ export default function WorkHub() {
         <span className="work-admin-strip__sep" aria-hidden>
           ·
         </span>
-        <Link href="/creator/work/applied" className="work-admin-strip__link">
-          <Inbox size={14} strokeWidth={1.75} />
-          Applied · {kpis.applied} waiting
+        <Link href="/creator/work/calendar" className="work-admin-strip__link">
+          <Calendar size={14} strokeWidth={1.75} />
+          Calendar
+        </Link>
+        <span className="work-admin-strip__sep" aria-hidden>
+          ·
+        </span>
+        <Link href="/creator/work/velocity" className="work-admin-strip__link">
+          <TrendingUp size={14} strokeWidth={1.75} />
+          Velocity
         </Link>
       </nav>
     </main>

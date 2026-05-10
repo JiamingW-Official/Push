@@ -119,13 +119,23 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <a href="#main-content" className="skip-nav">
-          Skip to main content
-        </a>
+        {/* v62 — skip link wrapped in <nav> so it's contained in a
+            landmark (axe "region" rule). aria-label distinguishes it
+            from primary site nav. */}
+        <nav aria-label="Skip links">
+          <a href="#main-content" className="skip-nav">
+            Skip to main content
+          </a>
+        </nav>
         <CommandPaletteProvider>
           <SmoothScroll>
             {children}
-            <BackToTop />
+            {/* v62 — wrapped in <aside aria-label="Page utilities"> so
+                the floating button is contained by a landmark (axe rule
+                "all page content must live inside a landmark"). */}
+            <aside aria-label="Page utilities">
+              <BackToTop />
+            </aside>
           </SmoothScroll>
         </CommandPaletteProvider>
       </body>

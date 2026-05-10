@@ -77,11 +77,15 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
       // v23: Today merged into Work (Today's NEXT MOVE / NEEDS YOU /
       // SCHEDULE / OPPS were 80% redundant with Work panels;
       // Today-unique milestone + pulse folded into Work).
-      // 6-domain IA: Work · Find · Pay · Comms · Me · Stats
+      // 6-domain IA: Work · Find · Pay · Inbox · Me · Stats
+      // v58: "Comms" renamed to "Inbox" + href routes directly into the
+      // /creator/inbox messages list (was a separate dashboard at
+      // /creator/comms, now redirected). Skipping the dashboard removes
+      // a meaningless intermediate — the messages list IS the inbox.
       { label: "Work", href: "/creator/work", icon: "work", exact: true },
       { label: "Find", href: "/creator/discover", icon: "discover" },
       { label: "Pay", href: "/creator/money", icon: "earnings" },
-      { label: "Comms", href: "/creator/comms", icon: "inbox" },
+      { label: "Inbox", href: "/creator/inbox", icon: "inbox" },
       { label: "Me", href: "/creator/me", icon: "trophy" },
       { label: "Stats", href: "/creator/analytics", icon: "analytics" },
     ],

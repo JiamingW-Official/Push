@@ -14,8 +14,8 @@
    action. v5.4 attribution decay curve referenced inline.
    ============================================================ */
 
-import { use } from "react";
-import { notFound } from "next/navigation";
+import { use, Suspense } from "react";
+import { notFound, useSearchParams } from "next/navigation";
 import { MOCK_CAMPAIGNS } from "@/lib/mocks/campaigns";
 import { totalNormalizedPay } from "@/lib/services/pricing";
 import {
@@ -50,7 +50,17 @@ export default function WrapPage({
 }: {
   params: Promise<{ gigId: string }>;
 }) {
+  return (
+    <Suspense fallback={null}>
+      <WrapPageInner params={params} />
+    </Suspense>
+  );
+}
+
+function WrapPageInner({ params }: { params: Promise<{ gigId: string }> }) {
   const { gigId } = use(params);
+  const search = useSearchParams();
+  const isFreshSubmit = search?.get("fresh") === "1";
   const c = MOCK_CAMPAIGNS.find((x) => x.id === gigId);
   if (!c) notFound();
 
@@ -65,16 +75,32 @@ export default function WrapPage({
 
   return (
     <StageShell backHref="/creator/work" ariaLabel="Gig wrap and payout">
-      <StageBanner
-        tone="champagne"
-        text="Verified · payout released"
-        meta={`Posted to your account · 2 hr ago`}
-      />
+      {/* v63 — banner shows different state when arriving fresh from /submit
+          (?fresh=1). The audit flagged that submit → wrap with no intermediate
+          state was confusing creators ("did the post go through? where's
+          my money?"). The fresh-state copy explains the verification window. */}
+      {isFreshSubmit ? (
+        <StageBanner
+          tone="blue"
+          text="Pending verification · ConversionOracle is attributing scans"
+          meta="Typical wait 2-6h · payout posts automatically when verified"
+        />
+      ) : (
+        <StageBanner
+          tone="champagne"
+          text="Verified · payout released"
+          meta={`Posted to your account · 2 hr ago`}
+        />
+      )}
 
       <StageHeader
-        eyebrow={`Stage 07 · Paid · ${c.merchantName}`}
+        eyebrow={`Stage 07 · ${isFreshSubmit ? "Verifying" : "Paid"} · ${c.merchantName}`}
         title={c.title}
-        sub={`${totalScans} verified scans across 7 days. Below is the earnings split, the attribution timeline, and how this gig compares to your cohort. Withdraw or roll into the next gig.`}
+        sub={
+          isFreshSubmit
+            ? `Your post is live and the QR code is being scanned in-store. Verification typically takes 2-6 hours. Below is the projected earnings split — final amounts settle once ConversionOracle confirms each scan.`
+            : `${totalScans} verified scans across 7 days. Below is the earnings split, the attribution timeline, and how this gig compares to your cohort. Withdraw or roll into the next gig.`
+        }
       />
 
       <StageTwoCol>
@@ -92,16 +118,36 @@ export default function WrapPage({
             }}
           >
             <ul className="stg__pay-list">
-              <StagePayRow label="Base cash · contracted" value={`$${baseCash.toFixed(0)}`} />
-              <StagePayRow label={`Verified scans · ${totalScans} × avg $${(scanEarnings / Math.max(totalScans, 1)).toFixed(0)}`} value={`$${scanEarnings.toFixed(0)}`} />
-              <StagePayRow label="Milestone bonus · 30+ scans" value={milestoneBonus > 0 ? `$${milestoneBonus.toFixed(0)}` : "—"} />
-              <StagePayRow label="Total" value={<span className="wrp__total">${grandTotal.toFixed(0)}</span>} />
+              <StagePayRow
+                label="Base cash · contracted"
+                value={`$${baseCash.toFixed(0)}`}
+              />
+              <StagePayRow
+                label={`Verified scans · ${totalScans} × avg $${(scanEarnings / Math.max(totalScans, 1)).toFixed(0)}`}
+                value={`$${scanEarnings.toFixed(0)}`}
+              />
+              <StagePayRow
+                label="Milestone bonus · 30+ scans"
+                value={
+                  milestoneBonus > 0 ? `$${milestoneBonus.toFixed(0)}` : "—"
+                }
+              />
+              <StagePayRow
+                label="Total"
+                value={
+                  <span className="wrp__total">${grandTotal.toFixed(0)}</span>
+                }
+              />
             </ul>
           </StageCard>
 
           {/* Attribution timeline — full row (7-day mini bar chart
               needs full grid width to read) */}
-          <StageCard eyebrow="Attribution timeline" title={`${totalScans} verified scans · 7 days`} full>
+          <StageCard
+            eyebrow="Attribution timeline"
+            title={`${totalScans} verified scans · 7 days`}
+            full
+          >
             <div className="wrp__chart">
               {TIMELINE_DAYS.map((d) => (
                 <div key={d.day} className="wrp__bar">
@@ -115,8 +161,9 @@ export default function WrapPage({
               ))}
             </div>
             <p className="wrp__chart-meta">
-              Peak: <strong>{peakDay.day}</strong> · {peakDay.scans} scans · ${peakDay.dollars}.
-              Per v5.4 decay curve, scans within 24h of post count 100%; later scans tier down (50 / 30 / 10 / 0).
+              Peak: <strong>{peakDay.day}</strong> · {peakDay.scans} scans · $
+              {peakDay.dollars}. Per v5.4 decay curve, scans within 24h of post
+              count 100%; later scans tier down (50 / 30 / 10 / 0).
             </p>
           </StageCard>
 
@@ -149,7 +196,9 @@ export default function WrapPage({
               />
             </div>
             <p className="wrp__learning">
-              <strong>Insight.</strong> Your Wed peak ($168) carried the gig. Coffee verticals over-index Wed/Thu in this neighborhood — schedule next campaign around that lift.
+              <strong>Insight.</strong> Your Wed peak ($168) carried the gig.
+              Coffee verticals over-index Wed/Thu in this neighborhood —
+              schedule next campaign around that lift.
             </p>
           </StageCard>
         </StageMain>
@@ -159,32 +208,52 @@ export default function WrapPage({
           <StageRailCard variant="primary" label="Total earned">
             <span className="wrp__rail-num">${grandTotal.toFixed(0)}</span>
             <p className="stg__rail-help">
-              Ready to withdraw to your linked Venmo. Per Push policy (v5.4), funds settle directly via Stripe Connect — Push never holds the cash.
+              Ready to withdraw to your linked Venmo. Per Push policy (v5.4),
+              funds settle directly via Stripe Connect — Push never holds the
+              cash.
             </p>
             <StageButtonStack>
-              <StageButton variant="primary">Withdraw ${grandTotal.toFixed(0)}</StageButton>
+              <StageButton variant="primary">
+                Withdraw ${grandTotal.toFixed(0)}
+              </StageButton>
               <StageButton variant="ghost">View statement</StageButton>
             </StageButtonStack>
           </StageRailCard>
 
           {/* Rate merchant */}
-          <StageRailCard label="Rate {c.merchantName}" heading="Help future creators">
+          <StageRailCard
+            label="Rate {c.merchantName}"
+            heading="Help future creators"
+          >
             <div className="wrp__rate">
               {[1, 2, 3, 4, 5].map((s) => (
-                <button key={s} type="button" className="wrp__star" aria-label={`Rate ${s} star${s === 1 ? "" : "s"}`}>
+                <button
+                  key={s}
+                  type="button"
+                  className="wrp__star"
+                  aria-label={`Rate ${s} star${s === 1 ? "" : "s"}`}
+                >
                   ★
                 </button>
               ))}
             </div>
-            <p className="stg__rail-help">Your rating is private to Push and feeds the merchant trust score.</p>
+            <p className="stg__rail-help">
+              Your rating is private to Push and feeds the merchant trust score.
+            </p>
           </StageRailCard>
 
           {/* Repeat / close-out */}
           <StageRailCard label="What's next">
             <StageButtonStack>
-              <StageButton variant="secondary" href="/creator/discover">Find next gig</StageButton>
-              <StageButton variant="pink" href="/creator/portfolio">Save to portfolio</StageButton>
-              <StageButton variant="ghost" href="/creator/comms">Thank merchant</StageButton>
+              <StageButton variant="secondary" href="/creator/discover">
+                Find next gig
+              </StageButton>
+              <StageButton variant="pink" href="/creator/portfolio">
+                Save to portfolio
+              </StageButton>
+              <StageButton variant="ghost" href="/creator/comms">
+                Thank merchant
+              </StageButton>
             </StageButtonStack>
           </StageRailCard>
         </StageRail>

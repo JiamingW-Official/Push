@@ -28,9 +28,24 @@
 /* ── Left pane: thread list ──────────────────────────────── */
 
 .msg-list-pane {
-  background: var(--snow);
-  border-radius: var(--r-2xl);
-  box-shadow: var(--shadow-1);
+  /* v58 inset chrome → v59 + 4-sided symmetric ambient halo per user
+     "panel 的 drop shadow 向着四周展开, 要小要微妙, 不要被左边的莫名其
+     妙的空间截住". Pattern mirrors .ib-sys-sidebar/main exactly:
+     - 0 0 32px = symmetric halo on all 4 sides (no directional bias)
+     - 0 1px 2px = tight contact line for grounding
+     - inset top white + bottom warm + 0.5px ink rim = iOS 26 chrome
+     overflow: hidden kept (so the bottom fade ::after can clip cleanly
+     to the rounded panel edge). The halo extends OUTSIDE the panel so
+     it isn't affected by overflow: hidden. */
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgba(20, 19, 15, 0.05),
+    0 0 32px rgba(20, 19, 15, 0.04),
+    0 6px 18px rgba(20, 19, 15, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08);
   /* GRID instead of flex — `auto 1fr` gives .msg-list-body the
      literal remaining space. No more flex algorithm ambiguity. */
   display: grid;
@@ -38,13 +53,36 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  /* v59 — establish positioning context for the bottom fade ::after. */
+  position: relative;
+}
+
+/* v62 — fade strip shrunk dramatically per user "太大了, 要缩小高度
+   非常多只有一个小边缘". 48 → 16px = a thin frosted hairline at the
+   panel's bottom rim, not a tall fog band. Just enough to soften the
+   last row's intersection with the rounded corner. */
+.msg-list-pane::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 16px;
+  pointer-events: none;
+  background: transparent;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  border-radius: 0 0 18px 18px;
+  z-index: 2;
 }
 
 .msg-list-pane-header {
-  padding: 20px 18px 14px;
+  /* v59 — chrome compressed (20/18/14 → 14/16/10) so the visible
+     thread list gets ~10px more vertical room above the fold. */
+  padding: 14px 16px 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
@@ -111,35 +149,19 @@
   box-shadow: none;
 }
 
-/* List body — premium scrollbar with breathing space.
-   `scrollbar-gutter: stable both-edges` reserves equal gutter on
-   BOTH sides so content stays visually centered and the blue
-   active highlight has equal left/right margins inside the panel. */
+/* v58 — list body scrollbar HIDDEN (matches /find + /work scroll-hidden
+   pattern). Wheel/drag scroll behavior preserved; visual track + thumb
+   gone for a cleaner premium feel. */
 .msg-list-body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable both-edges;
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface-3) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.msg-list-body::-webkit-scrollbar { width: 12px; }
-.msg-list-body::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 8px 0;
-}
-.msg-list-body::-webkit-scrollbar-thumb {
-  background: var(--surface-3);
-  border-radius: 50vh;
-  border: 4px solid var(--snow);
-  background-clip: padding-box;
-}
-.msg-list-body::-webkit-scrollbar-thumb:hover {
-  background: var(--mist, #d8d4c8);
-  background-clip: padding-box;
-}
+.msg-list-body::-webkit-scrollbar { display: none; }
 
 .msg-list-section-label {
   padding: 16px 16px 6px;
@@ -301,14 +323,22 @@
 /* ── Right pane: conversation thread ─────────────────────── */
 
 .msg-thread-pane {
-  background: var(--snow);
-  border-radius: var(--r-2xl);
-  box-shadow: var(--shadow-1);
+  /* v58 inset → v59 + 4-sided symmetric halo (mirrors .msg-list-pane). */
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgba(20, 19, 15, 0.05),
+    0 0 32px rgba(20, 19, 15, 0.04),
+    0 6px 18px rgba(20, 19, 15, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08);
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  position: relative;
 }
 /* CRITICAL: msg-thread-body MUST get `flex: 1 1 0` (not just 1) and
    `min-height: 0` for scroll to fire reliably. Other children of the
@@ -361,10 +391,11 @@
 
 /* Thread header — sticky top of right pane */
 .msg-thread-header {
+  /* v59 — padding compressed (16/24 → 12/20) for tighter chrome. */
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 24px;
+  padding: 12px 20px;
   border-bottom: 1px solid var(--hairline);
   flex-shrink: 0;
   background: rgba(255,255,255,0.86);
@@ -422,22 +453,22 @@
 .msg-thread-icon-btn:hover { background: var(--surface-3); transform: translate(1px, 1px); }
 .msg-thread-icon-btn:active { transform: translate(2px, 2px) scale(0.96); }
 
-/* Messages scroll area */
+/* v58 — messages scroll area scrollbar HIDDEN.
+   v59 — padding-top tightened (24 → 16) so the first message sits
+   closer to the attribution strip above. */
 .msg-thread-body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 24px 24px 16px;
+  padding: 16px 24px 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.msg-thread-body::-webkit-scrollbar { width: 6px; }
-.msg-thread-body::-webkit-scrollbar-thumb {
-  background: var(--surface-3);
-  border-radius: 50vh;
-}
+.msg-thread-body::-webkit-scrollbar { display: none; }
 
 
 /* Bubble row — wraps avatar + bubble */
@@ -843,9 +874,12 @@ body:has(.ib-page--fullbleed) .dh-main {
      context. */
 .ib-page.ib-page--fullbleed .msg-pane-layout {
   /* Reset base height so the parent grid row (1fr ≈ 100svh) governs.
-     padding: 2vh 0 is the 2% top/bottom breathing room. */
+     padding: 2vh 16px is the breathing room — v59 added 16px horizontal
+     so the panel shadows have room to halo on left/right without being
+     clipped by the sidebar / viewport edge per user
+     "不要被左边的莫名其妙的空间截住". */
   height: auto;
-  padding: 2vh 0;
+  padding: 2vh 16px;
   min-height: 0;
   /* gap between the two panes */
   gap: 24px;
@@ -858,14 +892,21 @@ body:has(.ib-page--fullbleed) .dh-main {
 }
 .ib-page.ib-page--fullbleed .msg-list-pane,
 .ib-page.ib-page--fullbleed .msg-thread-pane {
-  border-radius: 28px;
+  /* v59 — radius 28 → 18 for parity with /find + /work card chrome.
+     border removed (the 0.5px ink rim is now in box-shadow inset). */
+  border-radius: 18px;
   box-shadow:
-    0 1px 2px rgba(10,10,10,0.05),
-    0 0 32px rgba(10,10,10,0.04),
-    0 6px 18px rgba(10,10,10,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.90),
-    inset 0 -1px 0 rgba(10,10,10,0.05);
-  border: 0.5px solid rgba(10,10,10,0.04);
+    0 1px 2px rgba(20, 19, 15, 0.05),
+    0 0 32px rgba(20, 19, 15, 0.04),
+    0 6px 18px rgba(20, 19, 15, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.04),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08);
+  border: none;
+}
+/* v59 — bottom fade radius matches the 18px panel radius in fullbleed. */
+.ib-page.ib-page--fullbleed .msg-list-pane::after {
+  border-radius: 0 0 18px 18px;
 }
 
 /* ── 20× readability bumps — every smallest font moves one rung up ── */
@@ -1050,37 +1091,30 @@ body:has(.ib-page--fullbleed) .dh-main {
    it going?" without leaving the thread. (Replaces the fake AI
    pulse + theatrical suggested replies that previously sat here.) */
 
+/* v59 — attribution banner compressed per user "less overwhelmed".
+   Was a chunky 16px-padded gradient card; now a flat ink-04 strip
+   with no background gradient or 1px border. The numerical stats +
+   progress bar still convey campaign progress, just without the
+   visual heaviness of a separate "panel within a panel".
+   Further tightened in second pass: 12/14 → 10/12 padding + margin
+   12 → 8 to recover ~6px more vertical. */
 .msg-pane-layout .msg-attr-banner {
   flex-shrink: 0;
-  margin: 16px 32px 0;
-  padding: 16px 18px 14px;
-  background: linear-gradient(
-    180deg,
-    var(--surface-2) 0%,
-    var(--snow) 100%
-  );
-  border: 1px solid var(--hairline);
-  border-radius: 16px;
+  margin: 8px 32px 0;
+  padding: 10px 12px;
+  background: rgba(20, 19, 15, 0.03);
+  border: none;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .msg-pane-layout .msg-attr-banner.is-urgent {
-  border-color: rgba(193,18,31,0.32);
-  background: linear-gradient(
-    180deg,
-    rgba(193,18,31,0.04) 0%,
-    var(--snow) 100%
-  );
+  background: rgba(20, 19, 15, 0.04);
 }
 .msg-pane-layout .msg-attr-banner.is-complete {
-  border-color: rgba(31,122,57,0.28);
-  background: linear-gradient(
-    180deg,
-    rgba(31,122,57,0.05) 0%,
-    var(--snow) 100%
-  );
+  background: rgba(20, 19, 15, 0.04);
 }
 
 .msg-pane-layout .msg-attr-row {
@@ -1340,39 +1374,44 @@ body:has(.ib-page--fullbleed) .dh-main {
    unsigned FTC disclosure. Red-tinted left-accent strip with a
    "Sign now →" link into the compliance flow. */
 
+/* v59 — disclosure banner quieted from bright red wash to subtle ink
+   pill per user "less overwhelmed". Still scannable but doesn't shout
+   from the panel. Action link in red as the only color cue (matches
+   Push brand's CTA register). */
 .msg-disclosure-banner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin: 8px 36px 0;
-  padding: 10px 14px;
-  background: rgba(193, 18, 31, 0.06);
-  border-left: 3px solid var(--brand-red);
-  border-radius: 0 8px 8px 0;
+  padding: 8px 14px;
+  background: rgba(20, 19, 15, 0.04);
+  border-left: none;
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
 .msg-disclosure-icon {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   flex-shrink: 0;
-  color: var(--brand-red);
+  color: var(--ink-4);
 }
 
 .msg-disclosure-text {
   flex: 1;
   font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--brand-red);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-3);
 }
 
 .msg-disclosure-link {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   color: var(--brand-red);
   text-decoration: none;
   white-space: nowrap;

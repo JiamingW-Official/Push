@@ -1763,8 +1763,10 @@ body:has(.disc--split-mode) .dh-main {
 
 /* ── Left panel — independently scrollable ── */
 .disc-split-list {
-  /* v57 — scrollbar hidden per user "我的 scrow bar 不需要".
-     Scroll behavior preserved (wheel/drag still works). */
+  /* v57 — scrollbar hidden.
+     v60 — position: relative so the ::after bottom-fade pseudo can
+     anchor inside this scroll container. Mirror of the inbox
+     .msg-list-pane fade pattern (refined liquid-glass version). */
   flex: 1 1 0%;
   min-width: 0;
   min-height: 0;
@@ -1775,9 +1777,15 @@ body:has(.disc--split-mode) .dh-main {
   background: transparent;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  position: relative;
 }
 
 .disc-split-list::-webkit-scrollbar { display: none; }
+
+/* v62 — bottom fade REMOVED from .disc-split-list per user "find 那个
+   取消吧". Find map-view list scrolls cards directly to the panel
+   edge with no fade; only inbox keeps the (now-tiny 16px) hairline. */
+
 
 .disc--map-fullscreen .disc-split-list { display: none; }
 

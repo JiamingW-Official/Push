@@ -90,13 +90,19 @@ export default function SubmitPage({
   const allHaveCaption = assets.every((a) => a.caption.trim().length >= 10);
   const allHaveDisclosure = assets.every((a) => a.hasDisclosure);
   const allScheduled = assets.every((a) => a.scheduledAt);
-  const canSubmit = allHaveCaption && allHaveDisclosure && allScheduled && !submitting;
+  const canSubmit =
+    allHaveCaption && allHaveDisclosure && allScheduled && !submitting;
 
   async function handleSubmit() {
     if (!canSubmit) return;
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 700));
-    router.push(`/creator/work/wrap/${campaignId}`);
+    /* v63 — pass ?fresh=1 so the wrap page shows a "Pending verification"
+       banner instead of "Verified · payout released". The user audit
+       flagged that submit → wrap with no intermediate state was confusing
+       (creator wonders "where's my money?"). The fresh state communicates
+       that scans are still being attributed. */
+    router.push(`/creator/work/wrap/${campaignId}?fresh=1`);
   }
 
   return (
@@ -117,7 +123,11 @@ export default function SubmitPage({
         <StageMain>
           {/* Asset roster — full row (each asset row is wide:
               num + body + edit; needs full grid width) */}
-          <StageCard eyebrow="Asset roster" title={`${assets.length} pieces · ${c.merchantName}`} full>
+          <StageCard
+            eyebrow="Asset roster"
+            title={`${assets.length} pieces · ${c.merchantName}`}
+            full
+          >
             <ul className="sub__assets">
               {assets.map((a, i) => (
                 <li key={a.id} className="sub__asset">
@@ -125,7 +135,9 @@ export default function SubmitPage({
                   <div className="sub__asset-body">
                     <div className="sub__asset-head">
                       <span className="sub__asset-type">{a.type}</span>
-                      <span className={`sub__asset-platform sub__asset-platform--${a.platform}`}>
+                      <span
+                        className={`sub__asset-platform sub__asset-platform--${a.platform}`}
+                      >
                         {a.platform}
                       </span>
                       <span className="sub__asset-time">{a.scheduledAt}</span>
@@ -133,16 +145,24 @@ export default function SubmitPage({
                     <p className="sub__asset-caption">{a.caption}</p>
                     <p className="sub__asset-tags">{a.hashtags}</p>
                     <div className="sub__asset-flags">
-                      <span className={`sub__flag sub__flag--${a.hasDisclosure ? "ok" : "warn"}`}>
+                      <span
+                        className={`sub__flag sub__flag--${a.hasDisclosure ? "ok" : "warn"}`}
+                      >
                         {a.hasDisclosure ? "✓ FTC disclosed" : "⚠ Missing #ad"}
                       </span>
                       <span className="sub__flag sub__flag--ok">
                         ✓ Caption {a.caption.trim().length}c
                       </span>
-                      <span className="sub__flag sub__flag--ok">✓ Scheduled</span>
+                      <span className="sub__flag sub__flag--ok">
+                        ✓ Scheduled
+                      </span>
                     </div>
                   </div>
-                  <button type="button" className="sub__asset-edit" aria-label="Edit asset">
+                  <button
+                    type="button"
+                    className="sub__asset-edit"
+                    aria-label="Edit asset"
+                  >
                     Edit
                   </button>
                 </li>
@@ -156,15 +176,33 @@ export default function SubmitPage({
               <StageEligRow
                 status={allHaveDisclosure ? "ok" : "warn"}
                 label="FTC #ad on every asset"
-                meta={allHaveDisclosure ? `${assets.length}/${assets.length}` : `${assets.filter((a) => a.hasDisclosure).length}/${assets.length}`}
+                meta={
+                  allHaveDisclosure
+                    ? `${assets.length}/${assets.length}`
+                    : `${assets.filter((a) => a.hasDisclosure).length}/${assets.length}`
+                }
               />
-              <StageEligRow status="ok" label="Partner tag (@merchant)" meta="3/3" />
-              <StageEligRow status="ok" label="Platform-specific compliance" meta="IG · TT · RN" />
-              <StageEligRow status="ok" label="QR code visible in ≥1 frame" meta="2/3" />
+              <StageEligRow
+                status="ok"
+                label="Partner tag (@merchant)"
+                meta="3/3"
+              />
+              <StageEligRow
+                status="ok"
+                label="Platform-specific compliance"
+                meta="IG · TT · RN"
+              />
+              <StageEligRow
+                status="ok"
+                label="QR code visible in ≥1 frame"
+                meta="2/3"
+              />
             </ul>
             {!allHaveDisclosure && (
               <p className="sub__warn">
-                <strong>1 asset missing FTC #ad.</strong> DisclosureBot will block payout until corrected. Edit the asset above to add the disclosure tag.
+                <strong>1 asset missing FTC #ad.</strong> DisclosureBot will
+                block payout until corrected. Edit the asset above to add the
+                disclosure tag.
               </p>
             )}
           </StageCard>
@@ -176,7 +214,9 @@ export default function SubmitPage({
                 <li key={a.id} className="sub__sched-row">
                   <span className="sub__sched-time">{a.scheduledAt}</span>
                   <span className="sub__sched-body">
-                    <span className="sub__asset-platform sub__asset-platform--${a.platform}">{a.platform}</span>
+                    <span className="sub__asset-platform sub__asset-platform--${a.platform}">
+                      {a.platform}
+                    </span>
                     <span className="sub__sched-type">{a.type}</span>
                   </span>
                 </li>
@@ -190,12 +230,23 @@ export default function SubmitPage({
           <StageRailCard
             variant="primary"
             label="Pre-flight"
-            heading={canSubmit ? "All clear · ready to push" : "1 issue blocking"}
+            heading={
+              canSubmit ? "All clear · ready to push" : "1 issue blocking"
+            }
           >
             <ul className="stg__elig-list">
-              <StageEligRow status={allHaveCaption ? "ok" : "warn"} label="Captions complete" />
-              <StageEligRow status={allHaveDisclosure ? "ok" : "block"} label="FTC disclosure" />
-              <StageEligRow status={allScheduled ? "ok" : "warn"} label="Posting scheduled" />
+              <StageEligRow
+                status={allHaveCaption ? "ok" : "warn"}
+                label="Captions complete"
+              />
+              <StageEligRow
+                status={allHaveDisclosure ? "ok" : "block"}
+                label="FTC disclosure"
+              />
+              <StageEligRow
+                status={allScheduled ? "ok" : "warn"}
+                label="Posting scheduled"
+              />
               <StageEligRow status="ok" label="QR visible in frame" />
             </ul>
           </StageRailCard>
@@ -203,14 +254,20 @@ export default function SubmitPage({
           {/* Final preview note */}
           <StageRailCard label="Final preview" heading="What scanners will see">
             <p className="stg__rail-help">
-              On push, your assets go live at the scheduled times across IG · TikTok · RedNote. Verified scans drive your milestone bonus per v5.4 attribution decay curve.
+              On push, your assets go live at the scheduled times across IG ·
+              TikTok · RedNote. Verified scans drive your milestone bonus per
+              v5.4 attribution decay curve.
             </p>
           </StageRailCard>
 
           {/* CTAs */}
           <StageRailCard label="Submit">
             <StageButtonStack>
-              <StageButton variant="primary" disabled={!canSubmit} onClick={handleSubmit}>
+              <StageButton
+                variant="primary"
+                disabled={!canSubmit}
+                onClick={handleSubmit}
+              >
                 {submitting ? "Submitting…" : "Submit for verification"}
               </StageButton>
               <StageButton variant="ghost">Save and review later</StageButton>

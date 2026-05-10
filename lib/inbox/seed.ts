@@ -985,8 +985,12 @@ export const AVATAR_COLORS: Record<string, string> = {
   P: "var(--cat-fashion-deep, #2c2a26)",
   L: "var(--accent-blue)",
 };
-export const avatarBg = (initial?: string) =>
-  initial ? (AVATAR_COLORS[initial] ?? "var(--ink-3)") : "var(--ink-3)";
+/* v59 — avatar bg unified to single ink shade per user "less overwhelmed".
+   Previously: per-merchant color palette (red/blue/champagne/etc) which
+   added 6+ accent colors to a row, competing with the active-row blue.
+   Now: every avatar is ink-3 with white initial. The ONLY color cue is
+   the active-row's accent-blue underline (cleaner hierarchy). */
+export const avatarBg = (_initial?: string) => "var(--ink-3)";
 
 /* ──────────────────────────────────────────────────────────────
    SYSTEM NOTIFICATIONS

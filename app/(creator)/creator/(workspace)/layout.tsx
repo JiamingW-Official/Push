@@ -28,9 +28,13 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
       <ToastProvider>
         <CommandKProvider>
           <WorkspaceStateProvider>
-            <a href="#cw-main-content" className="dh-skip">
-              Skip to main content
-            </a>
+            {/* v62 — skip link wrapped in <nav> for landmark
+                containment (axe "region" rule). */}
+            <nav aria-label="Skip links">
+              <a href="#cw-main-content" className="dh-skip">
+                Skip to main content
+              </a>
+            </nav>
             <div className="dh-shell">
               <UnifiedSidebar
                 role="creator"
@@ -42,10 +46,15 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
               </main>
             </div>
             {/* Suspense wraps useSearchParams in NotificationsBell for static
-                pre-rendering. Always-mounted on every workspace page. */}
-            <Suspense fallback={null}>
-              <NotificationsBell />
-            </Suspense>
+                pre-rendering. Always-mounted on every workspace page.
+                v62 — wrapped in <aside aria-label="Page utilities"> so the
+                floating bell is contained by a landmark (axe rule
+                "all page content must live inside a landmark"). */}
+            <aside aria-label="Page utilities">
+              <Suspense fallback={null}>
+                <NotificationsBell />
+              </Suspense>
+            </aside>
             {/* Mobile bottom nav — display:none on >=768px (CSS handles it). */}
             <MobileBottomNav />
             {/* ⌘K palette — listens at document level, renders modal when open. */}

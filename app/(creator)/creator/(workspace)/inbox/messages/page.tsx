@@ -783,32 +783,12 @@ export default function InboxMessagesPage() {
                   {active.campaign ? ` · ${active.campaign.toUpperCase()}` : ""}
                 </p>
               </div>
+              {/* v59 — header actions reduced from 3 icons (star + voice
+                  call + info) → just info per user "less overwhelmed". Star
+                  + voice-call were rare-flow; users star via long-press on
+                  the row instead. Info opens the side detail drawer where
+                  star + call still live. */}
               <div className="msg-thread-header-actions">
-                <button
-                  type="button"
-                  className={`msg-thread-icon-btn${active.starred ? " is-starred" : ""}`}
-                  onClick={() => toggleStar(active.id)}
-                  aria-label={
-                    active.starred ? "Unstar conversation" : "Star conversation"
-                  }
-                  aria-pressed={!!active.starred}
-                  title={
-                    active.starred
-                      ? "Unstar (anchor off)"
-                      : "Star (anchor to top)"
-                  }
-                >
-                  <StarIcon filled={!!active.starred} />
-                </button>
-                <button
-                  type="button"
-                  className="msg-thread-icon-btn"
-                  aria-label="Voice call"
-                  title="Voice call (launching Q3)"
-                  onClick={handleCall}
-                >
-                  <PhoneIcon />
-                </button>
                 <button
                   type="button"
                   className={`msg-thread-icon-btn${infoOpen ? " is-active" : ""}`}
