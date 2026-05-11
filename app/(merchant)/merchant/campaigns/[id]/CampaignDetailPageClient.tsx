@@ -290,13 +290,20 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
 
   /* QR origin + scan stats + QR image generation */
   useEffect(() => {
+    // Prefer the configured render URL so QR codes never encode localhost
+    const renderUrl = process.env.NEXT_PUBLIC_RENDER_URL;
     const origin = window.location.origin;
-    setQrOrigin(origin);
+    const baseUrl =
+      renderUrl ??
+      (origin.includes("localhost")
+        ? "https://push-six-flax.vercel.app"
+        : origin);
+    setQrOrigin(baseUrl);
     const cid = campaign?.id;
     if (!cid) return;
 
     // Generate QR using npm qrcode package
-    const scanUrl = `${origin}/scan/${cid}`;
+    const scanUrl = `${baseUrl}/scan/${cid}`;
     import("qrcode")
       .then((QRCode) =>
         QRCode.toDataURL(scanUrl, {
@@ -1157,54 +1164,11 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
             </ul>
           </div>
 
-          {/* Controls card — white */}
-          <div className="mcd-controls">
-            <p className="mcd-controls__eyebrow">Campaign</p>
-            <p
-              className={`mcd-controls__status mcd-controls__status--${badgeStatus}`}
-            >
-              {badgeStatus.charAt(0).toUpperCase() + badgeStatus.slice(1)}
-            </p>
-            <ul className="mcd-controls__rows">
-              <li className="mcd-controls__row">
-                <span
-                  className={`mcd-controls__dot ${statusDotClass[badgeStatus] ?? "mcd-controls__dot--gray"}`}
-                />
-                <span className="mcd-controls__lbl">Status</span>
-                <span className="mcd-controls__val">
-                  {campaign.status?.toUpperCase() ?? "—"}
-                </span>
-              </li>
-              <li className="mcd-controls__row">
-                <span className="mcd-controls__dot mcd-controls__dot--green" />
-                <span className="mcd-controls__lbl">Creators</span>
-                <span className="mcd-controls__val">
-                  {acceptedCreators} / {maxCreators || "∞"}
-                </span>
-              </li>
-              <li className="mcd-controls__row">
-                <span
-                  className={`mcd-controls__dot ${daysRemaining(campaign.end_date) < 7 ? "mcd-controls__dot--orange" : "mcd-controls__dot--green"}`}
-                />
-                <span className="mcd-controls__lbl">Days left</span>
-                <span className="mcd-controls__val">
-                  {daysRemaining(campaign.end_date)}
-                </span>
-              </li>
-            </ul>
-
-            <div className="mcd-cta-stack">
-              <CampaignActions
-                initialStatus={normalizeActionStatus(campaign.status)}
-              />
-            </div>
-          </div>
-
-          {/* QR card — upgraded with npm qrcode */}
+          {/* QR card — prominent second position so it's always visible */}
           {(() => {
             const scanUrl = qrOrigin
               ? `${qrOrigin}/scan/${campaign.id}`
-              : `https://pushnyc.co/scan/${campaign.id}`;
+              : `https://push-six-flax.vercel.app/scan/${campaign.id}`;
             const displayUrl =
               scanUrl.replace(/^https?:\/\//, "").slice(0, 36) +
               (scanUrl.length > 44 ? "…" : "");
@@ -1267,6 +1231,49 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
               </div>
             );
           })()}
+
+          {/* Controls card — white */}
+          <div className="mcd-controls">
+            <p className="mcd-controls__eyebrow">Campaign</p>
+            <p
+              className={`mcd-controls__status mcd-controls__status--${badgeStatus}`}
+            >
+              {badgeStatus.charAt(0).toUpperCase() + badgeStatus.slice(1)}
+            </p>
+            <ul className="mcd-controls__rows">
+              <li className="mcd-controls__row">
+                <span
+                  className={`mcd-controls__dot ${statusDotClass[badgeStatus] ?? "mcd-controls__dot--gray"}`}
+                />
+                <span className="mcd-controls__lbl">Status</span>
+                <span className="mcd-controls__val">
+                  {campaign.status?.toUpperCase() ?? "—"}
+                </span>
+              </li>
+              <li className="mcd-controls__row">
+                <span className="mcd-controls__dot mcd-controls__dot--green" />
+                <span className="mcd-controls__lbl">Creators</span>
+                <span className="mcd-controls__val">
+                  {acceptedCreators} / {maxCreators || "∞"}
+                </span>
+              </li>
+              <li className="mcd-controls__row">
+                <span
+                  className={`mcd-controls__dot ${daysRemaining(campaign.end_date) < 7 ? "mcd-controls__dot--orange" : "mcd-controls__dot--green"}`}
+                />
+                <span className="mcd-controls__lbl">Days left</span>
+                <span className="mcd-controls__val">
+                  {daysRemaining(campaign.end_date)}
+                </span>
+              </li>
+            </ul>
+
+            <div className="mcd-cta-stack">
+              <CampaignActions
+                initialStatus={normalizeActionStatus(campaign.status)}
+              />
+            </div>
+          </div>
 
           {/* Meta card — small glass */}
           <div className="mcd-meta">
