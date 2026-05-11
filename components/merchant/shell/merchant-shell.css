@@ -7,7 +7,9 @@
    ============================================================ */
 
 .ms-shell {
-  background: var(--snow);
+  /* Warm cream matches creator workspace — makes liquid-glass effects
+     visible and gives the merchant portal the same premium warmth. */
+  background: var(--surface);
   min-height: 100svh;
 }
 
@@ -322,7 +324,7 @@
   background: var(--snow);
   margin-left: 72px;
   min-height: 100svh;
-  padding: 48px 15%;
+  padding: 24px 6%;
 }
 
 .ms-mobile-toggle {
@@ -372,7 +374,8 @@
 
   .ms-main-content {
     margin-left: 0;
-    padding: 32px 15% 80px;
+    /* 72px top clears the fixed mobile toggle (top:16px + 44px height = 60px + breathing room) */
+    padding: 72px 5% 64px;
   }
 
   .ms-mobile-toggle {
@@ -392,7 +395,7 @@
 
 @media (max-width: 768px) {
   .ms-main-content {
-    padding: 24px 15% 80px;
+    padding: 72px 16px 64px;
   }
 }
 

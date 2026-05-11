@@ -121,6 +121,8 @@ export type CreatorApplication = {
   confirmedDeliver?: boolean;
   /** v13 — confirmed FTC disclosure. */
   confirmedDisclose?: boolean;
+  /** Server-side UUID from playtestApplications (used to poll approval status). */
+  serverAppId?: string;
 
   /* ── v16 lifecycle timestamps ─────────────────────────────── */
   /** Stage 2 — merchant accepted at this time. */
@@ -186,8 +188,38 @@ async function mockFetcher(): Promise<CreatorApplication[]> {
     responseEta: RESPONSE_ETA[i] ?? "—",
   }));
 
+  // Fetch server-side playtest statuses so merchant approvals show up on creator side.
+  const serverStatusMap: Record<string, string> = {};
+  try {
+    const res = await fetch("/api/creator/live-applications");
+    if (res.ok) {
+      const json = (await res.json()) as {
+        applications: Array<{ campaignId: string; status: string }>;
+      };
+      for (const a of json.applications ?? []) {
+        serverStatusMap[a.campaignId] = a.status;
+      }
+    }
+  } catch {
+    // best-effort
+  }
+
+  const playtestStatusMap: Record<string, ApplicationStatus> = {
+    accepted: "accepted",
+    declined: "declined",
+    pending: "reviewing",
+    shortlisted: "reviewing",
+  };
+
   // Live applications first (just-applied rows go to the top).
-  const live = getLiveApplications();
+  // Override status with server truth when merchant has made a decision.
+  const live = getLiveApplications().map((app) => {
+    const serverStatus = serverStatusMap[app.campaignId];
+    if (serverStatus && playtestStatusMap[serverStatus]) {
+      return { ...app, status: playtestStatusMap[serverStatus] };
+    }
+    return app;
+  });
   // De-dup by campaignId — if user re-applies, live row replaces seed.
   const liveCampaignIds = new Set(live.map((a) => a.campaignId));
   const seedFiltered = seed.filter((a) => !liveCampaignIds.has(a.campaignId));

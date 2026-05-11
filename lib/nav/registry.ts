@@ -124,22 +124,29 @@ export const CREATOR_SECONDARY: NavLink[] = [
 // ---------------------------------------------------------------------------
 
 export const MERCHANT_PRIMARY: NavLink[] = [
-  { label: "Dashboard", href: "/merchant/dashboard", icon: "⬡" },
-  { label: "Campaigns", href: "/merchant/campaigns/new", icon: "◈" },
-  { label: "QR Codes", href: "/merchant/qr-codes", icon: "⊞" },
-  { label: "Redeem", href: "/merchant/redeem", icon: "◇" },
-  { label: "Applicants", href: "/merchant/applicants", icon: "◓" },
-  { label: "Analytics", href: "/merchant/analytics", icon: "◉" },
+  { label: "Dashboard", href: "/merchant/dashboard", icon: "⬡", prefix: true },
+  { label: "Campaigns", href: "/merchant/campaigns", icon: "◈", prefix: true },
+  {
+    label: "Applicants",
+    href: "/merchant/applicants",
+    icon: "◓",
+    prefix: true,
+  },
+  {
+    label: "Operations",
+    href: "/merchant/operations",
+    icon: "⊞",
+    prefix: true,
+  },
+  { label: "Analytics", href: "/merchant/analytics", icon: "◉", prefix: true },
 ];
 
 export const MERCHANT_SECONDARY: NavLink[] = [
-  { label: "Locations", href: "/merchant/locations", prefix: true },
-  { label: "Payments", href: "/merchant/payments" },
-  { label: "Billing", href: "/merchant/billing" },
-  { label: "Integrations", href: "/merchant/integrations", prefix: true },
-  { label: "Disputes", href: "/merchant/disputes", prefix: true },
+  { label: "Finance", href: "/merchant/finance", prefix: true },
   { label: "Messages", href: "/merchant/messages" },
-  { label: "Notifications", href: "/merchant/notifications" },
+  { label: "Locations", href: "/merchant/locations", prefix: true },
+
+  { label: "Integrations", href: "/merchant/integrations", prefix: true },
   { label: "Settings", href: "/merchant/settings" },
 ];
 

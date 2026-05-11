@@ -56,7 +56,7 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
      bleed buffer for row-3 mini-cards. */
   margin-top: 0;
   margin-bottom: 0;
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 32px;
   background: var(--snow, #fff);
   height: 100%;
@@ -79,7 +79,7 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 }
 .work-hero--compact .work-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(32px, 3.2vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.98;
@@ -273,7 +273,18 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 .work-bento > * { min-height: 0; }
 
 @media (max-width: 1024px) {
-  .work-hub { height: auto; overflow: visible; }
+  /* Release the 100svh lock so the hub scrolls on iPad */
+  html:has(.work-hub),
+  body:has(.work-hub) {
+    overflow: auto !important;
+    height: auto !important;
+  }
+  body:has(.dh-shell) .dh-main:has(.work-hub) {
+    height: auto !important;
+    overflow: auto !important;
+    min-height: 100svh;
+  }
+  .work-hub { height: auto !important; overflow: visible !important; }
   .work-bento { grid-template-rows: auto; grid-auto-rows: minmax(240px, auto); }
 }
 @media (max-width: 768px) {
@@ -886,12 +897,9 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 .work-chart-bottom--velocity .tc__totals {
   gap: 8px;
 }
-/* v47 — match "82 gigs" hero size to .work-pay__hero-num "$940" so the
-   two row-2 hero numerals read as the SAME hero family (per user
-   "82 gigs 和 $940 要高度一样，大小一样"). Default tc__total-num is
-   clamp(28-40px); bumped here to clamp(36-52px) to match $940. */
+/* Velocity hero — "82 gigs" matches pay panel size. */
 .work-chart-bottom--velocity .tc__total-num {
-  font-size: clamp(36px, 3.6vw, 52px);
+  font-size: clamp(22px, 2.2vw, 34px);
   letter-spacing: -0.028em;
   color: var(--ink, #111);
 }
@@ -1007,15 +1015,10 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   outline-offset: 2px;
 }
 .work-pay__hero-num {
-  /* Pin min-width to approximately "$940"'s rendered width so the eye
-     toggle hugs the number tightly on the right. 2.6em ≈ 135px @ 52px
-     font / 94px @ 36px font — scales with the responsive font-size so
-     the eye stays close to the digits at every viewport. min-width
-     prevents the left-shift when content masks to "****". */
   display: inline-block;
   min-width: 2.6em;
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(36px, 3.6vw, 52px);
+  font-size: clamp(22px, 2.2vw, 34px);
   font-weight: 800;
   letter-spacing: -0.028em;
   line-height: 1;
@@ -1250,9 +1253,8 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 }
 
 .work-next__time {
-  /* v31 — hero numeral, bigger than original 64px but safe for panel height */
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 76px);
+  font-size: clamp(32px, 3.4vw, 56px);
   font-weight: 800;
   letter-spacing: -0.032em;
   line-height: 0.92;
@@ -1364,7 +1366,7 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
   display: flex; flex-direction: column; gap: 8px;
 }
 .work-next--mega .work-next__time {
-  font-size: clamp(64px, 7vw, 112px);
+  font-size: clamp(40px, 4.2vw, 64px);
   letter-spacing: -0.04em;
   line-height: 0.92;
   margin: 0;
@@ -1632,11 +1634,8 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 .work-mini__icon-fill svg { width: 16px; height: 16px; }
 
 .work-mini__num {
-  /* v47 — clamp(24,2vw,30) tightened from v33's clamp(28,2.4vw,36) to
-     suit the reduced row height. Still anchor-class but right-sized
-     for a compact nav strip rather than a content row. */
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(24px, 2vw, 30px);
+  font-size: clamp(16px, 1.4vw, 22px);
   font-weight: 800;
   letter-spacing: -0.022em;
   color: var(--ink, #111);
@@ -1854,13 +1853,13 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
    numbers". Bumped eyebrow + sub to fix the awkward extreme contrast. */
 
 .work-bento .kpb__value {
-  font-size: clamp(48px, 4.6vw, 68px) !important;
+  font-size: clamp(28px, 2.8vw, 44px) !important;
   letter-spacing: -0.028em;
   line-height: 0.92;
 }
 
 .work-bento .kpb--compact .kpb__value {
-  font-size: clamp(48px, 4.6vw, 68px) !important;
+  font-size: clamp(28px, 2.8vw, 44px) !important;
 }
 
 .work-bento .kpb__eyebrow {
@@ -2713,7 +2712,7 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 
 .work-nextmove__verb {
   font-family: var(--font-darky, sans-serif);
-  font-size: clamp(40px, 6vw, 56px);
+  font-size: clamp(26px, 3.2vw, 40px);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
@@ -2993,3 +2992,106 @@ body:has(.dh-shell) .dh-main:has(.work-hub) {
 .bento--gigrail .bento__body::-webkit-scrollbar {
   display: none;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Wave 12 — Liquid Glass atmosphere + layout diversity
+   2026-05-10
+
+   Root fix: .work-hub was `background: #fff` which hid the
+   atmospheric ::before. Transparent hub reveals the 5-ellipse
+   orange/champagne haze so bento glass reads as genuine liquid
+   glass instead of flat-white panels.
+
+   Radius diversity: "kissing corners" — adjacent cards share a
+   reduced corner at their shared edge for a fluid, non-uniform feel.
+
+   Mini-card palette: restores per-tile color wash (champagne /
+   green / blue) overriding v47 unified-ink.
+   ══════════════════════════════════════════════════════════════ */
+
+/* 1 — Remove white blocker so atmospheric haze shows through */
+.work-hub { background: transparent; }
+
+/* 2 — Strengthen atmospheric backdrop (white base + larger alpha) */
+.work-hub::before {
+  background:
+    radial-gradient(ellipse 72vw 62vh at 80% 14%,  rgba(255,  94,  43, 0.13), transparent 60%),
+    radial-gradient(ellipse 62vw 58vh at 14% 28%,  rgba(191, 161, 112, 0.16), transparent 62%),
+    radial-gradient(ellipse 56vw 52vh at 86% 70%,  rgba(176, 133,  96, 0.10), transparent 65%),
+    radial-gradient(ellipse 84vw 44vh at 48% 104%, rgba(248, 244, 232, 0.72), transparent 68%),
+    radial-gradient(ellipse 38vw 32vh at 22%  90%, rgba(193,  18,  31, 0.05), transparent 74%),
+    rgba(255, 255, 255, 1);
+}
+
+/* 3 — Richer glass on neutral bento cards (not ink, not champagne) */
+.work-bento .bento:not(.bento--solid-ink):not(.bento--accent-champagne) {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(32px) saturate(1.55);
+  -webkit-backdrop-filter: blur(32px) saturate(1.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.90),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 2px 4px rgba(60, 45, 30, 0.05),
+    0 12px 40px rgba(60, 45, 30, 0.09);
+}
+
+/* Champagne Pay card — keep warm tint, add blur pass */
+.work-bento .bento--accent-champagne {
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+}
+
+/* 4 — Kissing-corner radius diversity
+        Child order: NxtMove[1] | Gigs[2] | Pulse[3] | Velocity[4] | Pay[5]
+        Mini cards: champagne[6] | green[7] | ok[8] | ink[9]          */
+/* Row-1: Gigs ↔ Pulse share inner top corner */
+.work-bento > :nth-child(2) { border-radius: 22px 14px 22px 22px; }
+.work-bento > :nth-child(3) { border-radius: 14px 22px 22px 22px; }
+/* Row-2: Velocity ↔ Pay share inner bottom corner */
+.work-bento > :nth-child(4) { border-radius: 22px 22px 14px 22px; }
+.work-bento > :nth-child(5) { border-radius: 22px 22px 22px 14px; }
+/* Row-3 mini cards — alternating left/right chamfer */
+.work-bento > :nth-child(6) { border-radius: 22px 14px 14px 22px; }
+.work-bento > :nth-child(7) { border-radius: 14px 22px 22px 14px; }
+.work-bento > :nth-child(8) { border-radius: 22px 14px 14px 22px; }
+.work-bento > :nth-child(9) { border-radius: 14px 22px 22px 14px; }
+
+/* 5 — Restore mini-card color palette (overrides v47 unified-ink) */
+.work-mini--champagne {
+  --mini-wash: rgba(191, 161, 112, 0.22);
+  --mini-glow: rgba(191, 161, 112, 0.18);
+}
+.work-mini--champagne .work-mini__icon-fill {
+  background: var(--champagne, #bfa170);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(120, 80, 20, 0.30);
+}
+.work-mini--champagne .work-mini__num { color: #7a5318; }
+
+.work-mini--green {
+  --mini-wash: rgba(74, 222, 128, 0.18);
+  --mini-glow: rgba(74, 222, 128, 0.14);
+}
+.work-mini--green .work-mini__icon-fill {
+  background: #22c55e;
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
+    0 1px 2px rgba(20, 80, 30, 0.25);
+}
+.work-mini--green .work-mini__num { color: #15803d; }
+
+.work-mini--ok {
+  --mini-wash: rgba(0, 133, 255, 0.12);
+  --mini-glow: rgba(0, 133, 255, 0.10);
+}
+.work-mini--ok .work-mini__icon-fill {
+  background: #0085ff;
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
+    0 1px 2px rgba(0, 60, 120, 0.25);
+}
+.work-mini--ok .work-mini__num { color: #0060cc; }

@@ -4,7 +4,7 @@
    ============================================================ */
 
 .me-hub {
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 8px;
   margin-bottom: -88px;
   background: var(--snow, #fff);
@@ -32,8 +32,8 @@
   grid-template-columns: 1fr auto;
   align-items: end;
   column-gap: 32px;
-  padding: 16px 0 20px;
-  margin-bottom: 20px;
+  padding: 8px 0 12px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--mist, #d8d4c8);
 }
 
@@ -63,7 +63,7 @@
 
 .me-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(32px, 3.2vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.98;
@@ -172,7 +172,7 @@
 
 .me-tier__score {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(40px, 4.4vw, 56px);
+  font-size: clamp(28px, 3.0vw, 44px);
   font-weight: 800;
   letter-spacing: -0.024em;
   line-height: 1;

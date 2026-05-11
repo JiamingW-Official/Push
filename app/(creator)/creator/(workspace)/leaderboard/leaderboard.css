@@ -168,7 +168,7 @@
 
 .lb-hero-title {
   font-family: var(--font-body);
-  font-size: clamp(56px, 10vw, 120px);
+  font-size: clamp(40px, 4.2vw, 64px);
   font-weight: 900;
   letter-spacing: -0.06em;
   line-height: 0.9;
@@ -185,7 +185,7 @@
 
 .lb-hero-rank {
   font-family: var(--font-body);
-  font-size: clamp(48px, 6vw, 72px);
+  font-size: clamp(32px, 3.4vw, 52px);
   font-weight: 900;
   letter-spacing: -0.04em;
   color: var(--champagne);
@@ -954,7 +954,7 @@
 
 @media (max-width: 480px) {
   .lb-hero-title {
-    font-size: clamp(48px, 14vw, 80px);
+    font-size: clamp(32px, 8vw, 56px);
   }
 
   .lb-podium {

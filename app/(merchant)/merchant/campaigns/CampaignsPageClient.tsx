@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { KPICard, PageHeader } from "@/components/merchant/shared";
+import { PageHeader } from "@/components/merchant/shared";
 import type { Campaign } from "@/lib/data/types";
 import { mockStore } from "@/lib/data/mock-store";
 import { CampaignsListClient } from "./CampaignsListClient";
@@ -76,14 +76,26 @@ export default function CampaignsPageClient({
         }
       />
 
-      <section className="cl-kpi-row" aria-label="Campaign KPIs">
-        <KPICard label="Active Campaigns" value={activeCampaigns} />
-        <KPICard label="MTD Spend" value={formatUsd(mtdSpend)} />
-        <KPICard
-          label="Total Reach"
-          value={numberOrZero(totalReach).toLocaleString("en-US")}
-        />
-      </section>
+      <div className="cl-stat-band" aria-label="Campaign overview">
+        <div className="cl-stat-band__cell">
+          <span className="cl-stat-band__num cl-stat-band__num--red">
+            {activeCampaigns}
+          </span>
+          <span className="cl-stat-band__label">Active Campaigns</span>
+        </div>
+        <div className="cl-stat-band__rule" aria-hidden="true" />
+        <div className="cl-stat-band__cell">
+          <span className="cl-stat-band__num">{formatUsd(mtdSpend)}</span>
+          <span className="cl-stat-band__label">MTD Spend</span>
+        </div>
+        <div className="cl-stat-band__rule" aria-hidden="true" />
+        <div className="cl-stat-band__cell">
+          <span className="cl-stat-band__num cl-stat-band__num--blue">
+            {numberOrZero(totalReach).toLocaleString("en-US")}
+          </span>
+          <span className="cl-stat-band__label">Total Reach</span>
+        </div>
+      </div>
 
       <CampaignsListClient campaigns={campaigns} />
     </div>

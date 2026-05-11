@@ -14,10 +14,11 @@
    with mock fallback for demo).
    ============================================================ */
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
-import { MOCK_CAMPAIGNS } from "@/lib/mocks/campaigns";
+import { MOCK_CAMPAIGNS, type Campaign } from "@/lib/mocks/campaigns";
+import { enrichCampaign } from "@/lib/data/live-campaigns";
 import {
   totalNormalizedPay,
   estimatedHours,
@@ -50,7 +51,11 @@ function nextWindows(): { iso: string; day: string; time: string }[] {
   for (let i = 1; i <= 2; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
-    const day = d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    const day = d.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
     for (const s of slots) {
       const wd = new Date(d);
       wd.setHours(s.hour, 0, 0, 0);
@@ -66,9 +71,28 @@ export default function ApplyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const c = MOCK_CAMPAIGNS.find((x) => x.id === id);
-  if (!c) notFound();
-  const campaignId = c.id;
+
+  // Hooks must be declared before any early return. Try MOCK_CAMPAIGNS first;
+  // fall back to the live-campaigns API for merchant-created playtest campaigns.
+  const [campaign, setCampaign] = useState<Campaign | null>(
+    () => MOCK_CAMPAIGNS.find((x) => x.id === id) ?? null,
+  );
+  const [loadingCampaign, setLoadingCampaign] = useState(
+    () => !MOCK_CAMPAIGNS.find((x) => x.id === id),
+  );
+  const [notFoundState, setNotFoundState] = useState(false);
+
+  useEffect(() => {
+    if (campaign) return;
+    fetch(`/api/creator/live-campaigns?id=${encodeURIComponent(id)}`)
+      .then((r) => r.json())
+      .then(({ campaign: live }: { campaign: Campaign | null }) => {
+        if (live) setCampaign(enrichCampaign(live));
+        else setNotFoundState(true);
+      })
+      .catch(() => setNotFoundState(true))
+      .finally(() => setLoadingCampaign(false));
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const router = useRouter();
 
@@ -79,12 +103,34 @@ export default function ApplyPage({
   const [submitting, setSubmitting] = useState(false);
 
   const windows = useMemo(() => nextWindows(), []);
+
+  if (loadingCampaign) {
+    return (
+      <div
+        style={{
+          padding: "80px 40px",
+          color: "var(--ink-4)",
+          fontFamily: "var(--font-body)",
+        }}
+      >
+        Loading campaign…
+      </div>
+    );
+  }
+  if (notFoundState || !campaign) return notFound();
+
+  const c = campaign;
+  const campaignId = c.id;
+
   const totalPay = totalNormalizedPay(c.cashPay, c.deliverables);
   const totalHours = estimatedHours(c.deliverables);
   const hourly = effectiveHourlyRate(c.cashPay, c.deliverables);
   const counterClass =
-    pitch.length > PITCH_MAX ? "apl__pitch-counter--over" :
-    pitch.length > PITCH_MAX * 0.85 ? "apl__pitch-counter--warn" : "";
+    pitch.length > PITCH_MAX
+      ? "apl__pitch-counter--over"
+      : pitch.length > PITCH_MAX * 0.85
+        ? "apl__pitch-counter--warn"
+        : "";
 
   const stepsDone =
     (pitch.trim().length > 0 ? 1 : 0) +
@@ -119,14 +165,20 @@ export default function ApplyPage({
         body: JSON.stringify({ campaign_id: campaignId }),
       });
       if (res.ok) {
-        const data: { application_id?: string; success?: boolean } =
-          await res.json().catch(() => ({}));
-        router.push(`/creator/work/confirmed/${data.application_id ?? campaignId}`);
+        const data: { application_id?: string; success?: boolean } = await res
+          .json()
+          .catch(() => ({}));
+        router.push(
+          `/creator/work/confirmed/${data.application_id ?? campaignId}`,
+        );
         return;
       }
       console.warn("[apply] POST /api/creator/apply non-OK", res.status);
     } catch (e) {
-      console.warn("[apply] POST /api/creator/apply unavailable, mock redirect", e);
+      console.warn(
+        "[apply] POST /api/creator/apply unavailable, mock redirect",
+        e,
+      );
     }
     await new Promise((r) => setTimeout(r, 400));
     router.push(`/creator/work/confirmed/${campaignId}`);
@@ -162,7 +214,9 @@ export default function ApplyPage({
                 onChange={(e) => setPitch(e.target.value)}
                 aria-label="Pitch text"
               />
-              <p className={`apl__pitch-counter ${counterClass}`}>{pitch.length} / {PITCH_MAX}</p>
+              <p className={`apl__pitch-counter ${counterClass}`}>
+                {pitch.length} / {PITCH_MAX}
+              </p>
             </div>
           </StageStep>
 
@@ -206,11 +260,15 @@ export default function ApplyPage({
                 I&apos;ll deliver{" "}
                 {c.deliverables.map((d, i) => (
                   <span key={i}>
-                    <strong>{d.count}× {d.type}</strong>
+                    <strong>
+                      {d.count}× {d.type}
+                    </strong>
                     {i < c.deliverables.length - 1 ? " + " : ""}
                   </span>
                 ))}{" "}
-                within the merchant&apos;s deadline window. I understand the QR code at the register is the attribution mechanism — I will include it in at least one frame.
+                within the merchant&apos;s deadline window. I understand the QR
+                code at the register is the attribution mechanism — I will
+                include it in at least one frame.
               </span>
             </label>
           </StageStep>
@@ -221,9 +279,15 @@ export default function ApplyPage({
             title="FTC compliance."
           >
             <div className="apl__ftc">
-              <span className="apl__ftc-h">DisclosureBot will auto-check at Submit</span>
+              <span className="apl__ftc-h">
+                DisclosureBot will auto-check at Submit
+              </span>
               <p>
-                Every post must carry an FTC-compliant partner disclosure. Push&apos;s DisclosureBot checks for <strong>#ad</strong> + the merchant&apos;s partner tag at the Submit stage. If a post is missing disclosure, payment holds until corrected — this protects you and the merchant.
+                Every post must carry an FTC-compliant partner disclosure.
+                Push&apos;s DisclosureBot checks for <strong>#ad</strong> + the
+                merchant&apos;s partner tag at the Submit stage. If a post is
+                missing disclosure, payment holds until corrected — this
+                protects you and the merchant.
               </p>
               <label className="apl__ftc-check">
                 <input
@@ -232,7 +296,8 @@ export default function ApplyPage({
                   onChange={(e) => setDiscloseOk(e.target.checked)}
                 />
                 <span className="apl__confirm-text">
-                  I understand my posts must include FTC disclosure (#ad + partner tag) before payout releases.
+                  I understand my posts must include FTC disclosure (#ad +
+                  partner tag) before payout releases.
                 </span>
               </label>
             </div>
@@ -240,7 +305,9 @@ export default function ApplyPage({
 
           {/* CTA row — full-width, asymmetric */}
           <div className="apl__cta-row">
-            <StageButton variant="ghost" full={false}>Save draft</StageButton>
+            <StageButton variant="ghost" full={false}>
+              Save draft
+            </StageButton>
             <button
               type="button"
               className="stg__btn stg__btn--primary stg__btn--full"
@@ -251,10 +318,16 @@ export default function ApplyPage({
             </button>
           </div>
           <p className="apl__cta-meta">
-            Merchant review · usually within 24 hours · we&apos;ll notify you when they reply
+            Merchant review · usually within 24 hours · we&apos;ll notify you
+            when they reply
           </p>
 
-          <Link href={`/creator/work/confirmed/${campaignId}`} prefetch={false} aria-hidden style={{ display: "none" }}>
+          <Link
+            href={`/creator/work/confirmed/${campaignId}`}
+            prefetch={false}
+            aria-hidden
+            style={{ display: "none" }}
+          >
             next
           </Link>
         </StageMain>
@@ -269,7 +342,9 @@ export default function ApplyPage({
               <div className="apl__rail-summary-body">
                 <span className="apl__rail-merchant">{c.merchantName}</span>
                 <span className="apl__rail-title">{c.title}</span>
-                <span className="apl__rail-loc">{c.neighborhood} · {c.distanceMi}mi</span>
+                <span className="apl__rail-loc">
+                  {c.neighborhood} · {c.distanceMi}mi
+                </span>
               </div>
             </div>
           </StageRailCard>
@@ -277,8 +352,14 @@ export default function ApplyPage({
           {/* Pay snapshot */}
           <StageRailCard label="Pay snapshot">
             <ul className="stg__pay-list">
-              <StagePayRow label="Total payout" value={`$${totalPay.toFixed(0)}`} />
-              <StagePayRow label="Est. hours" value={`${totalHours.toFixed(1)}h`} />
+              <StagePayRow
+                label="Total payout"
+                value={`$${totalPay.toFixed(0)}`}
+              />
+              <StagePayRow
+                label="Est. hours"
+                value={`${totalHours.toFixed(1)}h`}
+              />
               <StagePayRow label="Effective rate" value={`$${hourly}/hr`} />
             </ul>
           </StageRailCard>
@@ -286,27 +367,65 @@ export default function ApplyPage({
           {/* Step progress */}
           <StageRailCard label="Steps complete" heading={`${stepsDone} of 4`}>
             <ul className="stg__elig-list">
-              <StageEligRow status={pitch.trim().length > 0 ? "ok" : "info"} label="Pitch" meta={pitch.trim().length > 0 ? `${pitch.length} chars` : "optional"} />
-              <StageEligRow status={picked.length >= 1 ? "ok" : "warn"} label="Availability" meta={`${picked.length} window${picked.length === 1 ? "" : "s"}`} />
-              <StageEligRow status={confirmed ? "ok" : "warn"} label="Scope confirmed" />
-              <StageEligRow status={discloseOk ? "ok" : "warn"} label="FTC disclosure" />
+              <StageEligRow
+                status={pitch.trim().length > 0 ? "ok" : "info"}
+                label="Pitch"
+                meta={
+                  pitch.trim().length > 0 ? `${pitch.length} chars` : "optional"
+                }
+              />
+              <StageEligRow
+                status={picked.length >= 1 ? "ok" : "warn"}
+                label="Availability"
+                meta={`${picked.length} window${picked.length === 1 ? "" : "s"}`}
+              />
+              <StageEligRow
+                status={confirmed ? "ok" : "warn"}
+                label="Scope confirmed"
+              />
+              <StageEligRow
+                status={discloseOk ? "ok" : "warn"}
+                label="FTC disclosure"
+              />
             </ul>
           </StageRailCard>
 
           {/* Timeline */}
-          <StageRailCard label="What happens next" help="Merchants reply within 24h on average. If accepted, you go straight to Confirmed with QR code + briefing pack ready.">
+          <StageRailCard
+            label="What happens next"
+            help="Merchants reply within 24h on average. If accepted, you go straight to Confirmed with QR code + briefing pack ready."
+          >
             <ul className="apl__timeline">
-              <li><strong>Now</strong> · you submit</li>
-              <li><strong>~24h</strong> · merchant reviews</li>
-              <li><strong>If accepted</strong> · Confirmed page unlocks</li>
-              <li><strong>Shoot day</strong> · capture & upload</li>
+              <li>
+                <strong>Now</strong> · you submit
+              </li>
+              <li>
+                <strong>~24h</strong> · merchant reviews
+              </li>
+              <li>
+                <strong>If accepted</strong> · Confirmed page unlocks
+              </li>
+              <li>
+                <strong>Shoot day</strong> · capture & upload
+              </li>
             </ul>
           </StageRailCard>
 
           {/* Tips */}
           <StageRailCard label="Tip">
             <p className="stg__rail-help">
-              Creators who pitch with <strong style={{ color: "var(--ink)", fontFamily: "var(--font-display)", fontWeight: 700 }}>specific scan numbers</strong> from past gigs get accepted 1.4× faster. &ldquo;12 verified scans last month&rdquo; beats &ldquo;great content&rdquo; every time.
+              Creators who pitch with{" "}
+              <strong
+                style={{
+                  color: "var(--ink)",
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                }}
+              >
+                specific scan numbers
+              </strong>{" "}
+              from past gigs get accepted 1.4× faster. &ldquo;12 verified scans
+              last month&rdquo; beats &ldquo;great content&rdquo; every time.
             </p>
           </StageRailCard>
         </StageRail>

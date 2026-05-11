@@ -124,7 +124,37 @@ export default function ApplicantsPageClient({
     null,
   );
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { toast } = useToast();
+
+  const refresh = useCallback(async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    try {
+      const res = await fetch("/api/merchant/applicants?limit=200");
+      if (res.ok) {
+        const json = (await res.json()) as {
+          data: MockApplication[];
+          total: number;
+        };
+        setAllApplicants(json.data);
+        setLastRefreshed(new Date());
+      }
+    } catch {
+      // best-effort
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [isRefreshing]);
+
+  // Auto-refresh every 30s so merchant sees new applications without navigating away.
+  useEffect(() => {
+    const id = setInterval(() => {
+      void refresh();
+    }, 30_000);
+    return () => clearInterval(id);
+  }, [refresh]);
 
   const filteredApplicants = useMemo(
     () =>

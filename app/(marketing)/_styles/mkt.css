@@ -33,7 +33,7 @@
      center the page; the .mkt-shell wrapper keeps the bleed snow. */
   max-width: 1280px;
   margin: 0 auto;
-  padding: 56px clamp(40px, 8vw, 120px) 120px;
+  padding: 48px clamp(32px, 5vw, 80px) 96px;
   position: relative;
   isolation: isolate;
 }
@@ -83,7 +83,7 @@
 
 .mkt-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(56px, 6.4vw, 96px);
+  font-size: clamp(44px, 5.2vw, 80px);
   font-weight: 800;
   letter-spacing: -0.034em;
   line-height: 0.96;
@@ -199,7 +199,7 @@
 
 .mkt-section__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(36px, 4vw, 56px);
+  font-size: clamp(30px, 3.2vw, 48px);
   font-weight: 800;
   letter-spacing: -0.024em;
   line-height: 1.05;

@@ -14,7 +14,12 @@ import {
   getDemoAudience,
 } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
-import { playtestCampaigns, type PlaytestCampaign } from "@/lib/playtest/store";
+import {
+  playtestCampaigns,
+  playtestQRCodes,
+  type PlaytestCampaign,
+  type PlaytestQRCode,
+} from "@/lib/playtest/store";
 
 const DEMO_CAMPAIGNS = [
   {
@@ -162,7 +167,10 @@ export async function POST(req: NextRequest) {
       ? String(heroOffer.description)
       : `${title} offer`;
 
-    const id = crypto.randomUUID();
+    const id =
+      typeof body._clientId === "string" && body._clientId
+        ? body._clientId
+        : crypto.randomUUID();
     const campaign: PlaytestCampaign = {
       id,
       token: id,
@@ -181,6 +189,23 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     };
     playtestCampaigns.set(id, campaign);
+
+    // Auto-generate a QR code for this campaign so creators and the
+    // scan landing page can use it immediately after creation.
+    const qrCode: PlaytestQRCode = {
+      id,
+      campaignId: id,
+      merchantName: campaign.merchantName,
+      campaignTitle: title,
+      description,
+      offer,
+      reward: `$${payout}`,
+      deadline,
+      category,
+      scanCount: 0,
+      createdAt: campaign.createdAt,
+    };
+    playtestQRCodes.set(id, qrCode);
 
     return success({
       campaign: {

@@ -21,6 +21,7 @@ import {
   type Campaign,
   type TierLevel,
 } from "@/lib/mocks/campaigns";
+import { addLiveCampaign } from "@/lib/data/live-campaigns";
 import {
   normalizePay,
   totalNormalizedPay,
@@ -394,12 +395,18 @@ export default function DiscoverPage() {
     setActiveId(null);
   }, []);
 
-  // Fetch live campaigns created by merchants during demo sessions
+  // Fetch live campaigns created by merchants during demo sessions.
+  // Also sync each one into the shared LIVE store (localStorage) so
+  // the campaign detail page can resolve them via findLiveCampaign
+  // even after server HMR restarts clear the in-memory playtestCampaigns Map.
   useEffect(() => {
     fetch("/api/creator/live-campaigns")
       .then((r) => r.json())
       .then((d: { campaigns?: Campaign[] }) => {
-        if (d.campaigns?.length) setLiveCampaigns(d.campaigns);
+        if (d.campaigns?.length) {
+          d.campaigns.forEach(addLiveCampaign);
+          setLiveCampaigns(d.campaigns);
+        }
       })
       .catch(() => {});
   }, []);

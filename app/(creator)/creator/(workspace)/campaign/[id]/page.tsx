@@ -27,7 +27,7 @@
    scroll container (workspace layout's <main>).
    ============================================================ */
 
-import { use, useState, useMemo, useEffect, useRef } from "react";
+import { use, useState, useMemo, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -54,8 +54,20 @@ import {
   Inbox,
   ListChecks,
   ArrowUpRight,
+  Sparkles,
+  Type,
+  PlayCircle,
+  Sun,
+  Aperture,
+  Hash,
+  QrCode,
+  Copy,
 } from "lucide-react";
-import { useLiveCampaign } from "@/lib/data/live-campaigns";
+import {
+  findLiveCampaign,
+  enrichCampaign,
+  addLiveCampaign,
+} from "@/lib/data/live-campaigns";
 import { useApplicationForCampaign } from "@/lib/data/live-applications";
 import { useApplyQuota } from "@/lib/services/apply-quota";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
@@ -90,7 +102,61 @@ export default function CampaignDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const campaign = useLiveCampaign(id);
+
+  // undefined = loading; null = confirmed not found; Campaign = ready.
+  // All resolution happens in useEffect (client-only) so SSR and the
+  // initial client render both start with `undefined` → no hydration
+  // mismatch from the client-side LIVE store diverging from server.
+  const [campaign, setCampaign] = useState<Campaign | null | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    // Fast path: already in client LIVE store (covers MOCK_CAMPAIGNS
+    // + any campaign persisted to localStorage via addLiveCampaign).
+    const local = findLiveCampaign(id);
+    if (local) {
+      setCampaign(enrichCampaign(local));
+      return;
+    }
+
+    // Network path 1: fetch by id (works when server Map still has the
+    // playtest campaign; fastest path for the detail-link click flow).
+    fetch(`/api/creator/live-campaigns?id=${encodeURIComponent(id)}`)
+      .then((r) => (r.ok ? r.json() : { campaign: null }))
+      .then(({ campaign: c }: { campaign: Campaign | null }) => {
+        if (c) {
+          addLiveCampaign(c);
+          setCampaign(enrichCampaign(c));
+          return;
+        }
+        // Network path 2: server Map was cleared (HMR / cold-start).
+        // Fetch ALL live campaigns — if ours is still among them it will
+        // be synced back into the LIVE store and localStorage.
+        return fetch("/api/creator/live-campaigns")
+          .then((r) => (r.ok ? r.json() : { campaigns: [] }))
+          .then(({ campaigns }: { campaigns?: Campaign[] }) => {
+            const match = campaigns?.find((c2) => c2.id === id);
+            if (match) {
+              addLiveCampaign(match);
+              setCampaign(enrichCampaign(match));
+            } else {
+              setCampaign(null);
+            }
+          });
+      })
+      .catch(() => setCampaign(null));
+  }, [id]);
+
+  if (campaign === undefined) {
+    return (
+      <main className="cd-empty" aria-label="Loading campaign">
+        <div className="cd-empty__body">
+          <p className="cd-empty__sub">Loading campaign…</p>
+        </div>
+      </main>
+    );
+  }
 
   if (!campaign) {
     return (
@@ -98,8 +164,8 @@ export default function CampaignDetailPage({
         <div className="cd-empty__body">
           <h1 className="cd-empty__title">Campaign not found</h1>
           <p className="cd-empty__sub">
-            ID <code>{id}</code> doesn&apos;t match any active campaign. It
-            may have closed or expired.
+            ID <code>{id}</code> doesn&apos;t match any active campaign. It may
+            have closed or expired.
           </p>
           <Link href="/creator/discover" className="cd-empty__cta">
             Browse campaigns
@@ -236,7 +302,9 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
               <span className="cd-chip cd-chip--success">
                 Tier match · open to all
               </span>
-              <span className="cd-chip">{campaign.format.replace("-", " ")}</span>
+              <span className="cd-chip">
+                {campaign.format.replace("-", " ")}
+              </span>
               <span className="cd-chip cd-chip--score">
                 {campaign.matchScore}/100 match
               </span>
@@ -311,6 +379,7 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
             aria-label="Brief"
           >
             <BriefTab campaign={campaign} />
+            <AISuggestionsPanel campaign={campaign} />
           </section>
 
           <section
@@ -376,13 +445,16 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
               so its width aligns to .cd__main (was full-width spanning
               both cols, which broke the L/R hierarchy). Right rail
               keeps state ownership; this footer = explore branches. */}
-          {hasApplied && (
-            <PostApplyFooter campaignId={campaign.id} />
-          )}
+          {hasApplied && <PostApplyFooter campaignId={campaign.id} />}
         </div>
 
         {/* ── Sticky right rail ─────────────────────────── */}
-        <aside className="cd__rail" aria-label={hasApplied ? "Application status" : "Pay anatomy and apply"}>
+        <aside
+          className="cd__rail"
+          aria-label={
+            hasApplied ? "Application status" : "Pay anatomy and apply"
+          }
+        >
           {hasApplied && application ? (
             /* v24 — post-apply state. Pay/Eligibility/Apply replaced
                with status hero + slot pills + Add-to-calendar /
@@ -425,8 +497,8 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
                   {!quota.allowed
                     ? "Quota reached"
                     : eligible
-                    ? "You qualify"
-                    : "No slots left"}
+                      ? "You qualify"
+                      : "No slots left"}
                 </h3>
                 <ul className="cd-elig__list">
                   <li className="cd-elig__row">
@@ -472,7 +544,9 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
                   <div
                     className="cd-elig__quota-bar"
                     role="progressbar"
-                    aria-valuenow={(quota.tier.daily ?? 0) - (quota.remainingDaily ?? 0)}
+                    aria-valuenow={
+                      (quota.tier.daily ?? 0) - (quota.remainingDaily ?? 0)
+                    }
                     aria-valuemin={0}
                     aria-valuemax={quota.tier.daily ?? 0}
                     aria-label={`${(quota.tier.daily ?? 0) - (quota.remainingDaily ?? 0)} of ${quota.tier.daily} daily applications used`}
@@ -535,8 +609,8 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
                   {!quota.allowed
                     ? "Daily quota reached"
                     : selectedSlot
-                    ? "Apply with this slot"
-                    : "Pick a slot to apply"}
+                      ? "Apply with this slot"
+                      : "Pick a slot to apply"}
                 </button>
                 <button type="button" className="cd-btn cd-btn--ghost">
                   Save for later
@@ -559,6 +633,9 @@ function CampaignDetailInner({ campaign }: { campaign: Campaign }) {
                   FTC disclosure required at submit. Standard #ad + partner tag.
                 </p>
               )}
+
+              {/* QR code card — creator scans this at location */}
+              <CreatorQRCard campaignId={campaign.id} />
             </>
           )}
         </aside>
@@ -649,10 +726,365 @@ function BriefTab({ campaign }: { campaign: Campaign }) {
 
       {campaign.pickupRequired && (
         <p className="cd-pickup-note">
-          <strong>Pickup required.</strong> A printed QR card must be picked
-          up at the merchant before the shoot. Address in the Location tab.
+          <strong>Pickup required.</strong> A printed QR card must be picked up
+          at the merchant before the shoot. Address in the Location tab.
         </p>
       )}
+    </div>
+  );
+}
+
+/* ── AI Creative Suggestions Panel ───────────────────────── */
+
+/** Deterministic pseudo-random seeded from campaign id + category.
+ *  Returns a value 0–1. Not cryptographic — used only for pick-
+ *  ing suggestion text deterministically per campaign. */
+function seededRandom(seed: string, index: number): number {
+  let h = index * 2654435761;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(h ^ seed.charCodeAt(i), 2246822519);
+    h ^= h >>> 15;
+  }
+  return (h >>> 0) / 0xffffffff;
+}
+
+interface AISuggestions {
+  captions: string[];
+  hooks: string[];
+  timing: string;
+  angles: string;
+  hashtags: string;
+}
+
+function generateSuggestions(campaign: Campaign): AISuggestions {
+  const seed = campaign.id + (campaign.category ?? "");
+  const cat = (campaign.category ?? "").toUpperCase();
+  const merchant = campaign.merchantName;
+  const isFood =
+    cat.includes("FOOD") ||
+    cat.includes("DRINK") ||
+    cat.includes("COFFEE") ||
+    cat.includes("BAKERY");
+  const isFashion =
+    cat.includes("FASHION") || cat.includes("STYLE") || cat.includes("BEAUTY");
+  const isFitness =
+    cat.includes("FITNESS") || cat.includes("GYM") || cat.includes("WELLNESS");
+
+  // Caption pool per category
+  const captionPools: Record<string, string[][]> = {
+    food: [
+      [
+        `Starting the day right at ${merchant}. Their morning ritual > your alarm clock ☕`,
+        `That first sip feeling. Powered by ${merchant}'s menu 🌅`,
+        `New morning non-negotiable just dropped. @${merchant.replace(/\s+/g, "")} did it again`,
+      ],
+      [
+        `This is what a ${cat.toLowerCase()} spot looks like when they actually care 🍽️`,
+        `Found my new neighborhood go-to. ${merchant} is it.`,
+        `Not sponsored to say this, but ${merchant} just changed my order forever`,
+      ],
+      [
+        `The collab no one asked for but everyone needed. Me + ${merchant} 🤝`,
+        `Rating every item on the ${merchant} menu. Starting now.`,
+        `POV: You finally try the thing everyone's been talking about at ${merchant}`,
+      ],
+    ],
+    fashion: [
+      [
+        `That fit check everyone keeps asking about? It's from ${merchant} 👀`,
+        `Found the piece I've been looking for all season — ${merchant} delivered`,
+        `Style inspo for when you want to look like you tried (you didn't) — ${merchant}`,
+      ],
+    ],
+    fitness: [
+      [
+        `What my actual gym morning looks like at ${merchant} 💪`,
+        `The pre-workout ritual that actually works — ${merchant} edition`,
+        `Tracking my progress here so you don't have to — ${merchant} check`,
+      ],
+    ],
+  };
+
+  const r0 = Math.floor(seededRandom(seed, 0) * 3);
+  const captionKey = isFood
+    ? "food"
+    : isFashion
+      ? "fashion"
+      : isFitness
+        ? "fitness"
+        : "food";
+  const pool = captionPools[captionKey] ?? captionPools.food;
+  const captions = pool[r0 % pool.length];
+
+  // Hook openers
+  const hookPools = isFood
+    ? [
+        [
+          `POV: You found the neighborhood café that everyone keeps to themselves...`,
+          `This is what a perfect morning looks like, no filter`,
+          `Your morning just got an upgrade`,
+        ],
+        [
+          `The spot locals don't want you to know about — too late`,
+          `Caught me adding another stop to my morning routine`,
+          `Wait until you see what ${merchant} just dropped`,
+        ],
+      ]
+    : [
+        [
+          `POV: You discovered the one place in the city that does it differently`,
+          `This is what it looks like when quality actually matters`,
+          `Nobody told me ${merchant} existed and I'm a little mad about it`,
+        ],
+      ];
+  const r1 = Math.floor(seededRandom(seed, 1) * hookPools.length);
+  const hooks = hookPools[r1];
+
+  // Timing
+  const timingOptions = isFood
+    ? [
+        "6:30–9:00am for golden-hour natural light on drinks. Avoid midday harsh shadows.",
+        "7:00–10:00am or 4:30–6:30pm for soft window light. Lunch rush = poor lighting.",
+        "Early morning (before 9am) for empty-store atmosphere + blue-hour exterior.",
+      ]
+    : isFitness
+      ? [
+          "6:00–8:30am or 5:00–7:00pm peak traffic hours. Natural light optional — gym lighting is part of the aesthetic.",
+          "Morning session captures authentic energy. Avoid post-lunch lull (1–3pm).",
+        ]
+      : [
+          "10:00am–1:00pm for natural light on product. Avoid direct noon sun — use diffused window light.",
+          "Golden hour (1h before sunset) for exterior / street shots. Soft + directional.",
+        ];
+  const r2 = Math.floor(seededRandom(seed, 2) * timingOptions.length);
+  const timing = timingOptions[r2];
+
+  // Shot angles
+  const angleOptions = isFood
+    ? [
+        "Close-up slow pour from above · ambient morning crowd shot · exterior storefront at golden hour",
+        "Overhead flat-lay of the spread · medium shot of you reacting · extreme close-up of texture",
+        "45° product shot · lifestyle hands-on shot · wide establishing exterior",
+      ]
+    : isFitness
+      ? [
+          "Low-angle motivational shot · mid-workout candid · equipment close-up detail",
+          "Before / during / after triptych · wide gym floor shot · tight face / effort shot",
+        ]
+      : [
+          "Product hero on clean surface · in-use lifestyle shot · detail / texture close-up",
+          "Model wearing / using at location · flat-lay styling · street candid",
+        ];
+  const r3 = Math.floor(seededRandom(seed, 3) * angleOptions.length);
+  const angles = angleOptions[r3];
+
+  // Hashtags
+  const baseHashtags = isFood
+    ? "#MorningRitual #LocalCoffee #NYCEats #CreatorLife #FoodieNYC #CoffeeContent #PushPartner"
+    : isFitness
+      ? "#FitnessContent #GymLife #NYCFitness #CreatorLife #WorkoutMotivation #PushPartner"
+      : isFashion
+        ? "#OOTD #StyleContent #NYCFashion #CreatorLife #FashionCreator #PushPartner"
+        : "#LocalBusiness #NYCCreator #ContentCreator #CreatorLife #PushPartner";
+
+  return { captions, hooks, timing, angles, hashtags: baseHashtags };
+}
+
+function AISuggestionsPanel({ campaign }: { campaign: Campaign }) {
+  const suggestions = useMemo(() => generateSuggestions(campaign), [campaign]);
+
+  const cards: Array<{
+    id: string;
+    icon: typeof Sparkles;
+    label: string;
+    title: string;
+    content: "captions" | "hooks" | "timing" | "angles" | "hashtags";
+  }> = [
+    {
+      id: "captions",
+      icon: Type,
+      label: "Captions",
+      title: "Caption Ideas",
+      content: "captions",
+    },
+    {
+      id: "hooks",
+      icon: PlayCircle,
+      label: "Hook Openers",
+      title: "Hook Openers",
+      content: "hooks",
+    },
+    {
+      id: "timing",
+      icon: Sun,
+      label: "Best Timing",
+      title: "Best Timing",
+      content: "timing",
+    },
+    {
+      id: "angles",
+      icon: Aperture,
+      label: "Shot Angles",
+      title: "Shot Angles",
+      content: "angles",
+    },
+    {
+      id: "hashtags",
+      icon: Hash,
+      label: "Hashtag Pack",
+      title: "Hashtag Pack",
+      content: "hashtags",
+    },
+  ];
+
+  return (
+    <div
+      className="cd-ai-panel"
+      role="region"
+      aria-label="AI creative suggestions"
+    >
+      <div className="cd-ai-panel__head">
+        <span className="cd-ai-panel__badge">
+          <Sparkles size={9} strokeWidth={2.5} aria-hidden />
+          AI Suggestions
+        </span>
+        <div>
+          <h3 className="cd-ai-panel__title">
+            Creative direction, personalized
+          </h3>
+          <p className="cd-ai-panel__sub">
+            Generated for {campaign.category} · {campaign.merchantName}.
+            Consistent across sessions.
+          </p>
+        </div>
+      </div>
+
+      <div className="cd-ai-cards">
+        {cards.map(({ id, icon: Icon, label, title, content }) => (
+          <div key={id} className="cd-ai-card" aria-label={label}>
+            <p className="cd-ai-card__eyebrow">
+              <span className="cd-ai-card__eyebrow-icon" aria-hidden>
+                <Icon size={10} strokeWidth={2.5} />
+              </span>
+              {label}
+            </p>
+            <h4 className="cd-ai-card__title">{title}</h4>
+
+            {content === "captions" && (
+              <div className="cd-ai-card__variations">
+                {suggestions.captions.map((c, i) => (
+                  <p key={i} className="cd-ai-card__variation">
+                    {c}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {content === "hooks" && (
+              <div className="cd-ai-card__variations">
+                {suggestions.hooks.map((h, i) => (
+                  <p key={i} className="cd-ai-card__variation">
+                    &ldquo;{h}&rdquo;
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {(content === "timing" || content === "angles") && (
+              <p className="cd-ai-card__body">{suggestions[content]}</p>
+            )}
+
+            {content === "hashtags" && (
+              <p className="cd-ai-card__hashtags">{suggestions.hashtags}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Creator QR Card (right rail) ─────────────────────────── */
+
+function CreatorQRCard({ campaignId }: { campaignId: string }) {
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [scanUrl, setScanUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const origin = window.location.origin;
+    const url = `${origin}/scan/${campaignId}`;
+    setScanUrl(url);
+
+    // Dynamically import qrcode to avoid SSR issues
+    import("qrcode")
+      .then((QRCode) => {
+        QRCode.toDataURL(url, {
+          width: 240,
+          margin: 2,
+          color: { dark: "#1a1916", light: "#ffffff" },
+        })
+          .then((dataUrl: string) => setQrDataUrl(dataUrl))
+          .catch(() => setQrDataUrl(null));
+      })
+      .catch(() => {});
+  }, [campaignId]);
+
+  const handleCopy = useCallback(() => {
+    if (!scanUrl) return;
+    navigator.clipboard.writeText(scanUrl).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [scanUrl]);
+
+  const displayUrl = scanUrl
+    ? scanUrl.replace(/^https?:\/\//, "").slice(0, 38) +
+      (scanUrl.length > 46 ? "…" : "")
+    : "";
+
+  return (
+    <div className="cd-qr-card" aria-label="Campaign QR code">
+      <p className="cd-qr-card__eyebrow">
+        <QrCode size={11} strokeWidth={2} aria-hidden />
+        Scan at location
+      </p>
+      <p className="cd-qr-card__title">Your visit QR</p>
+      <p className="cd-qr-card__sub">
+        Creator scans this when visiting · visit gets attributed
+      </p>
+
+      <div className="cd-qr-card__img-wrap">
+        {qrDataUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={qrDataUrl}
+            alt="Campaign QR code"
+            width={240}
+            height={240}
+            style={{ display: "block", borderRadius: 4 }}
+          />
+        ) : (
+          <div className="cd-qr-card__placeholder">
+            <QrCode size={48} strokeWidth={1} />
+          </div>
+        )}
+      </div>
+
+      {displayUrl && (
+        <p className="cd-qr-card__url" title={scanUrl}>
+          {displayUrl}
+        </p>
+      )}
+
+      <button
+        type="button"
+        className="cd-qr-card__copy"
+        onClick={handleCopy}
+        aria-label="Copy scan link to clipboard"
+      >
+        <Copy size={12} strokeWidth={2} aria-hidden />
+        {copied ? "Copied!" : "Copy link"}
+      </button>
     </div>
   );
 }
@@ -685,14 +1117,12 @@ function DeliverableCard({
           <h4 className="cd-deliv-card__type">{d.type}</h4>
         </div>
         <span className="cd-deliv-card__time">
-          <Clock size={12} strokeWidth={2.25} />
-          ~{totalHours.toFixed(totalHours < 10 ? 1 : 0)}h
+          <Clock size={12} strokeWidth={2.25} />~
+          {totalHours.toFixed(totalHours < 10 ? 1 : 0)}h
         </span>
       </div>
 
-      {d.description && (
-        <p className="cd-deliv-card__desc">{d.description}</p>
-      )}
+      {d.description && <p className="cd-deliv-card__desc">{d.description}</p>}
 
       {d.format && (
         <p className="cd-deliv-card__format">
@@ -732,7 +1162,11 @@ function deliverableIconMeta(type: string): {
   if (t.includes("photo"))
     return { icon: Camera, tint: "rgba(191, 161, 112, 0.16)", fg: "#5c4a26" };
   if (t.includes("review"))
-    return { icon: MessageSquare, tint: "rgba(45, 110, 74, 0.12)", fg: "#1f7a39" };
+    return {
+      icon: MessageSquare,
+      tint: "rgba(45, 110, 74, 0.12)",
+      fg: "#1f7a39",
+    };
   if (t.includes("ugc"))
     return { icon: Film, tint: "rgba(20, 19, 15, 0.06)", fg: "#14130f" };
   // visit / scan / walk-in / fallback
@@ -752,7 +1186,11 @@ function CampaignHighlights({ campaign }: { campaign: Campaign }) {
   const veteran = merchant.campaignsHosted >= 15;
   const openToAll = campaign.minimumTier === 1;
   return (
-    <div className="cd-highlights" role="group" aria-label="Campaign highlights">
+    <div
+      className="cd-highlights"
+      role="group"
+      aria-label="Campaign highlights"
+    >
       <div className="cd-highlight">
         <span className="cd-highlight__icon" aria-hidden>
           <Zap size={18} strokeWidth={1.75} />
@@ -776,7 +1214,8 @@ function CampaignHighlights({ campaign }: { campaign: Campaign }) {
             {veteran ? "Veteran merchant" : "Verified merchant"}
           </p>
           <p className="cd-highlight__sub">
-            {merchant.campaignsHosted} campaigns hosted · ★ {merchant.starRating}
+            {merchant.campaignsHosted} campaigns hosted · ★{" "}
+            {merchant.starRating}
           </p>
         </div>
       </div>
@@ -787,7 +1226,9 @@ function CampaignHighlights({ campaign }: { campaign: Campaign }) {
         </span>
         <div className="cd-highlight__body">
           <p className="cd-highlight__title">
-            {openToAll ? "Open to first-timers" : `Tier ${campaign.minimumTier}+ only`}
+            {openToAll
+              ? "Open to first-timers"
+              : `Tier ${campaign.minimumTier}+ only`}
           </p>
           <p className="cd-highlight__sub">
             {merchant.repeatCreatorPct}% creators repeat-book
@@ -856,7 +1297,9 @@ function MerchantSection({ campaign }: { campaign: Campaign }) {
         </span>
         <span className="cd-merchant__signal">
           <TrendingUp size={12} strokeWidth={2.25} />
-          {merchant.avgResponseHours <= 12 ? "Fast-responder" : "Standard cadence"}
+          {merchant.avgResponseHours <= 12
+            ? "Fast-responder"
+            : "Standard cadence"}
         </span>
       </div>
     </div>
@@ -878,9 +1321,7 @@ function RulesSection({ campaign }: { campaign: Campaign }) {
           </p>
           <ul className="cd-rules__list">
             <li>Free reschedule up to 24h before your slot.</li>
-            <li>
-              Cancel within 24h: counts against your reliability score.
-            </li>
+            <li>Cancel within 24h: counts against your reliability score.</li>
             <li>No-show: -15 Push Score + dispute review.</li>
           </ul>
         </div>
@@ -891,12 +1332,8 @@ function RulesSection({ campaign }: { campaign: Campaign }) {
             Payment + verification
           </p>
           <ul className="cd-rules__list">
-            <li>
-              Payout clears 72h after merchant verifies the QR scan.
-            </li>
-            <li>
-              Stripe Connect instant transfer — no holding period.
-            </li>
+            <li>Payout clears 72h after merchant verifies the QR scan.</li>
+            <li>Stripe Connect instant transfer — no holding period.</li>
             <li>
               ${campaign.cashPay} per {campaign.payUnit} · paid even if 0
               customers attributed (T1 Seed minimum-earning guarantee).
@@ -914,12 +1351,12 @@ function RulesSection({ campaign }: { campaign: Campaign }) {
               FTC: <code>#ad</code> + partner tag required at submit.
             </li>
             <li>
-              You retain content rights. Merchant gets a 90-day usage
-              license for paid campaigns.
+              You retain content rights. Merchant gets a 90-day usage license
+              for paid campaigns.
             </li>
             <li>
-              Disputed scans: 78% resolve in creator&apos;s favor with
-              proof — check your QR scan record before flagging.
+              Disputed scans: 78% resolve in creator&apos;s favor with proof —
+              check your QR scan record before flagging.
             </li>
           </ul>
         </div>
@@ -941,7 +1378,12 @@ function ReferencesTab({ campaign }: { campaign: Campaign }) {
       <div className="cd-refs__grid">
         {campaign.images.map((src, i) => (
           /* eslint-disable-next-line @next/next/no-img-element */
-          <img key={i} src={src} alt={`Reference ${i + 1}`} className="cd-refs__img" />
+          <img
+            key={i}
+            src={src}
+            alt={`Reference ${i + 1}`}
+            className="cd-refs__img"
+          />
         ))}
       </div>
     </div>

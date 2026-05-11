@@ -1,12 +1,6 @@
-import { api } from '@/lib/data/api-client';
-import QRCodesClient from './QRCodesClient';
+import { redirect } from "next/navigation";
 
-async function getInitialQRs() {
-  return api.merchant.qrCodes.list({ status: 'all' });
-}
-
-export default async function MerchantQRCodesPage() {
-  const initialQRs = await getInitialQRs();
-
-  return <QRCodesClient initialQRs={initialQRs} />;
+// QR Codes merged into Operations hub — keep redirect for saved links.
+export default function MerchantQRCodesPage() {
+  redirect("/merchant/operations");
 }

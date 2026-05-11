@@ -58,6 +58,116 @@ const SHOTS = [
   },
 ] as const;
 
+/* ── CampaignQRCard ─────────────────────────────────────────────────── */
+
+function CampaignQRCard({ campaignId }: { campaignId: string }) {
+  const [origin, setOrigin] = useState("");
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  const scanUrl = origin
+    ? `${origin}/scan/${campaignId}`
+    : `https://pushnyc.co/scan/${campaignId}`;
+
+  const qrImgUrl =
+    `https://api.qrserver.com/v1/create-qr-code/` +
+    `?data=${encodeURIComponent(scanUrl)}` +
+    `&size=160x160&color=ffffff&bgcolor=1a1916&ecc=H&margin=6`;
+
+  return (
+    <div
+      className="ad-card"
+      style={{ background: "var(--ink, #1a1916)", color: "#fff" }}
+    >
+      <div className="ad-card__body">
+        <span
+          className="ad-card__label"
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          YOUR QR CODE
+        </span>
+        <div
+          className="ad-card__divider"
+          aria-hidden
+          style={{ borderColor: "rgba(255,255,255,0.1)" }}
+        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+            padding: "16px 0",
+          }}
+        >
+          {origin ? (
+            <a
+              href={scanUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open scan landing page"
+              style={{ display: "block", borderRadius: 8, overflow: "hidden" }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrImgUrl}
+                alt="Campaign QR code"
+                width={160}
+                height={160}
+                style={{ display: "block" }}
+              />
+            </a>
+          ) : (
+            <QrCode
+              size={48}
+              strokeWidth={1.5}
+              style={{ color: "rgba(255,255,255,0.4)" }}
+              aria-hidden
+            />
+          )}
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "#fff",
+              fontFamily: "var(--font-display, sans-serif)",
+              textAlign: "center",
+            }}
+          >
+            Show this at the register
+          </span>
+          <span
+            style={{
+              fontSize: 11,
+              color: "rgba(255,255,255,0.50)",
+              textAlign: "center",
+              lineHeight: 1.5,
+              fontFamily: "var(--font-body, monospace)",
+            }}
+          >
+            Tap to open scan page · share link with merchant
+          </span>
+          <a
+            href={scanUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: 10,
+              color: "rgba(255,255,255,0.35)",
+              wordBreak: "break-all",
+              textAlign: "center",
+              fontFamily: "var(--font-body, monospace)",
+            }}
+          >
+            {origin ? `/scan/${campaignId}` : ""}
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Stage3PreShootPanel({
   application,
   campaign,
@@ -147,62 +257,8 @@ export function Stage3PreShootPanel({
 
         {/* ── RIGHT COLUMN ────────────────────────────────────── */}
         <div className="ad-col-side">
-          {/* QR ready reminder card — dark styled */}
-          <div
-            className="ad-card"
-            style={{ background: "var(--ink, #1a1916)", color: "#fff" }}
-          >
-            <div className="ad-card__body">
-              <span
-                className="ad-card__label"
-                style={{ color: "rgba(255,255,255,0.5)" }}
-              >
-                QR READY
-              </span>
-              <div
-                className="ad-card__divider"
-                aria-hidden
-                style={{ borderColor: "rgba(255,255,255,0.1)" }}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "16px 0",
-                }}
-              >
-                <QrCode
-                  size={48}
-                  strokeWidth={1.5}
-                  style={{ color: "rgba(255,255,255,0.9)" }}
-                  aria-hidden
-                />
-                <span
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: "#fff",
-                    fontFamily: "var(--font-darky, sans-serif)",
-                    textAlign: "center",
-                  }}
-                >
-                  Show this at register
-                </span>
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: "rgba(255,255,255,0.55)",
-                    textAlign: "center",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Have your QR ready for check-in
-                </span>
-              </div>
-            </div>
-          </div>
+          {/* QR ready card — shows real scannable QR */}
+          <CampaignQRCard campaignId={campaign.id} />
 
           {/* Getting there card */}
           <div className="ad-card">

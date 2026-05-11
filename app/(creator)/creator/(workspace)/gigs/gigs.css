@@ -1963,7 +1963,7 @@ a.inv-row-view {
   font-family: var(--font-brand, "Magvix"), Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(48px, 6vw, 88px);
+  font-size: clamp(32px, 3.2vw, 52px);
   line-height: 0.92;
   color: var(--ink);
   letter-spacing: -0.025em;
@@ -3314,7 +3314,7 @@ a.inv-row-view {
 }
 
 .cw-page.ib-page--fullbleed:has(.gigs-pane) .giv-hero__title {
-  font-size: clamp(40px, 5.6vw, 80px);
+  font-size: clamp(28px, 3.2vw, 52px);
   line-height: 1.05;
   letter-spacing: -0.025em;
 }

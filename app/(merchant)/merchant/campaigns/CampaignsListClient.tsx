@@ -28,13 +28,12 @@ function formatUsd(value: number | null | undefined): string {
 
 function formatDeadline(value: string | null | undefined): string {
   if (!value) {
-    return "No deadline";
+    return "—";
   }
 
   return new Date(value).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    year: "numeric",
   });
 }
 
@@ -187,7 +186,7 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           );
         })()
       ) : (
-        <div className="cl-list">
+        <div className="cml-grid">
           {filtered.map((campaign) => {
             const budgetTotal = numberOrZero(campaign.budget_total);
             const budgetRemaining = Math.max(
@@ -202,51 +201,75 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
 
             return (
               <Link
-                className="cl-row"
+                className="cml-card"
                 href={`/merchant/campaigns/${campaign.id}`}
                 key={campaign.id}
+                data-status={badgeStatus}
               >
-                {campaign.image_url ? (
-                  <img
-                    alt={campaign.title}
-                    className="cl-row-image"
-                    src={campaign.image_url}
+                {/* Dark ink top band */}
+                <div className="cml-card__band">
+                  <span
+                    className={`cml-card__status-dot cml-card__status-dot--${badgeStatus}`}
                   />
-                ) : (
-                  <div
-                    className="cl-row-image cl-row-image--placeholder"
-                    aria-hidden="true"
-                  />
-                )}
+                  <span className="cml-card__status-text">
+                    {badgeStatus.toUpperCase()}
+                  </span>
+                  <span className="cml-card__category">
+                    {getCategory(campaign)}
+                  </span>
+                </div>
 
-                <div className="cl-row-main">
-                  <div className="cl-row-heading">
-                    <h3 className="cl-row-title">{campaign.title}</h3>
-                    <p className="cl-row-eyebrow">{getCategory(campaign)}</p>
+                {/* White body */}
+                <div className="cml-card__body">
+                  <h3 className="cml-card__title">{campaign.title}</h3>
+
+                  {/* Stats triptych */}
+                  <div className="cml-card__stats">
+                    <div className="cml-card__stat">
+                      <span className="cml-card__stat-num">
+                        {formatUsd(budgetRemaining)}
+                      </span>
+                      <span className="cml-card__stat-label">Budget Left</span>
+                    </div>
+                    <div
+                      className="cml-card__stat-divider"
+                      aria-hidden="true"
+                    />
+                    <div className="cml-card__stat">
+                      <span className="cml-card__stat-num">
+                        {acceptedCreators}
+                      </span>
+                      <span className="cml-card__stat-label">Creators</span>
+                    </div>
+                    <div
+                      className="cml-card__stat-divider"
+                      aria-hidden="true"
+                    />
+                    <div className="cml-card__stat">
+                      <span className="cml-card__stat-num cml-card__stat-num--sm">
+                        {formatDeadline(campaign.end_date)}
+                      </span>
+                      <span className="cml-card__stat-label">Deadline</span>
+                    </div>
                   </div>
 
-                  <div className="cl-row-meta">
-                    <StatusBadge status={badgeStatus}>
-                      {campaign.status.toUpperCase()}
-                    </StatusBadge>
-                    <p className="cl-row-statline">
-                      Deadline: {formatDeadline(campaign.end_date)}
-                    </p>
-                    <ProgressBar
-                      value={budgetUsedPercent}
-                      max={100}
-                      color="primary"
-                      height={4}
-                    />
+                  {/* Slim progress bar */}
+                  <div className="cml-card__progress-row">
+                    <div className="cml-card__progress-track">
+                      <div
+                        className="cml-card__progress-fill"
+                        style={{ width: `${budgetUsedPercent}%` }}
+                      />
+                    </div>
+                    <span className="cml-card__progress-pct">
+                      {Math.round(budgetUsedPercent)}%
+                    </span>
                   </div>
                 </div>
 
-                <div className="cl-row-stats">
-                  <p className="cl-row-budget">{formatUsd(budgetRemaining)}</p>
-                  <p className="cl-row-statline">
-                    Accepted creators {acceptedCreators}
-                  </p>
-                  <span className="cl-row-cta">View →</span>
+                {/* Footer */}
+                <div className="cml-card__footer">
+                  <span className="cml-card__cta">Manage →</span>
                 </div>
               </Link>
             );

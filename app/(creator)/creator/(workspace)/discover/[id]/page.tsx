@@ -10,10 +10,15 @@
    stays in detail.css.
    ============================================================ */
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MOCK_CAMPAIGNS, type TierLevel } from "@/lib/mocks/campaigns";
+import {
+  MOCK_CAMPAIGNS,
+  type Campaign,
+  type TierLevel,
+} from "@/lib/mocks/campaigns";
+import { enrichCampaign } from "@/lib/data/live-campaigns";
 import {
   normalizePay,
   totalNormalizedPay,
@@ -41,7 +46,14 @@ const CREATOR_TIER: TierLevel = 2;
 const CREATOR_AVG_RATE = 42;
 
 function tierLabel(t: TierLevel): string {
-  return ["Open to all", "Bronze+", "Steel+", "Gold+", "Ruby+", "Obsidian only"][t - 1];
+  return [
+    "Open to all",
+    "Bronze+",
+    "Steel+",
+    "Gold+",
+    "Ruby+",
+    "Obsidian only",
+  ][t - 1];
 }
 
 function daysUntil(iso?: string): number | null {
@@ -55,10 +67,53 @@ export default function QualifyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const c = MOCK_CAMPAIGNS.find((x) => x.id === id);
-  if (!c) notFound();
 
-  const { headline, estimate } = normalizePay(c.cashPay, c.payUnit, c.deliverables);
+  // Hooks must be declared before any early return.
+  // Try MOCK_CAMPAIGNS first (synchronous). If the id belongs to a
+  // merchant-created playtest campaign, fetch from the live-campaigns
+  // API as a fallback so the detail page works end-to-end.
+  const [campaign, setCampaign] = useState<Campaign | null>(
+    () => MOCK_CAMPAIGNS.find((x) => x.id === id) ?? null,
+  );
+  const [loadingCampaign, setLoadingCampaign] = useState(
+    () => !MOCK_CAMPAIGNS.find((x) => x.id === id),
+  );
+  const [notFoundState, setNotFoundState] = useState(false);
+
+  useEffect(() => {
+    if (campaign) return; // already found in MOCK_CAMPAIGNS
+    fetch(`/api/creator/live-campaigns?id=${encodeURIComponent(id)}`)
+      .then((r) => r.json())
+      .then(({ campaign: live }: { campaign: Campaign | null }) => {
+        if (live) setCampaign(enrichCampaign(live));
+        else setNotFoundState(true);
+      })
+      .catch(() => setNotFoundState(true))
+      .finally(() => setLoadingCampaign(false));
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (loadingCampaign) {
+    return (
+      <div
+        style={{
+          padding: "80px 40px",
+          color: "var(--ink-4)",
+          fontFamily: "var(--font-body)",
+        }}
+      >
+        Loading campaign…
+      </div>
+    );
+  }
+  if (notFoundState || !campaign) return notFound();
+
+  const c = campaign;
+
+  const { headline, estimate } = normalizePay(
+    c.cashPay,
+    c.payUnit,
+    c.deliverables,
+  );
   const totalPay = totalNormalizedPay(c.cashPay, c.deliverables);
   const totalHours = estimatedHours(c.deliverables);
   const hourly = effectiveHourlyRate(c.cashPay, c.deliverables);
@@ -74,14 +129,42 @@ export default function QualifyPage({
 
   type Flag = { kind: "warn" | "ok" | "info"; copy: string };
   const flags: Flag[] = [];
-  if (deadlineTight) flags.push({ kind: "warn", copy: `Tight deadline · only ${days} day${days === 1 ? "" : "s"} to deliver.` });
-  if (c.slotsRemaining <= 2) flags.push({ kind: "warn", copy: `Only ${c.slotsRemaining} of ${c.slotsTotal} spots left — apply soon.` });
-  if (c.distanceMi > 5 && c.format === "in-person") flags.push({ kind: "warn", copy: `${c.distanceMi}mi away · in-person · factor in transit.` });
-  if (hourly > 60) flags.push({ kind: "ok", copy: `Above-average effective rate at $${hourly}/hr.` });
-  if (c.matchScore >= 90) flags.push({ kind: "ok", copy: `Strong match · ${c.matchScore}/100 fit score.` });
-  flags.push({ kind: "info", copy: "FTC disclosure required at Submit. Standard #ad + partner tag." });
+  if (deadlineTight)
+    flags.push({
+      kind: "warn",
+      copy: `Tight deadline · only ${days} day${days === 1 ? "" : "s"} to deliver.`,
+    });
+  if (c.slotsRemaining <= 2)
+    flags.push({
+      kind: "warn",
+      copy: `Only ${c.slotsRemaining} of ${c.slotsTotal} spots left — apply soon.`,
+    });
+  if (c.distanceMi > 5 && c.format === "in-person")
+    flags.push({
+      kind: "warn",
+      copy: `${c.distanceMi}mi away · in-person · factor in transit.`,
+    });
+  if (hourly > 60)
+    flags.push({
+      kind: "ok",
+      copy: `Above-average effective rate at $${hourly}/hr.`,
+    });
+  if (c.matchScore >= 90)
+    flags.push({
+      kind: "ok",
+      copy: `Strong match · ${c.matchScore}/100 fit score.`,
+    });
+  flags.push({
+    kind: "info",
+    copy: "FTC disclosure required at Submit. Standard #ad + partner tag.",
+  });
 
-  const formatLabel = c.format === "in-person" ? "In-person" : c.format === "remote" ? "Remote" : "Hybrid";
+  const formatLabel =
+    c.format === "in-person"
+      ? "In-person"
+      : c.format === "remote"
+        ? "Remote"
+        : "Hybrid";
 
   return (
     <StageShell
@@ -98,16 +181,22 @@ export default function QualifyPage({
         title={c.title}
         sub={
           <>
-            <strong style={{ color: "var(--graphite)" }}>{c.merchantName}</strong>
+            <strong style={{ color: "var(--graphite)" }}>
+              {c.merchantName}
+            </strong>
             {c.tagline ? ` · ${c.tagline}` : ""}
           </>
         }
         chips={
           <>
             {tierOk ? (
-              <StageChip tone="success">Tier match · {tierLabel(c.minimumTier)}</StageChip>
+              <StageChip tone="success">
+                Tier match · {tierLabel(c.minimumTier)}
+              </StageChip>
             ) : (
-              <StageChip tone="accent">Tier locked · {tierLabel(c.minimumTier)}</StageChip>
+              <StageChip tone="accent">
+                Tier locked · {tierLabel(c.minimumTier)}
+              </StageChip>
             )}
             <StageChip>{formatLabel}</StageChip>
             {c.matchScore >= 85 && (
@@ -120,15 +209,53 @@ export default function QualifyPage({
       <StageTwoCol>
         <StageMain>
           {/* Brief — full row (text-heavy, benefits from width) */}
-          <StageCard eyebrow="Brief" title="What the merchant is asking for" full accent="blue">
-            <p style={{ fontSize: 16, lineHeight: 1.55, color: "var(--ink-3)", margin: 0 }}>
-              {c.tagline ?? `${c.merchantName} wants ${c.deliverables.length === 1 ? "a single piece" : "a package"} of original ${c.category.toLowerCase()} content created on-site at their ${c.neighborhood} location. Standard creator brief — no scripts, but please tag the merchant and use the QR code at the register so attribution lands.`}
+          <StageCard
+            eyebrow="Brief"
+            title="What the merchant is asking for"
+            full
+            accent="blue"
+          >
+            <p
+              style={{
+                fontSize: 16,
+                lineHeight: 1.55,
+                color: "var(--ink-3)",
+                margin: 0,
+              }}
+            >
+              {c.tagline ??
+                `${c.merchantName} wants ${c.deliverables.length === 1 ? "a single piece" : "a package"} of original ${c.category.toLowerCase()} content created on-site at their ${c.neighborhood} location. Standard creator brief — no scripts, but please tag the merchant and use the QR code at the register so attribution lands.`}
             </p>
-            <p style={{ fontSize: 16, lineHeight: 1.55, color: "var(--ink-3)", margin: 0 }}>
-              <strong style={{ fontFamily: "var(--font-display)", color: "var(--ink)", fontWeight: 700 }}>Must include:</strong>{" "}
-              on-location shot · merchant tag · branded hashtag · QR scan moment.{" "}
-              <strong style={{ fontFamily: "var(--font-display)", color: "var(--ink)", fontWeight: 700 }}>Must avoid:</strong>{" "}
-              competitor brands in frame · price misquotes · #sponsored without partner tag.
+            <p
+              style={{
+                fontSize: 16,
+                lineHeight: 1.55,
+                color: "var(--ink-3)",
+                margin: 0,
+              }}
+            >
+              <strong
+                style={{
+                  fontFamily: "var(--font-display)",
+                  color: "var(--ink)",
+                  fontWeight: 700,
+                }}
+              >
+                Must include:
+              </strong>{" "}
+              on-location shot · merchant tag · branded hashtag · QR scan
+              moment.{" "}
+              <strong
+                style={{
+                  fontFamily: "var(--font-display)",
+                  color: "var(--ink)",
+                  fontWeight: 700,
+                }}
+              >
+                Must avoid:
+              </strong>{" "}
+              competitor brands in frame · price misquotes · #sponsored without
+              partner tag.
             </p>
           </StageCard>
 
@@ -143,7 +270,9 @@ export default function QualifyPage({
                   <span className="qual__deliv-count">{d.count}×</span>
                   <span className="qual__deliv-body">
                     <span className="qual__deliv-type">{d.type}</span>
-                    <span className="qual__deliv-meta">~{d.estHoursEach}h each</span>
+                    <span className="qual__deliv-meta">
+                      ~{d.estHoursEach}h each
+                    </span>
                   </span>
                   <span className="qual__deliv-pay">${d.unitPay}/ea</span>
                 </li>
@@ -152,7 +281,10 @@ export default function QualifyPage({
           </StageCard>
 
           {/* Logistics meta */}
-          <StageCard eyebrow="Logistics" title="Format · slots · tier · deadline">
+          <StageCard
+            eyebrow="Logistics"
+            title="Format · slots · tier · deadline"
+          >
             <div className="qual__meta-grid">
               <div className="qual__meta-item">
                 <span className="qual__meta-label">Format</span>
@@ -160,11 +292,15 @@ export default function QualifyPage({
               </div>
               <div className="qual__meta-item">
                 <span className="qual__meta-label">Slots open</span>
-                <span className="qual__meta-value">{c.slotsRemaining} of {c.slotsTotal}</span>
+                <span className="qual__meta-value">
+                  {c.slotsRemaining} of {c.slotsTotal}
+                </span>
               </div>
               <div className="qual__meta-item">
                 <span className="qual__meta-label">Tier required</span>
-                <span className="qual__meta-value">{tierLabel(c.minimumTier)}</span>
+                <span className="qual__meta-value">
+                  {tierLabel(c.minimumTier)}
+                </span>
               </div>
               <div className="qual__meta-item">
                 <span className="qual__meta-label">Deadline</span>
@@ -199,7 +335,11 @@ export default function QualifyPage({
               <StageEligRow
                 status={tierOk ? "ok" : "block"}
                 label="Tier match"
-                meta={tierOk ? `T${CREATOR_TIER} ≥ T${c.minimumTier}` : `T${CREATOR_TIER} < T${c.minimumTier}`}
+                meta={
+                  tierOk
+                    ? `T${CREATOR_TIER} ≥ T${c.minimumTier}`
+                    : `T${CREATOR_TIER} < T${c.minimumTier}`
+                }
               />
               <StageEligRow
                 status={slotOk ? "ok" : "block"}
@@ -219,9 +359,18 @@ export default function QualifyPage({
             <h3 className="qual__pay-headline">{headline}</h3>
             {estimate && <p className="qual__pay-estimate">{estimate}</p>}
             <ul className="stg__pay-list">
-              <StagePayRow label="Base cash" value={`$${c.cashPay.toFixed(0)}`} />
-              <StagePayRow label="Total estimated" value={`$${totalPay.toFixed(0)}`} />
-              <StagePayRow label="Est. hours" value={`${totalHours.toFixed(1)}h`} />
+              <StagePayRow
+                label="Base cash"
+                value={`$${c.cashPay.toFixed(0)}`}
+              />
+              <StagePayRow
+                label="Total estimated"
+                value={`$${totalPay.toFixed(0)}`}
+              />
+              <StagePayRow
+                label="Est. hours"
+                value={`${totalHours.toFixed(1)}h`}
+              />
             </ul>
           </StageRailCard>
 
@@ -231,11 +380,23 @@ export default function QualifyPage({
             <p className="stg__rail-help">
               {ratePremium > 0 ? (
                 <>
-                  <strong style={{ color: "var(--success-dark)", fontFamily: "var(--font-display)", fontWeight: 700 }}>+${ratePremium}/hr</strong> vs your ${CREATOR_AVG_RATE}/hr avg
+                  <strong
+                    style={{
+                      color: "var(--success-dark)",
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 700,
+                    }}
+                  >
+                    +${ratePremium}/hr
+                  </strong>{" "}
+                  vs your ${CREATOR_AVG_RATE}/hr avg
                   {ratePremiumPct > 0 ? ` · +${ratePremiumPct}%` : ""}
                 </>
               ) : (
-                <>${Math.abs(ratePremium)}/hr below your ${CREATOR_AVG_RATE}/hr avg</>
+                <>
+                  ${Math.abs(ratePremium)}/hr below your ${CREATOR_AVG_RATE}/hr
+                  avg
+                </>
               )}
             </p>
           </StageRailCard>
@@ -244,7 +405,9 @@ export default function QualifyPage({
           <StageRailCard label="Flags">
             <ul className="stg__risks">
               {flags.map((f, i) => (
-                <StageRiskFlag key={i} kind={f.kind}>{f.copy}</StageRiskFlag>
+                <StageRiskFlag key={i} kind={f.kind}>
+                  {f.copy}
+                </StageRiskFlag>
               ))}
             </ul>
           </StageRailCard>
@@ -265,8 +428,16 @@ export default function QualifyPage({
 
       {/* Mobile bottom CTA strip */}
       <div className="qual__mobile-cta" role="group" aria-label="Apply actions">
-        <button type="button" className="stg__btn stg__btn--ghost stg__btn--full">Save</button>
-        <Link href={`/creator/discover/${c.id}/apply`} className="stg__btn stg__btn--primary stg__btn--full">
+        <button
+          type="button"
+          className="stg__btn stg__btn--ghost stg__btn--full"
+        >
+          Save
+        </button>
+        <Link
+          href={`/creator/discover/${c.id}/apply`}
+          className="stg__btn stg__btn--primary stg__btn--full"
+        >
           Apply
         </Link>
       </div>

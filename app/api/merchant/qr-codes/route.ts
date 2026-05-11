@@ -14,6 +14,7 @@ import {
 import { requireMerchantSession } from "@/lib/api/merchant-auth";
 import { demoShortCircuit } from "@/lib/api/demo-short-circuit";
 import { supabase } from "@/lib/db";
+import { playtestQRCodes } from "@/lib/playtest/store";
 
 const DEMO_QR_ROWS = [
   {
@@ -57,10 +58,22 @@ interface CreateBody {
 }
 
 export async function GET(request: NextRequest) {
-  const demo = await demoShortCircuit("merchant", () => ({
-    qr_codes: DEMO_QR_ROWS,
-    total: DEMO_QR_ROWS.length,
-  }));
+  const demo = await demoShortCircuit("merchant", () => {
+    const playtest = Array.from(playtestQRCodes.values()).map((pqr) => ({
+      id: pqr.id,
+      campaign_id: pqr.campaignId,
+      poster_type: "campaign-qr",
+      hero_message: pqr.offer || pqr.campaignTitle,
+      sub_message: pqr.description || pqr.campaignTitle,
+      scan_count: pqr.scanCount,
+      conversion_count: 0,
+      disabled: false,
+      created_at: pqr.createdAt,
+      last_active_at: pqr.createdAt,
+    }));
+    const all = [...playtest, ...DEMO_QR_ROWS];
+    return { qr_codes: all, total: all.length };
+  });
   if (demo) return demo;
 
   const gate = await requireMerchantSession();

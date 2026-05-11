@@ -47,7 +47,10 @@ import {
   Lightbulb,
 } from "lucide-react";
 import type { Campaign } from "@/lib/mocks/campaigns";
-import { applyToCampaign } from "@/lib/data/live-applications";
+import {
+  applyToCampaign,
+  patchApplication,
+} from "@/lib/data/live-applications";
 import type {
   QuizFamiliarity,
   QuizSetup,
@@ -97,7 +100,9 @@ export function ApplyModal({
   const [submitted, setSubmitted] = useState(false);
 
   /* AI state */
-  const [aiThinking, setAiThinking] = useState<null | "suggest" | "polish" | "autofill">(null);
+  const [aiThinking, setAiThinking] = useState<
+    null | "suggest" | "polish" | "autofill"
+  >(null);
   const [autofilled, setAutofilled] = useState(false);
 
   /* Lock body scroll + Esc to close. */
@@ -156,11 +161,16 @@ export function ApplyModal({
   /* Per-step gate. */
   const canAdvance = (() => {
     switch (step) {
-      case 1: return true;
-      case 2: return familiarity !== null;
-      case 3: return angle.trim().length >= 10;
-      case 4: return setup !== null;
-      case 5: return confirmDeliver && confirmDisclose;
+      case 1:
+        return true;
+      case 2:
+        return familiarity !== null;
+      case 3:
+        return angle.trim().length >= 10;
+      case 4:
+        return setup !== null;
+      case 5:
+        return confirmDeliver && confirmDisclose;
     }
   })();
 
@@ -181,7 +191,7 @@ export function ApplyModal({
     if (!confirmDeliver || !confirmDisclose) return;
     setSubmitting(true);
     const slotIso = `${selectedSlot.date}T${selectedSlot.startTime}`;
-    applyToCampaign({
+    const clientApp = applyToCampaign({
       campaign,
       slotIso,
       familiarity: familiarity ?? undefined,
@@ -190,6 +200,19 @@ export function ApplyModal({
       confirmedDeliver: true,
       confirmedDisclose: true,
     });
+    // Register with server so merchant can see applicant + approve
+    fetch("/api/creator/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ campaign_id: campaign.id }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { application_id?: string } | null) => {
+        if (data?.application_id) {
+          patchApplication(clientApp.id, { serverAppId: data.application_id });
+        }
+      })
+      .catch(() => {});
     setSubmitted(true);
     /* v15 — no redirect. Hold the success animation on screen for
        1.4s so the creator registers the green check + ETA, then
@@ -271,7 +294,11 @@ export function ApplyModal({
               >
                 {aiThinking === "autofill" ? (
                   <>
-                    <Loader2 size={12} strokeWidth={2.25} className="apply-mdl__spin" />
+                    <Loader2
+                      size={12}
+                      strokeWidth={2.25}
+                      className="apply-mdl__spin"
+                    />
                     Filling…
                   </>
                 ) : autofilled ? (
@@ -317,9 +344,7 @@ export function ApplyModal({
                   aiThinking={aiThinking}
                 />
               )}
-              {step === 4 && (
-                <Step4Setup value={setup} onChange={setSetup} />
-              )}
+              {step === 4 && <Step4Setup value={setup} onChange={setSetup} />}
               {step === 5 && (
                 <Step5Confirm
                   campaign={campaign}
@@ -337,13 +362,10 @@ export function ApplyModal({
 
             {/* Footer */}
             <div className="apply-mdl__foot">
-              <p
-                id="apply-mdl-title"
-                className="apply-mdl__anchor"
-                aria-hidden
-              >
+              <p id="apply-mdl-title" className="apply-mdl__anchor" aria-hidden>
                 <span className="apply-mdl__anchor-num">
-                  {String(step).padStart(2, "0")} / {String(TOTAL_STEPS).padStart(2, "0")}
+                  {String(step).padStart(2, "0")} /{" "}
+                  {String(TOTAL_STEPS).padStart(2, "0")}
                 </span>
                 <span className="apply-mdl__anchor-sep">·</span>
                 <span className="apply-mdl__anchor-brand">
@@ -379,7 +401,11 @@ export function ApplyModal({
                   aria-disabled={!canAdvance || submitting}
                 >
                   {step === TOTAL_STEPS ? (
-                    submitting ? "Submitting…" : "Submit application"
+                    submitting ? (
+                      "Submitting…"
+                    ) : (
+                      "Submit application"
+                    )
                   ) : (
                     <>
                       Next
@@ -408,9 +434,12 @@ function agentNarrative(
     aiThinking: null | "suggest" | "polish" | "autofill";
   },
 ): string {
-  if (ctx.aiThinking === "autofill") return "Drafting your answers from your profile…";
-  if (ctx.aiThinking === "suggest") return "Drafting an angle in the merchant's voice…";
-  if (ctx.aiThinking === "polish") return "Tightening your draft for clarity and fit…";
+  if (ctx.aiThinking === "autofill")
+    return "Drafting your answers from your profile…";
+  if (ctx.aiThinking === "suggest")
+    return "Drafting an angle in the merchant's voice…";
+  if (ctx.aiThinking === "polish")
+    return "Tightening your draft for clarity and fit…";
   if (ctx.autofilled && step < 5)
     return "Filled with smart defaults — review and edit each step before submitting.";
   switch (step) {
@@ -471,11 +500,7 @@ function Step1Slot({
         )}
       </div>
 
-      <button
-        type="button"
-        className="apply-mdl__edit-link"
-        onClick={onEdit}
-      >
+      <button type="button" className="apply-mdl__edit-link" onClick={onEdit}>
         Change slot →
       </button>
     </div>
@@ -495,9 +520,7 @@ function Step2Familiarity({
 }) {
   return (
     <div className="apply-mdl__pane">
-      <h2 className="apply-mdl__h">
-        How well do you know {merchantName}?
-      </h2>
+      <h2 className="apply-mdl__h">How well do you know {merchantName}?</h2>
       <p className="apply-mdl__sub">
         Helps the merchant judge how authentic your content can feel.
       </p>
@@ -512,7 +535,9 @@ function Step2Familiarity({
             aria-pressed={value === k}
           >
             <span className="apply-mdl__opt-row">
-              <span className="apply-mdl__opt-label">{FAMILIARITY_LABEL[k]}</span>
+              <span className="apply-mdl__opt-label">
+                {FAMILIARITY_LABEL[k]}
+              </span>
               {value === k && (
                 <span className="apply-mdl__opt-tick" aria-hidden>
                   <CheckCircle2 size={18} strokeWidth={2.5} />
@@ -548,7 +573,10 @@ function Step3Angle({
   onPolish: () => void;
   aiThinking: null | "suggest" | "polish" | "autofill";
 }) {
-  const strength = useMemo(() => analyzeAngle(value, campaign), [value, campaign]);
+  const strength = useMemo(
+    () => analyzeAngle(value, campaign),
+    [value, campaign],
+  );
   const suggestionChips = useMemo(
     () => suggestionChipsFor(value, campaign),
     [value, campaign],
@@ -558,8 +586,8 @@ function Step3Angle({
     <div className="apply-mdl__pane">
       <h2 className="apply-mdl__h">What&apos;s your angle?</h2>
       <p className="apply-mdl__sub">
-        One or two sentences. The merchant&apos;s decision often hinges on
-        this — what makes your content fit?
+        One or two sentences. The merchant&apos;s decision often hinges on this
+        — what makes your content fit?
       </p>
 
       <div className="apply-mdl__textarea-wrap">
@@ -567,7 +595,9 @@ function Step3Angle({
           className="apply-mdl__textarea"
           placeholder="e.g. The manga shelf hasn't changed since '98 — my mom shopped here, now I do too. I'd film the dive in handheld, no fast cuts."
           maxLength={280}
-          value={aiThinking === "suggest" || aiThinking === "polish" ? "" : value}
+          value={
+            aiThinking === "suggest" || aiThinking === "polish" ? "" : value
+          }
           onChange={(e) => onChange(e.target.value)}
           rows={5}
           autoFocus
@@ -593,7 +623,11 @@ function Step3Angle({
           >
             {aiThinking === "suggest" ? (
               <>
-                <Loader2 size={13} strokeWidth={2.25} className="apply-mdl__spin" />
+                <Loader2
+                  size={13}
+                  strokeWidth={2.25}
+                  className="apply-mdl__spin"
+                />
                 Drafting…
               </>
             ) : (
@@ -616,7 +650,11 @@ function Step3Angle({
           >
             {aiThinking === "polish" ? (
               <>
-                <Loader2 size={13} strokeWidth={2.25} className="apply-mdl__spin" />
+                <Loader2
+                  size={13}
+                  strokeWidth={2.25}
+                  className="apply-mdl__spin"
+                />
                 Polishing…
               </>
             ) : (
@@ -650,7 +688,9 @@ function Step3Angle({
               Try
             </span>
             {suggestionChips.map((c) => (
-              <span key={c} className="apply-mdl__chip">{c}</span>
+              <span key={c} className="apply-mdl__chip">
+                {c}
+              </span>
             ))}
           </div>
         )}
@@ -706,7 +746,8 @@ function Step4Setup({
             </span>
             <span className="apply-mdl__opt-desc">
               {k === "phone" && "iPhone or Android — handheld, native camera"}
-              {k === "phone-plus" && "Phone + ring light, gimbal, or external mic"}
+              {k === "phone-plus" &&
+                "Phone + ring light, gimbal, or external mic"}
               {k === "pro" && "Mirrorless / DSLR — dedicated video setup"}
             </span>
           </button>
@@ -841,7 +882,12 @@ function SuccessState({ campaign }: { campaign: Campaign }) {
   return (
     <div className="apply-mdl__success">
       <div className="apply-mdl__success-tick" aria-hidden>
-        <CheckCircle2 size={56} strokeWidth={2} fill="#34c759" color="#ffffff" />
+        <CheckCircle2
+          size={56}
+          strokeWidth={2}
+          fill="#34c759"
+          color="#ffffff"
+        />
       </div>
       <p className="apply-mdl__success-title">Application sent</p>
       <p className="apply-mdl__success-sub">
@@ -857,16 +903,15 @@ function SuccessState({ campaign }: { campaign: Campaign }) {
 /** Generate a merchant-aware angle draft. Uses category + neighborhood
  *  + tagline to produce a 1-2 sentence pitch in the creator's voice
  *  that fits Push's tone (specific, sensory, no fluff). */
-function generateAngleDraft(
-  c: Campaign,
-  fam: QuizFamiliarity | null,
-): string {
+function generateAngleDraft(c: Campaign, fam: QuizFamiliarity | null): string {
   const m = c.merchantName;
   const place = c.neighborhood.split(",")[0]?.trim() ?? c.neighborhood;
   const familiarity =
-    fam === "regular" ? "I shop here every other week"
-    : fam === "few" ? "I've been a couple times"
-    : "I haven't been yet, but I know the block";
+    fam === "regular"
+      ? "I shop here every other week"
+      : fam === "few"
+        ? "I've been a couple times"
+        : "I haven't been yet, but I know the block";
 
   const byCategory: Record<Campaign["category"], string[]> = {
     "FOOD & DRINK": [
@@ -964,20 +1009,42 @@ function analyzeAngle(text: string, c: Campaign): AngleStrength {
     len >= 60 ? "pass" : len >= 30 ? "warn" : "miss";
 
   const hasSpecific =
-    /\b(19|20)\d{2}\b/.test(t) || /\b\d+(\.\d+)?\b/.test(t) || /\b(every|each|one|two|three|first|last)\b/i.test(t);
+    /\b(19|20)\d{2}\b/.test(t) ||
+    /\b\d+(\.\d+)?\b/.test(t) ||
+    /\b(every|each|one|two|three|first|last)\b/i.test(t);
   const specificState: AngleDim["state"] = hasSpecific
     ? "pass"
-    : len > 30 ? "warn" : "miss";
+    : len > 30
+      ? "warn"
+      : "miss";
 
   const sensoryWords = [
-    "shoot", "film", "walk", "light", "loud", "quiet", "sound",
-    "shot", "cut", "frame", "morning", "evening", "smell", "taste",
-    "handheld", "wide", "close", "wide-angle", "vertical",
+    "shoot",
+    "film",
+    "walk",
+    "light",
+    "loud",
+    "quiet",
+    "sound",
+    "shot",
+    "cut",
+    "frame",
+    "morning",
+    "evening",
+    "smell",
+    "taste",
+    "handheld",
+    "wide",
+    "close",
+    "wide-angle",
+    "vertical",
   ];
   const hasSensory = sensoryWords.some((w) => lower.includes(w));
   const sensoryState: AngleDim["state"] = hasSensory
     ? "pass"
-    : len > 40 ? "warn" : "miss";
+    : len > 40
+      ? "warn"
+      : "miss";
 
   const place = c.neighborhood.split(",")[0]?.trim().toLowerCase() ?? "";
   const fitMentioned =
@@ -985,7 +1052,9 @@ function analyzeAngle(text: string, c: Campaign): AngleStrength {
     (place.length > 0 && lower.includes(place));
   const fitState: AngleDim["state"] = fitMentioned
     ? "pass"
-    : len > 40 ? "warn" : "miss";
+    : len > 40
+      ? "warn"
+      : "miss";
 
   const dims: AngleDim[] = [
     {
@@ -993,42 +1062,50 @@ function analyzeAngle(text: string, c: Campaign): AngleStrength {
       label: "Length",
       state: lengthState,
       hint:
-        lengthState === "pass" ? "Reads as a full thought."
-        : lengthState === "warn" ? "Short — 1 more sentence helps."
-        : "Too short. Aim for 1-2 sentences.",
+        lengthState === "pass"
+          ? "Reads as a full thought."
+          : lengthState === "warn"
+            ? "Short — 1 more sentence helps."
+            : "Too short. Aim for 1-2 sentences.",
     },
     {
       key: "specific",
       label: "Specific",
       state: specificState,
       hint:
-        specificState === "pass" ? "Specific enough — numbers or concrete words."
-        : "Add a specific detail (year, count, object).",
+        specificState === "pass"
+          ? "Specific enough — numbers or concrete words."
+          : "Add a specific detail (year, count, object).",
     },
     {
       key: "sensory",
       label: "Sensory",
       state: sensoryState,
       hint:
-        sensoryState === "pass" ? "You named what you'd film."
-        : "Mention a sound, light, or shot — show your eye.",
+        sensoryState === "pass"
+          ? "You named what you'd film."
+          : "Mention a sound, light, or shot — show your eye.",
     },
     {
       key: "fit",
       label: "Fit",
       state: fitState,
       hint:
-        fitState === "pass" ? "You tied it to the merchant or place."
-        : `Mention ${c.merchantName} or ${place} once.`,
+        fitState === "pass"
+          ? "You tied it to the merchant or place."
+          : `Mention ${c.merchantName} or ${place} once.`,
     },
   ];
 
   const passCount = dims.filter((d) => d.state === "pass").length;
   const summary =
-    passCount === 4 ? "Strong answer — merchant-ready."
-    : passCount === 3 ? "Good. One more tweak away from strong."
-    : passCount >= 1 ? "Some signal. Try the suggestions below."
-    : "Looks good";
+    passCount === 4
+      ? "Strong answer — merchant-ready."
+      : passCount === 3
+        ? "Good. One more tweak away from strong."
+        : passCount >= 1
+          ? "Some signal. Try the suggestions below."
+          : "Looks good";
   return { dims, summary };
 }
 

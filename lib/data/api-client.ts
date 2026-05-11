@@ -39,7 +39,13 @@ import {
   type MockApplication,
   type ApplicantFilters,
   type ApplicationStatus,
+  type CreatorTier,
 } from "./mock-applications";
+
+import {
+  playtestApplications,
+  type PlaytestApplication,
+} from "@/lib/playtest/store";
 
 import { MOCK_MERCHANT_NOTIFICATIONS } from "./mock-notifications";
 import { MOCK_MERCHANT_PAYMENTS_HISTORY } from "./mock-payments";
@@ -758,6 +764,32 @@ const creatorReal = {
 
 // ── Merchant endpoints ────────────────────────────────────────────────────────
 
+function playtestToMockApp(p: PlaytestApplication): MockApplication {
+  return {
+    id: p.id,
+    campaignId: p.campaignId,
+    campaignName: p.campaignTitle,
+    status: p.status as ApplicationStatus,
+    matchScore: 88,
+    coverLetter: "Applied via Push creator portal",
+    sampleUrls: [],
+    appliedAt: p.appliedAt,
+    creator: {
+      id: `playtest-creator-${p.id.slice(0, 8)}`,
+      name: "Demo Creator",
+      handle: p.creatorHandle,
+      avatar: "",
+      bio: "Playtest creator",
+      tier: "explorer" as CreatorTier,
+      pushScore: 72,
+      followers: 4200,
+      campaignsCompleted: 3,
+      conversionRate: 0.18,
+      lastActive: p.appliedAt,
+    },
+  };
+}
+
 let _applications = [...MOCK_APPLICATIONS];
 let _qrStore: QRCodeRecord[] = [...MOCK_QR_CODES];
 
@@ -771,8 +803,9 @@ const merchantMock = {
 
   createCampaign(data: CampaignCreatePayload): ApiResult<Campaign> {
     const existing = mockStore.read<Campaign[]>("merchant-campaigns", []);
+    const id = crypto.randomUUID();
     const campaign: Campaign = {
-      id: `cmp-${Date.now()}`,
+      id,
       merchant_id: "demo-merchant-001",
       tenant_id: data.tenant_id ?? "tenant-demo-001",
       title: data.title ?? "New Campaign",
@@ -802,6 +835,14 @@ const merchantMock = {
       created_at: new Date().toISOString(),
     };
     mockStore.write("merchant-campaigns", [...existing, campaign]);
+    // Fire-and-forget: sync to server so creator portal can discover this campaign
+    if (typeof window !== "undefined") {
+      fetch("/api/merchant/campaigns", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, _clientId: id }),
+      }).catch(() => {});
+    }
     return mockOk(campaign);
   },
 
@@ -823,31 +864,80 @@ const merchantMock = {
     data: MockApplication[];
     total: number;
   } {
-    return filterApplications(_applications, filters);
+    const { data, total } = filterApplications(_applications, filters);
+    // Include live playtest applications (populated server-side from /api/creator/apply)
+    const liveApps = Array.from(playtestApplications.values()).map(
+      playtestToMockApp,
+    );
+    return { data: [...liveApps, ...data], total: total + liveApps.length };
   },
 
-  decideApplication(
+  async decideApplication(
     id: string,
     decision: "accept" | "decline" | "shortlist",
-  ): MockApplication | null {
+  ): Promise<MockApplication | null> {
     const statusMap: Record<typeof decision, ApplicationStatus> = {
       accept: "accepted",
       decline: "declined",
       shortlist: "shortlisted",
     };
     const idx = _applications.findIndex((a) => a.id === id);
-    if (idx === -1) return null;
-    _applications[idx] = { ..._applications[idx], status: statusMap[decision] };
-    return _applications[idx];
+    if (idx !== -1) {
+      _applications[idx] = {
+        ..._applications[idx],
+        status: statusMap[decision],
+      };
+    }
+    // Always call server so playtestApplications is updated (playtest apps live there)
+    try {
+      const res = await fetch(`/api/merchant/applicants/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ decision }),
+      });
+      if (res.ok) {
+        if (idx !== -1) return _applications[idx] ?? null;
+        // Playtest application — construct MockApplication from server response
+        const data = (await res.json()) as Record<string, unknown>;
+        return {
+          id: (data.id as string) ?? id,
+          campaignId: (data.campaignId as string) ?? "",
+          campaignName: (data.campaignTitle as string) ?? "Campaign",
+          status: ((data.status as string) ??
+            statusMap[decision]) as ApplicationStatus,
+          matchScore: 88,
+          coverLetter: "Applied via Push creator portal",
+          sampleUrls: [],
+          appliedAt: (data.appliedAt as string) ?? new Date().toISOString(),
+          creator: {
+            id: `playtest-creator-${id.slice(0, 8)}`,
+            name: "Demo Creator",
+            handle: (data.creatorHandle as string) ?? "@demo-creator",
+            avatar: "",
+            bio: "Playtest creator",
+            tier: "explorer" as CreatorTier,
+            pushScore: 72,
+            followers: 4200,
+            campaignsCompleted: 3,
+            conversionRate: 0.18,
+            lastActive: (data.appliedAt as string) ?? new Date().toISOString(),
+          },
+        };
+      }
+    } catch {
+      // Network error — fall through to local result
+    }
+    return idx !== -1 ? (_applications[idx] ?? null) : null;
   },
 
-  batchDecide(
+  async batchDecide(
     ids: string[],
     decision: "accept" | "decline" | "shortlist",
-  ): MockApplication[] {
-    return ids
-      .map((id) => this.decideApplication(id, decision))
-      .filter((a): a is MockApplication => a !== null);
+  ): Promise<MockApplication[]> {
+    const results = await Promise.all(
+      ids.map((id) => this.decideApplication(id, decision)),
+    );
+    return results.filter((a): a is MockApplication => a !== null);
   },
 
   qrCodes: {

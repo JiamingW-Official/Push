@@ -118,6 +118,11 @@ export function Stage4ShootLivePanel({
   const [shotsDone, setShotsDone] = useState<Set<number>>(new Set());
   const [scanned, setScanned] = useState(false);
   const [scanFlash, setScanFlash] = useState(false);
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   function toggleShot(id: number) {
     setShotsDone((prev) => {
@@ -133,7 +138,14 @@ export function Stage4ShootLivePanel({
     setTimeout(() => setScanFlash(false), 2500);
   }
 
-  const qrId = application.qrCodeId ?? `qr_${application.id.slice(-6)}`;
+  const qrId = campaign.id;
+  const scanUrl = origin
+    ? `${origin}/scan/${qrId}`
+    : `https://pushnyc.co/scan/${qrId}`;
+  const qrImgUrl =
+    `https://api.qrserver.com/v1/create-qr-code/` +
+    `?data=${encodeURIComponent(scanUrl)}` +
+    `&size=168x168&color=ffffff&bgcolor=1a1916&ecc=H&margin=6`;
 
   const elapsedMinutes = (() => {
     if (!application.slotIso) return 0;
@@ -245,10 +257,57 @@ export function Stage4ShootLivePanel({
               className="ad-qr-v3__code"
               role="img"
               aria-label="QR code for merchant scan"
+              style={{ position: "relative" }}
             >
-              <QrGrid id={qrId} scanned={scanned} />
+              {origin ? (
+                <a
+                  href={scanUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "block",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={qrImgUrl}
+                    alt="Campaign QR code"
+                    width={168}
+                    height={168}
+                    style={{
+                      display: "block",
+                      opacity: scanned ? 0.25 : 1,
+                      transition: "opacity 0.4s ease",
+                    }}
+                  />
+                </a>
+              ) : (
+                <QrGrid id={qrId} scanned={scanned} />
+              )}
+              {scanned && (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <CheckCircle2
+                    size={64}
+                    strokeWidth={1.5}
+                    style={{ color: "#16a34a" }}
+                  />
+                </div>
+              )}
             </div>
-            <span className="ad-qr-v3__id">{qrId}</span>
+            <span className="ad-qr-v3__id">
+              {origin ? `/scan/${qrId.slice(0, 8)}…` : qrId}
+            </span>
             <span className="ad-qr-v3__hint">
               Merchant scans this at the register to log your visit and start
               attribution.

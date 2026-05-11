@@ -28,7 +28,7 @@ body:has(.dh-shell) .dh-main:has(.money-hub) {
 .money-hub {
   margin-top: 0;
   margin-bottom: 0;
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 32px;
   background: var(--snow, #fff);
   height: 100%;
@@ -70,7 +70,7 @@ body:has(.dh-shell) .dh-main:has(.money-hub) {
 .money-hero__left { min-width: 0; }
 .money-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(32px, 3.2vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.98;
@@ -248,7 +248,7 @@ body:has(.dh-shell) .dh-main:has(.money-hub) {
      Still 1.6-2x sibling heroes (44px) — anchor hierarchy preserved. */
   display: inline-block;
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(52px, 5.4vw, 72px);
+  font-size: clamp(32px, 3.4vw, 52px);
   font-weight: 800;
   letter-spacing: -0.032em;
   line-height: 0.96;
@@ -1337,7 +1337,7 @@ body:has(.dh-shell) .dh-main:has(.money-hub) {
 }
 .money-milestone__count {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(56px, 6vw, 80px);
+  font-size: clamp(32px, 3.4vw, 52px);
   font-weight: 800;
   letter-spacing: -0.028em;
   line-height: 1;

@@ -35,7 +35,7 @@
 }
 .today-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(32px, 3.2vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.98;

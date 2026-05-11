@@ -272,7 +272,7 @@
 }
 
 .conn-page .set-sub__title {
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.022em;
   position: relative;

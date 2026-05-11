@@ -18,7 +18,7 @@
   --us-tile:        32px;   /* icon tile */
   --us-icon:        22px;   /* icon glyph */
   --us-item-inset:  10px;   /* horizontal inset of pill from rail edge */
-  --us-item-gap:    6px;    /* between items */
+  --us-item-gap:    4px;    /* between items */
   --us-pad-x:       12px;   /* rail outer padding */
   --us-cap-size:    14px;   /* nav label font-size — v12.1 floor */
   --us-radius:      14px;   /* iOS 26 continuous corner */
@@ -99,7 +99,7 @@
   position: relative;
   width: calc(100% - 2 * var(--us-item-inset));
   margin: 0 auto;
-  padding: 6px 0 12px;
+  padding: 4px 0 8px;
   border-radius: var(--us-radius);
   text-decoration: none;
   color: var(--ink-3, #61605c);
@@ -432,7 +432,7 @@
 
 :root {
   --page-gutter: 10%;     /* symmetric L/R margin, viewport-relative */
-  --page-pad-y-top: 56px;
+  --page-pad-y-top: 32px;
   --page-pad-y-bot: 96px;
 }
 

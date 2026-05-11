@@ -1232,7 +1232,22 @@ export default function CampaignDetailPage() {
     if (!campaign || !creator || applying || applied) return;
     setApplying(true);
     if (isDemo) {
-      await new Promise((r) => setTimeout(r, 600));
+      // Playtest campaigns (UUID-based, not in local DEMO_CAMPAIGNS) need a real
+      // server write so the merchant sees the application in their pool.
+      const isPlaytest = !DEMO_CAMPAIGNS.find((c) => c.id === id);
+      if (isPlaytest) {
+        try {
+          await fetch("/api/creator/apply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ campaign_id: id }),
+          });
+        } catch {
+          // best-effort — UI still proceeds
+        }
+      } else {
+        await new Promise((r) => setTimeout(r, 600));
+      }
       setApplied(true);
       setMilestone("accepted");
       setApplying(false);

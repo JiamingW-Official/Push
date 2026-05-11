@@ -6,7 +6,7 @@
    ============================================================ */
 
 .md-hub {
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 8px;
   margin-bottom: -88px;
   background: var(--snow, #fff);
@@ -34,8 +34,8 @@
   grid-template-columns: 1fr auto;
   align-items: end;
   column-gap: 32px;
-  padding: 16px 0 20px;
-  margin-bottom: 20px;
+  padding: 8px 0 12px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--mist, #d8d4c8);
 }
 
@@ -65,7 +65,7 @@
 
 .md-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(32px, 3.2vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.98;
@@ -92,8 +92,17 @@
   gap: 16px;
 }
 
+@media (max-width: 1024px) {
+  /* iPad: reduce bento row height so all 6 panels fit without excessive scroll */
+  .md-bento { grid-auto-rows: minmax(200px, auto); }
+}
+
 @media (max-width: 768px) {
   .md-hub { padding-top: 16px; padding-bottom: 96px; }
+  /* Tighter rows on phone */
+  .md-bento { grid-auto-rows: minmax(160px, auto); gap: 12px; }
+  /* Hero title stays readable */
+  .md-hero__title { font-size: clamp(28px, 7vw, 40px); }
 }
 
 @media (max-width: 640px) {
@@ -110,7 +119,7 @@
 
 .md-revenue__num {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(56px, 6vw, 88px);
+  font-size: clamp(40px, 4.2vw, 64px);
   font-weight: 800;
   letter-spacing: -0.032em;
   line-height: 0.92;
@@ -165,7 +174,7 @@
 
 .md-applicants__num {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(56px, 6vw, 80px);
+  font-size: clamp(40px, 4.2vw, 60px);
   font-weight: 800;
   letter-spacing: -0.028em;
   line-height: 0.92;

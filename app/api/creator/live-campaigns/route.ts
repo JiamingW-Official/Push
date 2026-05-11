@@ -1,11 +1,15 @@
 // GET /api/creator/live-campaigns
 // Returns playtest campaigns in Campaign shape so the discover page can
 // prepend them to MOCK_CAMPAIGNS.
-// ?id=<uuid>  → single campaign lookup (for detail + apply pages)
+// ?id=<uuid|disc-*>  → single campaign lookup (for detail + apply pages)
+//
+// Lookup priority:
+//   1. playtestCampaigns server Map (user-created in demo session)
+//   2. MOCK_CAMPAIGNS (always-present seed data, needed for direct URLs)
 
 import { NextRequest, NextResponse } from "next/server";
 import { playtestCampaigns, type PlaytestCampaign } from "@/lib/playtest/store";
-import type { Campaign } from "@/lib/mocks/campaigns";
+import { MOCK_CAMPAIGNS, type Campaign } from "@/lib/mocks/campaigns";
 
 function toCampaign(p: PlaytestCampaign): Campaign {
   const cat = p.category.toUpperCase();
@@ -53,8 +57,12 @@ function toCampaign(p: PlaytestCampaign): Campaign {
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   if (id) {
+    // 1. Check playtest (user-created in this demo session)
     const p = playtestCampaigns.get(id);
-    return NextResponse.json({ campaign: p ? toCampaign(p) : null });
+    if (p) return NextResponse.json({ campaign: toCampaign(p) });
+    // 2. Check static mock seed (disc-* IDs — always available)
+    const mock = MOCK_CAMPAIGNS.find((c) => c.id === id);
+    return NextResponse.json({ campaign: mock ?? null });
   }
   const campaigns = Array.from(playtestCampaigns.values()).map(toCampaign);
   return NextResponse.json({ campaigns });

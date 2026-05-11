@@ -1,7 +1,14 @@
 // TODO: wire to Supabase + notify creator via Realtime
 import { NextRequest, NextResponse } from "next/server";
+import { playtestApplications } from "@/lib/playtest/store";
 
 type Decision = "accept" | "decline" | "shortlist";
+
+const STATUS_MAP: Record<Decision, "accepted" | "declined" | "shortlisted"> = {
+  accept: "accepted",
+  decline: "declined",
+  shortlist: "shortlisted",
+};
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -18,9 +25,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid decision" }, { status: 400 });
   }
 
-  // TODO: batch update Supabase applications table + trigger realtime notification
+  const newStatus = STATUS_MAP[decision];
+  let updated = 0;
+  for (const appId of applicationIds) {
+    const app = playtestApplications.get(appId);
+    if (app) {
+      playtestApplications.set(appId, { ...app, status: newStatus });
+      updated++;
+    }
+  }
+
   return NextResponse.json({
-    updated: applicationIds.length,
+    updated,
     decision,
     ids: applicationIds,
   });

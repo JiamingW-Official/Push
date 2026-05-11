@@ -121,7 +121,7 @@ export default function MerchantDashboard() {
 
         {/* LIVE — today's QR scans */}
         <BentoModule
-          href="/merchant/qr-codes"
+          href="/merchant/operations"
           eyebrow="Live · today"
           icon={<QrCode {...ICON_PROPS} />}
           span={3}
@@ -215,7 +215,7 @@ export default function MerchantDashboard() {
 
         {/* SPEND */}
         <BentoModule
-          href="/merchant/billing"
+          href="/merchant/finance"
           eyebrow="Spend · this month"
           icon={<CreditCard {...ICON_PROPS} />}
           span={3}

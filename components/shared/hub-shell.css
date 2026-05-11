@@ -155,8 +155,8 @@
   grid-template-columns: 1fr auto;
   align-items: end;
   column-gap: 32px;
-  padding: 16px 0 20px;
-  margin-bottom: 20px;
+  padding: 8px 0 12px;
+  margin-bottom: 16px;
   max-width: none;
   position: relative;
   border-bottom: 1px solid var(--mist, #d8d4c8);
@@ -223,14 +223,14 @@
 .work-hero__eyebrow::before  { background: #ff5e2b; box-shadow: 0 0 0 3px rgba(255, 94, 43, 0.18); }
 .set-hero__eyebrow::before   { background: #8a704a; box-shadow: 0 0 0 3px rgba(138, 112, 74, 0.18); }
 
-/* Hero title — Darky 800, full Analytics scale (clamp 48-72). */
+/* Hero title — Darky 800. */
 .money-hero__title,
 .me-hero__title,
 .comms-hero__title,
 .work-hero__title,
 .set-hero__title {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(32px, 3.2vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.98;

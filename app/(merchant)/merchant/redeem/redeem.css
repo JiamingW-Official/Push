@@ -922,7 +922,7 @@
 
 /* H1 mobile floor 40 — page title sits above ticket panel */
 .redeem-page .redeem-page-title {
-  font-size: clamp(40px, 5.6vw, 72px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.025em;
 }
@@ -982,4 +982,166 @@
     overflow-x: hidden;
     padding-bottom: max(48px, env(safe-area-inset-bottom));
   }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 11 — Redeem Terminal Premium Polish
+   Dark inner shine on input · premium dark result cards · massive CTA ·
+   larger status dot pulse · left-border red accent on result cards.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Enhanced ticket input — dark inner shine ─────────────── */
+
+.redeem-ticket-input {
+  /* Override: add a subtle dark inset shadow to feel like a physical slot */
+  box-shadow:
+    inset 0 2px 8px rgba(10, 10, 10, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 1.5px solid rgba(10, 10, 10, 0.35);
+}
+
+.redeem-ticket-input:focus,
+.redeem-ticket-input:focus-visible {
+  border-color: var(--ink);
+  box-shadow:
+    inset 0 2px 12px rgba(10, 10, 10, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 0 0 4px rgba(10, 10, 10, 0.14);
+}
+
+/* ── Status dot — larger with animated ring pulse ─────────── */
+
+.redeem-verify-dot--pending {
+  width: 12px;
+  height: 12px;
+  animation: redeem-pulse-v11 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+@keyframes redeem-pulse-v11 {
+  0%   { opacity: 1; transform: scale(1);   box-shadow: 0 0 0 0 rgba(10, 10, 10, 0.4); }
+  50%  { opacity: 0.7; transform: scale(0.8); box-shadow: 0 0 0 6px rgba(10, 10, 10, 0); }
+  100% { opacity: 1; transform: scale(1);   box-shadow: 0 0 0 0 rgba(10, 10, 10, 0); }
+}
+
+/* ── REDEEM button — massive full-width ───────────────────── */
+
+.redeem-cta {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 16px 32px;
+}
+
+/* ── Result cards — premium dark surface treatment ────────── */
+
+.redeem-page .redeem-result-card {
+  /* Override liquid-glass with ink-dark for premium POS terminal feel */
+  background: var(--ink);
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  border: none;
+  border-left: 4px solid var(--brand-red);
+  box-shadow: var(--shadow-2);
+}
+
+.redeem-page .redeem-result-card:hover {
+  background: var(--graphite, #2c2a26);
+  box-shadow: var(--shadow-3);
+}
+
+/* All text inside dark result cards → snow */
+.redeem-page .redeem-result-card .redeem-result-handle,
+.redeem-page .redeem-result-card .redeem-result-offer {
+  color: var(--snow);
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+}
+
+.redeem-page .redeem-result-card .redeem-result-time {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.redeem-page .redeem-result-card .redeem-result-campaign {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.redeem-page .redeem-result-card .redeem-result-meta dt {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.redeem-page .redeem-result-card .redeem-result-meta dd {
+  color: var(--snow);
+}
+
+.redeem-page .redeem-result-card .redeem-result-status-pill {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--snow);
+}
+
+/* ── Reduced transparency fallback: flat dark card ────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .redeem-page .redeem-result-card {
+    background: var(--ink) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 12 — Redeem Premium (2026-05-10)
+   Intensified atmosphere for warm-cream shell. Page eyebrow branded dot.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* More intense backdrop over warm cream canvas */
+.redeem-page::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 12%,  rgba(255, 94, 43, 0.12),   transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 10% 28%,  rgba(191, 161, 112, 0.16), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(0, 133, 255, 0.08),   transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.65), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 20% 85%,  rgba(193, 18, 31, 0.05),   transparent 75%);
+}
+
+/* GA-orange branded dot before page eyebrow */
+.redeem-page .redeem-page-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ga-orange, #ff5e2b);
+  box-shadow: 0 0 0 3px rgba(255, 94, 43, 0.20);
+  margin-right: 10px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+/* Page title — tighter tracking for POS terminal gravitas */
+.redeem-page .redeem-page-title {
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+/* Results section header — glass pill container */
+.redeem-page .redeem-results-section {
+  position: relative;
+}
+
+/* REDEEM button — bigger, more dramatic */
+.redeem-cta {
+  min-height: 64px;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  border-radius: 12px;
 }
