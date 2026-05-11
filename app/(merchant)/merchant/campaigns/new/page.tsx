@@ -1,19 +1,23 @@
 "use client";
 
-import { useState, type ChangeEvent } from "react";
+import { useState, useCallback, type ChangeEvent } from "react";
+import { Check } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CategoryPicker } from "@/components/merchant/campaign-wizard/CategoryPicker";
 import { TierSelector } from "@/components/merchant/campaign-wizard/TierSelector";
 import type { CreatorTier } from "@/components/merchant/campaign-wizard/TierSelector";
+import { MerchantAgent } from "@/components/merchant/campaign-wizard/MerchantAgent";
+import { AIBriefHelper } from "@/components/merchant/campaign-wizard/AIBriefHelper";
 import { useToast } from "@/components/toast/Toaster";
 import { api, type CampaignCreatePayload } from "@/lib/data/api-client";
 import { CampaignStatus } from "@/lib/data/types";
+import { addMerchantCampaign } from "@/lib/data/merchant-campaigns";
 import { MOCK_LOCATIONS } from "@/lib/merchant/mock-locations";
 import type { HeroOffer, HeroOfferType } from "@/lib/offers/types";
 import "./campaign-new.css";
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 type HeroOfferDraft = Partial<HeroOffer>;
 
@@ -32,6 +36,7 @@ type FormData = {
   // Mystery Drop (v3): raw user text for bonus positions. Parsed on change +
   // on submit into hero_offer.bonus_positions: number[].
   bonusPositionsInput: string;
+  campaignImages: string[];
 };
 
 type FormErrorKey =
@@ -78,7 +83,7 @@ function parseBonusPositionsInput(
 
 type FormErrors = Partial<Record<FormErrorKey, string>>;
 
-const STEPS: Step[] = [1, 2, 3, 4, 5, 6];
+const STEPS: Step[] = [1, 2, 3, 4, 5, 6, 7];
 
 const STEP_META: Record<
   Step,
@@ -103,18 +108,24 @@ const STEP_META: Record<
       "Define the content format, target platform, and delivery deadline.",
   },
   4: {
-    indicator: "APPLICABLE LOCATIONS",
+    indicator: "LOCATIONS",
     rail: "APPLICABLE LOCATIONS",
     description:
       "Choose exactly where customers can redeem the offer in-store.",
   },
   5: {
-    indicator: "HERO OFFER",
+    indicator: "OFFER",
     rail: "HERO OFFER",
     description:
       "Configure the offer customers receive when they show this campaign.",
   },
   6: {
+    indicator: "PHOTOS",
+    rail: "CAMPAIGN PHOTOS",
+    description:
+      "Pick up to 5 photos from the image archive. These appear in your campaign detail page.",
+  },
+  7: {
     indicator: "REVIEW",
     rail: "REVIEW",
     description: "Verify all campaign details before publishing.",
@@ -205,6 +216,7 @@ function createEmptyForm(): FormData {
       bonus_reward_description: "",
     },
     bonusPositionsInput: "",
+    campaignImages: [],
   };
 }
 
@@ -257,6 +269,233 @@ function formatHeroOfferValue(offer: HeroOfferDraft) {
     default:
       return "—";
   }
+}
+
+/* ── Photo archive catalogue (shared with ImageArchivePicker) ── */
+const PHOTO_ARCHIVE = [
+  {
+    id: "arc-001",
+    src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80",
+    alt: "Latte art overhead",
+    category: "coffee",
+    label: "Latte art",
+  },
+  {
+    id: "arc-002",
+    src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80",
+    alt: "Espresso pull",
+    category: "coffee",
+    label: "Espresso shot",
+  },
+  {
+    id: "arc-003",
+    src: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80",
+    alt: "Cold brew glass",
+    category: "coffee",
+    label: "Cold brew",
+  },
+  {
+    id: "arc-004",
+    src: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80",
+    alt: "Matcha latte",
+    category: "coffee",
+    label: "Matcha latte",
+  },
+  {
+    id: "arc-005",
+    src: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80",
+    alt: "Café interior",
+    category: "coffee",
+    label: "Café interior",
+  },
+  {
+    id: "arc-006",
+    src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80",
+    alt: "Barista at work",
+    category: "coffee",
+    label: "Barista",
+  },
+  {
+    id: "arc-007",
+    src: "https://images.unsplash.com/photo-1568254183919-78a4f43a2877?w=600&q=80",
+    alt: "Bagels on wood board",
+    category: "bakery",
+    label: "Bagels",
+  },
+  {
+    id: "arc-008",
+    src: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80",
+    alt: "Fresh baked bread",
+    category: "bakery",
+    label: "Fresh bread",
+  },
+  {
+    id: "arc-009",
+    src: "https://images.unsplash.com/photo-1530610476181-d83430b64dcd?w=600&q=80",
+    alt: "Croissants on tray",
+    category: "bakery",
+    label: "Croissants",
+  },
+  {
+    id: "arc-010",
+    src: "https://images.unsplash.com/photo-1567177662154-dfeb4c93b6ae?w=600&q=80",
+    alt: "Pastry close-up",
+    category: "bakery",
+    label: "Pastry",
+  },
+  {
+    id: "arc-011",
+    src: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80",
+    alt: "Artisan donuts",
+    category: "bakery",
+    label: "Donuts",
+  },
+  {
+    id: "arc-012",
+    src: "https://images.unsplash.com/photo-1515467197853-cd761b5ecf4f?w=600&q=80",
+    alt: "Cinnamon rolls",
+    category: "bakery",
+    label: "Cinnamon rolls",
+  },
+  {
+    id: "arc-013",
+    src: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",
+    alt: "Healthy bowl",
+    category: "food",
+    label: "Grain bowl",
+  },
+  {
+    id: "arc-014",
+    src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80",
+    alt: "Colorful plate",
+    category: "food",
+    label: "Plated dish",
+  },
+  {
+    id: "arc-015",
+    src: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80",
+    alt: "Fresh salad",
+    category: "food",
+    label: "Salad",
+  },
+  {
+    id: "arc-016",
+    src: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80",
+    alt: "Pizza slice",
+    category: "food",
+    label: "Pizza",
+  },
+  {
+    id: "arc-017",
+    src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80",
+    alt: "People at table",
+    category: "lifestyle",
+    label: "Table scene",
+  },
+  {
+    id: "arc-018",
+    src: "https://images.unsplash.com/photo-1531925470851-1b5896b62897?w=600&q=80",
+    alt: "Cozy café corner",
+    category: "lifestyle",
+    label: "Café corner",
+  },
+  {
+    id: "arc-019",
+    src: "https://images.unsplash.com/photo-1493515322954-4fa727e97985?w=600&q=80",
+    alt: "Hands holding drink",
+    category: "lifestyle",
+    label: "Hands + drink",
+  },
+  {
+    id: "arc-020",
+    src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80",
+    alt: "Restaurant interior",
+    category: "lifestyle",
+    label: "Interior",
+  },
+] as const;
+
+const PHOTO_CATS = ["all", "coffee", "bakery", "food", "lifestyle"] as const;
+type PhotoCat = (typeof PHOTO_CATS)[number];
+const MAX_PHOTOS = 5;
+
+function CampaignPhotoStep({
+  selected,
+  onChange,
+}: {
+  selected: string[];
+  onChange: (urls: string[]) => void;
+}) {
+  const [cat, setCat] = useState<PhotoCat>("all");
+
+  const toggle = useCallback(
+    (src: string) => {
+      if (selected.includes(src)) {
+        onChange(selected.filter((u) => u !== src));
+      } else if (selected.length < MAX_PHOTOS) {
+        onChange([...selected, src]);
+      }
+    },
+    [selected, onChange],
+  );
+
+  const filtered =
+    cat === "all"
+      ? PHOTO_ARCHIVE
+      : PHOTO_ARCHIVE.filter((img) => img.category === cat);
+
+  return (
+    <div className="cn-photo-wrap">
+      <div className="cn-photo-cats">
+        {PHOTO_CATS.map((c) => (
+          <button
+            key={c}
+            type="button"
+            className={`cn-photo-cat${cat === c ? " cn-photo-cat--active" : ""}`}
+            onClick={() => setCat(c)}
+          >
+            {c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <div className="cn-photo-grid">
+        {filtered.map((img) => {
+          const isSel = selected.includes(img.src);
+          const isDisabled = !isSel && selected.length >= MAX_PHOTOS;
+          return (
+            <button
+              key={img.id}
+              type="button"
+              className={`cn-photo-tile${isSel ? " cn-photo-tile--sel" : ""}${isDisabled ? " cn-photo-tile--off" : ""}`}
+              onClick={() => toggle(img.src)}
+              disabled={isDisabled}
+              aria-pressed={isSel}
+              aria-label={img.alt}
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="cn-photo-tile__img"
+                loading="lazy"
+              />
+              {isSel && (
+                <div className="cn-photo-tile__badge">
+                  <Check size={11} strokeWidth={3} />
+                </div>
+              )}
+              <span className="cn-photo-tile__label">{img.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="cn-photo-count">
+        {selected.length} / {MAX_PHOTOS} selected
+        {selected.length === MAX_PHOTOS && " — max reached"}
+      </p>
+    </div>
+  );
 }
 
 function StepIndicator({ current }: { current: Step }) {
@@ -608,6 +847,48 @@ export default function CampaignNewPage() {
     return Object.keys(validateStep(currentStep)).length === 0;
   }
 
+  function handleQuickFill() {
+    const campaignStart = toDateTimeLocalValue(new Date());
+    const campaignEnd = addDaysToDateTimeLocal(campaignStart, 7);
+    const dueDateISO = new Date(Date.now() + 7 * 86400_000)
+      .toISOString()
+      .split("T")[0];
+    const defaultName = `Demo Campaign ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+
+    setForm((current) => ({
+      ...current,
+      name: current.name.trim() || defaultName,
+      category: current.category || "food & drink",
+      description:
+        current.description.trim() ||
+        "Drop by, try our signature drink, and post a short video. Tag us and use the QR code at checkout — show this campaign to redeem your free item.",
+      budget: "200",
+      tier: "explorer",
+      commissionSplit: "70",
+      contentType: "video",
+      platform: "TikTok",
+      dueDate: dueDateISO,
+      applicable_location_ids: MOCK_LOCATIONS.map((l) => l.id),
+      hero_offer: {
+        type: "free_item",
+        value: "signature drink",
+        max_redemptions_per_customer: 1,
+        max_redemptions_total: null,
+        description: "Free signature drink — show this campaign at checkout",
+        valid_from: campaignStart,
+        valid_until: campaignEnd,
+        bonus_positions: undefined,
+        bonus_reward_text: "",
+        bonus_reward_description: "",
+      },
+      bonusPositionsInput: "",
+    }));
+
+    setErrors({});
+    setFormError("");
+    setStep(7);
+  }
+
   function handleNext() {
     const nextErrors = validateStep(step);
     if (Object.keys(nextErrors).length > 0) {
@@ -798,6 +1079,7 @@ export default function CampaignNewPage() {
         throw new Error(result.error ?? "Campaign creation failed.");
       }
 
+      addMerchantCampaign(result.data);
       toast.success(`${result.data.title} is live`);
       router.push(`/merchant/campaigns/${result.data.id}`);
     } catch (error) {
@@ -896,13 +1178,28 @@ export default function CampaignNewPage() {
           <p className="cn-eyebrow">LINKS / NEW CAMPAIGN</p>
           <h1 className="cn-title">Launch a campaign</h1>
           <p className="cn-subtitle">
-            Six guided steps. Define the brief, set the budget, choose the
-            creator tier, pick redemption locations, configure the offer, then
+            Seven guided steps. Define the brief, set the budget, choose the
+            creator tier, pick locations, configure the offer, add photos, then
             publish.
           </p>
         </div>
 
         <StepIndicator current={step} />
+
+        {/* v25 — Push AI agent strip mirrors the creator-side
+            ApplyModal v15. Sits between the step indicator and
+            the wizard layout. Auto-fill button (Step 1 only) drafts
+            campaign name + description from category + neighborhood. */}
+        <MerchantAgent
+          step={step}
+          form={{
+            name: form.name,
+            category: form.category,
+            description: form.description,
+            budget: form.budget,
+          }}
+          setField={(key, value) => setField(key, value)}
+        />
 
         {formError && (
           <div className="cn-form-error" role="alert">
@@ -916,7 +1213,7 @@ export default function CampaignNewPage() {
         <div className="cn-wizard-layout">
           <aside className="cn-wizard-rail">
             <div className="cn-rail-inner">
-              <p className="cn-rail-step-label">Step {step} of 6</p>
+              <p className="cn-rail-step-label">Step {step} of 7</p>
               <h2 className="cn-rail-heading">{STEP_META[step].rail}</h2>
               <div className="cn-rail-lines" aria-hidden="true">
                 {STEPS.map((stepNumber) => (
@@ -1001,6 +1298,31 @@ export default function CampaignNewPage() {
                     {form.description.length}/400
                   </span>
                 </div>
+                {/* v25 — AI brief helper. Suggest / Polish / 4-dim
+                    strength meter. Mirrors the creator-side ApplyModal
+                    angle helper for consistent agentic UX. */}
+                <AIBriefHelper
+                  description={form.description}
+                  category={form.category}
+                  onChange={(next) => setField("description", next)}
+                />
+              </div>
+
+              <div className="cn-demo-launch">
+                <div className="cn-demo-launch__body">
+                  <span className="cn-demo-launch__eyebrow">PLAYTEST MODE</span>
+                  <p className="cn-demo-launch__text">
+                    Skip all 6 steps — auto-fill demo defaults and jump straight
+                    to review.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn-secondary cn-demo-launch__btn"
+                  onClick={handleQuickFill}
+                >
+                  ⚡ Quick Launch
+                </button>
               </div>
 
               <div className="cn-nav cn-nav--end">
@@ -1787,14 +2109,48 @@ export default function CampaignNewPage() {
                   onClick={handleNext}
                   disabled={!isStepValid(5)}
                 >
+                  Next: Photos →
+                </button>
+              </div>
+            </section>
+
+            {/* ── Step 6: Campaign Photos ─────────────────────────── */}
+            <section
+              className={`cn-step-section${step === 6 ? " cn-step-section--visible" : ""}`}
+              aria-label="Step 6: Campaign photos"
+            >
+              <h2 className="cn-section-heading">CAMPAIGN PHOTOS</h2>
+              <p className="cn-field-hint" style={{ marginBottom: 20 }}>
+                Choose up to 5 photos. These appear in your campaign detail
+                page. Optional — you can add photos after publishing.
+              </p>
+
+              <CampaignPhotoStep
+                selected={form.campaignImages}
+                onChange={(urls) => setField("campaignImages", urls)}
+              />
+
+              <div className="cn-nav">
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  onClick={handleBack}
+                >
+                  ← Back
+                </button>
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={handleNext}
+                >
                   Next: Review →
                 </button>
               </div>
             </section>
 
             <section
-              className={`cn-step-section${step === 6 ? " cn-step-section--visible" : ""}`}
-              aria-label="Step 6: Review and Launch"
+              className={`cn-step-section${step === 7 ? " cn-step-section--visible" : ""}`}
+              aria-label="Step 7: Review and Launch"
             >
               <h2 className="cn-section-heading">REVIEW</h2>
 
@@ -1907,6 +2263,26 @@ export default function CampaignNewPage() {
                         {form.hero_offer.max_redemptions_total ?? "Unlimited"}
                       </span>
                     </div>
+                  </div>
+
+                  <div className="cn-summary-item cn-summary-item--full">
+                    <span className="cn-summary-label">Campaign Photos</span>
+                    {form.campaignImages.length > 0 ? (
+                      <div className="cn-summary-photos">
+                        {form.campaignImages.map((url, i) => (
+                          <img
+                            key={i}
+                            src={url}
+                            alt={`Campaign photo ${i + 1}`}
+                            className="cn-summary-photo"
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="cn-summary-value">
+                        None — can add after publishing
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

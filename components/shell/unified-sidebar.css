@@ -18,7 +18,7 @@
   --us-tile:        32px;   /* icon tile */
   --us-icon:        22px;   /* icon glyph */
   --us-item-inset:  10px;   /* horizontal inset of pill from rail edge */
-  --us-item-gap:    6px;    /* between items */
+  --us-item-gap:    4px;    /* between items */
   --us-pad-x:       12px;   /* rail outer padding */
   --us-cap-size:    14px;   /* nav label font-size — v12.1 floor */
   --us-radius:      14px;   /* iOS 26 continuous corner */
@@ -99,7 +99,7 @@
   position: relative;
   width: calc(100% - 2 * var(--us-item-inset));
   margin: 0 auto;
-  padding: 6px 0 12px;
+  padding: 4px 0 8px;
   border-radius: var(--us-radius);
   text-decoration: none;
   color: var(--ink-3, #61605c);
@@ -432,7 +432,7 @@
 
 :root {
   --page-gutter: 10%;     /* symmetric L/R margin, viewport-relative */
-  --page-pad-y-top: 56px;
+  --page-pad-y-top: 32px;
   --page-pad-y-bot: 96px;
 }
 
@@ -592,6 +592,31 @@ body:has(.us-rail) main [class*="-page"]:not([class*="-page-"]) {
    items need a subtle deviation later. No new paint here. */
 .us-foot .us-item:hover {
   /* inherits .us-item:hover refinement above — explicit no-op for clarity */
+}
+
+/* Cmd+K discoverability pill — small chip above Settings.
+   Plain button, no Link/aria gymnastics; clicks open the palette. */
+.us-cmdk-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 24px; padding: 0;
+  border: 1px solid rgba(10, 10, 10, 0.10);
+  border-radius: 6px;
+  background: var(--surface-3);
+  color: var(--ink-3);
+  font: 700 10px/1 "Darky", sans-serif; letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-spring), background 160ms ease,
+              color 160ms ease;
+}
+.us-cmdk-pill:hover {
+  background: var(--ink); color: var(--snow, #fff);
+  transform: translate(2px, 2px);
+}
+.us-cmdk-pill:focus-visible {
+  outline: 0; box-shadow: var(--shadow-focus);
+}
+@media (prefers-reduced-motion: reduce) {
+  .us-cmdk-pill { transition: none; }
 }
 
 /* ════════════════════════════════════════════════════════════

@@ -674,7 +674,7 @@ export const MOCK_MERCHANT_PAYMENTS: MerchantPayment[] = [
     id: "mpay-002",
     date: "2026-04-28",
     campaign: "Brow Transformation Story",
-    creator: "Maya Rodriguez",
+    creator: "Alex Chen",
     status: "scheduled",
     amount: 57.5,
     invoiceRef: "INV-2026-04-002",

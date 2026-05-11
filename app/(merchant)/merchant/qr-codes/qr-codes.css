@@ -561,7 +561,7 @@
 
 /* H1 mobile floor 40 — never falls below readable threshold */
 .qr-page .ms-page-header-title {
-  font-size: clamp(40px, 5.6vw, 72px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.025em;
 }

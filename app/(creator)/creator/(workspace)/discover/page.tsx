@@ -21,6 +21,7 @@ import {
   type Campaign,
   type TierLevel,
 } from "@/lib/mocks/campaigns";
+import { addLiveCampaign } from "@/lib/data/live-campaigns";
 import {
   normalizePay,
   totalNormalizedPay,
@@ -365,6 +366,7 @@ export default function DiscoverPage() {
   >({});
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
+  const [liveCampaigns, setLiveCampaigns] = useState<Campaign[]>([]);
 
   const [filterAnchor, setFilterAnchor] = useState<{
     top: number;
@@ -392,6 +394,28 @@ export default function DiscoverPage() {
     hoverTimerRef.current = null;
     setActiveId(null);
   }, []);
+
+  // Fetch live campaigns created by merchants during demo sessions.
+  // Also sync each one into the shared LIVE store (localStorage) so
+  // the campaign detail page can resolve them via findLiveCampaign
+  // even after server HMR restarts clear the in-memory playtestCampaigns Map.
+  useEffect(() => {
+    fetch("/api/creator/live-campaigns")
+      .then((r) => r.json())
+      .then((d: { campaigns?: Campaign[] }) => {
+        if (d.campaigns?.length) {
+          d.campaigns.forEach(addLiveCampaign);
+          setLiveCampaigns(d.campaigns);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // All campaigns: live ones at the top (highest matchScore=95) + mocks
+  const allCampaigns = useMemo(
+    () => [...liveCampaigns, ...MOCK_CAMPAIGNS],
+    [liveCampaigns],
+  );
 
   /* On mount: URL params win, then localStorage, then defaults.
      URL is for sharing exact filter combos; localStorage remembers the
@@ -628,7 +652,7 @@ export default function DiscoverPage() {
      is cheap and reruns separately, so save/apply actions don't trigger
      a full re-filter+re-sort of the universe. */
   const baseFilteredCampaigns = useMemo(() => {
-    let list = MOCK_CAMPAIGNS.filter((c) => c.cashPay > 0);
+    let list = allCampaigns.filter((c) => c.cashPay > 0);
     if (deferredQuery.trim()) {
       const q = deferredQuery.toLowerCase();
       list = list.filter(
@@ -727,6 +751,7 @@ export default function DiscoverPage() {
     quickIntents,
     savedIds,
     sortKey,
+    allCampaigns,
   ]);
 
   const filteredCampaigns = useMemo(() => {
@@ -783,10 +808,10 @@ export default function DiscoverPage() {
      it off would actually surface campaigns. Drives EmptyState variant. */
   const wouldShowIfTierOff = useMemo(() => {
     if (!tierOnly) return false;
-    return MOCK_CAMPAIGNS.some(
+    return allCampaigns.some(
       (c) => c.cashPay > 0 && c.minimumTier > CREATOR_TIER,
     );
-  }, [tierOnly]);
+  }, [tierOnly, allCampaigns]);
   const isAllLockedEmpty =
     filteredCampaigns.length === 0 && tierOnly && wouldShowIfTierOff;
 
@@ -795,7 +820,7 @@ export default function DiscoverPage() {
      tonight?" along a different axis: match · urgency · proximity · rate ·
      time investment · stretch goals. Order matters: most personal first. */
   const sectionGroups = useMemo(() => {
-    const eligible = MOCK_CAMPAIGNS.filter(
+    const eligible = allCampaigns.filter(
       (c) => c.cashPay > 0 && c.minimumTier <= CREATOR_TIER,
     );
 
@@ -834,12 +859,14 @@ export default function DiscoverPage() {
       return h > 0 && h <= 1;
     });
 
-    const stretchTier = MOCK_CAMPAIGNS.filter(
-      (c) =>
-        c.cashPay > 0 &&
-        c.minimumTier > CREATOR_TIER &&
-        c.minimumTier <= CREATOR_TIER + 2,
-    ).sort((a, b) => b.matchScore - a.matchScore);
+    const stretchTier = allCampaigns
+      .filter(
+        (c) =>
+          c.cashPay > 0 &&
+          c.minimumTier > CREATOR_TIER &&
+          c.minimumTier <= CREATOR_TIER + 2,
+      )
+      .sort((a, b) => b.matchScore - a.matchScore);
 
     return [
       {
@@ -885,7 +912,7 @@ export default function DiscoverPage() {
         campaigns: stretchTier.slice(0, 14),
       },
     ].filter((g) => g.campaigns.length >= 3);
-  }, []);
+  }, [allCampaigns]);
 
   /** When a section's "See all →" is clicked, apply the matching filter
    *  combo so the flat grid below shows the full intent-filtered set. */
@@ -1393,12 +1420,16 @@ export default function DiscoverPage() {
 
   return (
     <div className="cw-page disc" data-cat={activeCategory} style={themeStyle}>
+      {/* v53 — hero header restyled to match /work + /money pattern:
+          Title first, then agent-prose sub line below (bold, sentence
+          case). Padding/margin/border mirror .money-hero so cross-page
+          chrome reads as one system. */}
       <header className="cw-header">
         <div className="cw-header__left">
+          <h1 className="cw-title">Find</h1>
           <p className="cw-eyebrow">
-            Discover · {filteredCampaigns.length} open · NYC
+            {filteredCampaigns.length} open campaigns near you · NYC
           </p>
-          <h1 className="cw-title">Find your next campaign</h1>
         </div>
       </header>
 
@@ -1579,7 +1610,9 @@ const CampaignCard = memo(function CampaignCard({
 
   // Whole card is the click target → detail page. Save heart and carousel
   // arrows stop propagation so they don't trigger navigation.
-  const detailHref = `/creator/discover/${c.id}`;
+  // v15 (2026-05-09) — campaign moved into workspace for sidebar +
+  // shared SWR cache. Old /campaign/[id] still redirects here.
+  const detailHref = `/creator/campaign/${c.id}`;
 
   const cardClassName = [
     "disc-card",
@@ -1834,10 +1867,12 @@ const CampaignCard = memo(function CampaignCard({
     <Link
       href={detailHref}
       prefetch={false}
+      target="_blank"
+      rel="noopener"
       className="disc-card-link"
       onMouseEnter={handleCardEnter}
       onMouseLeave={() => onLeave?.()}
-      aria-label={`View ${c.title}`}
+      aria-label={`View ${c.title} (opens in new tab)`}
     >
       <article
         className={cardClassName}

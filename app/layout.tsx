@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import BackToTop from "@/components/layout/BackToTop";
-import { CommandKProvider } from "@/components/search/CommandKProvider";
+import { CommandPaletteProvider } from "@/components/feedback/CommandPalette";
 import { BRAND } from "@/lib/constants/brand";
 
 export const metadata: Metadata = {
@@ -119,15 +119,25 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <a href="#main-content" className="skip-nav">
-          Skip to main content
-        </a>
-        <CommandKProvider>
+        {/* v62 — skip link wrapped in <nav> so it's contained in a
+            landmark (axe "region" rule). aria-label distinguishes it
+            from primary site nav. */}
+        <nav aria-label="Skip links">
+          <a href="#main-content" className="skip-nav">
+            Skip to main content
+          </a>
+        </nav>
+        <CommandPaletteProvider>
           <SmoothScroll>
             {children}
-            <BackToTop />
+            {/* v62 — wrapped in <aside aria-label="Page utilities"> so
+                the floating button is contained by a landmark (axe rule
+                "all page content must live inside a landmark"). */}
+            <aside aria-label="Page utilities">
+              <BackToTop />
+            </aside>
           </SmoothScroll>
-        </CommandKProvider>
+        </CommandPaletteProvider>
       </body>
     </html>
   );

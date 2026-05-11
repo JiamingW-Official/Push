@@ -29,7 +29,11 @@ export type Campaign = {
   budget_total: number;
   budget_remaining: number;
   reward_per_visit: number;
+  /** Alias used by some API responses and demo data. */
+  payout?: number;
   max_creators: number;
+  /** Alias used by some API responses and demo data. */
+  spots_total?: number;
   accepted_creators: number;
   status: CampaignStatus;
   applicable_location_ids: string[];

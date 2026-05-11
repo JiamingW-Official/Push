@@ -10,8 +10,27 @@ import {
   StatusBadge,
 } from "@/components/merchant/shared";
 import { useToast } from "@/components/toast/Toaster";
+import { Sparkline } from "@/components/charts/Sparkline";
 import { api, type Invoice, type PaymentMethod } from "@/lib/data/api-client";
 import "./billing.css";
+
+// Mock 30-day series for the wallet balance hero + the two stat tiles.
+// Real ledger curves wire up later; values here are illustrative only.
+const BILLING_WALLET_SPEND_30D = [
+  120, 180, 240, 320, 380, 460, 510, 590, 660, 720, 800, 880, 960, 1040, 1130,
+  1210, 1300, 1390, 1480, 1570, 1660, 1750, 1840, 1930, 2020, 2110, 2200, 2300,
+  2400, 2510,
+];
+const BILLING_BALANCE_30D = [
+  4800, 4720, 4630, 4520, 4380, 4250, 4180, 4090, 4010, 4250, 4180, 4060, 3950,
+  3820, 3700, 3950, 3820, 3690, 3540, 3410, 3280, 3160, 3040, 2920, 2810, 2700,
+  2580, 2460, 2350, 2240,
+];
+const BILLING_LIFETIME_30D = [
+  18000, 18420, 18840, 19260, 19720, 20150, 20620, 21080, 21560, 22040, 22510,
+  22990, 23480, 23960, 24450, 24940, 25430, 25940, 26450, 26960, 27470, 27990,
+  28510, 29040, 29560, 30100, 30640, 31170, 31720, 32280,
+];
 
 type InvoiceFilter = "all" | "paid" | "pending" | "failed";
 
@@ -309,6 +328,15 @@ export default function BillingClient({
               ? "NOTHING PENDING"
               : `${pendingCount} PENDING INVOICE${pendingCount === 1 ? "" : "S"}`}
           </p>
+          <Sparkline
+            data={BILLING_WALLET_SPEND_30D}
+            width={220}
+            height={36}
+            trend="auto"
+            showArea
+            showLastDot
+            className="bill-hero-tile__spark"
+          />
         </article>
 
         <KPICard
@@ -318,12 +346,14 @@ export default function BillingClient({
               ? formatCurrency(walletStats.current_balance_cents)
               : "—"
           }
+          sparkline={BILLING_BALANCE_30D}
         />
 
         <div data-kpi="lifetime">
           <KPICard
             label="LIFETIME SPEND"
             value={formatCurrency(lifetimeSpend)}
+            sparkline={BILLING_LIFETIME_30D}
           />
         </div>
       </section>

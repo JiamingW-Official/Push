@@ -36,45 +36,45 @@ type MockSeed = {
 const SEEDS: MockSeed[] = [
   {
     thread: {
-      id: "mt-maya",
+      id: "mt-alex",
       participants: [],
       campaignId: "camp-summer-menu",
       campaignTitle: "Summer Menu Launch",
       unreadCount: 2,
-      creatorUserId: "u-maya",
-      creatorName: "Maya Rodriguez",
+      creatorUserId: "u-alex",
+      creatorName: "Alex Chen",
     },
     messages: [
       {
-        id: "mm-maya-1",
+        id: "mm-alex-1",
         role: "merchant",
         content:
-          "Hey Maya — welcome to the Summer Menu Launch. Your last food reel is exactly the energy we want.",
+          "Hey Alex — welcome to the Summer Menu Launch. Your last food reel is exactly the energy we want.",
         createdAt: hoursAgo(5),
       },
       {
-        id: "mm-maya-2",
+        id: "mm-alex-2",
         role: "merchant",
         content:
           "QR poster is at the register. Marco knows you're coming — Saturday around 1pm still good?",
         createdAt: hoursAgo(5),
       },
       {
-        id: "mm-maya-3",
+        id: "mm-alex-3",
         role: "creator",
         content:
           "Saturday 1pm works! Quick question — can I shoot the patio first or should I start at the bar?",
         createdAt: hoursAgo(2),
       },
       {
-        id: "mm-maya-4",
+        id: "mm-alex-4",
         role: "creator",
         content:
           "Also — do you want me to feature a specific pie? The Bee Sting looks insane on the menu.",
         createdAt: minutesAgo(38),
       },
       {
-        id: "mm-maya-5",
+        id: "mm-alex-5",
         role: "creator",
         content:
           "Bee Sting + a bar bite shot would be perfect. Tag @robertaspizza and we're set.",

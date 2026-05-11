@@ -1,7 +1,9 @@
-import { cookies } from 'next/headers';
-import type { AttributionSummary } from '@/lib/data/api-client';
-import type { Campaign } from '@/lib/data/types';
-import CampaignDetailPageClient, { type CampaignDetailPageData } from './CampaignDetailPageClient';
+import { cookies } from "next/headers";
+import type { AttributionSummary } from "@/lib/data/api-client";
+import type { Campaign } from "@/lib/data/types";
+import CampaignDetailPageClient, {
+  type CampaignDetailPageData,
+} from "./CampaignDetailPageClient";
 
 interface CampaignDetailPageProps {
   params: Promise<{ id: string }>;
@@ -15,13 +17,17 @@ type FetchResult<T> = {
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return `http://localhost:${process.env.PORT ?? '3931'}`;
+  return `http://localhost:${process.env.PORT ?? "3931"}`;
 }
 
 async function fetchMerchantJson<T>(path: string): Promise<FetchResult<T>> {
-  const cookieHeader = (await cookies()).toString();
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .map(({ name, value }) => `${name}=${value}`)
+    .join("; ");
   const response = await fetch(`${getBaseUrl()}${path}`, {
-    cache: 'no-store',
+    cache: "no-store",
     headers: cookieHeader ? { cookie: cookieHeader } : undefined,
   });
 
@@ -48,10 +54,14 @@ function attributionFallback(): AttributionSummary {
   };
 }
 
-async function getCampaignDetailPageData(id: string): Promise<CampaignDetailPageData> {
+async function getCampaignDetailPageData(
+  id: string,
+): Promise<CampaignDetailPageData> {
   const [campaignResult, attributionResult] = await Promise.all([
     fetchMerchantJson<Campaign>(`/api/merchant/campaigns/${id}`),
-    fetchMerchantJson<AttributionSummary>(`/api/merchant/attribution/summary?campaignId=${id}`),
+    fetchMerchantJson<AttributionSummary>(
+      `/api/merchant/attribution/summary?campaignId=${id}`,
+    ),
   ]);
 
   if (campaignResult.status === 404 || !campaignResult.data) {
@@ -67,7 +77,9 @@ async function getCampaignDetailPageData(id: string): Promise<CampaignDetailPage
   };
 }
 
-export default async function CampaignDetailPage({ params }: CampaignDetailPageProps) {
+export default async function CampaignDetailPage({
+  params,
+}: CampaignDetailPageProps) {
   const { id } = await params;
   const initialData = await getCampaignDetailPageData(id);
 

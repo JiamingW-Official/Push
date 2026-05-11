@@ -134,6 +134,7 @@ export default function NotificationsClient() {
             if (forceEmpty || activeTab === "all") {
               return (
                 <EmptyState
+                  artKind="notifications"
                   title="All caught up"
                   description="No alerts, mentions, or SLA reminders right now. We'll surface anything that needs your attention as soon as it happens."
                 />
@@ -142,6 +143,8 @@ export default function NotificationsClient() {
             if (activeTab === "unread") {
               return (
                 <EmptyState
+                  artKind="filter"
+                  artVariant="muted"
                   title="Inbox zero"
                   description="No unread notifications. Switch to All to revisit recent activity, or step away — we'll ping you when something needs eyes."
                   ctaLabel="View all notifications"
@@ -152,6 +155,8 @@ export default function NotificationsClient() {
             if (activeTab === "mentions") {
               return (
                 <EmptyState
+                  artKind="filter"
+                  artVariant="muted"
                   title="No mentions yet"
                   description="Mentions land here when creators tag your campaigns or comment threads ping your team."
                   ctaLabel="View all notifications"
@@ -162,6 +167,8 @@ export default function NotificationsClient() {
             if (activeTab === "system") {
               return (
                 <EmptyState
+                  artKind="filter"
+                  artVariant="muted"
                   title="No system alerts"
                   description="SLA reminders, payout deadlines, and platform updates show up here. A quiet system view means nothing is overdue."
                   ctaLabel="View all notifications"
@@ -171,6 +178,8 @@ export default function NotificationsClient() {
             }
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="Nothing in this view"
                 description="No notifications match the current filter. Reset to see everything in your inbox."
                 ctaLabel="View all notifications"

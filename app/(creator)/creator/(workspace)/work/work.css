@@ -1,99 +1,377 @@
 /* ============================================================
-   /creator/work — WORK hub. v12.2. Bento via shared primitives.
+   /creator/work — WORK hub. v13 (2026-05-07)
+   Authority: Design.md v11 + /creator/analytics layout.
+
+   Goals:
+     · Mirror analytics: full-bleed bento (escape padding trick
+       inherited from hub-shell.css), no inner max-width caps.
+     · Title in Darky 800 (delivered by hub-shell.css update).
+     · Drop section divider colorful decoration — analytics has
+       a single bento, no section heads. Work follows the same
+       discipline; if a hub legitimately needs section grouping,
+       the analytics-style hairline in hub-shell.css applies.
+     · Pipeline kanban cells keep their colorful top accent —
+       it doubles as the only colorful UI cue on this page,
+       balancing the ink solid hero panel.
    ============================================================ */
 
 /* Hero, eyebrow, title, subtitle styles live in components/shared/hub-shell.css.
    This file owns local module styling only. */
 
-.work-hub {
-  /* Horizontal padding + symmetric 10% L/R bleed are owned by
-     components/shared/hub-shell.css. */
-  padding-top: 24px;
-  padding-bottom: 120px;
-  background: var(--snow, #fff);
+/* v40 NO-SCROLL — root cause was .dh-main's padding-top:56 +
+   padding-bottom:96 + min-height:100svh stacking on top of work-hub,
+   which forced total height to 100svh + 152px. Same trick the
+   discover page uses: zero out dh-main's vertical padding + lock its
+   height when work-hub is mounted. Negative-margin escapes removed
+   (no longer needed once parent padding is gone).
+   Locked at 4 levels:
+     1. html / body overflow: hidden
+     2. .dh-shell height: 100svh + overflow: hidden
+     3. .dh-main height: 100svh + overflow: hidden + zero V padding
+     4. .work-hub height: 100% + overflow: hidden  */
+html:has(.work-hub),
+body:has(.work-hub) {
+  overflow: hidden;
+  height: 100svh;
 }
+body:has(.dh-shell):has(.work-hub) .dh-shell {
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+}
+body:has(.dh-shell) .dh-main:has(.work-hub) {
+  /* v44 — KEEP default padding-top:56 (matches money/me — that's
+     why their title sits 96px from viewport top). Only escape
+     padding-bottom so the bento can extend to viewport bottom. */
+  padding-bottom: 0 !important;
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.work-hub {
+  /* v44 — money-parity title position. dh-main padding-top:56 above,
+     work-hub padding-top:24 + hero padding-top:16 inside = 96px above
+     title (matches /money exactly). padding-bottom:32 reserves shadow
+     bleed buffer for row-3 mini-cards. */
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 16px;
+  padding-bottom: 32px;
+  background: var(--snow, #fff);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* v45/47/48 — hero spec mirrored exactly from .money-hero.
+   padding 16/0/8 + margin-bottom 12 + border-bottom 1px gives the
+   identical title→divider→bento rhythm as the /money page (per user
+   "我要你一模一样"). v48 tightened sub→divider and divider→bento per
+   "还是要上下小一点". */
+.work-hero.work-hero--compact {
+  padding: 16px 0 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--mist, #d8d4c8);
+  display: block;
+  flex-shrink: 0;
+}
+.work-hero--compact .work-hero__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(32px, 3.2vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--ink, #111);
+  margin: 0;
+}
+.work-hero--compact .work-hero__sub {
+  /* v47 — recast as agent prose to match /money pattern.
+     "Leave by 8:30 → Roberta's Pizza · 3 frames + ring light"
+     Sentence case, 15px, ink-3 — reads as a conversational hint.
+     v48 — title→sub gap 8 → 4 per user "还是要上下小一点".
+     v49 — font-weight 500→600 (bolder) per user "下面的文字还不是粗体".
+            max-width: 60ch removed per user "现在 work 还是很窄" — sub
+            now flows full hero width like /money's sub. */
+  font-family: var(--font-body, "Open Sans");
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-3, #61605c);
+  margin: 4px 0 0;
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Liquid Glass blur tokens — restored to .work-hub (got merged
+   into .work-hero--compact .work-hero__sub during v32 edit). */
+.work-hub {
+  --lg-blur-soft: blur(16px) saturate(1.2);
+  --lg-bg-std:    rgba(255, 255, 255, 0.62);
+  --lg-bg-light:  rgba(255, 255, 255, 0.74);
+  --lg-spec-top:  inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --lg-spec-bot:  inset 0 -1px 0 rgba(20, 19, 15, 0.04);
+  --lg-edge:      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  --lg-shadow-1:  0 1px 2px rgba(60, 45, 30, 0.05),
+                  0 8px 24px rgba(60, 45, 30, 0.06);
+  --lg-shadow-2:  0 2px 4px rgba(60, 45, 30, 0.06),
+                  0 16px 48px rgba(60, 45, 30, 0.10);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Atmosphere — GA-orange weighted (work hub identity = execution layer),
+   matches the dashboard 5-layer haze for cross-page visual continuity. */
+.work-hub::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(255, 94, 43, 0.10),   transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(176, 133, 96, 0.08),  transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
+    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
+}
+
+/* ── Active gigs urgency strip ───────────────────────────────
+   Horizontal-scroll row of gig cards, each linking to /creator/applied/[id].
+   Sorted by urgency (shoot live → today → upload → review → waiting).
+   Only rendered when liveApps has non-terminal entries. */
+
+.work-urgency {
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  padding: 0 0 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.work-urgency::-webkit-scrollbar { display: none; }
+
+.work-urgency__card {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  width: 224px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(60, 45, 30, 0.06),
+    0 4px 12px rgba(60, 45, 30, 0.06);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.work-urgency__card:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.10),
+    0 1px 2px rgba(60, 45, 30, 0.04),
+    0 3px 8px rgba(60, 45, 30, 0.04);
+}
+.work-urgency__thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface-3, #ece9e0);
+  display: block;
+}
+.work-urgency__thumb--blank {
+  display: block;
+}
+.work-urgency__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.work-urgency__name {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink, #14130f);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+.work-urgency__status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.work-urgency__chip {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+.work-urgency__chip--red         { background: #fef2f2; color: #dc2626; }
+.work-urgency__chip--amber       { background: #fffbeb; color: #d97706; }
+.work-urgency__chip--blue        { background: #eff6ff; color: #2563eb; }
+.work-urgency__chip--green       { background: #f0fdf4; color: #16a34a; }
+.work-urgency__chip--gray        { background: var(--surface-3, #ece9e0); color: var(--ink-3, #61605c); }
+.work-urgency__chip--champagne   { background: #fdf8ef; color: #92400e; }
+.work-urgency__pay {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3, #61605c);
+  font-variant-numeric: tabular-nums;
+}
+.work-urgency__arrow {
+  flex-shrink: 0;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--ink-4, #8f8d89);
+  margin-left: 2px;
+}
+
+/* ── Bento — 12-col asymmetric, mirrors analytics ────────────
+   Mixed spans (4 / 5 / 7) give the page rhythm: wide hero panels,
+   narrow data panels, no two adjacent the same width. BentoModule.css
+   already owns the responsive collapse (span 4-6 → 6 / span 7-8 → 12
+   at <1024px, all → 12 at <640px), so this hub keeps the override
+   minimal. */
 
 .work-bento {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
+  /* v44 — Row 1 stays the visual anchor, Row 2/3 compressed (lower
+     floors, lower fr) so the bigger title chrome (96px above) fits
+     without scroll. User: "通过压缩中间那一行和最底下那一行的高度来
+     给上面流出空间".
+     v47 — Row 3 reduced (120 → 96 minmax + 0.65fr → 0.5fr) per user
+     "下方是个panel的高度要降低". The 4 mini nav cards read as a
+     compact link strip, not a content row. Row 1/2 absorb the freed
+     vertical space → primary panels breathe more. */
+  grid-template-rows:
+    minmax(220px, 1.2fr)    /* Row 1: Next Move + Actions + Pulse */
+    minmax(140px, 0.8fr)    /* Row 2: Velocity + Pay */
+    minmax(96px, 0.5fr);    /* Row 3: 4 mini cards — compact nav strip */
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
 }
+.work-bento > * { min-height: 0; }
 
+@media (max-width: 1024px) {
+  /* Release the 100svh lock so the hub scrolls on iPad */
+  html:has(.work-hub),
+  body:has(.work-hub) {
+    overflow: auto !important;
+    height: auto !important;
+  }
+  body:has(.dh-shell) .dh-main:has(.work-hub) {
+    height: auto !important;
+    overflow: auto !important;
+    min-height: 100svh;
+  }
+  .work-hub { height: auto !important; overflow: visible !important; }
+  .work-bento { grid-template-rows: auto; grid-auto-rows: minmax(240px, auto); }
+}
 @media (max-width: 768px) {
   .work-hub {
     padding-top: 16px;
     padding-bottom: 96px;
   }
-  .work-bento {
-    gap: 16px;
-  }
+  .work-bento { gap: 16px; }
 }
-
 @media (max-width: 640px) {
   .work-bento { grid-template-columns: 1fr; gap: 16px; }
 }
 
-/* ── Pipeline kanban row ──────────────────────────────────── */
+/* ── Pipeline kanban — vertical phase list ─────────────────
+   Renders 4 phases stacked vertically inside a span-4 panel. Each
+   row shows a phase color dot + label + tabular count, with the
+   urgent (current-active) phase highlighted via background.
+   Replaces the horizontal kanban row (only worked at span 12). */
 
-.work-pipeline-row {
-  display: grid;
-  grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr;
-  gap: 12px;
-  align-items: center;
-  margin-top: 8px;
-}
-
-@media (max-width: 768px) {
-  .work-pipeline-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .work-pipeline-divider { display: none; }
-}
-
-.work-pipeline-cell {
+.work-pipeline-vlist {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 4px;
-  padding: 12px 8px;
-  background: var(--surface-2, #f5f3ee);
-  border-radius: 12px;
+  margin-top: 4px;
 }
 
-.work-pipeline-cell__count {
+.work-pipeline-vrow {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition: background 200ms ease;
+}
+
+.work-pipeline-vrow:hover {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.work-pipeline-vrow__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.work-pipeline-vrow:nth-child(1) .work-pipeline-vrow__dot { background: var(--brand-red, #c1121f); }
+.work-pipeline-vrow:nth-child(2) .work-pipeline-vrow__dot { background: var(--ga-orange, #ff5e2b); }
+.work-pipeline-vrow:nth-child(3) .work-pipeline-vrow__dot { background: var(--champagne, #bfa170); }
+.work-pipeline-vrow:nth-child(4) .work-pipeline-vrow__dot { background: var(--accent-blue, #0085ff); }
+
+.work-pipeline-vrow__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink, #111);
+}
+
+.work-pipeline-vrow__count {
   font-family: var(--font-display, "Darky"), Georgia, serif;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
-  letter-spacing: -0.024em;
+  letter-spacing: -0.018em;
+  line-height: 1;
   color: var(--ink, #111);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
 }
 
-.work-pipeline-cell__label {
-  font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  color: var(--ink-4, #61605c);
-  text-transform: uppercase;
+/* Active/urgent phase — boldened, opaque white surface, faint hairline
+   matching the phase color. The "you are here" cue. */
+.work-pipeline-vrow--active {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.10),
+    0 1px 2px rgba(60, 45, 30, 0.06);
 }
 
-.work-pipeline-divider {
-  text-align: center;
-  font-family: var(--font-body, "Open Sans");
-  font-size: 18px;
-  color: var(--ink-5, #888);
-  font-weight: 400;
-}
-
-/* ── Timeline list ────────────────────────────────────────── */
+/* ── Timeline / list rows ─────────────────────────────────── */
 
 .work-timeline-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 4px;
 }
 
@@ -115,8 +393,6 @@
   text-overflow: ellipsis;
 }
 
-/* ── Generic list rows (calendar, drafts, etc.) ───────────── */
-
 .work-row-status {
   display: inline-flex;
   margin-top: 6px;
@@ -125,7 +401,7 @@
 .work-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 4px;
 }
 
@@ -136,12 +412,820 @@
   align-items: center;
 }
 
-.work-list-row__date {
-  font-family: var(--font-mono, monospace);
+/* ── Action queue (Needs-you panel) — premium iconic 3-row queue.
+   Each row: 28×28 colored icon tile + verb + target + when. The
+   icon tile carries the color (red/champagne/grey by urgency); the
+   row background picks up a faint matching tint so the panel reads
+   as a colorful action stack, not a text list. */
+
+.work-queue {
+  /* v48 — margin-top 12 → 4 per user "稍微往上面提一点点". List sits
+     just below the panel eyebrow with minimal gap. */
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.work-queue__row {
+  /* v33 tile column 40px matches mini-card icon-fill.
+     v48 — min-height 64 matches the pulse panel's stat tiles on the
+     right (per user "高度要和右面 pulse 里面的 panels 的高度一样高").
+     Single gray bg unifies the row chrome with .work-pulse__stat-panel
+     (rgba(20,19,15,0.04)); the colored icon tile + verb text still
+     carry the per-action urgency cue. */
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  min-height: 64px;
+  border-radius: 12px;
+  background: rgba(20, 19, 15, 0.04);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition: background 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-queue__row:hover {
+  background: rgba(20, 19, 15, 0.08);
+  transform: translate(1px, 1px);
+}
+
+/* v48 — variant background overrides removed (per user "每一个 action
+   除了 icon 之外, 大的框框是灰色"). All rows share the single gray bg
+   defined above; only the icon tile + verb text retain their accent
+   color (red / blue / champagne / green / ink). */
+
+/* Icon tile — 40×40 rounded with saturated bg + snow icon (v33 — was 28). */
+.work-queue__tile {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: var(--snow, #fff);
+  flex-shrink: 0;
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.2);
+}
+.work-queue__tile svg { display: block; width: 18px; height: 18px; }
+
+.work-queue__row--submit .work-queue__tile { background: var(--brand-red, #c1121f); }
+.work-queue__row--review .work-queue__tile { background: var(--champagne-deep, #8a704a); }
+.work-queue__row--verify .work-queue__tile { background: var(--ink-3, #3a3835); }
+.work-queue__row--reply  .work-queue__tile { background: var(--accent-blue, #0085ff); }
+.work-queue__row--confirm .work-queue__tile { background: var(--success, #34c759); }
+
+/* Two-line copy — tiny verb above, target name below. */
+.work-queue__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.work-queue__verb {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.work-queue__row--submit .work-queue__verb { color: var(--brand-red, #c1121f); }
+.work-queue__row--review .work-queue__verb { color: var(--champagne-deep, #8a704a); }
+.work-queue__row--verify .work-queue__verb { color: var(--ink-3, #3a3835); }
+.work-queue__row--reply  .work-queue__verb { color: var(--accent-blue, #0085ff); }
+.work-queue__row--confirm .work-queue__verb { color: var(--success-dark, #1f7a39); }
+
+.work-queue__target {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #111);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.work-queue__when {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Segmented progress (legacy, may be reused in another page)
+   — visual phase track */
+.work-segments {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.work-segments__step {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  text-align: center;
+  padding: 10px 4px;
+  border-radius: 8px;
+  background: var(--surface-2, #f5f3ee);
+  position: relative;
+}
+
+/* States distinguished by background fill alone — no top border line. */
+.work-segments__step.is-done {
+  color: var(--ink, #111);
+  background: rgba(20, 19, 15, 0.10);
+}
+
+.work-segments__step.is-current {
+  color: var(--snow, #fff);
+  background: var(--ink, #14130f);
+}
+
+/* ── Countdown rail (Today panel) — replaces "Next in 47 min · X" sub.
+   Pulsing champagne dot + big numeral + "min until" label + arrow + target.
+   Compact 1-line element that anchors the panel's bottom with a designed
+   feel, not a paragraph. */
+
+.work-countdown {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(191, 161, 112, 0.14),
+    rgba(191, 161, 112, 0.04) 80%
+  );
+  box-shadow: inset 2px 0 0 var(--champagne, #bfa170);
+  position: relative;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.work-countdown__pulse {
+  position: relative;
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--champagne, #bfa170);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(191, 161, 112, 0.55);
+  animation: work-countdown-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes work-countdown-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(191, 161, 112, 0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(191, 161, 112, 0); }
+}
+
+.work-countdown__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  color: var(--champagne-deep, #8a704a);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-countdown__unit {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+}
+
+.work-countdown__arrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-4, #61605c);
+}
+
+.work-countdown__target {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #111);
+}
+
+/* ── Stat chips (Next-7-days panel) — 3 icon-tile + count + label.
+   Replaces "3 shoots · 2 deadlines · 0 conflicts" with a designed
+   chip row. Each chip carries its own subtle background + colored
+   icon tile so counts read at a glance, not as text. */
+
+.work-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.work-stats__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.04);
+  white-space: nowrap;
+}
+
+.work-stats__icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--snow, #fff);
+  flex-shrink: 0;
+}
+
+.work-stats__chip--shoots .work-stats__icon { background: var(--brand-red, #c1121f); }
+.work-stats__chip--deadlines .work-stats__icon { background: var(--champagne-deep, #8a704a); }
+.work-stats__chip--conflicts .work-stats__icon { background: var(--ink-3, #3a3835); }
+
+.work-stats__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.014em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-stats__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+
+/* Pulse is a CUSTOM panel (div, not Link). Inherits .bento glass but
+   the panel itself isn't clickable — only the stat tiles + drill are.
+   Disable the .bento hover translate so click affordance stays inside. */
+.work-pulse-panel {
+  cursor: default;
+}
+.work-pulse-panel:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(20, 19, 15, 0.05),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(60, 45, 30, 0.05),
+    0 12px 28px rgba(60, 45, 30, 0.06);
+}
+.work-pulse-panel .bento__drill {
+  cursor: pointer;
+}
+
+/* ── Pulse panel (v35) — interactive 6-metric grid + driven chart ──
+   3×2 grid of stat tiles (was 1×3 of 3). Each tile is a <button>;
+   click selects the metric and rewrites the spark chart below.
+   Active tile: ink-fill background, snow text. Reads as a tabbed
+   selector with live data preview. */
+.work-pulse {
+  display: flex; flex-direction: column; gap: 10px;
+  height: 100%;
+  min-height: 0;
+}
+.work-pulse__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.work-pulse__stat-panel {
+  /* button reset + tile look. v47 — taller padding so tiles extend
+     downward and feel substantial ("数字panel 的高度可以高一些往下
+     延展一些"). NO transform on hover — only color/shadow changes. */
+  appearance: none;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  display: flex; flex-direction: column; gap: 6px; justify-content: center;
+  padding: 16px 14px 16px;
+  min-height: 64px;
+  background: rgba(20, 19, 15, 0.04);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.04);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+.work-pulse__stat-panel:hover {
+  background: rgba(20, 19, 15, 0.08);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.10);
+}
+.work-pulse__stat-panel.is-active {
+  /* selected metric — ink fill + snow text, reads as the chart driver */
+  background: var(--ink, #14130f);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.10),
+    0 1px 2px rgba(20, 19, 15, 0.18),
+    0 6px 18px rgba(20, 19, 15, 0.18);
+}
+.work-pulse__stat-panel.is-active .work-pulse__num {
+  color: var(--snow, #fff);
+}
+.work-pulse__stat-panel.is-active .work-pulse__lbl {
+  color: var(--champagne, #bfa170);
+}
+.work-pulse__stat-panel:focus-visible {
+  outline: 2px solid var(--accent-blue, #0085ff);
+  outline-offset: 2px;
+}
+.work-pulse__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(18px, 1.6vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+.work-pulse__lbl {
+  /* v36 — smallest text floor is now 11px (user: "最小的文字要大一号") */
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+
+/* v41 — Pulse: smooth-curve line chart with period switcher.
+   tc__head shown but the totals+delta cluster is hidden (active
+   stat tile already carries the number) — only the period chips
+   appear at the right end. Chart 60-90px; axis labels under it. */
+.work-chart-bottom--pulse {
+  /* v50 — justify-content: flex-start so chart sits directly below the
+     6 stat tiles (no inherited flex-end from base class pushing chart
+     down). v51 — flex restored to auto-grow so the chart-wrap (now
+     uncapped) fills available body space. */
+  flex: 1 1 auto;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.work-chart-bottom--pulse .tc {
+  gap: 4px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.work-chart-bottom--pulse .tc__head {
+  /* v45 — period switcher removed entirely (user: "取消时间间隔选项").
+     Active stat tile carries the number; the chart is a fixed 7d
+     trend, no period switching. Hide the whole head. */
+  display: none;
+}
+.work-chart-bottom--pulse .tc__chart-wrap {
+  /* v48-51 max-height history: 90→72→56→76→uncapped (overflowed).
+     v52 — max-height 110. Pulse panel body has 6 stat tiles + chart +
+     axis. With stat grid taking ~150px, axis ~17, container padding ~20,
+     this leaves ~110px for the chart curve to breathe. */
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 60px;
+  max-height: 110px;
+  margin-top: 0;
+  margin-bottom: 8px;
+  overflow: visible;
+}
+.work-chart-bottom--pulse .tc__axis {
+  flex-shrink: 0;
+  font-size: 11px;
+}
+/* v48 — 12px breathing room between axis and panel padding-bottom. */
+.work-chart-bottom--pulse {
+  padding-bottom: 12px;
+}
+/* v47 — hide the per-day dots on the Pulse line chart (per user
+   "pulse 的chart 要取消点点"). The smooth line + area-fill alone
+   conveys trend; dots added visual noise at this small chart size.
+   Champagne accent below replaces the prior red/orange register. */
+.work-chart-bottom--pulse .tc__chart circle {
+  display: none;
+}
+
+/* ── Chart bottom-aligner (v33) ──
+   Drill arrow moved out of bottom-right (now top-right ↗ in head row),
+   so charts can extend to the panel's bottom edge without colliding.
+   .work-chart-bottom flex-grows to fill the freed space, keeping the
+   chart bottom edge flush with the panel padding-bottom (20px) for
+   uniform bottom alignment across all chart panels. */
+.work-chart-bottom {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  justify-content: flex-end;
+}
+.work-chart-bottom--velocity {
+  height: 100%;
+  justify-content: stretch;
+}
+.work-chart-bottom--velocity > * {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* v41: Velocity — chart bottom-aligns to the panel edge
+   ("为什么不是底对齐？为什么悬在中间？"). margin-top:auto on the
+   chart-wrap pushes any leftover flex-space ABOVE the bars, so they
+   sit just above the axis strip rather than floating in the middle. */
+.work-chart-bottom--velocity .tc {
+  /* v46 — gap zeroed; tc__head's margin-bottom now controls the
+     head→chart spacing (it reserves room for the rising tooltip). */
+  height: 100%;
+  min-height: 0;
+  gap: 0;
+  display: flex;
+  flex-direction: column;
+}
+.work-chart-bottom--velocity .tc__head {
+  /* v46 — period chips top-aligned so they sit at the very top of
+     the head, leaving a clear gap below for the rising tooltip.
+     v48 — 56 → 36 to free vertical space for axis + bottom breathing.
+     v49 — 36 → 16 per user "为什么还是留白那么大". The hero+chips block
+     no longer reserves big tooltip clearance — the bar chart is short
+     and unobtrusive, tooltip rises into the gap naturally. */
+  flex-shrink: 0;
+  align-items: start;
+  margin-bottom: 16px;
+}
+/* v45: more breathing room between "82 gigs" and "↑ 67.3% VS PRIOR" */
+.work-chart-bottom--velocity .tc__totals {
+  gap: 8px;
+}
+/* Velocity hero — "82 gigs" matches pay panel size. */
+.work-chart-bottom--velocity .tc__total-num {
+  font-size: clamp(22px, 2.2vw, 34px);
+  letter-spacing: -0.028em;
+  color: var(--ink, #111);
+}
+/* Period chips pinned to top-right corner of the head row — sits
+   above the tooltip's vertical zone. */
+.work-chart-bottom--velocity .tc__chips {
+  align-self: flex-start;
+}
+.work-chart-bottom--velocity .tc__chart-wrap {
+  /* v48-52 max-height history: 100→80→60→96→uncapped→140.
+     v53 — max-height 110 to fit panel body without axis overflow.
+     The panel body height varies by viewport (~220-370px); 110 leaves
+     room for head + 16gap + 110chart + 8 + 17axis + 12padding ≈ 173px
+     min, fitting comfortably even on tight viewports. */
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 60px;
+  max-height: 110px;
+  margin-top: 0;
+  margin-bottom: 8px;
+  overflow: visible;
+}
+.work-chart-bottom--velocity .tc__axis {
+  flex-shrink: 0;
+  font-size: 11px;
+}
+/* v48 — 12px breathing room between axis and panel padding-bottom,
+   matching the /money chart's bottom-stack rhythm. */
+.work-chart-bottom--velocity {
+  padding-bottom: 12px;
+}
+
+/* Override Bento body justify so chart panels can claim the freed
+   vertical space rather than centering content. v34: Actions queue
+   joined the override — user wanted the row list to top-align right
+   below the title with a fixed margin instead of vertically centered.
+   v47: .work-pay added so $940 hero starts at body top — aligning
+   with the "82 gigs" hero in the Velocity panel sibling. Without this
+   $940 sat ~21px lower than 82 gigs (because BentoModule's default
+   justify-content: center vertically centered the pay content). */
+.work-bento .bento__body:has(.work-chart-bottom),
+.work-bento .bento__body:has(.work-pulse),
+.work-bento .bento__body:has(.work-queue),
+.work-bento .bento__body:has(.work-pay) {
+  justify-content: flex-start;
+}
+
+/* ── v49 Pay panel — premium Push register.
+   3-zone composition:
+     1. Hero row: $940 + delta + tier badge
+     2. Segmented cycle bar with two-item legend
+     3. Verified-scan attribution row (Push DNA)
+   Everything sits on the existing champagne tone surface; we add
+   warm-gold inset rims and a champagne-deep ink for the hero number. */
+.work-pay {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* v47 — margin-top removed (was 6px) so the $940 hero starts at
+     body-top, lining up perfectly with the "82 gigs" hero on the
+     Velocity panel sibling. */
+  margin-top: 0;
+}
+
+/* Hero row — number left, tier badge right */
+.work-pay__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.work-pay__hero-stack {
+  display: flex;
+  flex-direction: column;
+  /* v47 — gap 4 → 8 to match the Velocity panel's tc__totals gap, so
+     "ready to cash out · 22%" sits at the same y as "67.3% VS PRIOR". */
+  gap: 8px;
+  min-width: 0;
+}
+.work-pay__hero-num-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Privacy eye — toggles money visibility across the page. Champagne-
+   tinted ghost button sized to sit comfortably next to the hero
+   numeral without competing with it for attention. */
+.work-pay__eye {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--champagne-deep, #8a704a);
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+.work-pay__eye:hover {
+  background: rgba(191, 161, 112, 0.18);
+  color: var(--ink, #111);
+  box-shadow: inset 0 0 0 0.5px rgba(191, 161, 112, 0.40);
+}
+.work-pay__eye:focus-visible {
+  outline: 2px solid var(--champagne, #bfa170);
+  outline-offset: 2px;
+}
+.work-pay__hero-num {
+  display: inline-block;
+  min-width: 2.6em;
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(22px, 2.2vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 1;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+}
+.work-pay__hero-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--champagne-deep, #8a704a);
+  letter-spacing: 0.005em;
+}
+.work-pay__delta {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(45, 110, 74, 0.14);
+  color: #2d6e4a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tier badge — champagne-tinted glass pill, 11px mono */
+.work-pay__tier {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(191, 161, 112, 0.36);
+}
+.work-pay__tier svg {
+  color: var(--champagne, #bfa170);
+}
+
+/* Segmented cycle bar — three flex sections proportional to their
+   dollar amounts. Inset rim + champagne gradient on the cleared
+   segment (the "money in your account" cue). */
+.work-pay__bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  gap: 3px;
+  background: rgba(191, 161, 112, 0.12);
+  padding: 0;
+  box-shadow: inset 0 0.5px 0 rgba(20, 19, 15, 0.04);
+}
+.work-pay__seg {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  min-width: 4px;
+}
+.work-pay__seg--cleared {
+  background: linear-gradient(
+    90deg,
+    var(--champagne, #bfa170) 0%,
+    var(--champagne-deep, #8a704a) 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30);
+}
+.work-pay__seg--verifying {
+  background: rgba(191, 161, 112, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.work-pay__seg--empty {
+  background: transparent;
+}
+
+/* Bar legend — two items inline, swatch + text */
+.work-pay__bar-legend {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--champagne-deep, #8a704a);
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+.work-pay__bar-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.work-pay__bar-legend-item strong {
+  color: var(--ink, #111);
+  font-weight: 800;
+}
+.work-pay__legend-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.work-pay__legend-swatch--cleared {
+  background: linear-gradient(
+    135deg,
+    var(--champagne, #bfa170),
+    var(--champagne-deep, #8a704a)
+  );
+}
+.work-pay__legend-swatch--verifying {
+  background: rgba(191, 161, 112, 0.55);
+}
+
+/* Push-signature attribution row — verified-scan unit economics.
+   Pulsing champagne dot acts as the "live" cue; tabular nums keep
+   the strong/value pairs clean. This is the line that says "this
+   panel belongs to Push." */
+.work-pay__attr {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3, #3a3835);
+  font-variant-numeric: tabular-nums;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(191, 161, 112, 0.32);
+}
+.work-pay__attr strong {
+  color: var(--ink, #111);
+  font-weight: 800;
+}
+.work-pay__attr-sep {
+  color: var(--champagne, #bfa170);
+  font-weight: 800;
+  margin: 0 2px;
+}
+.work-pay__attr-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--champagne-deep, #8a704a);
+  box-shadow: 0 0 0 0 rgba(138, 112, 74, 0.55);
+  animation: work-pay-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes work-pay-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(138, 112, 74, 0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(138, 112, 74, 0); }
+}
+
+/* ── Champagne progress (Drafts panel) — milestone-style fill */
+.work-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.work-progress__track {
+  height: 8px;
+  background: rgba(191, 161, 112, 0.18);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.work-progress__fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--champagne, #bfa170) 0%,
+    var(--champagne-deep, #8a704a) 100%
+  );
+  border-radius: 4px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-progress__meta {
+  font-family: var(--font-body, "Open Sans");
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--ink-4, #61605c);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--champagne-deep, #8a704a);
+}
+
+.work-list-row__date {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--ink-3, #3a3835);
   text-transform: uppercase;
 }
 
@@ -156,382 +1240,1858 @@
   text-overflow: ellipsis;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   Work Uplift v2 (2026-05-07) — Liquid Glass · Atmospheric · Colorful
-   hub-shell.css already supplies surface tokens, the L/R escape margin,
-   the 2-ellipse atmosphere and the > * stacking lift — this section
-   adds the missing blur tokens, upgrades the backdrop to the dashboard
-   5-layer haze (visual continuity), and adds two page-specific accents.
-   APPENDED ONLY — does not modify hub-shell.
-   ═══════════════════════════════════════════════════════════════════════ */
+/* ── "Next move" ink solid panel — the executive register ─────
+   macOS-26-widget feel: one massive time numeral anchors the panel.
+   Time fills the visual mass, everything else hugs it. Square-ish
+   span-4 tile, content centered vertically by the parent .bento__body
+   flex justify-content. */
 
-.work-hub {
-  /* Blur tokens not in hub-shell — required for backdrop-filter on glass.
-     Surface alphas, shadows and specular insets are inherited from
-     hub-shell.css unchanged. */
-  --lg-blur-hero: blur(32px) saturate(1.55);
-  --lg-blur-std:  blur(24px) saturate(1.4);
-  --lg-blur-soft: blur(16px) saturate(1.2);
+.work-next {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
+.work-next__time {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(32px, 3.4vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  line-height: 0.92;
+  color: var(--snow, #fff);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.work-next__time-meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+  margin: 0;
+}
+
+.work-next__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(18px, 1.7vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.014em;
+  color: var(--snow, #fff);
+  margin: 14px 0 0;
+  line-height: 1.15;
+}
+
+.work-next__caption {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+/* Icon chips — replaces the bullet list. Each chip is one fact
+   surfaced as a visual atom: 14px lucide icon + label, packed in a
+   subtle dark pill. Champagne icon picks the eye to the chip group,
+   the row reads as 3 visual atoms not as a paragraph. */
+.work-next__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* v45: Countdown rail — slim champagne-tinted progress bar over a
+   muted track + meta line. Sits between the AM time-meta and the
+   chip row. Mirrors the orange reference from the user's screenshot
+   but keeps the dark Next Move panel's color logic (champagne tint
+   on dark = the panel's standing accent). */
+.work-next__countdown {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.work-next__countdown-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
   position: relative;
-  isolation: isolate;
 }
-
-/* Upgrade the hub-shell 2-ellipse backdrop to the 5-layer dashboard
-   haze, GA-orange weighted (work hub identity = execution layer). */
-.work-hub::before {
-  background:
-    radial-gradient(ellipse 70vw 60vh at 78% 18%,  rgba(255, 94, 43, 0.10),   transparent 62%),
-    radial-gradient(ellipse 55vw 55vh at 12% 28%,  rgba(191, 161, 112, 0.13), transparent 65%),
-    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(176, 133, 96, 0.08),  transparent 65%),
-    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%),
-    radial-gradient(ellipse 35vw 30vh at 22% 88%,  rgba(193, 18, 31, 0.035),  transparent 75%);
-}
-
-/* ── Section heads — colorful gradient underline + status dot ───────────
-   Layered on top of hub-shell's hairline border so we keep the editorial
-   rhythm but add the chromatic horizon used across dashboard + analytics. */
-.work-hub .hub-section {
-  position: relative;
-}
-.work-hub .hub-section::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 2px;
-  width: 100%;
+.work-next__countdown-fill {
+  height: 100%;
   background: linear-gradient(
     90deg,
-    rgba(255, 94, 43, 0.55) 0%,
-    rgba(191, 161, 112, 0.55) 35%,
-    rgba(0, 133, 255, 0.45) 70%,
-    rgba(191, 161, 112, 0) 100%
+    var(--champagne, #bfa170) 0%,
+    var(--champagne, #bfa170) 65%,
+    rgba(191, 161, 112, 0.55) 100%
   );
-  border-radius: 2px;
-  pointer-events: none;
+  border-radius: 999px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.work-hub .hub-section__title {
+.work-next__countdown-meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+.work-next__countdown-meta strong {
+  color: var(--snow, #fff);
+  font-weight: 800;
+}
+
+/* v27 MEGA hero variant — full 12-span Next Move with prominent
+   agent panel. Splits 1fr | 380px on ≥1024px. Numbered list with
+   bigger numbers (1/2/3/4) replaces the dot bullets — easier to
+   scan, more "agent steering you" feel. */
+.work-next--mega {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding: 8px 0;
+}
+@media (min-width: 1024px) {
+  .work-next--mega {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: 64px;
+    align-items: center;
+  }
+}
+.work-next--mega .work-next__main {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.work-next--mega .work-next__time {
+  font-size: clamp(40px, 4.2vw, 64px);
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  margin: 0;
+}
+.work-next--mega .work-next__title {
+  font-size: clamp(24px, 2.4vw, 32px);
+  margin-top: 8px;
+}
+.work-next--mega .work-next__chips { margin-top: 18px; }
+.work-next--mega .work-next__chip {
+  font-size: 14px;
+  padding: 8px 14px;
+}
+
+.work-next__cta-hint {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 16px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+}
+
+.work-next__agent-panel {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 22px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: inset 0 0 0 0.5px rgba(191, 161, 112, 0.30);
+}
+.work-next__agent-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+  margin: 0;
+}
+.work-next__agent-mega {
+  display: flex; flex-direction: column; gap: 12px;
+  margin: 0; padding: 0;
+  list-style: none;
+}
+.work-next__agent-mega li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 12px;
+  align-items: start;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px; line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+.work-next__agent-num {
+  display: inline-grid; place-items: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(191, 161, 112, 0.20);
+  color: var(--champagne, #bfa170);
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 11px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.work-next__agent-mega strong {
+  color: var(--snow, #fff);
+  font-weight: 800;
+}
+
+/* ── v35 NEXT MOVE agent (inline variant — used in span-5 panel) ──
+   Replaces the unstyled <ul> that rendered with default browser
+   bullets. Now: dashed champagne hairline separator, "AGENT" eyebrow
+   with lightbulb (already styled above), numbered 01/02/03 step list
+   with champagne mono prefix, body in soft snow with emphasized
+   words in pure snow. Reads as an agent walking through the play. */
+.work-next__agent-inline {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(191, 161, 112, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.work-next__agent-mini {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  counter-reset: agent;
+}
+
+.work-next__agent-mini li {
+  /* v35.1 — was display:grid which broke text into separate cells:
+     each <strong> child landed in its own grid cell because grid
+     auto-flow placed <strong>8:30</strong> and "· scout angle" as
+     siblings of the ::before counter. Switched to flex so the entire
+     li body stays inline. */
+  counter-increment: agent;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.74);
+  letter-spacing: 0.005em;
+}
+
+.work-next__agent-mini li::before {
+  content: counter(agent, decimal-leading-zero);
+  flex-shrink: 0;
+  width: 22px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  color: var(--champagne, #bfa170);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.work-next__agent-mini strong {
+  color: var(--snow, #fff);
+  font-weight: 700;
+}
+
+/* ── v45 mini nav cards — true macOS 26 Liquid Glass ──
+   User: "下面四个彩色panel 要更高级的liquid glass... 一定要mac os 26".
+   Stripped back to the minimum-essential glass signature:
+     · White-frost substrate (heavier blur 40 + sat 1.8)
+     · CRISP top spec hairline (1px white at .95 — the iOS 26 cue)
+     · ONE specular highlight at top-center (not corner-anchored —
+       Apple's widgets read as light coming from above, not the side)
+     · Brand color enters via TWO subtle channels only:
+       · --mini-wash: a soft bottom radial tint inside the glass
+       · --mini-glow: the outer ambient drop-shadow color
+     · No diagonal sweeps, no heavy gradients, no inset rims that
+       outline the card. */
+.work-mini {
+  /* v47 — padding tightened (18 → 12) + gap (6 → 4) + radius (22 → 18)
+     to fit the reduced row 3 height (96px min instead of 120px). */
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px 12px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--ink, #111);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  backdrop-filter: blur(40px) saturate(1.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 14px 36px var(--mini-glow, rgba(0, 0, 0, 0.06));
+  transition:
+    background 320ms ease,
+    box-shadow 320ms ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  isolation: isolate;
+}
+.work-mini::before {
+  /* Two stacked radial layers:
+     1. Subtle white spec highlight from above — Apple widget signature
+     2. Brand-tinted wash bleeding up from the bottom corner */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(255, 255, 255, 0.40) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 120% 80% at 50% 110%,
+      var(--mini-wash, transparent) 0%,
+      transparent 65%
+    );
+}
+.work-mini > * {
+  position: relative;
+  z-index: 1;
+}
+.work-mini:hover {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.65),
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 22px 52px var(--mini-glow, rgba(0, 0, 0, 0.10));
+}
+
+.work-mini__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+/* v47 — all 4 mini cards unified to ink/gray (per user "底部的时光
+   panel 全部改为黑色和灰色"). Variants now share identical wash/glow/
+   icon-fill/num color. The kept --champagne/--green/--ok/--ink class
+   names are inherited from the React component (don't break props),
+   but visually they all render as a single ink register. */
+.work-mini--champagne,
+.work-mini--green,
+.work-mini--ok,
+.work-mini--ink {
+  --mini-wash: rgba(20, 19, 15, 0.08);
+  --mini-glow: rgba(20, 19, 15, 0.14);
+}
+
+/* Icon fills — single ink chip with snow glyph for all 4 variants. */
+.work-mini--champagne .work-mini__icon-fill,
+.work-mini--green .work-mini__icon-fill,
+.work-mini--ok .work-mini__icon-fill,
+.work-mini--ink .work-mini__icon-fill {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.20),
+    0 1px 2px rgba(20, 19, 15, 0.40);
+}
+.work-mini--champagne .work-mini__num,
+.work-mini--green .work-mini__num,
+.work-mini--ok .work-mini__num,
+.work-mini--ink .work-mini__num {
+  color: var(--ink, #111);
+}
+
+/* Reduced-transparency a11y fallback — drop blur, fall back to a
+   tone-washed flat surface so the cards still read as colored. */
+@media (prefers-reduced-transparency: reduce) {
+  .work-mini {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--snow, #fff);
+  }
+  .work-mini::before {
+    display: none;
+  }
+}
+
+.work-mini__icon-fill {
+  /* v47 — icon tile shrunk 40 → 32 to suit the more compact row. */
+  width: 32px; height: 32px;
+  display: inline-grid; place-items: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: rgba(20, 19, 15, 0.08);
+  color: var(--ink-3, #3a3835);
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.2);
+}
+.work-mini__icon-fill svg { width: 16px; height: 16px; }
+
+.work-mini__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(16px, 1.4vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-top: 0;
+}
+.work-mini__lbl {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+.work-mini__sub {
+  /* v47 — hidden in compact row 3 layout. The duplicate context line
+     (e.g. "2 likely accepted EOD · avg reply 18h") is visible on the
+     full sub-pages; on the dashboard the icon + num + lbl + viz alone
+     read at a glance. */
+  display: none;
+}
+/* v48 — drill disc matches the BentoModule pattern (↗ at 45° in a
+   circle), unifying "this is clickable" affordance across the page. */
+.work-mini__arrow {
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-}
-.work-hub .hub-section__title::before {
-  content: "";
-  width: 8px;
-  height: 8px;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-3, #3a3835);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 50%;
-  background: var(--ga-orange, #ff5e2b);
-  box-shadow: 0 0 0 4px rgba(255, 94, 43, 0.10);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(60, 45, 30, 0.05);
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.work-mini:hover .work-mini__arrow {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.10),
+    0 3px 8px rgba(20, 19, 15, 0.22);
+  transform: translate(2px, -2px);
+}
+
+/* ── Per-card visualizations (v31) ── */
+.work-mini__viz {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.work-mini__viz-legend,
+.work-mini__viz-axis {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-4, #6a6a6a);
+}
+.work-mini__viz-legend strong {
+  color: var(--ink, #111);
+  font-weight: 800;
+  margin-right: 2px;
+}
+.work-mini__viz-axis {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-5, #9a9a9a);
+}
+
+/* Applied: 3-segment status bar (accept/review/decline) */
+.work-mini__seg-bar {
+  display: flex;
+  height: 12px;
+  gap: 2px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.work-mini__seg {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+/* v47 — segmented bar recolored to a 3-step ink ramp (was champagne).
+   Same dark→light visual hierarchy, different hue family. */
+.work-mini__seg--accept { background: var(--ink, #111); }
+.work-mini__seg--review { background: var(--ink-4, #61605c); opacity: 0.7; }
+.work-mini__seg--decline { background: var(--ink-5, #9a9a9a); opacity: 0.5; }
+
+/* Paid: 7-day sparkline bars */
+.work-mini__sparkbars {
+  /* v47 — height 40 → 24 for compact row 3. */
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  align-items: end;
+  height: 24px;
+}
+.work-mini__sparkbar {
+  /* v47 — sparkbar ink-gray (was success-dark green). */
+  width: 100%;
+  background: var(--ink, #111);
+  opacity: 0.45;
+  border-radius: 2px;
+  min-height: 3px;
+  transition: opacity 200ms ease;
+}
+.work-mini__sparkbar.is-current {
+  /* Today gets full ink (no green). */
+  background: var(--ink, #111);
+  opacity: 1;
+}
+
+/* Disputes: 14-day safe streak — small circles each containing a ✓
+   (user: "需要一些列圆点里面有对勾而不是椭圆"). The aspect ratio is
+   forced to 1:1 so the marks stay round, not oval, regardless of
+   panel width. */
+.work-mini__streak {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 4px;
+  margin-top: 2px;
+}
+.work-mini__streak-dot {
+  /* v47 — streak dots ink/gray (was blue + green). */
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: rgba(20, 19, 15, 0.10);
+  display: inline-grid;
+  place-items: center;
+  color: var(--ink-3, #61605c);
+}
+.work-mini__streak-dot svg {
+  width: 60%;
+  height: 60%;
+  display: block;
+}
+.work-mini__streak-dot--ok {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+}
+
+/* Pipeline: 7-stage pip indicator (which stages have gigs) */
+.work-mini__stages {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  align-items: center;
+}
+.work-mini__stage-pip {
+  /* v47 — height 28 → 22 for compact row 3. */
+  display: inline-grid;
+  place-items: center;
+  height: 22px;
+  border-radius: 6px;
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink-5, #9a9a9a);
+}
+.work-mini__stage-pip.is-on {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+}
+
+@media (max-width: 1280px) {
+  .work-mini { grid-column: span 6; }
+}
+@media (max-width: 640px) {
+  .work-mini { grid-column: 1; padding: 16px 18px; gap: 12px; }
+  .work-mini__icon-fill { width: 40px; height: 40px; }
+  .work-mini__num { font-size: 28px; }
+}
+
+.work-next__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 0.5px rgba(191, 161, 112, 0.30);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+.work-next__chip svg {
+  color: var(--champagne, #bfa170);
   flex-shrink: 0;
 }
 
-/* ── Pipeline kanban cells — liquid glass + status-rotating top accent ──
-   The Pipeline module is the work hub's anchor surface (span 12, hero).
-   Glassify the 4 phase cells and rotate the top accent so accept → shoot
-   → submit → closed reads as a colorful timeline at a glance. */
-.work-hub .work-pipeline-row .work-pipeline-cell {
-  position: relative;
-  background: var(--lg-bg-std);
-  -webkit-backdrop-filter: var(--lg-blur-soft);
-          backdrop-filter: var(--lg-blur-soft);
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-1);
-  overflow: hidden;
-  isolation: isolate;
-  transition:
-    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 320ms cubic-bezier(0.22, 1, 0.36, 1);
+/* ── KPI override inside Work bento — secondary scale.
+   The hero (NEXT MOVE 9:00 at 88px) carries the heaviest typographic
+   weight on the page. Other KPIs (2 / 6 / etc.) sit one tier below at
+   ~64px so the contrast doesn't read as "page of giant high-contrast
+   numbers". Bumped eyebrow + sub to fix the awkward extreme contrast. */
+
+.work-bento .kpb__value {
+  font-size: clamp(28px, 2.8vw, 44px) !important;
+  letter-spacing: -0.028em;
+  line-height: 0.92;
 }
-.work-hub .work-pipeline-row .work-pipeline-cell::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  z-index: 1;
-  border-radius: 12px 12px 0 0;
+
+.work-bento .kpb--compact .kpb__value {
+  font-size: clamp(28px, 2.8vw, 44px) !important;
 }
-/* Outreach (1st) → red, Shooting (2nd) → orange, Submitted (3rd) →
-   champagne, Closed (4th) → blue. Each cell is wrapped in a divider
-   span between phases, so use nth-of-type to pick only the cells. */
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(1)::before {
-  background: linear-gradient(90deg, var(--brand-red, #c1121f), rgba(193, 18, 31, 0.4));
+
+.work-bento .kpb__eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.08em;
 }
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(2)::before {
-  background: linear-gradient(90deg, var(--ga-orange, #ff5e2b), rgba(255, 94, 43, 0.4));
-}
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(3)::before {
-  background: linear-gradient(90deg, var(--champagne, #bfa170), rgba(191, 161, 112, 0.45));
-}
-.work-hub .work-pipeline-row .work-pipeline-cell:nth-of-type(4)::before {
-  background: linear-gradient(90deg, var(--accent-blue, #0085ff), rgba(0, 133, 255, 0.4));
-}
-.work-hub .work-pipeline-row .work-pipeline-cell:hover {
-  transform: translate(2px, 2px);
-  background: var(--lg-bg-light);
-  box-shadow:
-    var(--lg-spec-top),
-    var(--lg-spec-bot),
-    var(--lg-edge),
-    var(--lg-shadow-2);
+
+.work-bento .kpb {
+  gap: 8px;
 }
 
 /* ── Reduced motion / transparency fallbacks ──────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .work-hub .work-pipeline-row .work-pipeline-cell {
+  .work-pipeline-cell {
     transition: none;
   }
-  .work-hub .work-pipeline-row .work-pipeline-cell:hover {
+  .work-pipeline-cell:hover {
     transform: none;
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .work-hub .work-pipeline-row .work-pipeline-cell {
-    background: var(--snow) !important;
+  .work-pipeline-cell {
+    background: var(--snow, #fff) !important;
     -webkit-backdrop-filter: none !important;
             backdrop-filter: none !important;
   }
 }
 
+/* ════════════════════════════════════════════════════════════
+   v3 FUNNEL — 7-stage end-to-end view (2026-05-08)
+   Replaces the old bento. Each section corresponds to one stage
+   of the creator journey. Used by app/(creator)/.../work/page.tsx.
+   ════════════════════════════════════════════════════════════ */
 
 /* ============================================================
-   Wave 9 — Typography Readability
-   Cap measure on long-form text so it doesn't cram left-to-right
-   on wide screens. Hero/section titles get fluid scaling, paragraph
-   measure capped to 72ch (body) / 64ch / 56ch (subtitles).
-   Does not modify Liquid Glass surfaces, atmospheric backdrops,
-   colorful section dividers, or Wave 1-8 uplifts.
+   v29 PIPELINE PIP STRIP — equal-width, no scroll
+   Replaces v28's bar chart (which was misleading because Discover
+   147 in-flight and Promoted 12 cumulative aren't comparable on
+   the same height scale). Now: 9 equal-width pips, current stage
+   highlighted, conversion % shown between pips with red/green
+   color coding for drop/up.
+   ============================================================ */
+.work-pipe {
+  margin: 12px 0 32px;
+  padding: 18px 22px 22px;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+          backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(20, 19, 15, 0.05),
+    0 8px 20px rgba(20, 19, 15, 0.05);
+}
+.work-pipe__head {
+  display: flex; align-items: baseline;
+  justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding: 0 4px 14px;
+  border-bottom: 1px dashed var(--mist, #d8d4c8);
+  margin-bottom: 16px;
+}
+.work-pipe__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+.work-pipe__total {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 600;
+  color: var(--ink-4, #6a6a6a);
+}
+.work-pipe__total strong { color: var(--ink, #111); font-weight: 800; }
+
+.work-pipe__strip {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  position: relative;
+}
+
+.work-pipe__pip {
+  position: relative;
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 4px;
+  padding: 14px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid transparent;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.work-pipe__pip:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(20, 19, 15, 0.10);
+  transform: translate(0, -1px);
+}
+
+.work-pipe__pip--current {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+  border-color: var(--ink, #111);
+}
+.work-pipe__pip--current .work-pipe__num {
+  background: var(--ga-orange, #ff5e2b);
+  color: var(--snow, #fff);
+}
+.work-pipe__pip--current .work-pipe__count { color: var(--snow, #fff); }
+.work-pipe__pip--current .work-pipe__label { color: rgba(255, 255, 255, 0.7); }
+.work-pipe__pip--current:hover { background: var(--ink, #111); }
+
+.work-pipe__num {
+  display: inline-grid; place-items: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(20, 19, 15, 0.08);
+  color: var(--ink-3, #3a3835);
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 11px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.work-pipe__pip--blue:not(.work-pipe__pip--current) .work-pipe__num {
+  background: rgba(0, 133, 255, 0.14); color: var(--accent-blue, #0085ff);
+}
+.work-pipe__pip--green:not(.work-pipe__pip--current) .work-pipe__num {
+  background: rgba(45, 110, 74, 0.14); color: #2d6e4a;
+}
+.work-pipe__pip--good:not(.work-pipe__pip--current) .work-pipe__num {
+  background: rgba(52, 199, 89, 0.16); color: var(--success-dark, #1f7a39);
+}
+
+.work-pipe__count {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-pipe__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+
+.work-pipe__conv {
+  position: absolute;
+  top: -10px;
+  left: -3px;
+  transform: translateX(-100%);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-4, #6a6a6a);
+  font-variant-numeric: tabular-nums;
+  background: var(--snow, #fff);
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0.5px rgba(20, 19, 15, 0.10);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.work-pipe__conv::before {
+  content: "→";
+  margin-right: 3px;
+  opacity: 0.5;
+}
+.work-pipe__conv--drop { color: var(--brand-red, #c1121f); }
+.work-pipe__conv--up { color: var(--success-dark, #1f7a39); }
+
+@media (max-width: 1024px) {
+  .work-pipe__strip { gap: 4px; }
+  .work-pipe__pip { padding: 10px 8px; }
+  .work-pipe__count { font-size: 18px; }
+  .work-pipe__label { font-size: 9px; letter-spacing: 0.02em; }
+  .work-pipe__num { width: 18px; height: 18px; font-size: 10px; }
+  .work-pipe__conv { font-size: 9px; padding: 1px 4px; }
+}
+@media (max-width: 768px) {
+  .work-pipe__strip { grid-template-columns: repeat(3, 1fr); }
+  .work-pipe__conv { display: none; }
+}
+
+/* ============================================================
+   v28 PIPELINE FUNNEL VISUALIZATION (legacy bar-chart, kept
+   for backward compat — v29 page.tsx uses .work-pipe instead)
+   ============================================================ */
+.work-funnel-viz {
+  margin: 12px 0 32px;
+  padding: 18px 22px 22px;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+          backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(20, 19, 15, 0.05),
+    0 8px 20px rgba(20, 19, 15, 0.05);
+}
+.work-funnel-viz__head {
+  display: flex; align-items: baseline;
+  justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding: 0 4px 14px;
+  border-bottom: 1px dashed var(--mist, #d8d4c8);
+  margin-bottom: 16px;
+}
+.work-funnel-viz__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+.work-funnel-viz__total {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 600;
+  color: var(--ink-4, #6a6a6a);
+}
+.work-funnel-viz__total strong {
+  color: var(--ink, #111); font-weight: 800;
+}
+
+.work-funnel-viz__chart {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.work-funnel-viz__col {
+  display: grid;
+  grid-template-rows: 22px 180px 22px 18px;
+  align-items: end;
+  justify-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 200ms ease, transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.work-funnel-viz__col:hover {
+  background: rgba(20, 19, 15, 0.04);
+  transform: translate(0, -2px);
+}
+
+.work-funnel-viz__count {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 18px; font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  align-self: end;
+}
+
+.work-funnel-viz__bar-wrap {
+  display: flex; flex-direction: column-reverse;
+  width: 100%; height: 100%;
+  position: relative;
+}
+
+.work-funnel-viz__bar {
+  width: 100%;
+  background: var(--ink-3, #3a3835);
+  border-radius: 8px 8px 0 0;
+  transition: height 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  min-height: 8px;
+}
+
+.work-funnel-viz__col--blue .work-funnel-viz__bar { background: var(--accent-blue, #0085ff); }
+.work-funnel-viz__col--green .work-funnel-viz__bar { background: #2d6e4a; }
+.work-funnel-viz__col--good .work-funnel-viz__bar { background: var(--success, #34c759); }
+.work-funnel-viz__col--current .work-funnel-viz__bar { background: var(--ga-orange, #ff5e2b); }
+
+.work-funnel-viz__col--current {
+  background: rgba(255, 94, 43, 0.06);
+}
+.work-funnel-viz__col--current .work-funnel-viz__count {
+  color: var(--ga-orange-deep, #cc4500);
+}
+
+.work-funnel-viz__conv {
+  position: absolute;
+  top: -22px;
+  left: -50%;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-4, #6a6a6a);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  pointer-events: none;
+}
+.work-funnel-viz__conv::before {
+  content: "→ ";
+  opacity: 0.6;
+}
+.work-funnel-viz__conv--drop { color: var(--brand-red, #c1121f); }
+.work-funnel-viz__conv--up { color: var(--success-dark, #1f7a39); }
+
+.work-funnel-viz__num {
+  display: inline-grid; place-items: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(20, 19, 15, 0.08);
+  color: var(--ink-3, #3a3835);
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 11px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.work-funnel-viz__col--current .work-funnel-viz__num {
+  background: var(--ga-orange, #ff5e2b);
+  color: var(--snow, #fff);
+}
+
+.work-funnel-viz__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .work-funnel-viz__chart { gap: 3px; }
+  .work-funnel-viz__col {
+    grid-template-rows: 18px 110px 16px 16px;
+    padding: 4px 2px;
+  }
+  .work-funnel-viz__count { font-size: 13px; }
+  .work-funnel-viz__num { width: 16px; height: 16px; font-size: 9px; }
+  .work-funnel-viz__label { font-size: 9px; letter-spacing: 0.02em; }
+  .work-funnel-viz__conv { font-size: 8px; top: -18px; }
+}
+
+/* legacy v26 .work-flow class kept below for backward compat;
+   v28 page.tsx no longer renders it. */
+/* ============================================================
+   v26 PIPELINE FLOW (legacy) — replaced by .work-funnel-viz
    ============================================================ */
 
-.work-hub p,
-.work-hub .body-text,
-.work-hub .description,
-.work-hub .ms-page-header-subtitle,
-.work-hub [class*="empty-state"] p,
-.work-hub [class*="subtitle"]:not(h1):not(h2):not(h3) {
-  max-width: 72ch;
-  line-height: 1.6;
+.work-flow {
+  margin: 12px 0 32px;
+  padding: 16px 20px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+          backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(20, 19, 15, 0.05),
+    0 8px 20px rgba(20, 19, 15, 0.05);
 }
 
-.work-hub .ms-page-header-subtitle,
-.work-hub [class*="hero-sub"] {
-  max-width: 56ch;
-  font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.55;
+.work-flow__head {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 0 4px 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px dashed var(--mist, #d8d4c8);
+  margin-bottom: 12px;
+}
+.work-flow__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+}
+.work-flow__meta {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 600;
+  color: var(--ink-4, #61605c);
+  margin-left: auto;
 }
 
-.work-hub [class*="eyebrow"]:not([class*="card__eyebrow"]) {
-  letter-spacing: 0.08em;
+.work-flow__strip {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.work-flow__strip::-webkit-scrollbar { height: 4px; }
+.work-flow__strip::-webkit-scrollbar-thumb { background: var(--mist, #d8d4c8); border-radius: 4px; }
+
+.work-flow__pair {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.work-hub h1,
-.work-hub .ms-page-header-title,
-.work-hub [class*="page-title"]:not([class*="card"]) {
-  font-size: clamp(40px, 5.6vw, 80px);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+.work-flow__stage {
+  display: grid;
+  grid-template-columns: 28px auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  color: var(--ink, #111);
+  border: 1px solid transparent;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 180ms ease,
+              border-color 180ms ease;
+}
+.work-flow__stage:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(20, 19, 15, 0.10);
+  transform: translate(1px, 1px);
 }
 
-.work-hub h2,
-.work-hub .db-section-title,
-.work-hub [class*="section-title"]:not([class*="card"]) {
-  font-size: clamp(28px, 3.5vw, 48px);
+.work-flow__stage.is-current {
+  background: var(--ink, #111);
+  color: var(--snow, #fff);
+  box-shadow: 0 4px 12px rgba(20, 19, 15, 0.20);
+}
+.work-flow__stage.is-current .work-flow__num {
+  background: var(--ga-orange, #ff5e2b);
+  color: var(--snow, #fff);
+}
+.work-flow__stage.is-current:hover {
+  background: var(--ink, #111);
+  border-color: transparent;
+}
+
+.work-flow__num {
+  display: inline-grid; place-items: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink-3, #3a3835);
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 12px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.work-flow__stage--blue:not(.is-current) .work-flow__num {
+  background: rgba(0, 133, 255, 0.12); color: var(--accent-blue, #0085ff);
+}
+.work-flow__stage--green:not(.is-current) .work-flow__num {
+  background: rgba(45, 110, 74, 0.12); color: #2d6e4a;
+}
+.work-flow__stage--warn:not(.is-current) .work-flow__num {
+  background: rgba(255, 94, 43, 0.14); color: var(--ga-orange, #ff5e2b);
+}
+.work-flow__stage--good:not(.is-current) .work-flow__num {
+  background: rgba(52, 199, 89, 0.14); color: var(--success-dark, #1f7a39);
+}
+
+.work-flow__body {
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.work-flow__icon {
+  display: inline-flex; align-items: center;
+  color: currentColor; opacity: 0.6;
+}
+.work-flow__stage.is-current .work-flow__icon { opacity: 0.9; }
+
+.work-flow__label {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+
+.work-flow__count {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 18px; font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
+.work-flow__connector {
+  display: inline-flex; flex-direction: column; align-items: center;
+  gap: 1px;
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+.work-flow__arrow {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--ink-5, #9a9a9a);
+  line-height: 1;
+}
+.work-flow__conv {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-4, #6a6a6a);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.work-flow__conv--drop { color: var(--brand-red, #c1121f); }
+.work-flow__conv--up { color: var(--success-dark, #1f7a39); }
+
+@media (max-width: 768px) {
+  .work-flow { padding: 12px 14px; }
+  .work-flow__head { padding-bottom: 8px; }
+  .work-flow__eyebrow { font-size: 10px; }
+  .work-flow__count { font-size: 16px; }
+  .work-flow__num { width: 24px; height: 24px; font-size: 11px; }
+}
+
+/* ── Funnel KPI strip — 7 stage pips connected with arrows ── */
+
+.work-funnel-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 14px 16px;
+  margin: 8px 0 32px;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+          backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(20, 19, 15, 0.05),
+    0 8px 20px rgba(20, 19, 15, 0.05);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.work-funnel-strip::-webkit-scrollbar { display: none; }
+
+.work-funnel-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  flex-shrink: 0;
+  position: relative;
+  font-family: var(--font-body, "Open Sans");
+}
+
+.work-funnel-pip__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink-3, #3a3835);
+  flex-shrink: 0;
+}
+
+/* v24 XL variant — bigger numbers + bigger icon tiles for the
+   "make every step's number and icon larger" directive. */
+.work-funnel-strip--xl .work-funnel-pip { padding: 8px 14px; gap: 12px; }
+.work-funnel-strip--xl .work-funnel-pip__icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+}
+.work-funnel-strip--xl .work-funnel-pip__num {
+  font-size: clamp(28px, 2.6vw, 36px);
+  letter-spacing: -0.02em;
+}
+.work-funnel-strip--xl .work-funnel-pip__lbl {
+  font-size: 12px;
+}
+.work-funnel-strip--xl .work-funnel-pip__step {
+  font-size: 11px;
+}
+.work-funnel-strip--xl .work-funnel-pip__arrow {
+  font-size: 18px;
+  margin: 0 8px;
+}
+@media (max-width: 768px) {
+  .work-funnel-strip--xl .work-funnel-pip__num { font-size: 22px; }
+  .work-funnel-strip--xl .work-funnel-pip__icon { width: 28px; height: 28px; }
+}
+
+.work-funnel-pip--ink .work-funnel-pip__icon { background: rgba(20, 19, 15, 0.10); color: var(--ink, #111); }
+.work-funnel-pip--blue .work-funnel-pip__icon { background: rgba(0, 133, 255, 0.12); color: var(--accent-blue, #0085ff); }
+.work-funnel-pip--green .work-funnel-pip__icon { background: rgba(45, 110, 74, 0.12); color: #2d6e4a; }
+.work-funnel-pip--orange .work-funnel-pip__icon { background: rgba(255, 94, 43, 0.14); color: #ff5e2b; }
+
+.work-funnel-pip__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.work-funnel-pip__lbl {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2, #2c2a26);
   line-height: 1.1;
 }
 
-.work-hub p + p {
-  margin-top: 12px;
+.work-funnel-pip__step {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-3, #3a3835);
+  opacity: 0.7;
 }
 
-/* ─── Wave 9 — Vertical Rhythm ───────────────────────────────── */
+.work-funnel-pip__arrow {
+  margin: 0 6px;
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink-3, #3a3835);
+  opacity: 0.40;
+  align-self: center;
+}
 
-@media (min-width: 1024px) {
-  .work-hub {
-    gap: 96px;
-    padding-top: 48px;
-    padding-bottom: 96px;
+@media (max-width: 768px) {
+  .work-funnel-strip { padding: 10px 12px; }
+  .work-funnel-pip__num { font-size: 16px; }
+  .work-funnel-pip__lbl { font-size: 10px; }
+}
+
+/* ── Section structure (one per funnel stage) ─────────────── */
+
+.work-section { margin-bottom: 36px; }
+
+.work-section__head {
+  margin-bottom: 14px;
+}
+
+.work-section__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-3, #3a3835);
+  margin: 0 0 8px;
+}
+
+.work-section__eyebrow--step {
+  color: var(--ink-2, #2c2a26);
+}
+
+.work-section__eyebrow--orange { color: #ff5e2b; }
+.work-section__eyebrow--green { color: #2d6e4a; }
+
+.work-section__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink, #111);
+  letter-spacing: -0.024em;
+  margin-right: 4px;
+}
+
+.work-section__eyebrow--orange .work-section__num { color: #ff5e2b; }
+.work-section__eyebrow--green .work-section__num { color: #2d6e4a; }
+
+.work-section__title-row {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.work-section__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  line-height: 1.1;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.work-section__see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(0, 133, 255, 0.08);
+  color: var(--accent-blue, #0085ff);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease;
+  flex-shrink: 0;
+}
+
+.work-section__see-all:hover {
+  background: rgba(0, 133, 255, 0.16);
+  transform: translateX(2px);
+}
+
+.work-section__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.work-priority-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.work-empty {
+  padding: 24px;
+  text-align: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.06);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  color: var(--ink-3, #3a3835);
+}
+
+.work-empty--soft {
+  background: rgba(0, 133, 255, 0.04);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 133, 255, 0.18);
+}
+
+.work-empty p { margin: 0; }
+
+/* ════════════════════════════════════════════════════════════
+   v47 — Admin link strip (mirrors .money-admin-strip pattern)
+   E-level deep-page nav sitting below the bento grid as a thin
+   footer. Reads as "by the way, here's where to manage / drill in".
+   ════════════════════════════════════════════════════════════ */
+.work-admin-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 14px 16px 0;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.work-admin-strip__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-3, #61605c);
+  background: transparent;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.work-admin-strip__link:hover {
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink, #111);
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 3px rgba(20, 19, 15, 0.06);
+}
+.work-admin-strip__link svg {
+  color: var(--ink-4, #61605c);
+}
+.work-admin-strip__sep {
+  color: var(--mist, #d8d4c8);
+  font-weight: 800;
+  font-size: 14px;
+  user-select: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   v31 — Next Move carousel + Active gig rail
+   ════════════════════════════════════════════════════════════ */
+
+@keyframes wn-in {
+  from {
+    transform: translateY(10px);
   }
-
-  .work-hub > .ms-page-header,
-  .work-hub > [class*="page-header"] {
-    margin-bottom: 24px;
-  }
-
-  .work-hub > section,
-  .work-hub > [class*="-section"] {
-    margin-top: 24px;
-  }
-
-  .work-hub > section + section {
-    margin-top: 0;
-  }
-
-  .work-hub [class*="section-head"]:not([class*="card"]) {
-    margin-bottom: 32px;
+  to {
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 1023px) and (min-width: 768px) {
-  .work-hub {
-    gap: 64px;
-    padding-top: 32px;
-    padding-bottom: 64px;
-  }
+@keyframes wn-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
 }
 
-@media (max-width: 767px) {
-  .work-hub {
-    gap: 48px;
-    padding-top: 24px;
-    padding-bottom: 48px;
-  }
+@keyframes ring-progress {
+  from { stroke-dashoffset: 69.12; }
+  to   { stroke-dashoffset: 0; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Horizontal Breathing (2026-05-07)
-   APPENDED ONLY. Caps content at 1440px on ultra-wide; ladders padding
-   16/32/48/64 across breakpoints. No prior negative-escape rule exists
-   on .work-hub, so !important is NOT required here — auto margins apply
-   cleanly. Atmospheric ::before backdrop is position:fixed and stays
-   full-bleed.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1440px) {
-  .work-hub {
-    max-width: 1440px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 64px;
-    padding-right: 64px;
-  }
+/* ── Next Move container ──────────────────────────────────── */
+.work-nextmove {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
 }
 
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .work-hub {
-    padding-left: 48px;
-    padding-right: 48px;
-  }
+.work-nextmove__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: wn-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .work-hub {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
+.work-nextmove__verb {
+  font-family: var(--font-darky, sans-serif);
+  font-size: clamp(26px, 3.2vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+}
+.work-nextmove__verb--red       { color: #ff6b6b; }
+.work-nextmove__verb--amber     { color: #fbbf24; }
+.work-nextmove__verb--blue      { color: #60b0ff; }
+.work-nextmove__verb--green     { color: #4ade80; }
+.work-nextmove__verb--snow50    { color: rgba(255, 255, 255, 0.55); }
+.work-nextmove__verb--champagne { color: var(--champagne, #bfa170); }
+
+.work-nextmove__merchant {
+  margin: 0;
+  font-family: var(--font-darky, sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.2;
 }
 
-@media (max-width: 767px) {
-  .work-hub {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
+.work-nextmove__detail {
+  margin: 0;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
 }
 
-/* Inner content cap for pipeline rows + bento */
-.work-hub .db-kpi-grid,
-.work-hub .db-list-surface,
-.work-hub [class*="kpi-row"],
-.work-hub [class*="bento"] {
-  max-width: 1320px;
-  margin-left: auto;
-  margin-right: auto;
+.work-nextmove__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.work-nextmove__pay {
+  font-family: var(--font-darky, sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+.work-nextmove__sep {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+}
+.work-nextmove__when {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-
-/* ═══════════════════════════════════════════════════════════════════════
-   Wave 9 — Ultra-Wide Polish (2026-05-07)
-   APPENDED ONLY. Tunes 1920+ and 2560+ breakpoints so the creator work hub feels iOS
-   26 native instead of jammed-against-sidebar on huge displays.
-   - Bumps cap from 1440→1480 @ 1920+; 1600 @ 2560+.
-   - Pushes padding 80px (1920+) / 96px (2560+) to relieve sidebar gap.
-   - Holds KPI gap to 24px so cards do not balloon.
-   - Adds a soft third-layer halo shadow on KPI / hero / bento at 1440+
-     (inline rgba fallback; no new tokens introduced).
-   ═══════════════════════════════════════════════════════════════════════ */
-
-@media (min-width: 1920px) {
-  .work-hub {
-    padding-left: 80px;
-    padding-right: 80px;
-    max-width: 1480px;
-  }
-  .work-hub .db-kpi-grid,
-  .work-hub [class*="kpi-row"] {
-    gap: 24px;
-  }
+.work-nextmove__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+.work-nextmove__dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.work-nextmove__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition:
+    background 200ms ease,
+    transform 200ms ease;
+}
+.work-nextmove__dot.is-active {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.3);
 }
 
-@media (min-width: 2560px) {
-  .work-hub {
-    padding-left: 96px;
-    padding-right: 96px;
-    max-width: 1600px;
-  }
+.work-nextmove__btn {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-darky, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+.work-nextmove__btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  transform: translate(2px, 2px);
 }
 
-@media (min-width: 1440px) {
-  .work-hub .db-kpi-grid .kpi-card,
-  .work-hub [class*="hero-card"],
-  .work-hub [class*="bento-tile"] {
-    box-shadow:
-      var(--lg-spec-top, inset 0 1px 0 rgba(255, 255, 255, 0.85)),
-      var(--lg-spec-bot, inset 0 -1px 0 rgba(20, 19, 15, 0.04)),
-      var(--lg-edge, inset 0 0 0 0.5px rgba(255, 255, 255, 0.55)),
-      0 2px 4px rgba(60, 45, 30, 0.06),
-      0 16px 48px rgba(60, 45, 30, 0.10),
-      0 32px 80px rgba(60, 45, 30, 0.06);
-  }
+/* Ring + button grouped on the right of the nav */
+.work-nextmove__nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* ─── Wave 10 — Mobile Edge Cases (2026-05-07) ────────────────────── */
-
-@media (max-width: 767px) {
-  .work-hub button:not([class*="icon-only"]),
-  .work-hub a[role="button"],
-  .work-hub [role="button"] {
-    min-height: 44px;
-  }
-  .work-hub button[class*="icon-only"],
-  .work-hub [class*="icon-btn"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Pipeline campaign titles ellipsis */
-  .work-hub [class*="campaign-name"],
-  .work-hub [class*="merchant-name"],
-  .work-hub [class*="row-title"] {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-
-  /* Brief / requirement 3-line clamp on bento tiles */
-  .work-hub [class*="brief-text"],
-  .work-hub [class*="requirements-text"] {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Submission URLs / IDs wrap */
-  .work-hub [class*="-url"],
-  .work-hub [class*="-mono"],
-  .work-hub code {
-    word-break: break-all;
-    overflow-wrap: break-word;
-  }
-
-  .work-hub {
-    overflow-x: hidden;
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
-  }
+/* Circular countdown ring — replaces horizontal progress bar */
+.work-nextmove__ring-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
+.work-nextmove__ring-fill {
+  /* Start from 12-o-clock, animate clockwise */
+  transform-origin: 14px 14px;
+  transform: rotate(-90deg);
+  animation: ring-progress 20s linear forwards;
+}
+
+/* ── Active gig rail ──────────────────────────────────────── */
+.work-gigrail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%; /* fill the panel body's full width */
+}
+.work-gigrail__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    transform 180ms ease;
+}
+.work-gigrail__row:hover {
+  background: var(--surface-2, #f5f3ee);
+  transform: translate(1px, 1px);
+}
+.work-gigrail__thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.work-gigrail__thumb--blank {
+  display: inline-block;
+  background: var(--surface-3, #ece9e0);
+}
+.work-gigrail__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.work-gigrail__name {
+  font-family: var(--font-darky, sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #1a1916);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.work-gigrail__chip {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-family: var(--font-darky, sans-serif);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+.work-gigrail__chip--red       { background: rgba(193, 18, 31, 0.1);   color: #c1121f; }
+.work-gigrail__chip--amber     { background: rgba(251, 191, 36, 0.15); color: #92400e; }
+.work-gigrail__chip--blue      { background: rgba(0, 133, 255, 0.1);   color: #0062cc; }
+.work-gigrail__chip--green     { background: rgba(74, 222, 128, 0.15); color: #15803d; }
+.work-gigrail__chip--gray      { background: var(--surface-3, #ece9e0); color: var(--ink-3, #61605c); }
+.work-gigrail__chip--champagne { background: rgba(191, 161, 112, 0.15); color: #92712a; }
+
+.work-gigrail__pay {
+  font-family: var(--font-darky, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #1a1916);
+  flex-shrink: 0;
+}
+.work-gigrail__arrow {
+  font-size: 16px;
+  color: var(--ink-4, #9a9792);
+  flex-shrink: 0;
+}
+
+/* ── Local span-2 for compact Pulse panel ─────────────────── */
+.bento--span-2 { grid-column: span 2; }
+@media (max-width: 1024px) { .bento--span-2 { grid-column: span 4; } }
+@media (max-width: 640px)  { .bento--span-2 { grid-column: span 12; } }
+
+/* ── work-next carousel layout ────────────────────────────── */
+
+/* Merchant name eyebrow above the big time */
+.work-next__name {
+  font-family: var(--font-darky, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--champagne, #bfa170);
+  margin: 0;
+}
+
+/* One-sentence action line below the big time — matches agent item size */
+.work-next__action {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0;
+}
+
+/* Slide: animated content block.
+   gap: 9px — tighter than 12px so all items (incl. nav ring) fit the panel. */
+.work-next__slide {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  animation: wn-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Reset all child margins — gap owns the spacing */
+.work-next__slide > * {
+  margin-top: 0;
+}
+
+/* Chips: slight lift above dashed agent line */
+.work-next__slide .work-next__chips {
+  margin-top: 4px;
+}
+
+/* Agent section: gap above dashed line + padding to AGENT label */
+.work-next__slide .work-next__agent-inline {
+  margin-top: 4px;  /* gap(9) + 4 = 13px above dashed line */
+  padding-top: 10px; /* space between dashed line and AGENT eyebrow */
+}
+
+/* Outer container: natural flex column.
+   margin-top shifts the bento__body center point downward —
+   creates breathing room between "NEXT MOVE" header and first content. */
+.work-next {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+/* Nav pushed to bottom, slight top margin from slide */
+.work-next > .work-nextmove__nav {
+  margin-top: 14px;
+}
+
+/* ── Active gig panel: top-align + scroll ─────────────────── */
+.bento--gigrail .bento__body {
+  /* justify-content: flex-start overrides base `center` → items stack from top
+     align-items stays at default `stretch` so each row fills full panel width */
+  justify-content: flex-start;
+  overflow-y: auto;
+  scrollbar-width: none;
+  max-height: 260px;
+}
+.bento--gigrail .bento__body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Wave 12 — Liquid Glass atmosphere + layout diversity
+   2026-05-10
+
+   Root fix: .work-hub was `background: #fff` which hid the
+   atmospheric ::before. Transparent hub reveals the 5-ellipse
+   orange/champagne haze so bento glass reads as genuine liquid
+   glass instead of flat-white panels.
+
+   Radius diversity: "kissing corners" — adjacent cards share a
+   reduced corner at their shared edge for a fluid, non-uniform feel.
+
+   Mini-card palette: restores per-tile color wash (champagne /
+   green / blue) overriding v47 unified-ink.
+   ══════════════════════════════════════════════════════════════ */
+
+/* 1 — Remove white blocker so atmospheric haze shows through */
+.work-hub { background: transparent; }
+
+/* 2 — Strengthen atmospheric backdrop (white base + larger alpha) */
+.work-hub::before {
+  background:
+    radial-gradient(ellipse 72vw 62vh at 80% 14%,  rgba(255,  94,  43, 0.13), transparent 60%),
+    radial-gradient(ellipse 62vw 58vh at 14% 28%,  rgba(191, 161, 112, 0.16), transparent 62%),
+    radial-gradient(ellipse 56vw 52vh at 86% 70%,  rgba(176, 133,  96, 0.10), transparent 65%),
+    radial-gradient(ellipse 84vw 44vh at 48% 104%, rgba(248, 244, 232, 0.72), transparent 68%),
+    radial-gradient(ellipse 38vw 32vh at 22%  90%, rgba(193,  18,  31, 0.05), transparent 74%),
+    rgba(255, 255, 255, 1);
+}
+
+/* 3 — Richer glass on neutral bento cards (not ink, not champagne) */
+.work-bento .bento:not(.bento--solid-ink):not(.bento--accent-champagne) {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(32px) saturate(1.55);
+  -webkit-backdrop-filter: blur(32px) saturate(1.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.90),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 2px 4px rgba(60, 45, 30, 0.05),
+    0 12px 40px rgba(60, 45, 30, 0.09);
+}
+
+/* Champagne Pay card — keep warm tint, add blur pass */
+.work-bento .bento--accent-champagne {
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+}
+
+/* 4 — Kissing-corner radius diversity
+        Child order: NxtMove[1] | Gigs[2] | Pulse[3] | Velocity[4] | Pay[5]
+        Mini cards: champagne[6] | green[7] | ok[8] | ink[9]          */
+/* Row-1: Gigs ↔ Pulse share inner top corner */
+.work-bento > :nth-child(2) { border-radius: 22px 14px 22px 22px; }
+.work-bento > :nth-child(3) { border-radius: 14px 22px 22px 22px; }
+/* Row-2: Velocity ↔ Pay share inner bottom corner */
+.work-bento > :nth-child(4) { border-radius: 22px 22px 14px 22px; }
+.work-bento > :nth-child(5) { border-radius: 22px 22px 22px 14px; }
+/* Row-3 mini cards — alternating left/right chamfer */
+.work-bento > :nth-child(6) { border-radius: 22px 14px 14px 22px; }
+.work-bento > :nth-child(7) { border-radius: 14px 22px 22px 14px; }
+.work-bento > :nth-child(8) { border-radius: 22px 14px 14px 22px; }
+.work-bento > :nth-child(9) { border-radius: 14px 22px 22px 14px; }
+
+/* 5 — Restore mini-card color palette (overrides v47 unified-ink) */
+.work-mini--champagne {
+  --mini-wash: rgba(191, 161, 112, 0.22);
+  --mini-glow: rgba(191, 161, 112, 0.18);
+}
+.work-mini--champagne .work-mini__icon-fill {
+  background: var(--champagne, #bfa170);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(120, 80, 20, 0.30);
+}
+.work-mini--champagne .work-mini__num { color: #7a5318; }
+
+.work-mini--green {
+  --mini-wash: rgba(74, 222, 128, 0.18);
+  --mini-glow: rgba(74, 222, 128, 0.14);
+}
+.work-mini--green .work-mini__icon-fill {
+  background: #22c55e;
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
+    0 1px 2px rgba(20, 80, 30, 0.25);
+}
+.work-mini--green .work-mini__num { color: #15803d; }
+
+.work-mini--ok {
+  --mini-wash: rgba(0, 133, 255, 0.12);
+  --mini-glow: rgba(0, 133, 255, 0.10);
+}
+.work-mini--ok .work-mini__icon-fill {
+  background: #0085ff;
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
+    0 1px 2px rgba(0, 60, 120, 0.25);
+}
+.work-mini--ok .work-mini__num { color: #0060cc; }

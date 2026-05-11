@@ -15,6 +15,7 @@ import { MobileBottomNav } from "@/components/creator/workspace/MobileBottomNav"
 import { CommandPalette } from "@/components/cmdk/CommandPalette";
 import { GlobalKeybindings } from "@/components/keyboard/GlobalKeybindings";
 import { AxeInit } from "@/lib/a11y/axe-init";
+import { DemoResetHandler } from "@/components/demo/DemoResetHandler";
 import { DEMO_CREATOR } from "@/lib/creator/demo-data";
 
 import "@/components/creator/workspace/lumin-shell.css";
@@ -28,9 +29,13 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
       <ToastProvider>
         <CommandKProvider>
           <WorkspaceStateProvider>
-            <a href="#cw-main-content" className="dh-skip">
-              Skip to main content
-            </a>
+            {/* v62 — skip link wrapped in <nav> for landmark
+                containment (axe "region" rule). */}
+            <nav aria-label="Skip links">
+              <a href="#cw-main-content" className="dh-skip">
+                Skip to main content
+              </a>
+            </nav>
             <div className="dh-shell">
               <UnifiedSidebar
                 role="creator"
@@ -42,10 +47,15 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
               </main>
             </div>
             {/* Suspense wraps useSearchParams in NotificationsBell for static
-                pre-rendering. Always-mounted on every workspace page. */}
-            <Suspense fallback={null}>
-              <NotificationsBell />
-            </Suspense>
+                pre-rendering. Always-mounted on every workspace page.
+                v62 — wrapped in <aside aria-label="Page utilities"> so the
+                floating bell is contained by a landmark (axe rule
+                "all page content must live inside a landmark"). */}
+            <aside aria-label="Page utilities">
+              <Suspense fallback={null}>
+                <NotificationsBell />
+              </Suspense>
+            </aside>
             {/* Mobile bottom nav — display:none on >=768px (CSS handles it). */}
             <MobileBottomNav />
             {/* ⌘K palette — listens at document level, renders modal when open. */}
@@ -54,6 +64,8 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
             <GlobalKeybindings />
             {/* Dev-only: axe-core a11y violations stream to the console. */}
             <AxeInit />
+            {/* Demo: ?reset=1 wipes localStorage and reloads. */}
+            <DemoResetHandler />
           </WorkspaceStateProvider>
         </CommandKProvider>
       </ToastProvider>

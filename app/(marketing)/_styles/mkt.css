@@ -1,0 +1,357 @@
+/* ============================================================
+   Marketing shared shell — v3 (2026-05-08)
+
+   Used by all (marketing)/* leaf pages: for-creators / for-merchants
+   / how-it-works / about / trust / security / careers / contact.
+
+   Pattern: every page opens with .mkt-page wrapper. Within it, pages
+   compose their own sections using the shared primitives below:
+     .mkt-hero       hero block (eyebrow + Darky title + sub)
+     .mkt-section    section wrapper with optional eyebrow + Darky h2
+     .mkt-panel      glass card
+     .mkt-panel--ink/--red/--blue/--orange/--champagne  solid/accent variants
+
+   Page-specific layout grids stay in each page's own CSS, so the
+   shell only owns shared tokens / hero / panels / typography.
+   ============================================================ */
+
+/* Outer shell — extends full viewport with snow background so the
+   body's cream gradient never leaks at wide viewports. .mkt-page
+   sits inside this shell and gets a content-width cap. */
+.mkt-shell {
+  background: var(--snow, #fff);
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+.mkt-page {
+  background: var(--snow, #fff);
+  /* Content cap — at 1280, marketing pages read like a focused SaaS
+     landing instead of stretching to fill ultrawides. Auto margins
+     center the page; the .mkt-shell wrapper keeps the bleed snow. */
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px clamp(32px, 5vw, 80px) 96px;
+  position: relative;
+  isolation: isolate;
+}
+
+.mkt-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60vw 50vh at 78% 18%, var(--mkt-atm-1, rgba(193, 18, 31, 0.06)), transparent 65%),
+    radial-gradient(ellipse 55vw 50vh at 18% 78%, rgba(191, 161, 112, 0.10), transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.55), transparent 70%);
+}
+.mkt-page > * { position: relative; z-index: 1; }
+
+/* ── Hero ──────────────────────────────────────────────────── */
+
+.mkt-hero {
+  padding: 32px 0 64px;
+  margin-bottom: 120px;
+  border-bottom: 1px solid var(--mist, #d8d4c8);
+}
+
+.mkt-hero__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3, #61605c);
+  margin: 0 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mkt-hero__eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mkt-accent, var(--brand-red, #c1121f));
+  box-shadow: 0 0 0 3px var(--mkt-accent-glow, rgba(193, 18, 31, 0.18));
+}
+
+.mkt-hero__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(44px, 5.2vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.034em;
+  line-height: 0.96;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.mkt-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: clamp(18px, 1.8vw, 22px);
+  /* Line-height 1.7 — generous editorial reading rhythm. Tighter
+     line-heights (1.5) made 22px text feel cramped at full-bleed. */
+  line-height: 1.7;
+  color: var(--ink-3, #3a3835);
+  margin: 32px 0 0;
+}
+
+.mkt-hero__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.mkt-btn {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), background 200ms ease;
+}
+
+.mkt-btn--primary {
+  background: var(--ink, #14130f);
+  color: var(--snow, #fff);
+}
+.mkt-btn--primary:hover {
+  transform: translate(2px, 2px);
+  background: #1d1c17;
+}
+
+.mkt-btn--ghost {
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink, #111);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: inset 0 0 0 0.5px rgba(20, 19, 15, 0.10);
+}
+.mkt-btn--ghost:hover {
+  transform: translate(2px, 2px);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.mkt-btn--accent {
+  background: var(--mkt-accent, var(--brand-red, #c1121f));
+  color: var(--snow, #fff);
+}
+.mkt-btn--accent:hover {
+  transform: translate(2px, 2px);
+  filter: brightness(1.05);
+}
+
+/* ── Section heads ─────────────────────────────────────────── */
+
+.mkt-section {
+  margin-bottom: 120px;
+  position: relative;
+}
+
+/* Editorial section number — counts up via CSS counter automatically.
+   Sits in the top-right of each .mkt-section like a magazine spread. */
+.mkt-page {
+  counter-reset: mkt-section;
+}
+
+.mkt-section::before {
+  counter-increment: mkt-section;
+  content: counter(mkt-section, decimal-leading-zero) " · " attr(data-label);
+  position: absolute;
+  top: -32px;
+  right: 0;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  pointer-events: none;
+}
+
+.mkt-section__head {
+  margin-bottom: 40px;
+}
+
+.mkt-section__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  margin: 0 0 10px;
+}
+
+.mkt-section__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(30px, 3.2vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.024em;
+  line-height: 1.05;
+  color: var(--ink, #111);
+  margin: 0;
+}
+
+.mkt-section__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink-3, #3a3835);
+  margin: 16px 0 0;
+}
+
+/* ── Panel — base glass card ───────────────────────────────── */
+
+.mkt-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.66);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+          backdrop-filter: blur(20px) saturate(1.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 8px 24px rgba(60, 45, 30, 0.06);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.mkt-panel__eyebrow {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  margin: 0;
+}
+
+.mkt-panel__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  line-height: 1.1;
+  color: var(--ink, #111);
+  margin: 4px 0 0;
+}
+
+.mkt-panel__num {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 0.92;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.mkt-panel__body {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-3, #3a3835);
+  margin: 6px 0 0;
+}
+
+/* ── Panel solid + accent variants ─────────────────────────── */
+
+.mkt-panel--ink {
+  background: #14130f;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  color: var(--snow, #fff);
+}
+.mkt-panel--ink .mkt-panel__title,
+.mkt-panel--ink .mkt-panel__num { color: var(--snow, #fff); }
+.mkt-panel--ink .mkt-panel__eyebrow { color: var(--champagne, #bfa170); }
+.mkt-panel--ink .mkt-panel__body { color: rgba(255, 255, 255, 0.78); }
+
+.mkt-panel--red { background: var(--brand-red, #c1121f); -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--snow, #fff); }
+.mkt-panel--red .mkt-panel__title, .mkt-panel--red .mkt-panel__num { color: var(--snow, #fff); }
+.mkt-panel--red .mkt-panel__eyebrow { color: var(--champagne, #bfa170); }
+.mkt-panel--red .mkt-panel__body { color: rgba(255, 255, 255, 0.86); }
+
+.mkt-panel--blue { background: var(--accent-blue, #0085ff); -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--snow, #fff); }
+.mkt-panel--blue .mkt-panel__title, .mkt-panel--blue .mkt-panel__num { color: var(--snow, #fff); }
+.mkt-panel--blue .mkt-panel__eyebrow { color: rgba(255, 255, 255, 0.78); }
+.mkt-panel--blue .mkt-panel__body { color: rgba(255, 255, 255, 0.86); }
+
+.mkt-panel--orange { background: var(--ga-orange, #ff5e2b); -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--snow, #fff); }
+.mkt-panel--orange .mkt-panel__title, .mkt-panel--orange .mkt-panel__num { color: var(--snow, #fff); }
+.mkt-panel--orange .mkt-panel__eyebrow { color: rgba(255, 255, 255, 0.78); }
+.mkt-panel--orange .mkt-panel__body { color: rgba(255, 255, 255, 0.86); }
+
+.mkt-panel--champagne {
+  background: linear-gradient(135deg, rgba(248, 244, 232, 0.92) 0%, rgba(245, 232, 210, 0.88) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(191, 161, 112, 0.32),
+    0 1px 2px rgba(60, 45, 30, 0.05),
+    0 8px 24px rgba(60, 45, 30, 0.06);
+}
+.mkt-panel--champagne .mkt-panel__eyebrow { color: var(--champagne-deep, #8a704a); }
+
+/* ── Page accent themes (set on .mkt-page) ─────────────────── */
+
+.mkt-page--orange { --mkt-accent: var(--ga-orange, #ff5e2b); --mkt-accent-glow: rgba(255, 94, 43, 0.18); --mkt-atm-1: rgba(255, 94, 43, 0.10); }
+.mkt-page--blue   { --mkt-accent: var(--accent-blue, #0085ff); --mkt-accent-glow: rgba(0, 133, 255, 0.18);   --mkt-atm-1: rgba(0, 133, 255, 0.10); }
+.mkt-page--ink    { --mkt-accent: var(--ink, #14130f);          --mkt-accent-glow: rgba(20, 19, 15, 0.16);    --mkt-atm-1: rgba(20, 19, 15, 0.05); }
+.mkt-page--red    { --mkt-accent: var(--brand-red, #c1121f);    --mkt-accent-glow: rgba(193, 18, 31, 0.18);   --mkt-atm-1: rgba(193, 18, 31, 0.06); }
+.mkt-page--champ  { --mkt-accent: var(--champagne-deep, #8a704a); --mkt-accent-glow: rgba(138, 112, 74, 0.20); --mkt-atm-1: rgba(191, 161, 112, 0.14); }
+
+/* ── Editorial divider — Magvix italic mid-page mark ──────── */
+
+.mkt-divider {
+  display: block;
+  text-align: center;
+  font-family: "Magvix", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  color: var(--champagne-deep, #8a704a);
+  line-height: 1;
+  margin: 96px 0;
+  user-select: none;
+}
+
+/* ── Reusable layout helpers ───────────────────────────────── */
+
+.mkt-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.mkt-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.mkt-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+@media (max-width: 960px) {
+  .mkt-grid-2, .mkt-grid-3, .mkt-grid-4 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .mkt-page { padding: 24px 20px 64px; }
+  .mkt-hero__title { font-size: clamp(40px, 9vw, 64px); }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mkt-page::before { display: none; }
+}

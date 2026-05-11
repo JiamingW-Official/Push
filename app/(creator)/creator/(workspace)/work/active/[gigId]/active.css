@@ -1,0 +1,116 @@
+/* ============================================================
+   /creator/work/active/[gigId] · Stage 05 — Shoot
+   Stage-specific UI only. All layout / cards / buttons / banner
+   come from shared `.stg__*` (Stage.css). This file holds the
+   capture checklist + upload slot patterns unique to Shoot.
+   ============================================================ */
+
+/* ── Capture checklist — 1-col narrow, 2-col wide ────── */
+.act__frames {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0; padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .act__frames { grid-template-columns: 1fr 1fr; }
+}
+
+.act__frame {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  transition: background 160ms var(--ease-out-soft);
+}
+.act__frame.is-done { background: rgba(52, 199, 89, 0.10); }
+.act__frame.is-done .act__frame-label { color: var(--ink-4); text-decoration: line-through; }
+
+.act__frame-check {
+  width: 24px; height: 24px;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--hairline-2);
+  background: var(--snow);
+  cursor: pointer;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 800;
+  color: var(--snow);
+  transition: background 160ms var(--ease-out-soft),
+              border-color 160ms var(--ease-out-soft),
+              transform 160ms var(--ease-spring);
+}
+.act__frame-check:hover { transform: translate(1px, 1px); }
+.act__frame-check[aria-pressed="true"] {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.act__frame-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.act__frame-label {
+  font-family: var(--font-body);
+  font-size: 15px; font-weight: 600;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.act__frame-meta {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+/* ── Draft upload slots ────────────────────────────────── */
+.act__slots {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+@media (min-width: 640px) {
+  .act__slots { grid-template-columns: repeat(3, 1fr); }
+}
+
+.act__slot {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  border: 1.5px dashed var(--hairline-2);
+}
+.act__slot-eyebrow {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-5);
+}
+.act__slot-h {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800;
+  color: var(--ink);
+  text-transform: capitalize;
+}
+.act__slot-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+.act__slot-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 36px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: var(--snow);
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 180ms var(--ease-spring),
+              background 180ms var(--ease-out-soft);
+}
+.act__slot-cta:hover { transform: translate(1px, 1px); background: var(--surface-3); }

@@ -90,6 +90,12 @@
   color: var(--ink-3);
 }
 
+.kpi-card__spark {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
 @keyframes db-slideInUp {
   from {
     opacity: 0;

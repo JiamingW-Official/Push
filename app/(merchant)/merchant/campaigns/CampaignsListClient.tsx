@@ -28,13 +28,12 @@ function formatUsd(value: number | null | undefined): string {
 
 function formatDeadline(value: string | null | undefined): string {
   if (!value) {
-    return "No deadline";
+    return "—";
   }
 
   return new Date(value).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    year: "numeric",
   });
 }
 
@@ -119,6 +118,7 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (tabCounts.all === 0) {
             return (
               <EmptyState
+                artKind="campaigns"
                 title="No campaigns yet"
                 description="Launch your first campaign and creators will start applying within hours. You set the brief, budget, and payout — Push handles attribution end-to-end."
                 ctaLabel="Launch your first campaign"
@@ -129,6 +129,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "active") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No live campaigns right now"
                 description="Nothing is currently accepting creators. Activate a draft to reopen the application queue, or start a new campaign."
                 ctaLabel="View all campaigns"
@@ -139,6 +141,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "paused") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No paused campaigns"
                 description="Pause a live campaign to stop accepting new applicants without losing your existing creator roster."
                 ctaLabel="View all campaigns"
@@ -149,6 +153,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "draft") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No drafts in progress"
                 description="Drafts let you scope a brief and budget before going live. Start one when you want to plan a campaign without publishing it yet."
                 ctaLabel="Start a new draft"
@@ -159,6 +165,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           if (activeTab === "closed") {
             return (
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No closed campaigns"
                 description="Wrapped campaigns archive here for reference — final spend, ROI, and creator roster all stay accessible."
                 ctaLabel="View all campaigns"
@@ -168,6 +176,8 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           }
           return (
             <EmptyState
+              artKind="filter"
+              artVariant="muted"
               title="Nothing in this view"
               description="No campaigns match the current filter. Reset to see your full roster."
               ctaLabel="Show all campaigns"
@@ -176,7 +186,7 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
           );
         })()
       ) : (
-        <div className="cl-list">
+        <div className="cml-grid">
           {filtered.map((campaign) => {
             const budgetTotal = numberOrZero(campaign.budget_total);
             const budgetRemaining = Math.max(
@@ -191,51 +201,75 @@ export function CampaignsListClient({ campaigns }: CampaignsListClientProps) {
 
             return (
               <Link
-                className="cl-row"
+                className="cml-card"
                 href={`/merchant/campaigns/${campaign.id}`}
                 key={campaign.id}
+                data-status={badgeStatus}
               >
-                {campaign.image_url ? (
-                  <img
-                    alt={campaign.title}
-                    className="cl-row-image"
-                    src={campaign.image_url}
+                {/* Dark ink top band */}
+                <div className="cml-card__band">
+                  <span
+                    className={`cml-card__status-dot cml-card__status-dot--${badgeStatus}`}
                   />
-                ) : (
-                  <div
-                    className="cl-row-image cl-row-image--placeholder"
-                    aria-hidden="true"
-                  />
-                )}
+                  <span className="cml-card__status-text">
+                    {badgeStatus.toUpperCase()}
+                  </span>
+                  <span className="cml-card__category">
+                    {getCategory(campaign)}
+                  </span>
+                </div>
 
-                <div className="cl-row-main">
-                  <div className="cl-row-heading">
-                    <h3 className="cl-row-title">{campaign.title}</h3>
-                    <p className="cl-row-eyebrow">{getCategory(campaign)}</p>
+                {/* White body */}
+                <div className="cml-card__body">
+                  <h3 className="cml-card__title">{campaign.title}</h3>
+
+                  {/* Stats triptych */}
+                  <div className="cml-card__stats">
+                    <div className="cml-card__stat">
+                      <span className="cml-card__stat-num">
+                        {formatUsd(budgetRemaining)}
+                      </span>
+                      <span className="cml-card__stat-label">Budget Left</span>
+                    </div>
+                    <div
+                      className="cml-card__stat-divider"
+                      aria-hidden="true"
+                    />
+                    <div className="cml-card__stat">
+                      <span className="cml-card__stat-num">
+                        {acceptedCreators}
+                      </span>
+                      <span className="cml-card__stat-label">Creators</span>
+                    </div>
+                    <div
+                      className="cml-card__stat-divider"
+                      aria-hidden="true"
+                    />
+                    <div className="cml-card__stat">
+                      <span className="cml-card__stat-num cml-card__stat-num--sm">
+                        {formatDeadline(campaign.end_date)}
+                      </span>
+                      <span className="cml-card__stat-label">Deadline</span>
+                    </div>
                   </div>
 
-                  <div className="cl-row-meta">
-                    <StatusBadge status={badgeStatus}>
-                      {campaign.status.toUpperCase()}
-                    </StatusBadge>
-                    <p className="cl-row-statline">
-                      Deadline: {formatDeadline(campaign.end_date)}
-                    </p>
-                    <ProgressBar
-                      value={budgetUsedPercent}
-                      max={100}
-                      color="primary"
-                      height={4}
-                    />
+                  {/* Slim progress bar */}
+                  <div className="cml-card__progress-row">
+                    <div className="cml-card__progress-track">
+                      <div
+                        className="cml-card__progress-fill"
+                        style={{ width: `${budgetUsedPercent}%` }}
+                      />
+                    </div>
+                    <span className="cml-card__progress-pct">
+                      {Math.round(budgetUsedPercent)}%
+                    </span>
                   </div>
                 </div>
 
-                <div className="cl-row-stats">
-                  <p className="cl-row-budget">{formatUsd(budgetRemaining)}</p>
-                  <p className="cl-row-statline">
-                    Accepted creators {acceptedCreators}
-                  </p>
-                  <span className="cl-row-cta">View →</span>
+                {/* Footer */}
+                <div className="cml-card__footer">
+                  <span className="cml-card__cta">Manage →</span>
                 </div>
               </Link>
             );

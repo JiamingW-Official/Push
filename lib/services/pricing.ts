@@ -3,6 +3,16 @@ export interface Deliverable {
   count: number;
   unitPay: number;
   estHoursEach: number;
+  /** v23 — what the creator actually needs to capture. One sentence,
+   *  merchant-voice. Synthesized from `type` in enrichCampaign() if
+   *  the merchant didn't write one explicitly. */
+  description?: string;
+  /** v23 — format constraints (aspect, duration, frame count).
+   *  Rendered as a chip on the deliverable card. */
+  format?: string;
+  /** v23 — short shot-list / what the merchant wants to see.
+   *  3-5 bullets max. */
+  shotList?: string[];
 }
 
 export interface NormalizedPay {

@@ -46,6 +46,9 @@ function breadcrumbLabel(pathname: string | null | undefined): string {
 }
 
 function GigsShell({ children }: { children: React.ReactNode }) {
+  // ⚠ Rules of Hooks: every hook below MUST run on every render
+  // (the early-return for the hub route lives at the bottom of the
+  // function so React keeps the hook count constant across paths).
   const pathname = usePathname();
   const { invites, liveMessage } = useWorkspaceState();
   const now = useNow();
@@ -63,6 +66,14 @@ function GigsShell({ children }: { children: React.ReactNode }) {
      without the heavy black pill that made the old bar feel stiff. */
   const invPop = usePopOnChange(pendingCount);
   const activePop = usePopOnChange(activeCount);
+
+  // Mission Control hub at /creator/gigs renders standalone — no
+  // segmented nav, no fullbleed shell. The hub's own header surfaces
+  // hub-back + quick-links to Invites/Active/History.
+  // ⚠ This early-return MUST come AFTER all hooks above (Rules of Hooks).
+  if (pathname === "/creator/gigs") {
+    return <>{children}</>;
+  }
 
   /* The 3 modes (Invites / Active / History) are kept as separate routes
      because they represent distinct creator mental modes: triage vs. in-flight

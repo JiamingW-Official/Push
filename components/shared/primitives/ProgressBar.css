@@ -11,17 +11,18 @@
 
 .pgb__label {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   letter-spacing: 0.06em;
-  color: var(--ink-4, #61605c);
+  color: var(--ink-3, #3a3835);
   text-transform: uppercase;
 }
 
 .pgb__sub {
   font-family: var(--font-body, "Open Sans");
-  font-size: 12px;
-  color: var(--ink-4, #61605c);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3, #3a3835);
 }
 
 /* ── Linear track ────────────────────────────────────────── */
@@ -67,10 +68,10 @@
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 800;
   letter-spacing: 0.04em;
-  color: var(--ink-4, #61605c);
+  color: var(--ink-3, #3a3835);
   white-space: nowrap;
   text-transform: uppercase;
 }
@@ -103,10 +104,10 @@
   top: 12px;
   left: 0;
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 800;
   letter-spacing: 0.04em;
-  color: var(--ink-4, #61605c);
+  color: var(--ink-3, #3a3835);
   text-transform: uppercase;
   white-space: nowrap;
 }

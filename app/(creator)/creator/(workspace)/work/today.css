@@ -1,0 +1,426 @@
+/* ============================================================
+   /creator/work — Today hub (v10 nav refactor, 2026-05-09)
+
+   Replaces 2,564-line work.css panel grid. New layout is a
+   simple stacked list — header + 3 sections + find-new CTA.
+   No 100svh lock; page scrolls naturally if many gigs in flight.
+   ============================================================ */
+
+.today-hub {
+  background: var(--snow, #fff);
+  padding: 8px 0 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  isolation: isolate;
+}
+
+.today-hub::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60vw 50vh at 78% 12%, rgba(0, 133, 255, 0.06), transparent 60%),
+    radial-gradient(ellipse 50vw 50vh at 12% 28%, rgba(191, 161, 112, 0.08), transparent 65%);
+}
+.today-hub > * { position: relative; z-index: 1; }
+
+/* ── Hero ────────────────────────────────────────────────── */
+.today-hero {
+  padding: 16px 0 16px;
+  border-bottom: 1px solid var(--mist, #d8d4c8);
+}
+.today-hero__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: clamp(32px, 3.2vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--ink, #111);
+  margin: 0;
+}
+.today-hero__sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  font-variant-numeric: tabular-nums;
+  margin: 6px 0 0;
+}
+
+/* ── Sections wrapper ────────────────────────────────────── */
+.today-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Section ─────────────────────────────────────────────── */
+.today-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.today-section__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(20, 19, 15, 0.10);
+}
+.today-section__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink-3, #3a3835);
+  flex-shrink: 0;
+}
+.today-section--now .today-section__icon {
+  background: rgba(193, 18, 31, 0.10);
+  color: var(--brand-red, #c1121f);
+}
+.today-section--next .today-section__icon {
+  background: rgba(0, 133, 255, 0.10);
+  color: var(--accent-blue, #0085ff);
+}
+.today-section--needs .today-section__icon {
+  background: rgba(191, 161, 112, 0.18);
+  color: var(--champagne-deep, #8a704a);
+}
+
+.today-section__label {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.014em;
+  color: var(--ink, #111);
+  line-height: 1;
+}
+.today-section__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--ink, #14130f);
+  color: var(--snow, #fff);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.today-section--now .today-section__count {
+  background: var(--brand-red, #c1121f);
+}
+.today-section__help {
+  margin-left: auto;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+}
+.today-section__empty {
+  margin: 4px 0 0;
+  padding: 24px 16px;
+  background: rgba(20, 19, 15, 0.03);
+  border-radius: 12px;
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-4, #61605c);
+  text-align: center;
+}
+
+/* ── List ────────────────────────────────────────────────── */
+.today-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Row ─────────────────────────────────────────────────── */
+.today-row {
+  background: var(--snow, #fff);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.08),
+    0 1px 2px rgba(20, 19, 15, 0.04);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease;
+}
+.today-row:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.12),
+    0 4px 12px rgba(20, 19, 15, 0.10);
+}
+
+.today-row__link {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  min-height: 80px;
+}
+
+.today-row__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--ink, #14130f), #3a3835);
+  color: var(--snow, #fff);
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 22px;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.20),
+    0 1px 2px rgba(20, 19, 15, 0.10);
+}
+
+.today-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.today-row__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.today-row__title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  color: var(--ink, #111);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.today-row__brand {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-4, #61605c);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.today-row__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.today-row__urgency {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink-3, #3a3835);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.today-row__urgency--overdue {
+  background: rgba(193, 18, 31, 0.12);
+  color: var(--brand-red, #c1121f);
+}
+.today-row__urgency--today,
+.today-row__urgency--soon {
+  background: rgba(255, 149, 0, 0.14);
+  color: #b35a00;
+}
+.today-row__urgency--invite {
+  background: rgba(0, 133, 255, 0.10);
+  color: var(--accent-blue, #0085ff);
+}
+.today-row__urgency--stuck {
+  background: rgba(191, 161, 112, 0.18);
+  color: var(--champagne-deep, #8a704a);
+}
+.today-row__urgency--live {
+  background: rgba(45, 110, 74, 0.14);
+  color: #1f7a39;
+}
+.today-row__urgency svg {
+  flex-shrink: 0;
+}
+.today-row__reason {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3, #3a3835);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* ── Row CTA ─────────────────────────────────────────────── */
+.today-row__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(20, 19, 15, 0.06);
+  color: var(--ink, #111);
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 200ms ease, color 200ms ease;
+}
+.today-row__cta--primary {
+  /* The single red CTA in the list — only the NOW section gets
+     this treatment so the eye lands on what to do next. */
+  background: var(--brand-red, #c1121f);
+  color: var(--snow, #fff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.16),
+    0 2px 6px rgba(193, 18, 31, 0.20);
+}
+.today-row:hover .today-row__cta {
+  background: var(--ink, #14130f);
+  color: var(--snow, #fff);
+}
+.today-row:hover .today-row__cta--primary {
+  background: #a00f1a;
+}
+
+/* ── Find new gigs CTA ───────────────────────────────────── */
+.today-find {
+  margin-top: 8px;
+}
+.today-find__cta {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--ink, #14130f);
+  color: var(--snow, #fff);
+  text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 4px 16px rgba(20, 19, 15, 0.18);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease;
+}
+.today-find__cta:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 6px 24px rgba(20, 19, 15, 0.24);
+}
+.today-find__cta-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--champagne, #bfa170);
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+}
+.today-find__cta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.today-find__cta-title {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  color: var(--snow, #fff);
+}
+.today-find__cta-sub {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.02em;
+}
+.today-find__cta svg {
+  color: var(--champagne, #bfa170);
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .today-row__link {
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .today-row__avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+    border-radius: 12px;
+  }
+  .today-row__cta {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    margin-top: 4px;
+  }
+  .today-row__title { font-size: 15px; }
+  .today-section__head { flex-wrap: wrap; }
+  .today-section__help { width: 100%; margin-left: 0; }
+  .today-find__cta {
+    grid-template-columns: 48px 1fr;
+  }
+  .today-find__cta-num {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  .today-find__cta svg { display: none; }
+}

@@ -4,6 +4,46 @@ export type TierLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export type Format = "in-person" | "remote" | "hybrid";
 export type PayUnit = "campaign" | "visit" | "post" | "reel" | "story";
 
+/* v11 — campaign location + scheduling.
+   `address` + `shootWindows` are optional on the type so the
+   ~100 existing mocks keep validating. Reads at the new
+   /campaign/[id] standalone page go through `enrichCampaign()`
+   which fills defaults from neighborhood + lat/lng + deadlineIso
+   when these fields are absent. Merchant create form populates
+   them directly going forward. */
+
+/** A booking time slot on a specific date. */
+export interface ShootSlot {
+  /** "09:00" 24h start time. */
+  startTime: string;
+  /** "10:30" 24h end time. */
+  endTime: string;
+  /** How many creators can claim this slot (usually 1). */
+  capacity: number;
+  /** Creator IDs who already booked. Length === capacity → slot full. */
+  bookedBy?: string[];
+}
+
+/** A day with bookable shoot slots. */
+export interface ShootWindow {
+  /** ISO date "2026-05-12". */
+  date: string;
+  slots: ShootSlot[];
+}
+
+/** Physical address of the merchant location (where the shoot happens). */
+export interface CampaignAddress {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  lat: number;
+  lng: number;
+  /** Merchant note for the creator (e.g. "Use side entrance off Berry St"). */
+  publicNote?: string;
+}
+
 export interface Campaign {
   id: string;
   title: string;
@@ -33,6 +73,61 @@ export interface Campaign {
   lng: number;
   images: string[];
   minimumTier: TierLevel;
+
+  /** v11 — physical address. Optional so existing mocks keep
+   *  validating; `enrichCampaign()` synthesizes a default from
+   *  the neighborhood + lat/lng when missing. Required on
+   *  campaigns created through the merchant form going forward. */
+  address?: CampaignAddress;
+
+  /** v11 — bookable shoot slots. Optional; `enrichCampaign()`
+   *  generates 4-6 plausible windows in the next 14 days from
+   *  format + deliverables.estHoursEach when missing. */
+  shootWindows?: ShootWindow[];
+
+  /** v11 — does the creator need to physically pick up a printed
+   *  QR code from the merchant before shooting? Defaults false. */
+  pickupRequired?: boolean;
+
+  /** v17 — merchant profile snapshot. Optional; enrichCampaign
+   *  synthesizes a deterministic default per campaign id when
+   *  missing. */
+  merchant?: MerchantInfo;
+
+  /** v23 — long-form merchant brief: 2-4 sentence character-driven
+   *  description of the place + what they want filmed. Synthesized
+   *  by enrichCampaign() when missing, but the merchant create form
+   *  populates it directly going forward. Voice example:
+   *  "This arcade hasn't changed since '98. The carpet is loud, the
+   *  cabinets are louder. Play three games, film the one where you
+   *  almost win. The crowd reaction is the content." */
+  briefBody?: string;
+
+  /** v23 — must-include shot list for the brief rules card. */
+  briefMustInclude?: string[];
+
+  /** v23 — must-avoid list for the brief rules card. */
+  briefMustAvoid?: string[];
+}
+
+/** Merchant profile shown on /campaign/[id] in the "Meet your
+ *  merchant" section. Fields here mirror what Airbnb's "Meet your
+ *  host" card surfaces — credibility signals + response speed. */
+export interface MerchantInfo {
+  /** Brand bio (1-2 sentence). */
+  bio: string;
+  /** ISO year merchant joined Push. */
+  joinedYear: number;
+  /** Total campaigns the merchant has hosted. */
+  campaignsHosted: number;
+  /** Avg hours from creator-apply to merchant-decision. */
+  avgResponseHours: number;
+  /** % creators who came back for a second campaign. */
+  repeatCreatorPct: number;
+  /** Star rating from past creator reviews (1-5). */
+  starRating: number;
+  /** How many reviews back this rating. */
+  reviewCount: number;
 }
 
 /** Hand-crafted campaign fixtures — first 10 (static, anchored to known

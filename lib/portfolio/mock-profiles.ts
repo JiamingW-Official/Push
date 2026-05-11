@@ -61,9 +61,9 @@ export interface CreatorProfile {
 
 export const MOCK_PROFILES: CreatorProfile[] = [
   {
-    id: "maya-eats-nyc",
-    handle: "maya-eats-nyc",
-    displayName: "Maya Chen",
+    id: "alex-eats-nyc",
+    handle: "alex-eats-nyc",
+    displayName: "Alex Chen",
     neighborhood: "Lower East Side",
     bio: "NYC food & lifestyle creator documenting the city's most compelling dining stories. From hole-in-the-wall dumplings in Chinatown to omakase counters in the West Village — I cover it all with an editorial eye and a genuine appetite.",
     avatarUrl:
@@ -176,7 +176,7 @@ export const MOCK_PROFILES: CreatorProfile[] = [
         merchant: "James Park",
         role: "Owner, Momo Palace",
         quote:
-          "Maya's content drove real foot traffic. We saw a 40% spike in weekend visitors within 48 hours of her post. Truly professional.",
+          "Alex's content drove real foot traffic. We saw a 40% spike in weekend visitors within 48 hours of her post. Truly professional.",
         rating: 5,
       },
       {
@@ -192,12 +192,12 @@ export const MOCK_PROFILES: CreatorProfile[] = [
         merchant: "David Ng",
         role: "GM, Harvest Table",
         quote:
-          "Fast delivery, authentic voice, and verifiable results. Maya is our go-to creator.",
+          "Fast delivery, authentic voice, and verifiable results. Alex is our go-to creator.",
         rating: 5,
       },
     ],
-    instagramHandle: "mayaeatsnyc",
-    tiktokHandle: "mayaeatsnyc",
+    instagramHandle: "alexeatsnyc",
+    tiktokHandle: "alexeatsnyc",
   },
   {
     id: "felix-brooklyn",

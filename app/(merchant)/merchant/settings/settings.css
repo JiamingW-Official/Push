@@ -220,7 +220,7 @@
 .settings-page h1,
 .settings-page .ms-page-header-title,
 .settings-page [class*="page-title"]:not([class*="card"]) {
-  font-size: clamp(40px, 5.6vw, 80px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.025em;
 }

@@ -244,7 +244,7 @@
 .cd-budget-number {
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 64px);
+  font-size: clamp(28px, 3.2vw, 48px);
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
@@ -591,7 +591,7 @@
 .cl-page h1,
 .cl-page .ms-page-header-title,
 .cl-page [class*="page-title"]:not([class*="card"]) {
-  font-size: clamp(40px, 5.6vw, 80px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.025em;
 }
@@ -821,5 +821,655 @@
   .cd-page {
     overflow-x: hidden;
     padding-bottom: max(48px, env(safe-area-inset-bottom));
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 11 — Premium Campaign Card Grid (cml-*)
+   2-column card grid replacing the cl-list row layout.
+   Dark ink top band · stats triptych · slim progress · Manage → footer.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.cml-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cml-card {
+  background: var(--snow);
+  border-radius: 16px;
+  box-shadow: var(--shadow-1);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-decoration: none;
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 180ms ease;
+}
+
+.cml-card:hover {
+  box-shadow: var(--shadow-2);
+  transform: translate(2px, 2px);
+}
+
+.cml-card:active {
+  transform: translate(3px, 3px) scale(0.98);
+}
+
+/* ── Dark ink top band ─────────────────────────────────────── */
+
+.cml-card__band {
+  align-items: center;
+  background: var(--ink);
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+}
+
+.cml-card__status-dot {
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: 8px;
+  width: 8px;
+}
+
+.cml-card__status-dot--active  { background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.22); }
+.cml-card__status-dot--paused  { background: var(--champagne); box-shadow: 0 0 0 3px rgba(191, 161, 112, 0.22); }
+.cml-card__status-dot--draft   { background: var(--ink-4); }
+.cml-card__status-dot--closed  { background: var(--ink-4); }
+
+.cml-card__status-text {
+  color: rgba(255, 255, 255, 0.85);
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.cml-card__category {
+  color: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── White body ───────────────────────────────────────────── */
+
+.cml-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 20px 16px;
+}
+
+.cml-card__title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* ── Stats triptych ───────────────────────────────────────── */
+
+.cml-card__stats {
+  align-items: stretch;
+  display: flex;
+  gap: 0;
+}
+
+.cml-card__stat {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cml-card__stat:not(:first-child) {
+  padding-left: 16px;
+}
+
+.cml-card__stat-divider {
+  background: var(--hairline, rgba(20, 19, 15, 0.1));
+  flex-shrink: 0;
+  margin: 4px 0;
+  width: 1px;
+}
+
+.cml-card__stat-num {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cml-card__stat-num--sm {
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0;
+  white-space: normal;
+}
+
+.cml-card__stat-label {
+  color: var(--ink-4);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+/* ── Slim progress bar ────────────────────────────────────── */
+
+.cml-card__progress-row {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.cml-card__progress-track {
+  background: var(--surface-3, #ece9e0);
+  border-radius: 2px;
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+}
+
+.cml-card__progress-fill {
+  background: var(--brand-red);
+  border-radius: 2px;
+  height: 100%;
+  max-width: 100%;
+  transition: width 600ms ease;
+}
+
+.cml-card__progress-pct {
+  color: var(--ink-4);
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ── Card footer ──────────────────────────────────────────── */
+
+.cml-card__footer {
+  border-top: 1px solid var(--hairline, rgba(20, 19, 15, 0.08));
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+}
+
+.cml-card__cta {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .cml-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cml-card__body {
+    gap: 16px;
+    padding: 20px 16px 12px;
+  }
+  .cml-card__stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cml-card__stat-divider {
+    display: none;
+  }
+  .cml-card__stat:not(:first-child) {
+    padding-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cml-card,
+  .cml-card:hover,
+  .cml-card:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 12 — Premium Merchant Redesign (2026-05-10)
+   Stat band · enriched cards · intensified atmosphere · premium KPIs.
+   Warm-cream shell background (merchant-shell.css) makes glass
+   layers visible — every upgrade below depends on that base.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Intensify atmospheric backdrop for warm-cream canvas ────── */
+
+.cl-page::before {
+  background:
+    radial-gradient(ellipse 70vw 60vh at 78% 12%,  rgba(0, 133, 255, 0.14),    transparent 62%),
+    radial-gradient(ellipse 55vw 55vh at 10% 25%,  rgba(193, 18, 31, 0.08),    transparent 65%),
+    radial-gradient(ellipse 60vw 50vh at 88% 72%,  rgba(191, 161, 112, 0.14),  transparent 65%),
+    radial-gradient(ellipse 80vw 45vh at 50% 100%, rgba(248, 244, 232, 0.65),  transparent 70%),
+    radial-gradient(ellipse 40vw 35vh at 20% 85%,  rgba(193, 18, 31, 0.055),   transparent 75%);
+}
+
+/* ── 2. Horizontal stat band ─────────────────────────────────────── */
+
+.cl-stat-band {
+  display: flex;
+  margin-bottom: 40px;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 20% 0%,  rgba(255, 255, 255, 0.70) 0%, rgba(255, 255, 255, 0) 60%),
+    radial-gradient(ellipse at 90% 100%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%),
+    rgba(255, 255, 255, 0.54);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+          backdrop-filter: blur(32px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 4px 24px rgba(60, 45, 30, 0.07),
+    0 1px 4px rgba(60, 45, 30, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90),
+    inset 0 -1px 0 rgba(10, 10, 10, 0.03);
+}
+
+.cl-stat-band__cell {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 32px;
+}
+
+.cl-stat-band__rule {
+  background: var(--mist, #d8d4c8);
+  flex-shrink: 0;
+  margin: 24px 0;
+  width: 1px;
+}
+
+.cl-stat-band__num {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.8vw, 52px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.cl-stat-band__num--red  { color: var(--brand-red); }
+.cl-stat-band__num--blue { color: var(--n2w-blue, #0085ff); }
+
+.cl-stat-band__label {
+  color: var(--ink-4);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .cl-stat-band {
+    flex-direction: column;
+    border-radius: 16px;
+    margin-bottom: 24px;
+  }
+  .cl-stat-band__rule {
+    height: 1px;
+    width: auto;
+    margin: 0 24px;
+  }
+  .cl-stat-band__cell {
+    padding: 20px 24px;
+    gap: 6px;
+  }
+  .cl-stat-band__num {
+    font-size: clamp(36px, 9vw, 48px);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cl-stat-band {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ── 3. Upgraded campaign cards ──────────────────────────────────── */
+
+/* Richer dark gradient on the band header */
+.cl-page .cml-card__band {
+  background: linear-gradient(135deg, var(--char, #3a3835) 0%, var(--ink) 100%);
+  padding: 14px 22px;
+}
+
+/* Active status dot gets a glow halo */
+.cl-page .cml-card__status-dot--active {
+  box-shadow:
+    0 0 0 3px rgba(74, 222, 128, 0.25),
+    0 0 8px rgba(74, 222, 128, 0.45);
+}
+
+/* Bigger title with tighter tracking */
+.cl-page .cml-card__title {
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+/* Bolder stat numerals */
+.cl-page .cml-card__stat-num {
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+/* Deadline / small-variant must stay compact */
+.cl-page .cml-card__stat-num--sm {
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Budget left gets brand-red tint */
+.cl-page .cml-card__stat:first-child .cml-card__stat-num {
+  color: var(--brand-red);
+}
+
+/* Card footer: glass surface, darker "Manage →" */
+.cl-page .cml-card__footer {
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255,255,255,0.55) 0%, transparent 70%),
+    rgba(255, 255, 255, 0.40);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.55);
+  padding: 14px 22px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.cl-page .cml-card__cta {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+/* Card gains a subtle bottom-edge color flash on hover */
+.cl-page .cml-card {
+  position: relative;
+}
+.cl-page .cml-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 0 0 16px 16px;
+  background: linear-gradient(90deg, var(--brand-red), transparent 70%);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.cl-page .cml-card:hover::after {
+  opacity: 1;
+}
+
+/* ── 4. Page header on warm-cream canvas ─────────────────────────── */
+
+/* Eyebrow gains a branded dot (mirrors creator today-hero__eyebrow) */
+.cl-page .ms-page-header-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.18);
+  margin-right: 10px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+/* Warmer divider (mist instead of hairline) */
+.cl-page .ms-page-header {
+  border-bottom-color: var(--mist, #d8d4c8);
+}
+
+/* ── 5. Glassmorphic filter tabs row container ───────────────────── */
+
+.cl-page .cl-list-section .ms-filter-tabs {
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.48);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+          backdrop-filter: blur(20px) saturate(1.4);
+  border: 0.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 3px rgba(60, 45, 30, 0.04);
+  margin-bottom: 24px;
+}
+
+/* ── 6. Reduced transparency fallback for stat band ─────────────── */
+
+@media (prefers-reduced-transparency: reduce) {
+  .cl-page .cml-card__footer {
+    background: var(--surface-2) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+  .cl-page .ms-filter-tabs {
+    background: var(--surface-2) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Wave 12.1 — 20× Campaign Card Overhaul (2026-05-10)
+   Glass body · CSS-var accent bar · featured first · gradient progress ·
+   pulse dot · 3-col grid · lift-shadow hover
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Status accent token — drive inset box-shadow from one variable */
+.cl-page .cml-card                        { --card-accent: var(--ink-5); }
+.cl-page .cml-card[data-status="active"]  { --card-accent: #22c55e; }
+.cl-page .cml-card[data-status="paused"]  { --card-accent: #bfa170; }
+.cl-page .cml-card[data-status="draft"]   { --card-accent: var(--ink-4); }
+.cl-page .cml-card[data-status="closed"]  { --card-accent: var(--ink-5); opacity: 0.78; }
+
+/* Full glass body: replaces flat white from Wave 11 */
+.cl-page .cml-card {
+  background: rgba(255, 255, 255, 0.64);
+  -webkit-backdrop-filter: blur(28px) saturate(1.55);
+          backdrop-filter: blur(28px) saturate(1.55);
+  border-radius: 20px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.07),
+    inset 4px 0 0 var(--card-accent);
+}
+
+/* Lift shadow on hover (replaces flat translate-only) */
+.cl-page .cml-card:hover {
+  box-shadow:
+    0 20px 56px rgba(0, 0, 0, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.07),
+    inset 4px 0 0 var(--card-accent);
+  transform: translate(2px, -4px);
+}
+.cl-page .cml-card:active {
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 0.5px rgba(20, 19, 15, 0.07),
+    inset 4px 0 0 var(--card-accent);
+}
+
+/* ::after bottom flash: update radius to match 20px card */
+.cl-page .cml-card::after {
+  border-radius: 0 0 20px 20px;
+}
+
+/* Band: glass-tinted instead of solid ink */
+.cl-page .cml-card__band {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.10) 0%, transparent 60%),
+    rgba(20, 19, 15, 0.90);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  border-radius: 20px 20px 0 0;
+  padding: 12px 22px 12px 26px; /* extra left pad to clear accent bar */
+}
+
+/* Body: extra left padding for accent bar clearance */
+.cl-page .cml-card__body {
+  padding-left: 28px;
+}
+
+/* Footer: also clear the accent bar */
+.cl-page .cml-card__footer {
+  padding-left: 28px;
+  border-radius: 0 0 20px 20px;
+}
+
+/* Featured first card: full-width + bigger everything */
+.cml-grid > .cml-card:first-child {
+  grid-column: 1 / -1;
+}
+.cml-grid > .cml-card:first-child .cl-page .cml-card__title,
+.cl-page .cml-grid > .cml-card:first-child .cml-card__title {
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+.cl-page .cml-grid > .cml-card:first-child .cml-card__stat-num {
+  font-size: clamp(24px, 3vw, 38px);
+}
+
+/* Grid: 3-column on large screens (Wave 11 uses 2) */
+@media (min-width: 1100px) {
+  .cml-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .cml-grid > .cml-card:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Gradient progress bar: taller + warm gradient */
+.cl-page .cml-card__progress-track {
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(20, 19, 15, 0.07);
+}
+.cl-page .cml-card__progress-fill {
+  background: linear-gradient(90deg, var(--brand-red) 0%, #ff7c45 85%);
+  border-radius: 6px;
+}
+.cl-page .cml-card__progress-pct {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ink-3);
+}
+
+/* Creators count (3rd stat): N2W blue */
+.cl-page .cml-card__stat:nth-child(3) .cml-card__stat-num {
+  color: var(--n2w-blue, #0085ff);
+}
+
+/* Active dot: CSS pulse animation */
+@keyframes w121-dot-pulse {
+  0%,  100% { box-shadow: 0 0 0 0   rgba(74, 222, 128, 0.70); }
+  55%        { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);    }
+}
+.cl-page .cml-card__status-dot--active {
+  animation: w121-dot-pulse 2.4s ease-in-out infinite;
+}
+
+/* CTA arrow */
+.cl-page .cml-card__cta {
+  color: var(--brand-red);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  transition: letter-spacing 200ms ease;
+}
+.cl-page .cml-card:hover .cml-card__cta {
+  letter-spacing: 0.18em;
+}
+
+/* Responsive: 2-col → 1-col */
+@media (max-width: 1100px) {
+  .cml-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cml-grid > .cml-card:first-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 640px) {
+  .cml-grid {
+    grid-template-columns: 1fr;
+  }
+  .cml-grid > .cml-card:first-child {
+    grid-column: 1;
+  }
+}
+
+/* Reduced-transparency fallback */
+@media (prefers-reduced-transparency: reduce) {
+  .cl-page .cml-card {
+    background: var(--snow) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+  }
+}
+
+/* Reduced-motion: kill the pulse */
+@media (prefers-reduced-motion: reduce) {
+  .cl-page .cml-card__status-dot--active {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.30);
   }
 }

@@ -20,6 +20,7 @@ import { useOptionalWorkspaceState } from "@/lib/workspace/state";
 import { useNow } from "@/lib/workspace/hooks";
 import { useInvitesLive } from "@/lib/data/hooks";
 import { buildActionQueue } from "@/lib/today/briefing";
+import { useCommandPalette } from "@/components/feedback/CommandPalette";
 import "./unified-sidebar.css";
 
 // ---------------------------------------------------------------------------
@@ -69,17 +70,24 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
     profileHref: "/admin",
   },
   creator: {
-    homeHref: "/creator/dashboard",
+    homeHref: "/creator/work",
     primary: [
       // Short captions (≤5 chars): live under each icon, no hover needed.
       // Full route name kept in href so analytics/aria still read clean.
-      // 7-domain canonical IA per architectural audit § 3.1.
-      // Today · Work · Money · Find · Comms · Me · Stats
-      { label: "Today", href: "/creator/today", icon: "home", exact: true },
-      { label: "Work", href: "/creator/work", icon: "work" },
+      // v23: Today merged into Work (Today's NEXT MOVE / NEEDS YOU /
+      // SCHEDULE / OPPS were 80% redundant with Work panels;
+      // Today-unique milestone + pulse folded into Work).
+      // 6-domain IA: Work · Find · Pay · Inbox · Me · Stats
+      // v58: "Comms" renamed to "Inbox" + href routes directly into the
+      // /creator/inbox messages list (was a separate dashboard at
+      // /creator/comms, now redirected). Skipping the dashboard removes
+      // a meaningless intermediate — the messages list IS the inbox.
+      // v10.1 — Inbox + Stats restored per user feedback. Stats
+      // may be merged into Me later. 6-item IA preserved.
+      { label: "Today", href: "/creator/work", icon: "work", exact: true },
       { label: "Find", href: "/creator/discover", icon: "discover" },
-      { label: "Pay", href: "/creator/money", icon: "earnings" },
-      { label: "Comms", href: "/creator/comms", icon: "inbox" },
+      { label: "Money", href: "/creator/money", icon: "earnings" },
+      { label: "Inbox", href: "/creator/inbox", icon: "inbox" },
       { label: "Me", href: "/creator/me", icon: "trophy" },
       { label: "Stats", href: "/creator/analytics", icon: "analytics" },
     ],
@@ -104,12 +112,11 @@ const CONFIGS: Record<SidebarRole, SidebarConfig> = {
       { label: "Camps", href: "/merchant/campaigns", icon: "campaigns" },
       { label: "Pool", href: "/merchant/applicants", icon: "applicants" },
       { label: "Stats", href: "/merchant/analytics", icon: "analytics" },
-      { label: "Codes", href: "/merchant/qr-codes", icon: "qr" },
-      { label: "Redeem", href: "/merchant/redeem", icon: "redeem" },
+      { label: "Ops", href: "/merchant/operations", icon: "qr" },
+      { label: "Finance", href: "/merchant/finance", icon: "finance" },
       { label: "Spots", href: "/merchant/locations", icon: "location" },
       { label: "Inbox", href: "/merchant/messages", icon: "messages" },
-      { label: "Pay", href: "/merchant/payments", icon: "payments" },
-      { label: "Billing", href: "/merchant/billing", icon: "billing" },
+      { label: "Apps", href: "/merchant/integrations", icon: "integrations" },
     ],
     notificationsHref: "/merchant/notifications",
     settingsHref: "/merchant/settings",
@@ -139,7 +146,6 @@ export interface UnifiedSidebarProps {
 
 export function UnifiedSidebar({
   role,
-  notificationCount = 0,
   inboxUnread = 0,
   userInitial,
   avatarUrl,
@@ -155,9 +161,6 @@ export function UnifiedSidebar({
     if (exact) return pathname === href;
     return pathname === href || pathname.startsWith(href + "/");
   };
-
-  const showBadge = notificationCount > 0;
-  const badgeText = notificationCount > 99 ? "99+" : String(notificationCount);
 
   const ws = useOptionalWorkspaceState();
   const now = useNow();
@@ -268,6 +271,7 @@ export function UnifiedSidebar({
       </nav>
 
       <div className="us-foot">
+        <CommandKHintPill />
         <Link
           href={config.settingsHref}
           className={`us-item${
@@ -329,5 +333,22 @@ function AvatarImg({ src, alt }: { src: string; alt: string }): ReactNode {
       loading="lazy"
       decoding="async"
     />
+  );
+}
+
+/* Discoverability pill — sits in us-foot above Settings. Click opens the
+   global command palette. Visible on every role surface. */
+function CommandKHintPill() {
+  const { open } = useCommandPalette();
+  return (
+    <button
+      type="button"
+      className="us-cmdk-pill"
+      onClick={open}
+      aria-label="Open command palette"
+      title="Command palette (⌘K)"
+    >
+      <span aria-hidden>⌘K</span>
+    </button>
   );
 }

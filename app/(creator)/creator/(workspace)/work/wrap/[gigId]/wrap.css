@@ -1,0 +1,119 @@
+/* ============================================================
+   /creator/work/wrap/[gigId] · Stage 07 — Paid
+   Stage-specific: total numeral, mini bar chart, cohort grid,
+   star rate. Layout / cards / buttons come from .stg__*.
+   ============================================================ */
+
+/* ── Total numeral (in earnings card row) ──────────────── */
+.wrp__total {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+/* ── Big earnings number on rail primary card ──────────── */
+.wrp__rail-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 56px; font-weight: 800;
+  color: var(--snow);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Mini bar chart (attribution timeline) ─────────────── */
+.wrp__chart {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  align-items: end;
+  height: 200px;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+}
+
+.wrp__bar {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  height: 100%;
+  position: relative;
+}
+.wrp__bar-fill {
+  width: 100%;
+  background: var(--ink);
+  border-radius: var(--r-xs) var(--r-xs) 0 0;
+  margin-top: auto;
+  transition: height 360ms var(--ease-spring);
+  min-height: 4px;
+}
+.wrp__bar-num {
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  position: absolute;
+  bottom: calc(100% - 132px);
+  left: 50%;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+.wrp__bar-day {
+  font-family: var(--font-display);
+  font-size: 10px; font-weight: 700;
+  color: var(--ink-5);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+
+.wrp__chart-meta {
+  font-family: var(--font-body);
+  font-size: 13px; line-height: 1.55;
+  color: var(--ink-4);
+  margin: 12px 0 0;
+}
+.wrp__chart-meta strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── Cohort compare grid ─ 2-up narrow, 4-up wide ────── */
+.wrp__cohort {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 32px;
+  padding: 16px 0;
+}
+@media (min-width: 1024px) {
+  .wrp__cohort { grid-template-columns: repeat(4, 1fr); }
+}
+
+.wrp__learning {
+  margin: 8px 0 0;
+  padding: 12px 14px;
+  background: var(--accent-blue-tint);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.5;
+  color: var(--ink-2);
+}
+.wrp__learning strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── Star rating ───────────────────────────────────────── */
+.wrp__rate { display: flex; gap: 4px; padding: 4px 0; }
+.wrp__star {
+  width: 36px; height: 36px;
+  border: none; background: transparent;
+  font-size: 24px;
+  color: var(--mist);
+  cursor: pointer;
+  transition: color 160ms var(--ease-out-soft),
+              transform 160ms var(--ease-spring);
+}
+.wrp__star:hover { color: var(--champagne); transform: scale(1.1); }
+.wrp__star:focus { outline: none; color: var(--champagne); }

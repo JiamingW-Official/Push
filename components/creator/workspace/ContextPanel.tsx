@@ -439,7 +439,7 @@ function getPageContext(pathname: string): PageContext {
           href: "/creator/leaderboard",
         },
         {
-          label: "Beat Maya · #10",
+          label: "Beat Alex · #10",
           date: "+18 PTS",
           href: "/creator/leaderboard",
         },

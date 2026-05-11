@@ -1,0 +1,104 @@
+/* ============================================================
+   <Donut> — small SVG donut + legend.
+   ============================================================ */
+
+.donut {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+}
+
+.donut__svg {
+  width: 140px;
+  height: 140px;
+  display: block;
+  flex-shrink: 0;
+  grid-row: span 2;
+}
+
+.donut__arc {
+  transition: stroke-width 200ms ease, opacity 200ms ease;
+  cursor: pointer;
+}
+
+.donut__center {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut__total {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  line-height: 1;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.donut__lbl {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-4, #61605c);
+  margin: 4px 0 0;
+}
+
+.donut__legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.donut__legend-row {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.donut__legend-row:hover {
+  background: rgba(20, 19, 15, 0.04);
+}
+
+.donut__legend-sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.donut__legend-name {
+  font-family: var(--font-body, "Open Sans");
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink, #111);
+}
+
+.donut__legend-val {
+  font-family: var(--font-display, "Darky"), Georgia, serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink, #111);
+  font-variant-numeric: tabular-nums;
+}

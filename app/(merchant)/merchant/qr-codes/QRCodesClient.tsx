@@ -197,6 +197,7 @@ export default function QRCodesClient({
       {initialQRs.length === 0 ? (
         <div className="qr-empty-wrap">
           <EmptyState
+            artKind="qrcodes"
             title="No QR codes yet"
             description="Each accepted creator gets a unique QR poster wired to your campaign. Approve your first applicant and the generated poster will land here, ready to print."
             ctaLabel="Review pending applicants"
@@ -221,6 +222,8 @@ export default function QRCodesClient({
           {filtered.length === 0 ? (
             <div className="qr-empty-wrap">
               <EmptyState
+                artKind="filter"
+                artVariant="muted"
                 title="No posters match these filters"
                 description="No QR posters match the campaign and format you've selected. Reset to see every poster across your active campaigns."
                 ctaLabel="Reset filters"

@@ -1,0 +1,141 @@
+/* ============================================================
+   /creator/work/confirmed/[gigId] · Stage 04 — Confirmed
+   v20 · 2026-05-08 — stage-specific only. Shell / banner /
+   header / cards / rail cards / buttons / thread / merchant
+   avatar come from Stage primitives. This file holds merchant
+   stats grid, briefing pack table, refs grid, QR mock, schedule
+   chip. ~110 lines down from ~340.
+   ============================================================ */
+
+/* ── Merchant intro layout ─────────────────────────────── */
+.cnf__merch {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.cnf__merch-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cnf__merch-name {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.cnf__merch-meta {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-4);
+}
+
+.cnf__merch-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 1px solid var(--hairline);
+}
+.cnf__merch-stat { display: flex; flex-direction: column; gap: 2px; }
+.cnf__merch-stat-num {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 800;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.cnf__merch-stat-label {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ── Briefing pack table ───────────────────────────────── */
+.cnf__brief-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.cnf__brief-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  align-items: flex-start;
+}
+.cnf__brief-label {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-4);
+  padding-top: 2px;
+}
+.cnf__brief-val {
+  font-family: var(--font-body);
+  font-size: 15px; line-height: 1.55;
+  color: var(--ink-2);
+}
+.cnf__brief-val strong {
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── Reference frames ──────────────────────────────────── */
+.cnf__refs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.cnf__ref {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+}
+
+/* ── QR code mock (checkered tile, 192px) ─────────────── */
+.cnf__qr {
+  width: 192px; height: 192px;
+  margin: 12px auto 8px;
+  background:
+    linear-gradient(45deg, var(--snow) 25%, transparent 25%, transparent 75%, var(--snow) 75%),
+    linear-gradient(45deg, var(--snow) 25%, var(--ink) 25%, var(--ink) 75%, var(--snow) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  background-color: var(--ink);
+  border-radius: var(--r-md);
+  border: 8px solid var(--snow);
+  position: relative;
+}
+.cnf__qr::before, .cnf__qr::after {
+  content: ""; position: absolute;
+  width: 48px; height: 48px;
+  border: 8px solid var(--snow);
+  background: var(--ink);
+}
+.cnf__qr::before { top: -8px; left: -8px; }
+.cnf__qr::after { top: -8px; right: -8px; }
+.cnf__qr-id {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Schedule chip ─────────────────────────────────────── */
+.cnf__sched {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+}
+.cnf__sched-day {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800;
+  color: var(--ink);
+}
+.cnf__sched-when {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-4);
+}

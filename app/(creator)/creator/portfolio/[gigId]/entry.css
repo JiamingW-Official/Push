@@ -1,0 +1,139 @@
+/* ============================================================
+   /creator/portfolio/[gigId] · Stage 09 — Promoted (entry)
+   Stage-specific only. Shell / banner / header / chips / cards /
+   rail cards / buttons / stats / elig from Stage primitives.
+   This file holds hero photo, stat grid, case-study textareas,
+   visibility toggle, share-link row.
+   ============================================================ */
+
+/* Hero photo */
+.pro__hero {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  display: block;
+}
+.pro__caption {
+  font-family: var(--font-body);
+  font-size: 14px; font-style: italic;
+  color: var(--ink-4);
+  line-height: 1.55;
+  margin: 8px 0 0;
+}
+
+/* Stat grid (4-up on desktop, 2-up on mobile) */
+.pro__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 32px;
+  padding: 8px 0;
+}
+@media (min-width: 640px) {
+  .pro__stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Case study sections */
+.pro__case-section {
+  display: flex; flex-direction: column; gap: 6px;
+  padding-top: 4px;
+}
+.pro__case-section + .pro__case-section {
+  padding-top: 8px;
+  border-top: 1px solid var(--hairline);
+  margin-top: 4px;
+}
+.pro__case-label {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-4);
+}
+.pro__case-input {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);
+  background: var(--snow);
+  font-family: var(--font-body);
+  font-size: 15px; line-height: 1.55;
+  color: var(--ink);
+  transition: border-color 180ms var(--ease-out-soft),
+              box-shadow 180ms var(--ease-out-soft);
+}
+.pro__case-input:focus {
+  outline: none;
+  border-color: var(--brand-red);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Tags */
+.pro__tags {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+/* Visibility toggle group */
+.pro__vis-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--r-sm);
+}
+.pro__vis {
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: var(--r-sm);
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: background 160ms var(--ease-out-soft),
+              color 160ms var(--ease-out-soft);
+}
+.pro__vis:hover { color: var(--snow); }
+.pro__vis.is-on {
+  background: var(--snow);
+  color: var(--ink);
+}
+
+/* Share link row */
+.pro__share {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--r-sm);
+  align-items: center;
+}
+.pro__share-link {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--snow);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pro__share-copy {
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--r-xs);
+  background: var(--snow);
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 180ms var(--ease-spring);
+}
+.pro__share-copy:hover { transform: translate(1px, 1px); }

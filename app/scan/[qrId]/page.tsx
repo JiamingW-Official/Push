@@ -1,9 +1,17 @@
 "use client";
 
+/* ============================================================
+   /scan/[qrId] — consumer-facing QR landing page
+   v3 · 2026-05-10 — 3-screen flow:
+     1. Welcome coupon ticket (with tear animation)
+     2. ACTIVATED! — 6-digit code + 2:30 countdown
+     3. Enjoy! — success + share
+   ============================================================ */
+
 import { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import { ShoppingBag, ShoppingCart, MapPin } from "lucide-react";
 import "./scan.css";
 import {
   getQRCode,
@@ -17,118 +25,172 @@ import {
   setConsentTier,
   type ConsentTier,
 } from "@/lib/attribution/consent";
-import ConsentPicker from "@/components/customer/ConsentPicker";
-
-// Leaflet map loaded client-side only
-const MapView = dynamic(() => import("@/components/layout/MapView"), {
-  ssr: false,
-  loading: () => (
-    <div
-      style={{ width: "100%", height: "100%", background: "var(--surface-2)" }}
-    />
-  ),
-});
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
-function formatExpiry(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+function pad2(n: number) {
+  return String(n).padStart(2, "0");
 }
 
-function getCategoryLabel(category: string): string {
-  const map: Record<string, string> = {
-    Coffee: "Coffee",
-    Food: "Food",
-    Beauty: "Beauty",
-    Retail: "Retail",
-    Fitness: "Fitness",
-    Lifestyle: "Lifestyle",
-  };
-  return map[category] ?? category;
+function generateCode(qrId: string): string {
+  const epoch = Math.floor(Date.now() / 150_000); // rotates every 2.5 min
+  const seed = qrId + String(epoch);
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = (Math.imul(31, h) + seed.charCodeAt(i)) | 0;
+  }
+  return ((Math.abs(h) % 900000) + 100000).toString();
 }
 
-/* ── Component ───────────────────────────────────────────────── */
+function fmtEnjoyTime(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+}
+
+/* ── SVG barcode (deterministic from campaignId) ─────────────── */
+function Barcode({ id, color = "#1a1916" }: { id: string; color?: string }) {
+  let x = 0;
+  const bars: { x: number; w: number; h: number }[] = [];
+  for (let i = 0; i < 30; i++) {
+    const w = 1 + (id.charCodeAt(i % id.length) % 3);
+    const h = 26 + (id.charCodeAt((i * 3) % id.length) % 18);
+    bars.push({ x, w, h });
+    x += w + 1.5;
+  }
+  return (
+    <svg
+      width={Math.ceil(x)}
+      height={48}
+      viewBox={`0 0 ${Math.ceil(x)} 48`}
+      aria-hidden
+      style={{ display: "block" }}
+    >
+      {bars.map((b, i) => (
+        <rect
+          key={i}
+          x={b.x}
+          y={48 - b.h}
+          width={b.w}
+          height={b.h}
+          fill={color}
+          rx={0.3}
+        />
+      ))}
+    </svg>
+  );
+}
+
+/* ── 3-screen phase type ─────────────────────────────────────── */
+type ScanPhase = "welcome" | "tearing" | "activated" | "enjoy";
+type QRStatus = "loading" | "found" | "not-found" | "expired";
+
+/* ══════════════════════════════════════════════════════════════
+   COMPONENT
+   ══════════════════════════════════════════════════════════════ */
 
 export default function ScanLandingPage() {
   const params = useParams();
-  const router = useRouter();
   const qrId = params.qrId as string;
 
+  /* QR data */
   const [qr, setQr] = useState<MockQRCode | null>(null);
-  const [status, setStatus] = useState<
-    "loading" | "found" | "not-found" | "expired"
-  >("loading");
+  const [qrStatus, setQrStatus] = useState<QRStatus>("loading");
   const [scanRecorded, setScanRecorded] = useState(false);
-  const [consentTier, setConsentTierState] = useState<ConsentTier>(2);
-  const [isMinor, setIsMinor] = useState<boolean>(false);
   const trackFired = useRef(false);
+
+  /* 3-screen state */
+  const [phase, setPhase] = useState<ScanPhase>("welcome");
+  const [code, setCode] = useState("");
+  const [countdown, setCountdown] = useState(150); // 2:30
+  const [enjoyTs, setEnjoyTs] = useState("");
+
+  /* Consent (kept for attribution compliance) */
+  const [consentTier, setConsentTierState] = useState<ConsentTier>(2);
 
   useEffect(() => {
     setConsentTierState(getConsentTier(qrId));
   }, [qrId]);
 
-  const handleConsentChange = (tier: ConsentTier) => {
-    setConsentTierState(tier);
-    setConsentTier(qrId, tier);
-  };
-
+  /* QR lookup ── client-side mock first, then API fallback */
   useEffect(() => {
-    const code = getQRCode(qrId);
-    if (!code) {
-      setStatus("not-found");
-      return;
+    function applyCode(qrCode: MockQRCode) {
+      if (isQRExpired(qrCode)) {
+        setQrStatus("expired");
+        setQr(qrCode);
+        return;
+      }
+      setQr(qrCode);
+      setQrStatus("found");
+      if (!trackFired.current && !hasScannedThisSession(qrId)) {
+        trackFired.current = true;
+        trackScan(qrId, {
+          campaignId: qrCode.campaignId,
+          creatorId: qrCode.creatorId,
+          merchantId: qrCode.merchantId,
+        })
+          .then(() => setScanRecorded(true))
+          .catch(() => setScanRecorded(true));
+      } else {
+        setScanRecorded(true);
+      }
     }
-    if (isQRExpired(code)) {
-      setStatus("expired");
-      setQr(code);
-      return;
-    }
-    setQr(code);
-    setStatus("found");
 
-    if (!trackFired.current && !hasScannedThisSession(qrId)) {
-      trackFired.current = true;
-      trackScan(qrId, {
-        campaignId: code.campaignId,
-        creatorId: code.creatorId,
-        merchantId: code.merchantId,
-      }).then(() => setScanRecorded(true));
-    } else {
-      setScanRecorded(true);
+    const localCode = getQRCode(qrId);
+    if (localCode) {
+      applyCode(localCode);
+      return;
     }
+    fetch(`/api/scan-context?qrId=${encodeURIComponent(qrId)}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then(({ qr: serverQr }: { qr: MockQRCode }) => applyCode(serverQr))
+      .catch(() => setQrStatus("not-found"));
   }, [qrId]);
 
-  /* ── Loading ── */
-  if (status === "loading") {
+  /* Countdown while ACTIVATED */
+  useEffect(() => {
+    if (phase !== "activated") return;
+    if (countdown <= 0) {
+      setEnjoyTs(fmtEnjoyTime());
+      setPhase("enjoy");
+      return;
+    }
+    const t = setInterval(() => setCountdown((c) => c - 1), 1000);
+    return () => clearInterval(t);
+  }, [phase, countdown]);
+
+  /* Claim → tear animation → ACTIVATED */
+  function handleClaim() {
+    const c = generateCode(qrId);
+    setCode(c);
+    setConsentTier(qrId, consentTier); // persist consent
+    setPhase("tearing");
+    setTimeout(() => setPhase("activated"), 720);
+  }
+
+  function handleDone() {
+    setEnjoyTs(fmtEnjoyTime());
+    setPhase("enjoy");
+  }
+
+  /* ── LOADING ── */
+  if (qrStatus === "loading") {
     return (
-      <div className="scan-loading-wrap">
-        <span className="scan-loading-wordmark">PUSH</span>
-        <div
-          className="scan-spinner"
-          role="status"
-          aria-label="Verifying QR code"
-        />
-        <p className="scan-loading-label">Verifying QR code…</p>
+      <div className="sc-center sc-center--cream">
+        <p className="sc-logo-text">PUSH</p>
+        <div className="sc-spinner" role="status" aria-label="Loading" />
       </div>
     );
   }
 
-  /* ── Not found ── */
-  if (status === "not-found") {
+  /* ── ERROR: not found ── */
+  if (qrStatus === "not-found") {
     return (
-      <div className="scan-error-wrap">
-        <div className="scan-error-card">
-          <p className="scan-error-eyebrow">(INVALID CODE)</p>
-          <h1 className="scan-error-title">QR code invalid.</h1>
-          <p className="scan-error-body">
-            This code doesn&apos;t match any active campaign. Ask your creator
-            for the correct link.
-          </p>
-          <Link href="/" className="scan-error-link">
+      <div className="sc-center sc-center--cream">
+        <div className="sc-err-card">
+          <p className="sc-err-eye">INVALID CODE</p>
+          <h1 className="sc-err-title">QR code not found</h1>
+          <p className="sc-err-body">Ask your creator for the correct link.</p>
+          <Link href="/" className="sc-err-link">
             ← Back to Push
           </Link>
         </div>
@@ -136,18 +198,15 @@ export default function ScanLandingPage() {
     );
   }
 
-  /* ── Expired ── */
-  if (status === "expired" && qr) {
+  /* ── ERROR: expired ── */
+  if (qrStatus === "expired" && qr) {
     return (
-      <div className="scan-error-wrap">
-        <div className="scan-error-card">
-          <p className="scan-error-eyebrow">(CAMPAIGN ENDED)</p>
-          <h1 className="scan-error-title">{qr.campaignTitle}</h1>
-          <p className="scan-error-body">
-            This campaign ended on {formatExpiry(qr.expiresAt)}. Check{" "}
-            <strong>{qr.businessName}</strong> for current offers.
-          </p>
-          <Link href="/" className="scan-error-link">
+      <div className="sc-center sc-center--cream">
+        <div className="sc-err-card">
+          <p className="sc-err-eye">CAMPAIGN ENDED</p>
+          <h1 className="sc-err-title">{qr.campaignTitle}</h1>
+          <p className="sc-err-body">This campaign has ended.</p>
+          <Link href="/" className="sc-err-link">
             ← Back to Push
           </Link>
         </div>
@@ -159,741 +218,253 @@ export default function ScanLandingPage() {
 
   const heroLeft = heroSlotsRemaining(qr);
   const heroExhausted = heroLeft === 0;
+  const offerText = heroExhausted ? qr.offerTier2 : qr.offerTier1;
+  const mins = Math.floor(countdown / 60);
+  const secs = countdown % 60;
 
-  return (
-    <div className="scan-page" style={st.page}>
-      {/* ── FTC §255 disclosure ── */}
-      <div style={st.ftcBanner} role="note" aria-label="Ad disclosure">
-        <span style={st.ftcTag}>#ad</span>
-        <span style={st.ftcText}>
-          Paid partnership with <strong>{qr.businessName}</strong>. Sponsored
-          content — FTC §&nbsp;255 disclosure.
-        </span>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════
-          TICKET PANEL — physical ticket aesthetic
-          GA Orange fill, ink text, 4 corner grommets,
-          dashed perforation top + bottom, flat no-shadow
-      ════════════════════════════════════════════════════ */}
-      <div style={st.ticketWrap}>
-        <div style={st.ticket}>
-          {/* Grommet corner circles — Design.md Ticket Panel spec */}
-          <span
-            style={{ ...st.grommet, top: 24, left: 24 }}
-            aria-hidden="true"
-          />
-          <span
-            style={{ ...st.grommet, top: 24, right: 24 }}
-            aria-hidden="true"
-          />
-          <span
-            style={{ ...st.grommet, bottom: 24, left: 24 }}
-            aria-hidden="true"
-          />
-          <span
-            style={{ ...st.grommet, bottom: 24, right: 24 }}
-            aria-hidden="true"
-          />
-
-          {/* Top bar — wordmark + status */}
-          <div style={st.ticketTop}>
-            <span style={st.pushWordmark}>PUSH</span>
-            {scanRecorded ? (
-              <span style={st.verifiedBadge}>
-                {/* SVG check icon in 20×20 tile — Design.md v11 */}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M3 8.5L6.5 12L13 5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>{" "}
-                Scan verified
-              </span>
-            ) : (
-              <span style={st.activeBadge}>Active</span>
-            )}
-          </div>
-
-          {/* Perforation line — top */}
-          <div style={st.perf} aria-hidden="true" />
-
-          {/* Main ticket body */}
-          <div style={st.ticketBody}>
-            <p style={st.ticketEyebrow}>
-              {getCategoryLabel(qr.category).toUpperCase()}
-              {scanRecorded && (
-                <span style={st.referralNote}>
-                  &nbsp;·&nbsp;Referred by @{qr.creatorHandle}
-                </span>
-              )}
-            </p>
-
-            <h1 style={st.merchantName}>{qr.businessName}</h1>
-            <p style={st.campaignTitle}>{qr.campaignTitle}</p>
-            <p style={st.address}>{qr.businessAddress}</p>
-
-            <div style={st.validRow}>
-              <span style={st.validLabel}>Valid until</span>
-              <span style={st.validDate}>{formatExpiry(qr.expiresAt)}</span>
-            </div>
-          </div>
-
-          {/* Perforation line — bottom */}
-          <div style={st.perf} aria-hidden="true" />
-
-          {/* Stub — offer summary + CTA */}
-          <div style={st.ticketStub}>
-            <div style={st.offerRow}>
-              {heroExhausted ? (
-                <div style={st.offerBlock}>
-                  <p style={st.offerLabel}>STANDARD OFFER</p>
-                  <p style={st.offerText}>{qr.offerTier2}</p>
-                </div>
-              ) : (
-                <>
-                  <div style={st.offerBlock}>
-                    <p style={st.offerLabel}>HERO OFFER · {heroLeft} LEFT</p>
-                    <p style={st.offerText}>{qr.offerTier1}</p>
-                  </div>
-                  <div
-                    style={{
-                      ...st.offerBlock,
-                      borderLeft: "1px dashed rgba(10,10,10,0.2)",
-                      paddingLeft: 16,
-                    }}
-                  >
-                    <p style={st.offerLabel}>STANDARD OFFER</p>
-                    <p style={st.offerText}>{qr.offerTier2}</p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Claim Reward CTA — .scan-claim-btn, full-width mobile per spec */}
-            <button
-              className="scan-claim-btn"
-              onClick={() => router.push(`/scan/${qrId}/verify`)}
-            >
-              {scanRecorded ? "Confirm My Visit →" : "Claim Reward →"}
-            </button>
-          </div>
+  /* ════════════════════════════════════════════════════════════
+     SCREEN 3 — Enjoy!
+     ════════════════════════════════════════════════════════════ */
+  if (phase === "enjoy") {
+    return (
+      <div className="sc-page sc-page--white">
+        {/* Top bar */}
+        <div className="sc-top-bar">
+          <span className="sc-top-wordmark">PUSH</span>
         </div>
-      </div>
 
-      {/* ── Verified success banner (shown after scan recorded) ── */}
-      {scanRecorded && (
-        <div className="scan-verified-banner">
-          {/* 40×40 circle tile with SVG check — Design.md v11 */}
-          <div className="scan-verified-icon" aria-hidden="true">
+        <div className="sc-enjoy-wrap">
+          {/* Card fan */}
+          <div className="sc-fan" aria-hidden>
+            <div className="sc-fan__card sc-fan__card--a" />
+            <div className="sc-fan__card sc-fan__card--b" />
+            <div className="sc-fan__card sc-fan__card--c" />
+          </div>
+
+          <Link href="/" className="sc-discover-link">
+            &rsaquo; Discover more nearby
+          </Link>
+
+          <h1 className="sc-enjoy-title">Enjoy!</h1>
+          <p className="sc-enjoy-meta">
+            {qr.businessName} · {enjoyTs}
+          </p>
+
+          <button
+            className="sc-share-btn"
+            onClick={() => {
+              if (navigator.share) {
+                navigator
+                  .share({ title: qr.campaignTitle, url: window.location.href })
+                  .catch(() => {});
+              }
+            }}
+          >
             <svg
               width="20"
               height="20"
               viewBox="0 0 20 20"
               fill="none"
-              aria-hidden="true"
+              aria-hidden
             >
               <path
-                d="M4 10.5L8.5 15L16 6"
-                stroke="rgba(34,197,94,0.9)"
-                strokeWidth="2.5"
+                d="M10 2v11M10 2L7 5M10 2l3 3"
+                stroke="currentColor"
+                strokeWidth="1.75"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
+              <path
+                d="M5 9H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+              />
             </svg>
-          </div>
-          <div>
-            <h2 className="scan-verified-heading">Verified!</h2>
-            <p className="scan-verified-sub">
-              Your visit has been recorded for @{qr.creatorHandle}
-            </p>
-          </div>
+            Share
+          </button>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {/* ── Campaign details card ─────────────────────────────── */}
-      <section
-        style={{ ...st.detailsSection, paddingTop: 32, paddingBottom: 32 }}
-      >
-        <div style={st.sectionInner}>
-          <div className="scan-details-card">
-            <h2 className="scan-campaign-name">{qr.campaignTitle}</h2>
-            <p className="scan-merchant-name">{qr.businessName}</p>
-            {/* Primary offer in brand-red Display 40px */}
-            <p className="scan-offer-value">
-              {heroExhausted ? qr.offerTier2 : qr.offerTier1}
-            </p>
-            <p className="scan-offer-label">
+  /* ════════════════════════════════════════════════════════════
+     SCREEN 2 — ACTIVATED!
+     ════════════════════════════════════════════════════════════ */
+  if (phase === "activated") {
+    return (
+      <div className="sc-page sc-page--dark sc-activated-in">
+        {/* Top bar */}
+        <div className="sc-top-bar">
+          <span className="sc-top-wordmark">PUSH</span>
+        </div>
+
+        <div className="sc-activated-wrap">
+          <h1 className="sc-activated-title">ACTIVATED!</h1>
+          <p className="sc-activated-sub">{offerText.toUpperCase()}</p>
+
+          {/* Big code box */}
+          <div
+            className="sc-code-box"
+            aria-label={`Redemption code ${code}`}
+            role="text"
+          >
+            {code}
+          </div>
+
+          {/* Countdown */}
+          <div className="sc-cdown">
+            <div className="sc-cdown__time">
+              {pad2(mins)}&nbsp;:&nbsp;{pad2(secs)}
+            </div>
+            <div className="sc-cdown__label">Remaining</div>
+          </div>
+
+          <p className="sc-activated-creator">via @{qr.creatorHandle}</p>
+          <p className="sc-activated-biz">{qr.businessName}</p>
+
+          <button className="sc-done-btn" onClick={handleDone}>
+            Done →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     SCREEN 1 — Welcome coupon ticket
+     (phase === "welcome" | "tearing")
+     ════════════════════════════════════════════════════════════ */
+  return (
+    <div className="sc-page sc-page--cream">
+      {/* FTC disclosure */}
+      <div className="sc-ftc" role="note">
+        <span className="sc-ftc__tag">#ad</span>
+        <span className="sc-ftc__text">
+          Paid partnership with {qr.businessName} · FTC §255
+        </span>
+      </div>
+
+      <div className="sc-coupon-wrap">
+        <div className="sc-coupon">
+          {/* ── LEFT: Main offer body ──────────────────── */}
+          <div className="sc-coupon__main">
+            {/* Decorative shopping icons */}
+            <ShoppingBag
+              className="sc-deco sc-deco--bag"
+              size={52}
+              strokeWidth={1.4}
+              aria-hidden
+            />
+            <ShoppingCart
+              className="sc-deco sc-deco--cart"
+              size={44}
+              strokeWidth={1.25}
+              aria-hidden
+            />
+
+            {/* Creator credit row */}
+            <div className="sc-coupon__creator">
+              <div className="sc-coupon__creator-av" aria-hidden>
+                {qr.creatorName.charAt(0).toUpperCase()}
+              </div>
+              <div className="sc-coupon__creator-info">
+                <p className="sc-coupon__creator-handle">@{qr.creatorHandle}</p>
+                <p className="sc-coupon__creator-ref">
+                  Referred by {qr.creatorName}
+                </p>
+              </div>
+            </div>
+
+            {/* Offer text */}
+            <div className="sc-coupon__offer">
+              <p className="sc-coupon__offer-eye">SPECIAL OFFER</p>
+              <h1 className="sc-coupon__offer-title">{offerText}</h1>
+            </div>
+
+            {/* Location */}
+            <div className="sc-coupon__loc">
+              <MapPin
+                size={15}
+                strokeWidth={2}
+                aria-hidden
+                className="sc-coupon__loc-pin"
+              />
+              <span className="sc-coupon__loc-biz">{qr.businessName}</span>
+              {qr.businessAddress && (
+                <span className="sc-coupon__loc-addr">
+                  &nbsp;{qr.businessAddress}
+                </span>
+              )}
+              <a
+                href={`https://maps.google.com/?q=${encodeURIComponent(qr.businessName + " " + qr.businessAddress)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sc-coupon__loc-map"
+              >
+                &rsaquo; View on Map
+              </a>
+            </div>
+          </div>
+
+          {/* ── PERFORATION ───────────────────────────── */}
+          <div className="sc-coupon__perf" aria-hidden />
+
+          {/* ── RIGHT: Stub ───────────────────────────── */}
+          <button
+            type="button"
+            className={`sc-coupon__stub${phase === "tearing" ? " is-tearing" : ""}`}
+            onClick={handleClaim}
+            aria-label="Reveal your offer"
+          >
+            {/* PUSH mini logo */}
+            <div className="sc-coupon__stub-brand">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M2 10V2h3a2.5 2.5 0 010 5H2"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+              PUSH
+            </div>
+
+            {/* Vertical badge text */}
+            <div className="sc-coupon__stub-badge">
+              {heroExhausted ? "STANDARD" : "HERO OFFER"}
+            </div>
+
+            {/* Spot count */}
+            <div className="sc-coupon__stub-spots">
               {heroExhausted
-                ? "Standard Offer"
-                : `Hero Offer · ${heroLeft} left`}
-            </p>
-          </div>
-          {/* About section below the card */}
-          <div style={{ marginTop: 24 }}>
-            <p style={st.sectionEyebrow}>(ABOUT THIS CAMPAIGN)</p>
-            <p style={st.detailsText}>{qr.description}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Creator credit ─────────────────────────────────── */}
-      <section style={st.creatorSection}>
-        <div style={st.sectionInner}>
-          <p style={st.sectionEyebrow}>(RECOMMENDED BY)</p>
-          <div style={st.creatorCard}>
-            <div style={st.creatorAvatar} aria-hidden="true">
-              {qr.creatorName.charAt(0).toUpperCase()}
+                ? "Standard offer"
+                : `${heroLeft} of ${qr.heroSlotsTotal} spot${qr.heroSlotsTotal !== 1 ? "s" : ""} left`}
             </div>
-            <div style={st.creatorInfo}>
-              <p style={st.creatorName}>{qr.creatorName}</p>
-              <p style={st.creatorHandle}>@{qr.creatorHandle}</p>
+
+            {/* Barcode */}
+            <div className="sc-coupon__barcode">
+              <Barcode id={qr.campaignId} color="rgba(255,255,255,0.65)" />
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ── Map ────────────────────────────────────────────── */}
-      <section style={st.mapSection}>
-        <div style={st.sectionInner}>
-          <p style={st.sectionEyebrow}>(FIND THEM)</p>
-          <div style={st.mapWrap}>
-            <MapView
-              campaigns={[
-                {
-                  id: qr.campaignId,
-                  title: qr.campaignTitle,
-                  business_name: qr.businessName,
-                  payout: qr.payout,
-                  spots_remaining: heroLeft,
-                  category: qr.category,
-                  lat: qr.lat,
-                  lng: qr.lng,
-                },
-              ]}
-              center={[qr.lat, qr.lng]}
-            />
-          </div>
-          <p style={st.mapAddress}>{qr.businessAddress}</p>
+            {/* Tap hint */}
+            <span className="sc-coupon__tap-hint">Tap to reveal</span>
+          </button>
         </div>
-      </section>
+      </div>
 
-      {/* ── Age gate + Consent ────────────────────────────── */}
-      <section style={st.consentSection}>
-        <div style={st.sectionInner}>
-          <label style={st.ageGate}>
-            <input
-              type="checkbox"
-              checked={isMinor}
-              onChange={(e) => {
-                setIsMinor(e.target.checked);
-                if (e.target.checked && consentTier > 1) {
-                  handleConsentChange(1);
-                }
-              }}
-              style={st.ageGateCheck}
-            />
-            <span style={st.ageGateText}>
-              I am under 18 years old
-              <small style={st.ageGateSmall}>
-                Required by COPPA / CCPA — locks consent to Tier 1 (attribution
-                only).
-              </small>
-            </span>
-          </label>
-          <ConsentPicker
-            initialTier={consentTier}
-            minor={isMinor}
-            onChange={handleConsentChange}
-            onDeclineAll={() => handleConsentChange(1)}
-            onContinue={(tier) => {
-              handleConsentChange(tier);
-              router.push(`/scan/${qrId}/verify`);
-            }}
-          />
-        </div>
-      </section>
-
-      {/* ── Footer — "Powered by Push" mono 12px brand ──────── */}
-      <footer style={st.footer}>
-        <p className="scan-powered-by">
-          Powered by <Link href="/">Push</Link> — community attribution platform
+      {/* Scan recorded indicator */}
+      {scanRecorded && (
+        <p className="sc-scan-note" role="status">
+          ✓ Visit logged via @{qr.creatorHandle}
         </p>
-      </footer>
+      )}
     </div>
   );
 }
-
-/* ── Styles ──────────────────────────────────────────────────── */
-// Inline styles keep the scan page self-contained and fast on mobile.
-// All radii / spacing follow Design.md v11 token scale.
-
-const ORANGE = "var(--ga-orange, #ff5e2b)";
-const INK = "var(--ink, #0a0a0a)";
-const INK3 = "var(--ink-3, #61605c)";
-const INK4 = "var(--ink-4, #6a6a6a)";
-const SNOW = "var(--snow, #fff)";
-const SURFACE = "var(--surface, #f8f4e8)";
-const SURFACE2 = "var(--surface-2, #f5f3ee)";
-const MIST = "var(--mist, #d8d4c8)";
-const GRAPHITE = "var(--graphite, #2c2a26)";
-
-const st = {
-  page: {
-    minHeight: "100vh",
-    background: SURFACE,
-    fontFamily: "var(--font-body)",
-    color: INK,
-  } as React.CSSProperties,
-
-  centered: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: SURFACE,
-    padding: "24px",
-  } as React.CSSProperties,
-
-  loadingText: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    color: INK4,
-  } as React.CSSProperties,
-
-  errorCard: {
-    background: SURFACE2,
-    border: `1px solid ${MIST}`,
-    borderRadius: "10px",
-    padding: "40px 32px",
-    maxWidth: "480px",
-    width: "100%",
-  } as React.CSSProperties,
-
-  errorEyebrow: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    color: "var(--brand-red, #c1121f)",
-    marginBottom: "16px",
-  } as React.CSSProperties,
-
-  errorTitle: {
-    fontFamily: "var(--font-display)",
-    fontSize: "clamp(28px, 5vw, 40px)",
-    fontWeight: 900,
-    color: INK,
-    letterSpacing: "-0.03em",
-    marginBottom: "12px",
-  } as React.CSSProperties,
-
-  errorBody: {
-    fontFamily: "var(--font-body)",
-    fontSize: "18px",
-    lineHeight: 1.55,
-    color: INK3,
-    marginBottom: "24px",
-  } as React.CSSProperties,
-
-  errorLink: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase" as const,
-    color: INK,
-    textDecoration: "none",
-    borderBottom: `1px solid ${INK}`,
-  } as React.CSSProperties,
-
-  /* FTC disclosure — ink top bar */
-  ftcBanner: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "8px 24px",
-    background: INK,
-    color: SNOW,
-  } as React.CSSProperties,
-
-  ftcTag: {
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    padding: "2px 8px",
-    background: "var(--brand-red, #c1121f)",
-    color: SNOW,
-    borderRadius: "4px",
-    flexShrink: 0,
-  } as React.CSSProperties,
-
-  ftcText: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    lineHeight: 1.4,
-    color: "rgba(255,255,255,0.7)",
-  } as React.CSSProperties,
-
-  /* Ticket wrapper — graphite bg centers card on wider screens */
-  ticketWrap: {
-    padding: "40px 24px",
-    display: "flex",
-    justifyContent: "center",
-    background: GRAPHITE,
-  } as React.CSSProperties,
-
-  /* Physical ticket — GA Orange, flat no-shadow per Design.md */
-  ticket: {
-    position: "relative" as const,
-    width: "100%",
-    maxWidth: "480px",
-    background: ORANGE,
-    borderRadius: "10px",
-    overflow: "hidden",
-    /* flat — no box-shadow per Ticket Panel spec */
-  } as React.CSSProperties,
-
-  /* Grommet corner circles — 16px, 24px inset */
-  grommet: {
-    position: "absolute" as const,
-    width: "16px",
-    height: "16px",
-    borderRadius: "50%",
-    background: GRAPHITE,
-    border: `2px solid ${INK}`,
-  } as React.CSSProperties,
-
-  /* Top bar inside ticket */
-  ticketTop: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "24px 40px 16px",
-  } as React.CSSProperties,
-
-  pushWordmark: {
-    fontFamily: "var(--font-display)",
-    fontSize: "20px",
-    fontWeight: 900,
-    color: INK,
-    letterSpacing: "-0.04em",
-  } as React.CSSProperties,
-
-  verifiedBadge: {
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    color: INK,
-    background: "rgba(10,10,10,0.12)",
-    padding: "4px 10px",
-    borderRadius: "4px",
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-  } as React.CSSProperties,
-
-  activeBadge: {
-    fontFamily: "var(--font-body)",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    color: INK,
-    background: "rgba(10,10,10,0.12)",
-    padding: "4px 10px",
-    borderRadius: "4px",
-  } as React.CSSProperties,
-
-  /* Dashed perforation — 2px dashed per Design.md Ticket Panel spec */
-  perf: {
-    borderTop: "2px dashed rgba(10,10,10,0.25)",
-    margin: "0 24px",
-  } as React.CSSProperties,
-
-  ticketBody: {
-    padding: "24px 40px",
-  } as React.CSSProperties,
-
-  ticketEyebrow: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    color: "rgba(10,10,10,0.6)",
-    marginBottom: "16px",
-  } as React.CSSProperties,
-
-  referralNote: {
-    opacity: 0.75,
-  } as React.CSSProperties,
-
-  /* Magvix Italic centered — centered allowed inside Ticket Panel */
-  merchantName: {
-    fontFamily: "var(--font-display)",
-    fontSize: "clamp(40px, 8vw, 64px)",
-    fontWeight: 900,
-    color: INK,
-    letterSpacing: "-0.04em",
-    lineHeight: 0.95,
-    margin: "0 0 8px",
-  } as React.CSSProperties,
-
-  campaignTitle: {
-    fontFamily: "var(--font-body)",
-    fontSize: "18px",
-    fontWeight: 600,
-    color: "rgba(10,10,10,0.75)",
-    marginBottom: "4px",
-    lineHeight: 1.4,
-  } as React.CSSProperties,
-
-  address: {
-    fontFamily: "var(--font-body)",
-    fontSize: "14px",
-    color: "rgba(10,10,10,0.55)",
-    marginBottom: "24px",
-  } as React.CSSProperties,
-
-  validRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  } as React.CSSProperties,
-
-  validLabel: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    textTransform: "uppercase" as const,
-    color: "rgba(10,10,10,0.5)",
-  } as React.CSSProperties,
-
-  validDate: {
-    fontFamily: "var(--font-body)",
-    fontSize: "14px",
-    fontWeight: 700,
-    color: INK,
-  } as React.CSSProperties,
-
-  /* Stub section at bottom of ticket */
-  ticketStub: {
-    padding: "24px 40px 32px",
-  } as React.CSSProperties,
-
-  offerRow: {
-    display: "flex",
-    gap: "16px",
-    marginBottom: "24px",
-    flexWrap: "wrap" as const,
-  } as React.CSSProperties,
-
-  offerBlock: {
-    flex: 1,
-    minWidth: "120px",
-  } as React.CSSProperties,
-
-  offerLabel: {
-    fontFamily: "var(--font-body)",
-    fontSize: "10px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "rgba(10,10,10,0.5)",
-    marginBottom: "4px",
-  } as React.CSSProperties,
-
-  offerText: {
-    fontFamily: "var(--font-body)",
-    fontSize: "14px",
-    fontWeight: 600,
-    color: INK,
-    lineHeight: 1.4,
-  } as React.CSSProperties,
-
-  /* Filled Ink CTA — Design.md Ticket Panel spec */
-  ctaButton: {
-    display: "block",
-    width: "100%",
-    padding: "14px 28px",
-    background: INK,
-    color: SNOW,
-    fontFamily: "var(--font-body)",
-    fontSize: "14px",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase" as const,
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    transition: "transform 150ms cubic-bezier(0.34,1.56,0.64,1)",
-  } as React.CSSProperties,
-
-  /* Below-fold sections */
-  detailsSection: {
-    padding: "48px 24px",
-    borderBottom: `1px solid ${MIST}`,
-  } as React.CSSProperties,
-
-  sectionInner: {
-    maxWidth: "480px",
-    margin: "0 auto",
-  } as React.CSSProperties,
-
-  sectionEyebrow: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    color: INK4,
-    marginBottom: "16px",
-  } as React.CSSProperties,
-
-  detailsText: {
-    fontFamily: "var(--font-body)",
-    fontSize: "18px",
-    lineHeight: 1.65,
-    color: INK3,
-  } as React.CSSProperties,
-
-  creatorSection: {
-    padding: "48px 24px",
-    background: SURFACE2,
-    borderBottom: `1px solid ${MIST}`,
-  } as React.CSSProperties,
-
-  creatorCard: {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-  } as React.CSSProperties,
-
-  creatorAvatar: {
-    width: "48px",
-    height: "48px",
-    borderRadius: "50%",
-    background: INK,
-    color: SNOW,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "var(--font-display)",
-    fontSize: "20px",
-    fontWeight: 900,
-    flexShrink: 0,
-  } as React.CSSProperties,
-
-  creatorInfo: {
-    flex: 1,
-    minWidth: 0,
-  } as React.CSSProperties,
-
-  creatorName: {
-    fontFamily: "var(--font-body)",
-    fontSize: "18px",
-    fontWeight: 700,
-    color: INK,
-    marginBottom: "2px",
-  } as React.CSSProperties,
-
-  creatorHandle: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    color: INK4,
-  } as React.CSSProperties,
-
-  mapSection: {
-    padding: "48px 24px",
-    borderBottom: `1px solid ${MIST}`,
-  } as React.CSSProperties,
-
-  mapWrap: {
-    height: "224px",
-    border: `1px solid ${MIST}`,
-    borderRadius: "10px",
-    overflow: "hidden",
-    marginBottom: "8px",
-  } as React.CSSProperties,
-
-  mapAddress: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    color: INK4,
-  } as React.CSSProperties,
-
-  consentSection: {
-    padding: "48px 24px",
-    borderBottom: `1px solid ${MIST}`,
-  } as React.CSSProperties,
-
-  ageGate: {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "12px",
-    padding: "16px",
-    marginBottom: "16px",
-    border: `1px solid ${MIST}`,
-    borderRadius: "8px",
-    background: SURFACE2,
-    cursor: "pointer",
-  } as React.CSSProperties,
-
-  ageGateCheck: {
-    marginTop: "2px",
-    width: "16px",
-    height: "16px",
-    accentColor: "var(--brand-red, #c1121f)",
-    flexShrink: 0,
-  } as React.CSSProperties,
-
-  ageGateText: {
-    display: "flex",
-    flexDirection: "column" as const,
-    fontFamily: "var(--font-body)",
-    fontSize: "14px",
-    fontWeight: 600,
-    color: INK,
-    lineHeight: 1.4,
-  } as React.CSSProperties,
-
-  ageGateSmall: {
-    fontSize: "12px",
-    fontWeight: 500,
-    color: INK4,
-    marginTop: "2px",
-  } as React.CSSProperties,
-
-  footer: {
-    padding: "24px",
-    textAlign: "center" as const,
-    borderTop: `1px solid ${MIST}`,
-  } as React.CSSProperties,
-
-  footerText: {
-    fontFamily: "var(--font-body)",
-    fontSize: "12px",
-    color: INK4,
-  } as React.CSSProperties,
-
-  footerLink: {
-    color: INK,
-    fontWeight: 700,
-    textDecoration: "none",
-  } as React.CSSProperties,
-} as const;

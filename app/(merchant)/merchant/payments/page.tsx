@@ -1,9 +1,6 @@
-import { api } from '@/lib/data/api-client';
-import PaymentsClient from './PaymentsClient';
+import { redirect } from "next/navigation";
 
-export default async function MerchantPaymentsPage() {
-  const res = await api.merchant.payments();
-  const payments = res.ok ? res.data : [];
-
-  return <PaymentsClient initialPayments={payments} />;
+// Payments merged into Finance hub — keep this redirect for any saved links.
+export default function MerchantPaymentsPage() {
+  redirect("/merchant/finance");
 }

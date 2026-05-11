@@ -1123,15 +1123,61 @@ export default function CampaignDetailPage() {
       setLoading(true);
       setError(null);
       if (isDemo) {
-        const found =
-          DEMO_CAMPAIGNS.find((c) => c.id === id) ?? DEMO_CAMPAIGNS[0];
-        setCampaign(found);
-        setCreator(DEMO_CREATOR);
-        const demoMilestone = DEMO_MILESTONE_BY_CAMPAIGN[found.id];
-        if (demoMilestone) {
-          setApplied(true);
-          setMilestone(demoMilestone);
+        const found = DEMO_CAMPAIGNS.find((c) => c.id === id);
+        if (found) {
+          setCampaign(found);
+          setCreator(DEMO_CREATOR);
+          const demoMilestone = DEMO_MILESTONE_BY_CAMPAIGN[found.id];
+          if (demoMilestone) {
+            setApplied(true);
+            setMilestone(demoMilestone);
+          }
+          setLoading(false);
+          return;
         }
+        // Not in local demo list — try playtest store via API
+        try {
+          const res = await fetch(`/api/creator/live-campaigns?id=${id}`);
+          const data = await res.json();
+          if (data.campaign) {
+            const c = data.campaign as {
+              id: string;
+              title: string;
+              description?: string;
+              cashPay: number;
+              slotsTotal: number;
+              slotsRemaining: number;
+              deadlineIso?: string;
+              merchantName: string;
+              lat?: number;
+              lng?: number;
+            };
+            setCampaign({
+              id: c.id,
+              title: c.title,
+              description: c.description ?? "",
+              business_name: c.merchantName,
+              business_address: "New York, NY",
+              payout: c.cashPay,
+              spots_total: c.slotsTotal,
+              spots_remaining: c.slotsRemaining,
+              deadline: c.deadlineIso ?? "2026-06-30",
+              status: "active",
+              category: "Food & Drink",
+              tier_required: "seed",
+              requirements: ["Create content featuring the brand"],
+              lat: c.lat ?? 40.7218,
+              lng: c.lng ?? -74.001,
+              merchant_id: "playtest-merchant",
+            });
+            setCreator(DEMO_CREATOR);
+            setLoading(false);
+            return;
+          }
+        } catch {
+          // fall through to error state
+        }
+        setError("Campaign not found.");
         setLoading(false);
         return;
       }
@@ -1186,7 +1232,22 @@ export default function CampaignDetailPage() {
     if (!campaign || !creator || applying || applied) return;
     setApplying(true);
     if (isDemo) {
-      await new Promise((r) => setTimeout(r, 600));
+      // Playtest campaigns (UUID-based, not in local DEMO_CAMPAIGNS) need a real
+      // server write so the merchant sees the application in their pool.
+      const isPlaytest = !DEMO_CAMPAIGNS.find((c) => c.id === id);
+      if (isPlaytest) {
+        try {
+          await fetch("/api/creator/apply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ campaign_id: id }),
+          });
+        } catch {
+          // best-effort — UI still proceeds
+        }
+      } else {
+        await new Promise((r) => setTimeout(r, 600));
+      }
       setApplied(true);
       setMilestone("accepted");
       setApplying(false);

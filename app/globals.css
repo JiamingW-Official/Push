@@ -339,28 +339,28 @@
   --font-body:    'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   /* v12: CS Genio Mono removed. --font-mono abolished. Darky = labels/buttons/nav. Open Sans = body/inputs. */
 
-  /* ---- Type Scale (v12.1 — floor lifted 12→14px, Design.md § 3.1 2026-05-05) ---- */
-  --text-display: clamp(64px,  9vw, 200px);  /* Magvix Hero — landing only, 1 per page */
-  --text-h1:      clamp(40px,  5vw, 72px);
-  --text-h2:      40px;
-  --text-h3:      28px;
-  --text-h4:      24px;
-  --text-body:    18px;  /* body-small tier — paragraph 2 (body p1 = 20px via p{} rule) */
-  --text-small:   16px;  /* was 14px — small/label tier */
-  --text-eyebrow: 14px;  /* was 12px — caption/eyebrow/table-header tier */
-  /* --text-caption REMOVED — floor is now 14px (--text-eyebrow); no sub-14 exceptions */
+  /* ---- Type Scale (v12.2 — scaled for 1728px primary viewport, ~10-15% reduction) ---- */
+  --text-display: clamp(48px,  7vw, 120px);  /* Magvix Hero — landing only, 1 per page */
+  --text-h1:      clamp(36px,  4vw,  60px);
+  --text-h2:      36px;
+  --text-h3:      24px;
+  --text-h4:      20px;
+  --text-body:    16px;  /* body-small tier */
+  --text-small:   14px;
+  --text-eyebrow: 13px;
+  /* --text-caption REMOVED — floor is now 13px (--text-eyebrow) */
 
-  /* ---- Semantic font-size tokens (v12.1) ---- */
-  --fs-body:         20px;  /* paragraph 1 — unchanged */
-  --fs-body-small:   18px;  /* paragraph 2 — was 16px */
-  --fs-table-body:   18px;  /* editorial table body cell */
-  --fs-small:        16px;  /* small / label */
-  --fs-numbered:     16px;  /* numbered section marker */
-  --fs-stat-caption: 16px;  /* stat card caption (below KPI numeral) */
-  --fs-eyebrow:      14px;  /* eyebrow canonical + parenthetical */
-  --fs-caption:      14px;  /* caption — floor value, exception removed */
-  --fs-table-header: 14px;  /* editorial table column header */
-  --fs-photo-meta:   14px;  /* photo card metadata overlay */
+  /* ---- Semantic font-size tokens (v12.2) ---- */
+  --fs-body:         18px;  /* paragraph 1 */
+  --fs-body-small:   16px;  /* paragraph 2 */
+  --fs-table-body:   16px;  /* editorial table body cell */
+  --fs-small:        14px;  /* small / label */
+  --fs-numbered:     14px;  /* numbered section marker */
+  --fs-stat-caption: 14px;  /* stat card caption (below KPI numeral) */
+  --fs-eyebrow:      13px;  /* eyebrow canonical + parenthetical */
+  --fs-caption:      13px;  /* caption floor */
+  --fs-table-header: 13px;  /* editorial table column header */
+  --fs-photo-meta:   13px;  /* photo card metadata overlay */
 
   /* ---- Grid base unit ---- */
   --grid:      8px;   /* 8px grid base — all spacing must snap to multiples */
@@ -410,10 +410,10 @@
   --space-14: 240px;
 
   /* Type scale supplements (v11 had no h5/body-sm/kpi-numeral aliases) */
-  --text-body-sm:    16px;
-  --text-h5:         20px;
-  --text-hero:       clamp(64px, 9vw, 200px);   /* v12 Magvix Hero range — synced with --text-display */
-  --text-kpi-numeral:clamp(40px, 5vw, 72px);    /* § 3.1 KPI numeral */
+  --text-body-sm:    14px;
+  --text-h5:         18px;
+  --text-hero:       clamp(48px, 7vw, 120px);   /* v12.2 Magvix Hero — synced with --text-display */
+  --text-kpi-numeral:clamp(32px, 3.8vw, 56px);  /* § 3.1 KPI numeral */
 
   /* Liquid Glass surfaces (warm + dark variants for floating tiles) */
   --lg-surface:      rgba(255, 255, 255, 0.22);
@@ -448,7 +448,7 @@ body {
     radial-gradient(ellipse 800px 400px at 70% 85%, rgba(93, 74, 107, 0.05), transparent 70%),
     linear-gradient(180deg, var(--surface) 0%, var(--surface) 40%, var(--surface-2) 100%);
   background-attachment: fixed;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--ink-3);
   line-height: 1.55;
   font-feature-settings: "kern", "liga", "calt";

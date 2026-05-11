@@ -9,10 +9,12 @@
 .set-hub {
   /* Horizontal padding + symmetric 10% L/R bleed are owned by
      components/shared/hub-shell.css. */
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 120px;
   background: var(--snow, #fff);
 }
+
+/* Back-button styling lives in lumin-shell.css → .hub-back (unified). */
 
 .set-pulse {
   display: grid;
@@ -309,7 +311,7 @@
 .set-sub__title {
   font-family: "Magvix", Georgia, serif;
   font-style: italic;
-  font-size: clamp(40px, 5vw, 64px);
+  font-size: clamp(28px, 3.2vw, 48px);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.022em;
@@ -450,7 +452,7 @@
 }
 
 .set-sub__title {
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.022em;
 }

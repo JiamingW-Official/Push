@@ -119,7 +119,7 @@ const CREATORS = [
   "@alexchen.nyc",
   "@rachelkimnyc",
   "@tompark.nyc",
-  "@mayaj.creates",
+  "@alexj.creates",
   "@jessicawang",
   "@nycfoodie",
   "@brooklynbite",

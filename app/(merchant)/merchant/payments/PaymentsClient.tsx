@@ -11,7 +11,25 @@ import {
   StatusBadge,
 } from "@/components/merchant/shared";
 import { useToast } from "@/components/toast/Toaster";
+import { Sparkline } from "@/components/charts/Sparkline";
 import "./payments.css";
+
+// Mock 30-day curves: balance trends down as charges hit, MTD spend grows,
+// pending-auths waver. Pure illustrative data for the hero band.
+const PAY_BALANCE_30D = [
+  5200, 5120, 5040, 4960, 4880, 4800, 4720, 4640, 4520, 4400, 4280, 4160, 4040,
+  3920, 3800, 3680, 3560, 3440, 3320, 3200, 3080, 2960, 2840, 2720, 2600, 2480,
+  2360, 2240, 2120, 2000,
+];
+const PAY_MTD_30D = [
+  40, 90, 150, 210, 280, 360, 440, 520, 610, 700, 790, 880, 970, 1060, 1160,
+  1260, 1360, 1460, 1560, 1660, 1760, 1860, 1960, 2070, 2180, 2290, 2400, 2510,
+  2620, 2740,
+];
+const PAY_PENDING_30D = [
+  120, 180, 140, 220, 260, 200, 280, 320, 240, 300, 360, 280, 220, 290, 350,
+  410, 340, 280, 360, 420, 380, 320, 400, 460, 380, 300, 360, 420, 380, 340,
+];
 
 type PaymentBrand = "visa" | "mastercard" | "amex";
 type TransactionType = "topup" | "campaign-charge" | "refund" | "adjustment";
@@ -370,16 +388,27 @@ export default function PaymentsClient({
             {formatMoney(currentBalance)}
           </p>
           <p className="pay-hero-tile__caption">Available to fund campaigns</p>
+          <Sparkline
+            data={PAY_BALANCE_30D}
+            width={220}
+            height={36}
+            trend="auto"
+            showArea
+            showLastDot
+            className="pay-hero-tile__spark"
+          />
         </article>
         <KPICard
           label="MTD Spend"
           value={formatMoney(monthToDateSpend)}
           delay={100}
+          sparkline={PAY_MTD_30D}
         />
         <KPICard
           label="Pending Authorizations"
           value={formatMoney(pendingAuthorizations)}
           delay={160}
+          sparkline={PAY_PENDING_30D}
         />
       </div>
 
@@ -499,6 +528,7 @@ export default function PaymentsClient({
               if (transactions.length === 0) {
                 return (
                   <EmptyState
+                    artKind="transactions"
                     title="No transactions yet"
                     description="Top-ups, campaign charges, refunds, and adjustments all post here as they happen. Top up your wallet to start spending against live campaigns."
                     ctaLabel="Top up balance"
@@ -509,6 +539,8 @@ export default function PaymentsClient({
               if (activeFilter === "topup") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="No top-ups in this view"
                     description="You haven't topped up your wallet yet. Add funds to keep campaigns running without interruption."
                     ctaLabel="Top up balance"
@@ -519,6 +551,8 @@ export default function PaymentsClient({
               if (activeFilter === "campaign-charge") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="No campaign charges yet"
                     description="Charges post here each time a verified scan converts. Reset to see your full transaction history."
                     ctaLabel="Show all transactions"
@@ -529,6 +563,8 @@ export default function PaymentsClient({
               if (activeFilter === "refund") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="No refunds on file"
                     description="Refunds appear here when a charge is reversed. A clean record is a good sign."
                     ctaLabel="Show all transactions"
@@ -539,6 +575,8 @@ export default function PaymentsClient({
               if (activeFilter === "adjustment") {
                 return (
                   <EmptyState
+                    artKind="filter"
+                    artVariant="muted"
                     title="No adjustments yet"
                     description="Manual credits and corrections from Push ops appear here. Empty means your ledger is in sync."
                     ctaLabel="Show all transactions"
@@ -548,6 +586,8 @@ export default function PaymentsClient({
               }
               return (
                 <EmptyState
+                  artKind="filter"
+                  artVariant="muted"
                   title="Nothing in this view"
                   description="No transactions match the current filter. Reset to see your full ledger."
                   ctaLabel="Show all transactions"

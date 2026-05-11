@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/merchant/shared";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { buildMerchantActivity } from "@/lib/dashboard/activity";
 import { ActiveCampaigns } from "./sections/ActiveCampaigns";
 import { KPIGrid } from "./sections/KPIGrid";
 import { RecentApplications } from "./sections/RecentApplications";
@@ -21,6 +24,15 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ initialData }: DashboardClientProps) {
+  const activityEvents = useMemo(
+    () =>
+      buildMerchantActivity({
+        applications: initialData.applications,
+        campaigns: initialData.campaigns,
+      }),
+    [initialData.applications, initialData.campaigns],
+  );
+
   return (
     <div className="db-dashboard-page anim-page">
       <PageHeader
@@ -40,6 +52,8 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
         mtdSpend={initialData.mtdSpend}
         totalReach={initialData.totalReach}
       />
+
+      <RecentActivity events={activityEvents} limit={10} />
 
       <ActiveCampaigns campaigns={initialData.campaigns} />
       <RecentApplications applications={initialData.applications} />

@@ -5,6 +5,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import "../analytics.css";
 import {
   SUMMARY,
@@ -26,7 +27,8 @@ export default function FansDetailPage() {
   return (
     <div className="an2 an2-detail">
       <div style={{ paddingTop: 32 }}>
-        <Link href="/creator/analytics" className="an2-back">
+        <Link href="/creator/analytics" className="hub-back">
+          <ArrowLeft size={14} strokeWidth={2.25} />
           Analytics
         </Link>
 

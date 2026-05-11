@@ -83,11 +83,11 @@ const NAMED_ENTRIES: LedgerEntry[] = [
     id: "txn_004",
     timestamp: iso(2025, 4, 7, 11, 0),
     type: "payout",
-    counterparty: "@maya_eats_nyc",
+    counterparty: "@alex_eats_nyc",
     amount: -40,
     status: "completed",
     stripe_ref: stripeRef("po", 4),
-    creator_id: "cre_maya",
+    creator_id: "cre_alex",
     campaign_id: "cmp_bsc_apr",
   },
   {
@@ -329,11 +329,11 @@ const NAMED_ENTRIES: LedgerEntry[] = [
     id: "txn_205",
     timestamp: iso(2026, 4, 5, 8, 30),
     type: "payout",
-    counterparty: "@maya_eats_nyc",
+    counterparty: "@alex_eats_nyc",
     amount: -80,
     status: "completed",
     stripe_ref: stripeRef("po", 205),
-    creator_id: "cre_maya",
+    creator_id: "cre_alex",
     campaign_id: "cmp_bsc_apr26",
   },
   {
@@ -475,7 +475,7 @@ const MERCHANTS = [
 ];
 
 const CREATORS = [
-  "@maya_eats_nyc",
+  "@alex_eats_nyc",
   "@streetfoodchris",
   "@lucywanders",
   "@nycfoodscout",

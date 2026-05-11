@@ -108,11 +108,11 @@
   margin: 0 0 16px;
 }
 
-/* Magvix Hero — v12 spec: clamp(64px, 9vw, 200px), lh 0.85, ls -0.02em */
+/* Magvix Hero — v12.2: clamp(48px, 7vw, 120px) for 1728px primary viewport */
 .hp-hero-title {
   font-family: var(--font-hero);
   font-weight: normal;
-  font-size: clamp(64px, 9vw, 200px);
+  font-size: clamp(48px, 7vw, 120px);
   letter-spacing: -0.02em;
   line-height: 0.85;
   color: var(--snow);

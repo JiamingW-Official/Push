@@ -1,0 +1,143 @@
+/* ============================================================
+   /creator/work/submit/[gigId] · Stage 06 — Submit
+   Stage-specific: asset roster + posting schedule rows.
+   Layout / cards / buttons / banner / elig come from .stg__*.
+   ============================================================ */
+
+/* ── Asset roster — 1-col narrow, 2-col wide ─────────── */
+.sub__assets {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0; padding: 0;
+  list-style: none;
+}
+@media (min-width: 1280px) {
+  .sub__assets { grid-template-columns: 1fr 1fr; }
+}
+
+.sub__asset {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 16px;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  align-items: flex-start;
+}
+.sub__asset-num {
+  width: 40px; height: 40px;
+  border-radius: var(--r-sm);
+  background: var(--ink); color: var(--snow);
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800;
+  flex-shrink: 0;
+}
+.sub__asset-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sub__asset-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.sub__asset-type {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 800;
+  color: var(--ink);
+  text-transform: capitalize;
+}
+.sub__asset-platform {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3); color: var(--ink-2);
+}
+.sub__asset-platform--instagram { background: rgba(232, 68, 125, 0.12); color: var(--editorial-pink); }
+.sub__asset-platform--tiktok { background: rgba(20, 19, 18, 0.08); color: var(--ink); }
+.sub__asset-platform--rednote { background: var(--brand-red-tint); color: var(--brand-red); }
+.sub__asset-time {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-left: auto;
+}
+.sub__asset-caption {
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+.sub__asset-tags {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--accent-blue);
+  margin: 0;
+}
+.sub__asset-flags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.sub__flag {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+}
+.sub__flag--ok { background: rgba(52, 199, 89, 0.12); color: var(--success-dark); }
+.sub__flag--warn { background: rgba(255, 149, 0, 0.12); color: var(--ink-2); }
+
+.sub__asset-edit {
+  align-self: flex-start;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--r-sm);
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 180ms var(--ease-spring),
+              background 180ms var(--ease-out-soft);
+}
+.sub__asset-edit:hover { transform: translate(1px, 1px); background: var(--surface-3); }
+
+/* ── DisclosureBot warning ─────────────────────────────── */
+.sub__warn {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  background: rgba(255, 149, 0, 0.12);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 13px; line-height: 1.5;
+  color: var(--ink-2);
+}
+.sub__warn strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── Posting schedule rows ─────────────────────────────── */
+.sub__schedule { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+
+.sub__sched-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  align-items: center;
+}
+.sub__sched-time {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700;
+  color: var(--ink);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.sub__sched-body { display: flex; gap: 8px; align-items: center; }
+.sub__sched-type {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-3);
+  text-transform: capitalize;
+}

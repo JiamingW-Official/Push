@@ -1,168 +1,150 @@
-/* Discover detail — single-column reading layout, ~720px max width.
-   Placeholder until the full apply flow ships. */
+/* ============================================================
+   Discover detail · Stage 02 · Qualify — stage-specific only.
+   v20 · 2026-05-08 — refactored to Stage primitives. Shared
+   shell / header / chips / cards / rail cards / buttons /
+   eligibility / pay rows / risk flags now come from .stg__*.
+   This file only contains Qualify-unique patterns: hero img,
+   deliverable rows, meta grid, refs grid, big $/hr stat,
+   mobile bottom CTA. ~80 lines down from ~350.
+   ============================================================ */
 
-.disc-detail {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 32px 24px 96px;
-  font-family: var(--font-body);
-}
-
-.disc-detail-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-3);
-  text-decoration: none;
-  margin-bottom: 24px;
-  transition: color 200ms ease;
-}
-.disc-detail-back:hover {
-  color: var(--ink);
-}
-
-.disc-detail-hero {
+/* Hero photograph (16:9, rounded, soft shadow) */
+.qual__hero {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 14px;
-  margin-bottom: 32px;
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 8px 22px rgba(0, 0, 0, 0.10);
+  border-radius: var(--r-2xl);
+  background: var(--surface-3);
+  box-shadow: var(--shadow-1);
+  display: block;
+  margin-bottom: 24px;
 }
 
-.disc-detail-head {
-  margin-bottom: 16px;
-}
-
-.disc-detail-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin: 0 0 12px;
-}
-
-.disc-detail-title {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4.5vw, 48px);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  color: var(--ink);
-  margin: 0 0 12px;
-}
-
-.disc-detail-merchant {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ink-3);
+/* Deliverable rows — 1-col on narrow, 2-col on wide for less vertical scroll */
+.qual__deliv-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
-
-.disc-detail-tagline {
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 1.55;
+@media (min-width: 1024px) {
+  .qual__deliv-list { grid-template-columns: 1fr 1fr; }
+}
+.qual__deliv {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+}
+.qual__deliv-count {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.qual__deliv-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.qual__deliv-type {
+  font-family: var(--font-body);
+  font-size: 16px; font-weight: 600;
   color: var(--ink-2);
-  margin: 24px 0 32px;
+  text-transform: capitalize;
 }
-
-.disc-detail-pay {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 20px 0;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
-  margin-bottom: 32px;
-}
-
-.disc-detail-pay-headline {
-  font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-}
-
-.disc-detail-pay-estimate,
-.disc-detail-pay-total {
-  font-size: 14px;
+.qual__deliv-meta {
+  font-family: var(--font-body);
+  font-size: 13px;
   color: var(--ink-4);
 }
-
-.disc-detail-section-title {
+.qual__deliv-pay {
   font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 18px; font-weight: 700;
   color: var(--ink);
-  margin: 0 0 12px;
+  font-variant-numeric: tabular-nums;
 }
 
-.disc-detail-deliverables {
-  margin-bottom: 32px;
-}
-
-.disc-detail-deliverable-list {
-  margin: 0;
-  padding-left: 20px;
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--ink-3);
-}
-
-.disc-detail-meta {
+/* Logistics meta grid */
+.qual__meta-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px 24px;
-  padding: 24px 0;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
-  margin-bottom: 32px;
+  gap: 24px 32px;
 }
-.disc-detail-meta > div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+@media (min-width: 640px) {
+  .qual__meta-grid { grid-template-columns: repeat(4, 1fr); }
 }
-.disc-detail-meta-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.qual__meta-item { display: flex; flex-direction: column; gap: 6px; }
+.qual__meta-label {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-4);
 }
-.disc-detail-meta-value {
-  font-size: 15px;
-  font-weight: 500;
+.qual__meta-value {
+  font-family: var(--font-body);
+  font-size: 16px; font-weight: 600;
   color: var(--ink);
 }
 
-/* Apply button — pill, theme-styled. Placeholder until the real apply flow ships. */
-.disc-detail-apply {
-  width: 100%;
-  height: 52px;
-  border: none;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--brand-red) 0%, #a21015 100%);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -1.5px 0 rgba(0, 0, 0, 0.18),
-    0 1px 2px rgba(0, 0, 0, 0.06);
-  transition: filter 200ms ease;
+/* Reference frames grid */
+.qual__refs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
-.disc-detail-apply:hover {
-  filter: brightness(1.06);
+.qual__ref {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  display: block;
+}
+
+/* Pay-anatomy big numerals (rendered inside .stg__rail-card--primary) */
+.qual__pay-headline {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--snow);
+  line-height: 1;
+  margin: 0;
+}
+.qual__pay-estimate {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin: 0;
+}
+
+/* Effective $/hr big numeral */
+.qual__rate-num {
+  font-family: var(--font-display);
+  font-size: 40px; font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+/* Mobile bottom CTA strip — only visible <1024px */
+.qual__mobile-cta { display: none; }
+@media (max-width: 1023px) {
+  .qual__mobile-cta {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 12px 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border-top: 1px solid var(--hairline);
+    z-index: 20;
+    display: flex; gap: 8px;
+  }
+  /* Bottom padding on shell so content doesn't hide behind CTA */
+  .stg { padding-bottom: 120px; }
 }

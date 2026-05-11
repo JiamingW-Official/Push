@@ -72,7 +72,7 @@ const DEMO_CAMPAIGN_RECORDS: CampaignRecord[] = [
       description: 'Free signature latte',
     },
     creators: [
-      { id: 'cr-1', name: 'Maya Johnson', tier: 'proven', roi: 3.4 },
+      { id: 'cr-1', name: 'Alex Johnson', tier: 'proven', roi: 3.4 },
       { id: 'cr-2', name: 'Theo Park', tier: 'operator', roi: 2.9 },
       { id: 'cr-3', name: 'Sofia Martinez', tier: 'closer', roi: 4.2 },
     ],

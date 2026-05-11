@@ -29,6 +29,7 @@ import {
   User,
   Wallet,
   MessageCircle,
+  Plug,
   type LucideProps,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -60,7 +61,8 @@ export type IconKey =
   | "settings"
   | "bell"
   | "user"
-  | "cohorts";
+  | "cohorts"
+  | "integrations";
 
 const ICON_PROPS: LucideProps = {
   size: 22,
@@ -96,6 +98,7 @@ const MAP: Record<IconKey, (props: LucideProps) => ReactNode> = {
   wallet: (p) => <Wallet {...p} />,
   messages: (p) => <MessageCircle {...p} />,
   user: (p) => <User {...p} />,
+  integrations: (p) => <Plug {...p} />,
 };
 
 export function Icon({ name }: { name: IconKey }): ReactNode {

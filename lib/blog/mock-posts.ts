@@ -113,7 +113,7 @@ With Push, merchants pay a per-visit rate set by themselves — typically $10–
 
 Digital marketing optimizes for proxies — likes, comments, shares, saves. These correlate weakly, at best, with the metric local businesses actually care about: people in the room.
 
-Push collapses the measurement gap. Instead of inferring that a post "probably" drove some traffic, you know — with certainty — that @maya.eats.nyc drove 12 verified visits last Tuesday, and those 12 visits generated $780 in documented revenue.
+Push collapses the measurement gap. Instead of inferring that a post "probably" drove some traffic, you know — with certainty — that @alex.eats.nyc drove 12 verified visits last Tuesday, and those 12 visits generated $780 in documented revenue.
 
 That's not a metric. That's a fact. And facts are what serious businesses make decisions on.
 
@@ -170,7 +170,7 @@ Within 6 hours, Push's matching algorithm had suggested 7 creators from the loca
 
 | Creator | Score | Recent visits driven | Neighborhood |
 |---------|-------|---------------------|-------------|
-| @maya.eats.nyc | 94 | 28 | Williamsburg |
+| @alex.eats.nyc | 94 | 28 | Williamsburg |
 | @brooklyn_bites | 87 | 19 | Bushwick |
 | @noodlenycofficial | 91 | 22 | Greenpoint |
 
@@ -180,7 +180,7 @@ Each creator received a unique QR code embedded in their campaign brief. They we
 
 Results after 7 days:
 
-- @maya.eats.nyc: 23 QR-verified visits, $736 in attributed revenue
+- @alex.eats.nyc: 23 QR-verified visits, $736 in attributed revenue
 - @brooklyn_bites: 14 QR-verified visits, $448 in attributed revenue
 - @noodlenycofficial: 10 QR-verified visits, $320 in attributed revenue
 
@@ -192,13 +192,13 @@ Net ROI: the restaurant paid $1,504 to generate $1,504 in documented first-visit
 
 The unexpected finding wasn't the volume — it was the quality. QR-verified customers spend 23% more than walk-in customers, possibly because the recommendation from a trusted creator primes them to "experience" the meal rather than just eat it.
 
-Jin: *"We had one table of four that came specifically because of maya's video. They spent $185. That's not a click. That's a table."*
+Jin: *"We had one table of four that came specifically because of alex's video. They spent $185. That's not a click. That's a table."*
 
 ## What We Learned
 
 Three insights from this campaign that apply to any restaurant running Push:
 
-**1. Creator-neighborhood match outperforms follower count.** @maya.eats.nyc has 8,200 followers. @noodlenycofficial has 22,000. Maya drove 2.3× more verified visits. Neighborhood familiarity matters more than reach.
+**1. Creator-neighborhood match outperforms follower count.** @alex.eats.nyc has 8,200 followers. @noodlenycofficial has 22,000. Alex drove 2.3× more verified visits. Neighborhood familiarity matters more than reach.
 
 **2. Optimal visit window is Tuesday–Thursday.** QR scan rates peak during weekday lunch and early dinner. Creators who post Tuesday morning see the best same-day conversion.
 

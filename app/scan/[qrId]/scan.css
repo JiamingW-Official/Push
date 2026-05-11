@@ -378,3 +378,421 @@
     overflow-x: hidden;
   }
 }
+
+/* ============================================================
+   v4 · 3-Screen Scan Flow — Premium Redesign
+   Screen 1: Warm cream page · horizontal ticket · dark ink stub
+   Screen 2: Deep ink page · cream code box · red CTA
+   Screen 3: White page · branded card fan · bold Enjoy!
+   ============================================================ */
+
+/* ── Page shells ─────────────────────────────────────────────── */
+.sc-page {
+  min-height: 100svh;
+  font-family: var(--font-body);
+  color: var(--ink, #1a1916);
+  overflow-x: hidden;
+}
+
+.sc-page--cream {
+  background: #f5f0e4;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 92% 8%,  rgba(193,18,31,0.07)  0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at  8% 92%, rgba(191,161,112,0.14) 0%, transparent 55%);
+}
+
+.sc-page--white { background: #ffffff; }
+
+.sc-page--dark {
+  background: #1a1916;
+  background-image:
+    radial-gradient(ellipse 110% 55% at 50% -5%, rgba(193,18,31,0.22) 0%, transparent 60%);
+}
+
+/* Loading / error */
+.sc-center {
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px; padding: 24px;
+}
+.sc-center--cream { background: #f5f0e4; }
+
+.sc-logo-text {
+  font-family: var(--font-display, sans-serif);
+  font-size: 40px; font-weight: 900;
+  color: var(--ink, #1a1916); letter-spacing: -0.04em; margin: 0;
+}
+.sc-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(26,25,22,0.10);
+  border-top-color: var(--brand-red, #c1121f);
+  border-radius: 50%;
+  animation: sc-spin 700ms linear infinite;
+}
+@keyframes sc-spin { to { transform: rotate(360deg); } }
+
+.sc-err-card {
+  background: #ffffff; border-radius: 20px;
+  padding: 48px 40px; max-width: 400px; width: 100%;
+  display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+}
+.sc-err-eye {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--brand-red, #c1121f); margin: 0;
+}
+.sc-err-title {
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(24px, 6vw, 32px); font-weight: 900;
+  color: var(--ink, #1a1916); letter-spacing: -0.03em;
+  line-height: 1.1; margin: 0;
+}
+.sc-err-body { font-size: 16px; line-height: 1.55; color: var(--ink-3, #61605c); margin: 0; }
+.sc-err-link {
+  font-size: 13px; font-weight: 700;
+  color: var(--brand-red, #c1121f);
+  text-decoration: underline; text-underline-offset: 3px;
+}
+
+/* ── Top bar (Screens 2 & 3) ─────────────────────────────────── */
+.sc-top-bar {
+  padding: 28px 28px 0;
+  display: flex; align-items: center;
+}
+.sc-top-wordmark {
+  font-family: var(--font-display, sans-serif);
+  font-size: 24px; font-weight: 900; letter-spacing: -0.04em;
+  color: var(--ink, #1a1916);
+}
+.sc-page--dark .sc-top-wordmark { color: rgba(255,255,255,0.88); }
+
+/* ── FTC banner ──────────────────────────────────────────────── */
+.sc-ftc {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 22px;
+  font-size: 11px; color: rgba(26,25,22,0.38);
+  letter-spacing: 0.01em;
+}
+.sc-ftc__tag {
+  font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: rgba(26,25,22,0.55);
+}
+.sc-ftc__text { color: rgba(26,25,22,0.40); }
+
+/* ════════════════════════════════════════════════════════════════
+   SCREEN 1 — Coupon ticket
+   ════════════════════════════════════════════════════════════════ */
+.sc-coupon-wrap {
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 20px 56px;
+  min-height: calc(100svh - 36px);
+}
+
+.sc-coupon {
+  display: flex; flex-direction: row;
+  width: 100%; max-width: 520px;
+  border-radius: 22px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.85) inset,
+    0 4px 12px rgba(0,0,0,0.06),
+    0 16px 48px rgba(0,0,0,0.12),
+    0 32px 80px rgba(0,0,0,0.10);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Main offer body */
+.sc-coupon__main {
+  flex: 1; min-width: 0;
+  padding: 28px 16px 28px 24px;
+  display: flex; flex-direction: column;
+  gap: 12px;
+  position: relative; overflow: hidden;
+  min-height: 320px;
+  background: linear-gradient(148deg, #faf6f0 0%, #f2ece0 100%);
+}
+
+/* Shopping bag — large watermark top-right */
+.sc-deco {
+  position: absolute;
+  pointer-events: none;
+}
+.sc-deco--bag {
+  top: -10px; right: -10px;
+  color: var(--brand-red, #c1121f);
+  opacity: 0.07;
+  width: 110px !important; height: 110px !important;
+}
+/* Remove the cart icon */
+.sc-deco--cart { display: none; }
+
+/* Creator row */
+.sc-coupon__creator {
+  display: flex; align-items: center; gap: 10px;
+  padding-left: 0;
+}
+.sc-coupon__creator-av {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #bfa170;
+  color: #ffffff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(191,161,112,0.40);
+}
+.sc-coupon__creator-info { display: flex; flex-direction: column; gap: 1px; }
+.sc-coupon__creator-handle {
+  font-size: 13px; font-weight: 800;
+  color: var(--ink, #1a1916); margin: 0; line-height: 1.3;
+}
+.sc-coupon__creator-ref {
+  font-size: 11px; color: rgba(26,25,22,0.45); margin: 0; line-height: 1.3;
+}
+
+/* Offer */
+.sc-coupon__offer {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; gap: 6px;
+}
+.sc-coupon__offer-eye {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-red, #c1121f); margin: 0;
+}
+.sc-coupon__offer-title {
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(24px, 7.5vw, 44px); font-weight: 900;
+  line-height: 1.0; letter-spacing: -0.03em;
+  color: var(--ink, #1a1916); margin: 0;
+  word-break: break-word;
+}
+
+/* Location */
+.sc-coupon__loc {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 3px;
+  font-size: 11px; color: rgba(26,25,22,0.50);
+}
+.sc-coupon__loc-pin { flex-shrink: 0; color: rgba(26,25,22,0.35); }
+.sc-coupon__loc-biz { font-weight: 700; color: var(--ink, #1a1916); }
+.sc-coupon__loc-addr { color: rgba(26,25,22,0.45); }
+.sc-coupon__loc-map {
+  display: block; width: 100%;
+  font-size: 11px; font-weight: 700;
+  color: var(--brand-red, #c1121f);
+  text-decoration: none; margin-top: 2px;
+}
+
+/* Perforation — subtle ink dashes */
+.sc-coupon__perf {
+  width: 1.5px; flex-shrink: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(26,25,22,0.20) 0px,
+    rgba(26,25,22,0.20) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  margin: 24px 0;
+}
+
+/* Stub — dark ink background */
+.sc-coupon__stub {
+  width: 100px; flex-shrink: 0;
+  padding: 20px 12px 20px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  background: #1a1916;
+  border: none; cursor: pointer;
+  position: relative;
+  transform-origin: left center;
+  transition: none;
+}
+.sc-coupon__stub.is-tearing {
+  animation: sc-tear-off 0.72s cubic-bezier(0.55, 0, 0.55, 1) forwards;
+}
+@keyframes sc-tear-off {
+  0%   { transform: translateX(0) rotate(0deg); opacity: 1; }
+  60%  { transform: translateX(20%) rotate(4deg); opacity: 1; }
+  100% { transform: translateX(115%) rotate(14deg); opacity: 0; }
+}
+
+.sc-coupon__stub-brand {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 10px; font-weight: 900; letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.80);
+}
+.sc-coupon__stub-badge {
+  writing-mode: vertical-rl; text-orientation: mixed;
+  font-size: 9px; font-weight: 800; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.70);
+  transform: rotate(180deg);
+  flex: 1;
+}
+.sc-coupon__stub-spots {
+  writing-mode: vertical-rl; text-orientation: mixed;
+  font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.06em;
+  transform: rotate(180deg);
+}
+.sc-coupon__barcode { overflow: hidden; }
+.sc-coupon__tap-hint {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.30);
+}
+
+.sc-scan-note {
+  text-align: center; font-size: 12px; font-weight: 600;
+  color: #15803d; padding: 8px 24px 20px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCREEN 2 — ACTIVATED! (dark page)
+   ════════════════════════════════════════════════════════════════ */
+@keyframes sc-activated-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.sc-activated-in {
+  animation: sc-activated-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.sc-activated-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  padding: 48px 28px 72px;
+  gap: 20px;
+}
+
+.sc-activated-title {
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(56px, 15vw, 96px); font-weight: 900;
+  letter-spacing: -0.04em; line-height: 1;
+  color: rgba(255,255,255,0.95); margin: 0;
+}
+.sc-activated-sub {
+  font-size: clamp(11px, 3vw, 14px); font-weight: 700;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: rgba(255,255,255,0.38); margin: 0;
+}
+
+/* Code box — warm cream card on dark bg */
+.sc-code-box {
+  width: 100%; max-width: 340px;
+  background: #f8f4e8;
+  border-radius: 18px;
+  padding: 32px 16px;
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(52px, 15vw, 80px); font-weight: 900;
+  letter-spacing: 0.18em; color: #1a1916;
+  line-height: 1;
+  user-select: all;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 8px 32px rgba(0,0,0,0.40),
+    0 2px 8px rgba(0,0,0,0.30);
+}
+
+/* Countdown */
+.sc-cdown { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.sc-cdown__time {
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(40px, 11vw, 60px); font-weight: 800;
+  letter-spacing: 0.04em; color: rgba(255,255,255,0.88); line-height: 1;
+}
+.sc-cdown__label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(255,255,255,0.32);
+}
+
+.sc-activated-creator { font-size: 13px; color: rgba(255,255,255,0.32); margin: 0; }
+.sc-activated-biz {
+  font-family: var(--font-display, sans-serif);
+  font-size: 22px; font-weight: 700;
+  color: rgba(255,255,255,0.88); letter-spacing: -0.02em; margin: 0;
+}
+
+.sc-done-btn {
+  padding: 16px 52px; border-radius: 8px;
+  background: var(--brand-red, #c1121f); color: #ffffff;
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: none; cursor: pointer; margin-top: 4px;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sc-done-btn:hover { transform: translate(2px, 2px); }
+
+/* ════════════════════════════════════════════════════════════════
+   SCREEN 3 — Enjoy!
+   ════════════════════════════════════════════════════════════════ */
+.sc-enjoy-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  padding: 40px 32px 80px; gap: 20px;
+}
+
+/* Card fan — branded colors */
+.sc-fan {
+  position: relative; width: 250px; height: 200px;
+  flex-shrink: 0;
+}
+.sc-fan__card {
+  position: absolute;
+  width: 180px; height: 130px;
+  border-radius: 22px;
+  left: 50%; top: 50%;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.10);
+}
+.sc-fan__card--a {
+  background: #c1121f;
+  transform: translate(-52%, -45%) rotate(-16deg);
+}
+.sc-fan__card--b {
+  background: #bfa170;
+  transform: translate(-50%, -52%) rotate(-4deg);
+}
+.sc-fan__card--c {
+  background: #1a1916;
+  transform: translate(-42%, -55%) rotate(9deg);
+}
+
+.sc-discover-link {
+  font-size: 14px; font-weight: 700;
+  color: var(--brand-red, #c1121f); text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: transform 150ms ease;
+}
+.sc-discover-link:hover { transform: translate(2px, 0); }
+
+.sc-enjoy-title {
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(72px, 20vw, 112px); font-weight: 900;
+  letter-spacing: -0.05em; line-height: 0.95;
+  color: var(--ink, #1a1916); margin: 0;
+}
+
+.sc-enjoy-meta {
+  font-size: 13px; color: rgba(26,25,22,0.42);
+  margin: 0; line-height: 1.5;
+}
+
+.sc-share-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 48px; border-radius: 8px;
+  background: var(--ink, #1a1916); color: #ffffff;
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: none; cursor: pointer; margin-top: 8px;
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sc-share-btn:hover { transform: translate(2px, 2px); }
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .sc-coupon { border-radius: 16px; }
+  .sc-coupon__main { padding: 22px 12px 22px 18px; min-height: 280px; }
+  .sc-coupon__stub { width: 88px; padding: 16px 10px; }
+  .sc-coupon__offer-title { font-size: clamp(22px, 8vw, 36px); }
+  .sc-activated-wrap { padding: 36px 20px 56px; }
+  .sc-code-box { font-size: clamp(44px, 14vw, 64px); padding: 24px 12px; border-radius: 14px; }
+  .sc-enjoy-title { font-size: clamp(60px, 18vw, 88px); }
+}

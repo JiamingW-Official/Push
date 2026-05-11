@@ -43,18 +43,24 @@
 }
 
 .notif-bell__dot {
+  /* v40: bg changed from editorial-pink #e8447d to brand-red. White
+     text on editorial-pink was 3.78:1 (fails WCAG AA 4.5:1 for small
+     text). Brand-red is 6.91:1 — safe. Per Design.md, editorial-pink
+     is reserved for ≤1 CTA stamp per page, not recurring badges, so
+     this also brings the bell back into spec.
+     Font also bumped 10→11px to match the new "smallest = 11px" floor. */
   position: absolute;
   top: -2px;
   right: -2px;
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  background: var(--editorial-pink, #e8447d);
+  background: var(--brand-red, #c1121f);
   color: var(--snow, #fff);
   border: 1.5px solid var(--snow, #fff);
   border-radius: 999px;
   font-family: var(--font-body, "Open Sans");
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 15px;
   text-align: center;

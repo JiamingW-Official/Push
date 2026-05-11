@@ -62,7 +62,7 @@
 .pay-hero-tile__numeral {
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(28px, 3.2vw, 48px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -78,6 +78,12 @@
   letter-spacing: 0.04em;
   margin: 0;
   text-transform: uppercase;
+}
+
+.pay-hero-tile__spark {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 240px;
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -957,7 +963,7 @@
 .pay-page h1,
 .pay-page .ms-page-header-title,
 .pay-page [class*="page-title"]:not([class*="card"]) {
-  font-size: clamp(40px, 5.6vw, 80px);
+  font-size: clamp(28px, 3.2vw, 48px);
   line-height: 1.05;
   letter-spacing: -0.025em;
 }

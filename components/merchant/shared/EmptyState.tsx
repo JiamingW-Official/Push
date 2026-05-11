@@ -2,6 +2,11 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
+import {
+  EMPTY_STATE_ART,
+  type EmptyStateArtKind,
+  type EmptyStateArtVariant,
+} from "@/components/feedback/empty-state-illustrations";
 import "./empty-state.css";
 
 export interface EmptyStateProps {
@@ -19,6 +24,21 @@ export interface EmptyStateProps {
   ctaLabel?: string;
   ctaHref?: string;
   ctaOnClick?: () => void;
+  /**
+   * Optional brand-aligned line-art illustration above the title. Pass an
+   * already-rendered ReactNode for full control.
+   *
+   * Back-compat: if `art` is omitted, no illustration renders (existing
+   * call-sites continue to work unchanged).
+   */
+  art?: ReactNode;
+  /**
+   * Convenience: pick one of the predefined illustrations by key. Ignored
+   * when `art` is provided.
+   */
+  artKind?: EmptyStateArtKind;
+  /** Variant for the predefined illustrations — `"muted"` for filter no-match. */
+  artVariant?: EmptyStateArtVariant;
 }
 
 export function EmptyState({
@@ -30,11 +50,25 @@ export function EmptyState({
   ctaLabel,
   ctaHref,
   ctaOnClick,
+  art,
+  artKind,
+  artVariant,
 }: EmptyStateProps) {
   const renderConvenienceCta = !action && Boolean(ctaLabel);
 
+  let resolvedArt: ReactNode = art ?? null;
+  if (!resolvedArt && artKind) {
+    const ArtComponent = EMPTY_STATE_ART[artKind];
+    resolvedArt = <ArtComponent variant={artVariant} />;
+  }
+
   return (
     <div className="ms-empty-state" role="status">
+      {resolvedArt ? (
+        <div className="ms-empty-state-art" aria-hidden="true">
+          {resolvedArt}
+        </div>
+      ) : null}
       {icon ? (
         <div className="ms-empty-state-icon" aria-hidden="true">
           {icon}
