@@ -16,6 +16,7 @@
    ============================================================ */
 
 import { hydrate, persist } from "@/lib/data/local-persist";
+import { mockStore } from "@/lib/data/mock-store";
 import type { Campaign } from "@/lib/data/types";
 
 const STORAGE_KEY = "merchant_campaigns_v1";
@@ -41,8 +42,14 @@ export function addMerchantCampaign(c: Campaign): void {
   persist(STORAGE_KEY, stored);
 }
 
-/** Look up a merchant campaign by id. Returns undefined if not found. */
+/** Look up a merchant campaign by id. Returns undefined if not found.
+ *  Falls back to mockStore so campaigns created before addMerchantCampaign
+ *  was introduced are still recoverable client-side. */
 export function findMerchantCampaign(id: string): Campaign | undefined {
   init();
-  return stored.find((c) => c.id === id);
+  const fromStore = stored.find((c) => c.id === id);
+  if (fromStore) return fromStore;
+  // Fallback: merchantMock.createCampaign writes to "merchant-campaigns" in mockStore
+  const mockList = mockStore.read<Campaign[]>("merchant-campaigns", []);
+  return mockList.find((c) => c.id === id);
 }
