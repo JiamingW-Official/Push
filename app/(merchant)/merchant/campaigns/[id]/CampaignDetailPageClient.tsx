@@ -19,6 +19,7 @@
 */
 
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   FileText,
@@ -42,6 +43,7 @@ import {
 } from "lucide-react";
 import { CampaignStatus, type Campaign } from "@/lib/data/types";
 import type { AttributionSummary } from "@/lib/data/api-client";
+import { findMerchantCampaign } from "@/lib/data/merchant-campaigns";
 import type { MockApplication } from "@/lib/data/mock-applications";
 import { CampaignActions } from "./CampaignActions";
 import { ImageArchivePicker } from "@/components/merchant/campaign-wizard/ImageArchivePicker";
@@ -200,6 +202,12 @@ const TILE_POSITIONS = ["pos-1", "pos-2", "pos-3", "pos-4"] as const;
    ═══════════════════════════════════════════════════════════════ */
 
 export default function CampaignDetailPageClient({ initialData }: Props) {
+  const params = useParams<{ id: string }>();
+  const [campaign, setCampaign] = useState<Campaign | null>(
+    initialData.campaign,
+  );
+  const [loadingCampaign, setLoadingCampaign] = useState(!initialData.campaign);
+
   const [activeSection, setActiveSection] = useState<SectionKey>("brief");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -244,9 +252,33 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
     return () => observer.disconnect();
   }, []);
 
+  /* localStorage fallback — runs client-side when server returned null
+     (Vercel serverless instances don't share playtestCampaigns in-memory state) */
+  useEffect(() => {
+    if (initialData.campaign) return;
+    const id = params?.id;
+    if (!id) {
+      setLoadingCampaign(false);
+      return;
+    }
+    const local = findMerchantCampaign(id);
+    if (local) {
+      setCampaign(local);
+      setLoadingCampaign(false);
+      return;
+    }
+    fetch(`/api/merchant/campaigns/${encodeURIComponent(id)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: Campaign | null) => {
+        if (data?.id) setCampaign(data);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingCampaign(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   /* Fetch applicants for this campaign */
   useEffect(() => {
-    const cid = initialData.campaign?.id;
+    const cid = campaign?.id;
     if (!cid) return;
     fetch(`/api/merchant/applicants?campaignId=${encodeURIComponent(cid)}`)
       .then((r) => r.json())
@@ -254,13 +286,13 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
         setApplicants(data ?? []),
       )
       .catch(() => {});
-  }, [initialData.campaign?.id]);
+  }, [campaign?.id]);
 
   /* QR origin + scan stats + QR image generation */
   useEffect(() => {
     const origin = window.location.origin;
     setQrOrigin(origin);
-    const cid = initialData.campaign?.id;
+    const cid = campaign?.id;
     if (!cid) return;
 
     // Generate QR using npm qrcode package
@@ -280,7 +312,7 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then(({ scanCount }: { scanCount: number }) => setQrScanCount(scanCount))
       .catch(() => setQrScanCount(0));
-  }, [initialData.campaign?.id]);
+  }, [campaign?.id]);
 
   function jumpTo(key: SectionKey) {
     sectionRefs.current[key]?.scrollIntoView({
@@ -324,8 +356,23 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
     }
   }
 
-  /* ── Empty / not-found state ── */
-  if (!initialData.campaign) {
+  /* ── Loading / not-found state ── */
+  if (loadingCampaign) {
+    return (
+      <div className="mcd-page">
+        <div className="mcd-shell">
+          <div
+            className="mcd-empty"
+            style={{ gridColumn: "1 / -1", marginTop: 80 }}
+          >
+            <p className="mcd-empty__sub">Loading campaign…</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!campaign) {
     return (
       <div className="mcd-page">
         <div className="mcd-shell">
@@ -357,7 +404,7 @@ export default function CampaignDetailPageClient({ initialData }: Props) {
     );
   }
 
-  const { campaign, summary } = initialData;
+  const summary = initialData.summary;
 
   /* Budget maths */
   const budgetTotal = numberOrZero(campaign.budget_total);

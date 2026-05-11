@@ -12,6 +12,7 @@ import { AIBriefHelper } from "@/components/merchant/campaign-wizard/AIBriefHelp
 import { useToast } from "@/components/toast/Toaster";
 import { api, type CampaignCreatePayload } from "@/lib/data/api-client";
 import { CampaignStatus } from "@/lib/data/types";
+import { addMerchantCampaign } from "@/lib/data/merchant-campaigns";
 import { MOCK_LOCATIONS } from "@/lib/merchant/mock-locations";
 import type { HeroOffer, HeroOfferType } from "@/lib/offers/types";
 import "./campaign-new.css";
@@ -1078,6 +1079,7 @@ export default function CampaignNewPage() {
         throw new Error(result.error ?? "Campaign creation failed.");
       }
 
+      addMerchantCampaign(result.data);
       toast.success(`${result.data.title} is live`);
       router.push(`/merchant/campaigns/${result.data.id}`);
     } catch (error) {
