@@ -25,7 +25,7 @@ import {
   type MerchantCategory,
 } from "@/lib/services/merchant-ai";
 
-export type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
+export type WizardStep = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export interface MerchantAgentForm {
   name: string;
@@ -43,10 +43,7 @@ export function MerchantAgent({
 }: {
   step: WizardStep;
   form: MerchantAgentForm;
-  setField: (
-    key: "name" | "description",
-    value: string,
-  ) => void;
+  setField: (key: "name" | "description", value: string) => void;
   /** Display-only — the merchant brand for AI prompts. Defaults to
    *  "Your spot" if not provided. */
   merchantName?: string;
@@ -57,7 +54,8 @@ export function MerchantAgent({
   const [working, setWorking] = useState<null | "autofill">(null);
   const [filled, setFilled] = useState(false);
 
-  const canAutofill = step === 1 && (form.name.trim() === "" || form.description.trim() === "");
+  const canAutofill =
+    step === 1 && (form.name.trim() === "" || form.description.trim() === "");
 
   function handleAutofill() {
     if (working || !canAutofill) return;
@@ -100,7 +98,11 @@ export function MerchantAgent({
         >
           {working === "autofill" ? (
             <>
-              <Loader2 size={12} strokeWidth={2.25} className="ma-strip__spin" />
+              <Loader2
+                size={12}
+                strokeWidth={2.25}
+                className="ma-strip__spin"
+              />
               Drafting…
             </>
           ) : filled ? (
@@ -133,7 +135,10 @@ function agentNarrative(
       if (ctx.form.name.trim() === "" && ctx.form.description.trim() === "") {
         return "Tap Auto-fill for a draft I'll write from your category, or type your own. I'll polish it after.";
       }
-      if (ctx.form.description.trim().length > 0 && ctx.form.description.trim().length < 60) {
+      if (
+        ctx.form.description.trim().length > 0 &&
+        ctx.form.description.trim().length < 60
+      ) {
         return "Description is a little short — 2-3 more sentences helps creators visualize.";
       }
       return "Looking good. Strength meter under the description shows what creators will see.";
@@ -147,5 +152,7 @@ function agentNarrative(
       return "Configure your hero offer — the headline incentive creators see first.";
     case 6:
       return "Review and publish. Once live, vetted creators can apply within minutes.";
+    default:
+      return "Almost there — review your settings before publishing.";
   }
 }
